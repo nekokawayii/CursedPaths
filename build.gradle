@@ -4,7 +4,7 @@ plugins {
 }
 
 group = 'cn.blockforge.generated.nnnnr1201forge2'
-version = '1.8.1-original-textures-r371-1.21.1'
+version = '1.8.1-original-textures-r372-1.21.1'
 base { archivesName = "jujutsu-kaisen-cursed-paths-neoforge-1.21.1" }
 
 java.toolchain.languageVersion = JavaLanguageVersion.of(21)

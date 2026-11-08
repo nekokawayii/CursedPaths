@@ -8,6 +8,30 @@
 
 ---
 
+## 〇、NeoForge 1.21.1 移植分支（`neoforge-1.21.1`）
+
+本仓库除 Forge 1.20.1 主线外，另有一条 **NeoForge 1.21.1** 移植分支，产物名 `jujutsu-kaisen-cursed-paths-neoforge-1.21.1-*.jar`，**与 1.20.1 产物不可同时用于同一实例（modid 相同）**。
+
+| 项 | 说明 |
+|---|---|
+| 游戏 | Minecraft **1.21.1** |
+| 加载器 | **NeoForge 21.1.265**（FML 4.x） |
+| 工具链 | JDK **21**、Gradle 8.10.2、ModDevGradle 2.0.148 |
+| 必需前置 | **Photon 2.2.10（1.21.1 版）及其依赖 LDLib2 2.2.43+** |
+| 可选前置 | TLM 1.5.3（neoforge）、PlayerAnimator |
+
+本地构建：
+
+```bash
+# 需要 JDK 21；libs/ 里放好前置 jar（不进仓库）
+./gradlew build
+```
+
+> `libs/` 在 `.gitignore` 中，克隆后需手动放入：`photon-neoforge-1.21.1-2.2.10-all.jar`、`touhoulittlemaid-1.5.3-neoforge+mc1.21.1.jar`、`player-animation-lib-*`、`Jade`、`JEI`。
+> 已知限制：本机缺 LDLib2 1.21.1，Photon 的实机联调尚未完成；资源包/数据包已按 1.21 单数目录规范迁移。
+
+---
+
 ## 一、环境要求
 
 | 项 | 说明 |
