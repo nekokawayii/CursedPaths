@@ -20,6 +20,7 @@ import net.neoforged.neoforge.event.tick.ServerTickEvent;
 import net.minecraft.core.Holder;
 import cn.blockforge.generated.nnnnr1201forge2.CompatAttr;
 import net.minecraft.core.registries.BuiltInRegistries;
+import cn.blockforge.generated.nnnnr1201forge2.CompatItem;
 
 /** 无为转变的「自我改变」与贮存轮盘的辅助功能：治疗 / 爆裂 / 遍杀即灵体 / 肢体。 */
 public final class MahitoSelf {
@@ -236,7 +237,7 @@ public final class MahitoSelf {
         if (list.size() >= arms) { p.sendSystemMessage(Component.literal("肢体：手臂都拿着东西了").withStyle(ChatFormatting.GRAY)); return; }
         ItemStack main = p.getMainHandItem();
         if (main.isEmpty()) { p.sendSystemMessage(Component.literal("肢体：主手是空的").withStyle(ChatFormatting.GRAY)); return; }
-        list.add(main.copy().save(new CompoundTag()));
+        CompatItem.save(list.add(main.copy()));
         data.put(LIMB_ITEMS, list);
         p.setItemInHand(net.minecraft.world.InteractionHand.MAIN_HAND, ItemStack.EMPTY);
         syncArms(p);
@@ -255,7 +256,7 @@ public final class MahitoSelf {
         if (result.getResult().consumesAction() && !stack.isEmpty()) {
             if (!p.getInventory().add(stack)) p.drop(stack, false);
         } else if (!stack.isEmpty()) {
-            list.add(stack.save(new CompoundTag()));
+            CompatItem.save(list.add(stack));
             data.put(LIMB_ITEMS, list);
         }
         syncArms(p);
@@ -302,7 +303,7 @@ public final class MahitoSelf {
                 if (st.getItem() instanceof net.minecraft.world.item.BowItem) {
                     shootArrow(p, power);
                     fired++;
-                } else if (!st.isEmpty()) rest.add(st.save(new CompoundTag()));
+                } else if (!st.isEmpty()) CompatItem.save(rest.add(st));
             }
             data.put(LIMB_ITEMS, rest);
             syncArms(p);
@@ -322,7 +323,7 @@ public final class MahitoSelf {
                 potion.shootFromRotation(p, p.getXRot(), p.getYRot(), -10f, 0.9f, 1f);
                 p.level().addFreshEntity(potion);
                 thrown++;
-            } else if (!st.isEmpty()) rest.add(st.save(new CompoundTag()));
+            } else if (!st.isEmpty()) CompatItem.save(rest.add(st));
         }
         data.put(LIMB_ITEMS, rest);
         if (thrown > 0) { syncArms(p); p.sendSystemMessage(Component.literal("肢体：同时扔出 " + thrown + " 瓶药水").withStyle(ChatFormatting.AQUA)); }
@@ -379,7 +380,7 @@ public final class MahitoSelf {
         if (result.getResult().consumesAction() && !stack.isEmpty()) {
             if (!p.getInventory().add(stack)) p.drop(stack, false);
         } else if (!stack.isEmpty()) {
-            list.add(stack.save(new CompoundTag()));
+            CompatItem.save(list.add(stack));
             data.put(LIMB_ITEMS, list);
         }
     }

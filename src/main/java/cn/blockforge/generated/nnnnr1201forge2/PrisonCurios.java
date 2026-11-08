@@ -40,7 +40,7 @@ public final class PrisonCurios {
                 IItemHandlerModifiable h=entry.getValue();
                 for(int slot=0;slot<h.getSlots();slot++){
                     ItemStack stack=h.getStackInSlot(slot);if(stack.isEmpty())continue;
-                    if(entity instanceof ServerPlayer){CompoundTag item=new CompoundTag();item.putString("Handler",entry.getKey());item.putInt("Slot",slot);item.put("Stack",stack.save(new CompoundTag()));saved.add(item);record.put("Curios",saved);}
+                    if(entity instanceof ServerPlayer){CompoundTag item=new CompoundTag();item.putString("Handler",entry.getKey());item.putInt("Slot",slot);item.put("Stack",CompatItem.save(stack));saved.add(item);record.put("Curios",saved);}
                     h.setStackInSlot(slot,ItemStack.EMPTY);
                 }
             }

@@ -45,7 +45,7 @@ public final class PrisonInventory {
             else {ItemStack taken=h.extractItem(slot,Integer.MAX_VALUE,false);if(extras!=null)stash(extras,taken);}
         }
     }
-    private static void stash(ListTag list,ItemStack stack){if(!stack.isEmpty())list.add(stack.save(new CompoundTag()));}
+    private static void stash(ListTag list,ItemStack stack){if(!stack.isEmpty())list.add(CompatItem.save(stack));}
     public static void restore(ServerPlayer p,CompoundTag record){
         p.closeContainer();confiscate(p,record);
         p.getInventory().load(record.getList("Inventory",Tag.TAG_COMPOUND));p.getInventory().selected=record.getInt("Selected");

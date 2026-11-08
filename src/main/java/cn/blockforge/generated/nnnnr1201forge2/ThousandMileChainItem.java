@@ -66,7 +66,7 @@ public final class ThousandMileChainItem extends Item {
             }
             ItemStack saved = source.copy();
             saved.setCount(1);
-            CompatNbt.update(chain, t -> t.put(ATTACHMENT, saved.save(new CompoundTag())));
+            CompatNbt.update(chain, t -> t.put(ATTACHMENT, CompatItem.save(saved)));
             // 创造模式也转移这一件实体物品，拆装不能凭空复制附件。
             source.shrink(1);
             tell(p, "已装上天逆蛑：命中切断术式，缠绕期间持续封锁咒术");

@@ -49,7 +49,7 @@ public final class ObserverRitual {
         Session s=new Session(p,slot,party);sessions.put(p.getUUID(),s);
         CompoundTag d=Curse.data(p);d.putBoolean("ObserverRunning",true);d.putBoolean("ObserverShattered",false);
         d.putBoolean("ObserverOldGravity",p.isNoGravity());d.putBoolean("ObserverOldInvulnerable",p.isInvulnerable());d.putBoolean("ObserverOldInvisible",p.isInvisible());
-        if(p.hasEffect(MobEffects.CONFUSION))d.put("ObserverOldConfusion",p.getEffect(MobEffects.CONFUSION).save(new CompoundTag()));else d.remove("ObserverOldConfusion");
+        if(p.hasEffect(MobEffects.CONFUSION))d.put("ObserverOldConfusion",CompatItem.save(p.getEffect(MobEffects.CONFUSION)));else d.remove("ObserverOldConfusion");
         p.setInvulnerable(true);p.setNoGravity(true);p.setDeltaMovement(Vec3.ZERO);
         fire(p,FX_START,0);sync(s,0);
         sound(p,SoundEvents.WITHER_SPAWN,.6f,.6f);

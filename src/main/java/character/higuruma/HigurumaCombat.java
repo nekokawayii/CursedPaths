@@ -21,6 +21,7 @@ import static cn.blockforge.generated.nnnnr1201forge2.Content.GAVEL;
 import net.neoforged.neoforge.event.tick.ServerTickEvent;
 import net.neoforged.neoforge.event.tick.PlayerTickEvent;
 import cn.blockforge.generated.nnnnr1201forge2.CompatNbt;
+import cn.blockforge.generated.nnnnr1201forge2.CompatItem;
 
 /** 诛伏赐死：法槌授予/回收、刻印、投掷回旋、领域展开。 */
 public final class HigurumaCombat {
@@ -76,7 +77,7 @@ public final class HigurumaCombat {
         if (off.isEmpty()) { p.sendSystemMessage(Component.literal("副手没有武器可刻印").withStyle(ChatFormatting.GRAY)); return; }
         CompoundTag seal = new CompoundTag();
         seal.putString("name", off.getHoverName().getString());
-        seal.put("item", off.save(new CompoundTag()));
+        seal.put("item", CompatItem.save(off));
         ItemStack proxy = off.copy();
         double damage = 1.0, speed = 4.0;
         for (var entry : proxy.getAttributeModifiers(EquipmentSlot.MAINHAND).entries()) {
