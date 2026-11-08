@@ -37,3 +37,4 @@ client-join*.log
 server-*.log
 config/
 defaultconfigs/
+client-photon.log

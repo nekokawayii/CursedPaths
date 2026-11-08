@@ -21,7 +21,7 @@ ordering="NONE"
 side="BOTH"
 [[dependencies.${mod_id}]]
 modId="photon"
-    type="optional"
+    type="required"
 versionRange="[2.2.10,)"
 ordering="AFTER"
 side="CLIENT"
