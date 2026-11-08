@@ -10,8 +10,10 @@ public final class GeneratedMod {
     public static final String MOD_ID = "jujutsu_kaisen_cursed_paths";
     /** 1.21 起 FMLJavaModLoadingContext 被移除，构造器注入总线后存这里给全工程用。 */
     public static net.neoforged.bus.api.IEventBus MOD_BUS;
+    public static net.neoforged.fml.ModContainer CONTAINER;
     public GeneratedMod(net.neoforged.bus.api.IEventBus modBus, net.neoforged.fml.ModContainer container) {
         MOD_BUS = modBus;
+        CONTAINER = container;
         GrowthConfig.register();
         GeneratedMod.MOD_BUS
             .addListener((net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent e) -> SimpleChannel.register(e));
