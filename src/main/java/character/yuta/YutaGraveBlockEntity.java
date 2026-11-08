@@ -22,7 +22,7 @@ public class YutaGraveBlockEntity extends BlockEntity {
     public void taken(boolean value) { this.taken = value; setChanged(); }
 
     @Override
-    protected void saveAdditional(CompoundTag tag) {
+    protected void saveAdditional(CompoundTag tag, net.minecraft.core.HolderLookup.Provider provider) {
         super.saveAdditional(tag);
         tag.putBoolean("Taken", taken);
     }

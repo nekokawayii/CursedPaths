@@ -8,6 +8,8 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.gui.GuiGraphics;
 import org.lwjgl.opengl.GL30;
+import com.mojang.blaze3d.vertex.Tesselator;
+import com.mojang.blaze3d.vertex.BufferBuilder;
 
 /** 每帧复制当前画面，按随机切线裁成两片并反向错位，结束时释放缓存。 */
 public final class ScreenSeverance {

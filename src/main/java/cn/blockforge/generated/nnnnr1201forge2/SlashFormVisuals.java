@@ -3,6 +3,7 @@ package cn.blockforge.generated.nnnnr1201forge2;
 import java.util.*;
 import com.mojang.blaze3d.vertex.*;
 import net.minecraft.world.phys.Vec3;
+import com.mojang.blaze3d.vertex.BufferBuilder;
 
 public final class SlashFormVisuals {
     private record Visual(Network.Effect e,long born){}

@@ -3,6 +3,7 @@ package cn.blockforge.generated.nnnnr1201forge2;
 import java.util.*;
 import com.mojang.blaze3d.vertex.*;
 import net.minecraft.world.phys.Vec3;
+import com.mojang.blaze3d.vertex.BufferBuilder;
 
 /** 剑气拼接的龙、六芒星、紫火与烟尘；世界坐标表现，不占用实体模型或输入。 */
 public final class ExpansionVisuals {

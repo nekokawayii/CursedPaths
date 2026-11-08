@@ -19,6 +19,8 @@ import org.joml.Matrix4f;
 import org.joml.Vector4f;
 import net.neoforged.neoforge.client.event.ClientTickEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
+import com.mojang.blaze3d.vertex.Tesselator;
+import com.mojang.blaze3d.vertex.BufferBuilder;
 
 /**
  * 鹿紫云一的表现层：落雷、雷走残影、放电环、吸附拉线、头顶正电荷图标、屏幕边缘电弧。

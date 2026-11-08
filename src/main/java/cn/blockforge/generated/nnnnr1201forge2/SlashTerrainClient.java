@@ -5,6 +5,7 @@ import com.mojang.blaze3d.vertex.*;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.*;
 import net.minecraft.world.phys.Vec3;
+import com.mojang.blaze3d.vertex.BufferBuilder;
 
 /** 仅绘制服务端确认的存活片段；断掉的一段绝不由客户端继续预测。 */
 public final class SlashTerrainClient {

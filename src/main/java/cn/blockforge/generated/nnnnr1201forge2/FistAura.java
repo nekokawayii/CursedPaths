@@ -8,6 +8,7 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.renderer.GameRenderer;
 import org.lwjgl.opengl.GL30;
 import com.mojang.blaze3d.vertex.Tesselator;
+import com.mojang.blaze3d.vertex.BufferBuilder;
 
 /** 只处理右下角的画面与咒力，不取消、重画或移动原版手臂。 */
 public final class FistAura {

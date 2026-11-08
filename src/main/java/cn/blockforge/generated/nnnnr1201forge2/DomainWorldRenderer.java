@@ -15,6 +15,8 @@ import net.neoforged.fml.common.Mod;
 import java.util.*;
 import net.neoforged.neoforge.client.event.ClientTickEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
+import com.mojang.blaze3d.vertex.Tesselator;
+import com.mojang.blaze3d.vertex.BufferBuilder;
 
 /** 真实世界中的球面天空和对拼交界。深度测试保留，绝不使用遮住 NPC 的全屏贴片。 */
 @EventBusSubscriber(modid="jujutsu_kaisen_cursed_paths",value=Dist.CLIENT)

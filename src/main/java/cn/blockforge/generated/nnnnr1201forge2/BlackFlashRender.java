@@ -4,6 +4,7 @@ import java.util.*;
 import com.mojang.blaze3d.vertex.*;
 import net.minecraft.client.Minecraft;
 import net.minecraft.world.phys.Vec3;
+import com.mojang.blaze3d.vertex.BufferBuilder;
 
 /** 黑闪表现层（客户端，纯顶点通路自绘 + 少量 Photon 加法发光）。
  *

@@ -5,6 +5,7 @@ import com.mojang.blaze3d.vertex.*;
 import net.minecraft.client.Minecraft;
 import net.minecraft.world.phys.Vec3;
 import static cn.blockforge.generated.nnnnr1201forge2.Client.*;
+import com.mojang.blaze3d.vertex.BufferBuilder;
 
 /** 紫芯黑边斩击、跟随目标的裂隙网络、黑火和汇聚球。 */
 public final class VoidTechniqueClient {

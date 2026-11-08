@@ -16,6 +16,8 @@ import net.neoforged.fml.common.Mod;
 import net.neoforged.neoforge.client.event.*;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
+import com.mojang.blaze3d.vertex.Tesselator;
+import com.mojang.blaze3d.vertex.BufferBuilder;
 
 /** 遗迹的局部天空和非实体残影，不生成怪物、不改变世界时间。 */
 @EventBusSubscriber(modid="jujutsu_kaisen_cursed_paths",value=Dist.CLIENT)

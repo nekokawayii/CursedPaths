@@ -3,6 +3,7 @@ package cn.blockforge.generated.nnnnr1201forge2;
 import com.mojang.blaze3d.vertex.*;
 import net.minecraft.world.phys.Vec3;
 import static cn.blockforge.generated.nnnnr1201forge2.Client.*;
+import com.mojang.blaze3d.vertex.BufferBuilder;
 
 /** 九相终式：每种招式独立轮廓，金边虚空刃、九重冠轮与立体焰纹。 */
 public final class NineVisuals {

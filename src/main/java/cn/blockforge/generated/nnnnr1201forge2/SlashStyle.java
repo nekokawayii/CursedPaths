@@ -3,6 +3,7 @@ package cn.blockforge.generated.nnnnr1201forge2;
 import com.mojang.blaze3d.vertex.*;
 import net.minecraft.client.Minecraft;
 import net.minecraft.world.phys.Vec3;
+import com.mojang.blaze3d.vertex.BufferBuilder;
 
 /** 全部斩击共用尖梭轮廓；高阶段按施术者共享选择显示壁纸，包边缓慢由白变黑。 */
 public final class SlashStyle {

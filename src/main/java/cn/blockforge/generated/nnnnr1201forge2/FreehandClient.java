@@ -8,6 +8,7 @@ import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.phys.Vec3;
 import org.lwjgl.glfw.GLFW;
+import com.mojang.blaze3d.vertex.BufferBuilder;
 
 /** 绘制时释放鼠标，在真实分辨率画布上记录；定稿后恢复鼠标控制相机。 */
 public final class FreehandClient {

@@ -8,6 +8,8 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.renderer.GameRenderer;
 import org.lwjgl.opengl.GL30;
 import java.util.List;
+import com.mojang.blaze3d.vertex.Tesselator;
+import com.mojang.blaze3d.vertex.BufferBuilder;
 
 /** 仅在显存复制游戏自身的最终画面（含聊天），不读取桌面，不写文件，不联网。 */
 public final class FinaleScreenGlass {

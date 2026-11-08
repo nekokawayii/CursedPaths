@@ -19,6 +19,8 @@ import net.neoforged.bus.api.*;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.neoforge.client.event.RenderFrameEvent;
 import net.neoforged.neoforge.client.event.ClientTickEvent;
+import com.mojang.blaze3d.vertex.Tesselator;
+import com.mojang.blaze3d.vertex.BufferBuilder;
 
 /** 终式表现按服务端年龄续租；只移动本机镜头，不替换相机实体或修改全局按键。 */
 public final class FinaleClient {

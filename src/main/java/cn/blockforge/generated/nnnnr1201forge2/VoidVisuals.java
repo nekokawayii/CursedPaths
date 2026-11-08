@@ -4,6 +4,7 @@ import java.util.*;
 import com.mojang.blaze3d.vertex.*;
 import net.minecraft.world.phys.Vec3;
 import static cn.blockforge.generated.nnnnr1201forge2.Client.*;
+import com.mojang.blaze3d.vertex.BufferBuilder;
 
 /** 裂缝位置以服务端每刻同步为准；保留折点，不用平滑转向抹去锐角。 */
 public final class VoidVisuals {

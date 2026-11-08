@@ -13,6 +13,8 @@ import net.neoforged.neoforge.client.event.RenderLevelStageEvent;
 import net.neoforged.bus.api.SubscribeEvent;
 import static cn.blockforge.generated.nnnnr1201forge2.Client.ribbon;
 import net.neoforged.fml.common.EventBusSubscriber;
+import com.mojang.blaze3d.vertex.Tesselator;
+import com.mojang.blaze3d.vertex.BufferBuilder;
 
 /** 只在岩手近处添加稻穗轻摆、溪底咒力、树林光点与秋千运动。 */
 @EventBusSubscriber(modid="jujutsu_kaisen_cursed_paths",value=Dist.CLIENT)

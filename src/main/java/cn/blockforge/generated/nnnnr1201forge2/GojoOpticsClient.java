@@ -18,6 +18,8 @@ import org.joml.Matrix4f;
 import org.joml.Vector4f;
 import org.lwjgl.opengl.GL30;
 import net.neoforged.neoforge.client.event.RenderFrameEvent;
+import com.mojang.blaze3d.vertex.Tesselator;
+import com.mojang.blaze3d.vertex.BufferBuilder;
 
 /** 世界画面深度重建、背景折射与独立点光源；不改变游戏逻辑亮度或放置隐形方块。 */
 public final class GojoOpticsClient {

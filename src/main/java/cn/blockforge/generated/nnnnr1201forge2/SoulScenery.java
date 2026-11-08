@@ -3,6 +3,7 @@ package cn.blockforge.generated.nnnnr1201forge2;
 import com.mojang.blaze3d.vertex.*;
 import net.minecraft.world.phys.Vec3;
 import static cn.blockforge.generated.nnnnr1201forge2.Client.*;
+import com.mojang.blaze3d.vertex.BufferBuilder;
 
 /** 领域心象覆盖：不写入真实世界方块，战斗结束即恢复。 */
 public final class SoulScenery {

@@ -14,6 +14,7 @@ import net.neoforged.bus.api.SubscribeEvent;
 import org.lwjgl.opengl.GL30;
 import net.neoforged.neoforge.client.event.ClientTickEvent;
 import com.mojang.blaze3d.vertex.Tesselator;
+import com.mojang.blaze3d.vertex.BufferBuilder;
 
 /** 动态血液材质负责主体，Photon 负责雾、飞沫与亮点；后者失败不吞掉整招。 */
 public final class BloodClient {

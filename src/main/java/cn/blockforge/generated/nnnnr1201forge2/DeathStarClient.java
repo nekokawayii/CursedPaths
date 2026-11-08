@@ -11,6 +11,8 @@ import net.neoforged.neoforge.client.event.*;
 import net.neoforged.bus.api.SubscribeEvent;
 import org.lwjgl.opengl.GL30;
 import net.neoforged.neoforge.client.event.ClientTickEvent;
+import com.mojang.blaze3d.vertex.Tesselator;
+import com.mojang.blaze3d.vertex.BufferBuilder;
 
 /** Photon 血星主体和血刺；独立几何兜底保证特效失败时仍看得见蓄力、弹道与范围。 */
 public final class DeathStarClient {

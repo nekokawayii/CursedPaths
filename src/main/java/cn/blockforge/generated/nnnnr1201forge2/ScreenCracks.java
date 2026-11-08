@@ -7,6 +7,8 @@ import org.joml.Matrix4f;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.resources.ResourceLocation;
+import com.mojang.blaze3d.vertex.Tesselator;
+import com.mojang.blaze3d.vertex.BufferBuilder;
 
 /**
  * 「斩击切屏」：观测者对着镜头挥刀时，画面真的裂开——不是红屏，是玻璃裂纹，

@@ -23,7 +23,7 @@ public final class JacobsLadderEntity extends Entity {
     public int age(){return entityData.get(AGE);}
     public AABB area(){return new AABB(getX()-5,getY()-1,getZ()-5,getX()+5,getY()+PrisonRules.LIGHT_HEIGHT,getZ()+5);}
     private boolean inside(Entity e){double x=e.getX()-getX(),z=e.getZ()-getZ();return x*x+z*z<=25;}
-    @Override protected void defineSynchedData(){entityData.define(AGE,0);}
+    @Override protected void defineSynchedData(net.minecraft.network.syncher.SynchedEntityData.Builder builder){builder.define(AGE,0);}
     @Override public void tick(){
         super.tick();if(!(level() instanceof ServerLevel l))return;
         int age=age()+1;entityData.set(AGE,age);

@@ -11,6 +11,7 @@ import net.neoforged.neoforge.client.event.*;
 import net.neoforged.bus.api.SubscribeEvent;
 import org.joml.Matrix4f;
 import org.lwjgl.opengl.GL30;
+import com.mojang.blaze3d.vertex.Tesselator;
 
 /** 在地形之后、实体之前替换胎海环境；生物和手持物仍走原渲染，不清空真实地形。 */
 public final class BloodRealmRenderer {

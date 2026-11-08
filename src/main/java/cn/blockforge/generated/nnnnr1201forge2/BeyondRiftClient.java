@@ -4,6 +4,8 @@ import com.mojang.blaze3d.vertex.*;
 import java.util.UUID;
 import net.minecraft.client.Minecraft;
 import net.minecraft.world.phys.Vec3;
+import com.mojang.blaze3d.vertex.Tesselator;
+import com.mojang.blaze3d.vertex.BufferBuilder;
 
 /**
  * 灵魂通道北端那道常驻裂隙的表现层：撕裂的黑色口子，里面是**玩家的电脑桌面**

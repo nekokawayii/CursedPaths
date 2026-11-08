@@ -15,6 +15,8 @@ import net.neoforged.fml.common.Mod;
 import org.lwjgl.glfw.GLFW;
 import java.util.*;
 import net.neoforged.neoforge.client.event.ClientTickEvent;
+import com.mojang.blaze3d.vertex.Tesselator;
+import com.mojang.blaze3d.vertex.BufferBuilder;
 
 /** 事件由 ClientBootstrap 显式注册，避免核心渲染路径只依赖自动扫描。 */
 public final class Client {

@@ -13,6 +13,8 @@ import net.neoforged.bus.api.*;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.neoforge.client.event.ClientTickEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
+import com.mojang.blaze3d.vertex.Tesselator;
+import com.mojang.blaze3d.vertex.BufferBuilder;
 
 /** 白色空间、独立高位机位和输入隔离；所有设置退出后归还。 */
 @EventBusSubscriber(modid="jujutsu_kaisen_cursed_paths",value=Dist.CLIENT)

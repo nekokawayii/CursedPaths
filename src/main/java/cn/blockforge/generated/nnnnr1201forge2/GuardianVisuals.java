@@ -4,6 +4,7 @@ import com.mojang.blaze3d.vertex.*;
 import net.minecraft.client.Minecraft;
 import net.minecraft.world.phys.Vec3;
 import static cn.blockforge.generated.nnnnr1201forge2.Client.*;
+import com.mojang.blaze3d.vertex.BufferBuilder;
 
 /** 净土守护者独立演出：强化、反转、穿血、灵魂迟滞与连打各自使用不同轮廓。 */
 public final class GuardianVisuals {

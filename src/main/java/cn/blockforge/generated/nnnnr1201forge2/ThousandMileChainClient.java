@@ -17,6 +17,7 @@ import net.neoforged.bus.api.*;
 import org.joml.Quaternionf;
 import org.lwjgl.glfw.GLFW;
 import net.neoforged.neoforge.client.event.ClientTickEvent;
+import com.mojang.blaze3d.vertex.BufferBuilder;
 
 /** 使用原版方块锁链模型，不使用原版扁平物品图，也不新增链节实体。 */
 public final class ThousandMileChainClient {

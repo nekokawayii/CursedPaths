@@ -10,6 +10,7 @@ import net.neoforged.neoforge.client.event.ViewportEvent;
 import net.neoforged.bus.api.SubscribeEvent;
 import static cn.blockforge.generated.nnnnr1201forge2.Client.*;
 import net.neoforged.fml.common.EventBusSubscriber;
+import com.mojang.blaze3d.vertex.BufferBuilder;
 
 @EventBusSubscriber(modid="jujutsu_kaisen_cursed_paths",value=Dist.CLIENT)
 public final class VoidBossClient {
