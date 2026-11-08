@@ -20,7 +20,7 @@ import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.event.entity.EntityAttributeCreationEvent;
 
 public final class VoidContent {
-    private static final DeferredRegister<Codec<? extends ChunkGenerator>> GENERATORS=DeferredRegister.create(Registries.CHUNK_GENERATOR,"jujutsu_kaisen_cursed_paths");
+    private static final DeferredRegister<com.mojang.serialization.MapCodec<? extends ChunkGenerator>> GENERATORS=DeferredRegister.create(Registries.CHUNK_GENERATOR,"jujutsu_kaisen_cursed_paths");
     public static final DeferredHolder<?, Codec<? extends ChunkGenerator>> ARENA=GENERATORS.register("void_arena",()->VoidArenaGenerator.CODEC);
     public static final DeferredHolder<EntityType<?>, EntityType<GojoEntity>> GOJO=Content.ENTITIES.register("gojo",()->EntityType.Builder.of(GojoEntity::new,MobCategory.MONSTER).sized(0.6f,1.8f).fireImmune().clientTrackingRange(16).updateInterval(1).build("jujutsu_kaisen_cursed_paths:gojo"));
     public static final DeferredHolder<EntityType<?>, EntityType<MahoragaEntity>> MAHORAGA=Content.ENTITIES.register("mahoraga",()->EntityType.Builder.of(MahoragaEntity::new,MobCategory.MONSTER).sized(0.95f,3.6f).fireImmune().clientTrackingRange(16).updateInterval(1).build("jujutsu_kaisen_cursed_paths:mahoraga"));

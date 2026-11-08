@@ -23,7 +23,7 @@ import net.neoforged.neoforge.registries.DeferredHolder;
 
 /** 显式的记录编解码器保持扁平JSON；直接xmap验证型Codec会被结构分派当成value字段读取。 */
 public final class SukunaTempleStructure extends Structure {
-    public static final Codec<SukunaTempleStructure> CODEC=RecordCodecBuilder.create(i->i.group(
+    public static final com.mojang.serialization.MapCodec<SukunaTempleStructure> CODEC = RecordCodecBuilder.mapCodec(i->i.group(
         settingsCodec(i),
         StructureTemplatePool.CODEC.fieldOf("start_pool").forGetter(s->s.pool),
         ResourceLocation.CODEC.optionalFieldOf("start_jigsaw_name").forGetter(s->s.jigsawName),

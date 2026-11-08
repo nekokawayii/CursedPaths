@@ -20,7 +20,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.entity.player.Player;
 
 public final class SoulContent {
-    private static final DeferredRegister<Codec<? extends ChunkGenerator>> GENERATORS=DeferredRegister.create(Registries.CHUNK_GENERATOR,"jujutsu_kaisen_cursed_paths");
+    private static final DeferredRegister<com.mojang.serialization.MapCodec<? extends ChunkGenerator>> GENERATORS=DeferredRegister.create(Registries.CHUNK_GENERATOR,"jujutsu_kaisen_cursed_paths");
     public static final DeferredHolder<?, Codec<? extends ChunkGenerator>> CORRIDOR=GENERATORS.register("soul_corridor",()->SoulCorridorGenerator.CODEC);
     public static final DeferredHolder<EntityType<?>, EntityType<MegumiEntity>> MEGUMI=Content.ENTITIES.register("megumi",()->EntityType.Builder.of(MegumiEntity::new,MobCategory.CREATURE).sized(.6f,1.8f).clientTrackingRange(16).updateInterval(1).build("jujutsu_kaisen_cursed_paths:megumi"));
     public static final DeferredHolder<EntityType<?>, EntityType<YujiEntity>> YUJI=Content.ENTITIES.register("yuji_echo",()->EntityType.Builder.of(YujiEntity::new,MobCategory.MONSTER).sized(0.6f,1.8f).clientTrackingRange(16).updateInterval(1).build("jujutsu_kaisen_cursed_paths:yuji_echo"));
