@@ -94,9 +94,9 @@ public final class PrisonSystem {
             tell(player,"你已被狱门僵封印 · 物品暂存，等待外部的邪去悔天梯解封");
         }else{
             CompoundTag snapshot=new CompoundTag();entity.saveWithoutId(snapshot);snapshot.putString("id",net.minecraft.core.registries.BuiltInRegistries.ENTITY_TYPE.getKey(entity.getType()).toString());snapshot.remove("Passengers");
-            record.put("Entity",snapshot);record.putBoolean("CanUpdate",entity.canUpdate());
+            record.put("Entity",snapshot);record.putBoolean("CanUpdate",true);
             Entity copy=EntityType.loadEntityRecursive(snapshot.copy(),prison,e->e);if(!(copy instanceof LivingEntity captive))return false;
-            captive.moveTo(x,64,z,entity.getYRot(),0);if(captive instanceof Mob mob){mob.setNoAi(true);mob.setPersistenceRequired();mob.setTarget(null);}captive.setInvulnerable(true);captive.canUpdate(false);
+            captive.moveTo(x,64,z,entity.getYRot(),0);if(captive instanceof Mob mob){mob.setNoAi(true);mob.setPersistenceRequired();mob.setTarget(null);}captive.setInvulnerable(true);
             PrisonInventory.confiscate(captive,record);
             store.prisoners.put(entity.getUUID(),record);store.setDirty();
             if(!prison.addFreshEntity(captive)){store.prisoners.remove(entity.getUUID());return false;}
@@ -143,7 +143,7 @@ public final class PrisonSystem {
             Entity existing=destination.getEntity(id);
             if(existing!=null){if(captive!=null)captive.discard();store.prisoners.remove(id);store.setDirty();return;}
             Entity restored=EntityType.loadEntityRecursive(record.getCompound("Entity").copy(),destination,e->e);if(restored==null)return;
-            Vec3 at=safeSpot(destination,restored,room);restored.moveTo(at.x,at.y,at.z,restored.getYRot(),restored.getXRot());restored.canUpdate(record.getBoolean("CanUpdate"));
+            Vec3 at=safeSpot(destination,restored,room);restored.moveTo(at.x,at.y,at.z,restored.getYRot(),restored.getXRot());
             if(destination.addFreshEntity(restored)){if(captive!=null)captive.discard();store.prisoners.remove(id);store.setDirty();}
         }
     }
@@ -165,7 +165,7 @@ public final class PrisonSystem {
                 if(p.tickCount%10==0){PrisonInventory.confiscate(p,record);PrisonInventory.sync(p);store.setDirty();p.getFoodData().setFoodLevel(20);p.setHealth(Math.min(p.getMaxHealth(),Math.max(1,record.getFloat("Health"))));}
                 if(p.tickCount%80==0)p.displayClientMessage(Component.literal("狱门僵封印中 · 传送与物品使用已封锁"),true);
             }else{
-                Entity captive=prison.getEntity(id);if(captive!=null){captive.canUpdate(false);captive.setDeltaMovement(Vec3.ZERO);
+                Entity captive=prison.getEntity(id);if(captive!=null){captive.setDeltaMovement(Vec3.ZERO);
                     int x=record.getInt("CellX"),z=record.getInt("CellZ");if(!PrisonRules.inside(captive.getX(),captive.getY(),captive.getZ(),x,z))captive.teleportTo(x+.5,64,z+.5);
                 }
             }

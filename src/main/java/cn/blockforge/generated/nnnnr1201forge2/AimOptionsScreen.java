@@ -38,7 +38,6 @@ public final class AimOptionsScreen extends Screen {
         }catch(NumberFormatException e){message="请填：半角0.5～15度，距离4～256格";}
     }
     @Override public void onClose(){minecraft.setScreen(parent);}
-    @Override public void tick(){angle.tick();range.tick();}
     @Override public void render(GuiGraphics g,int mx,int my,float partial){
         renderBackground(g, 0, 0, 0);int x=width/2-140,y=Math.max(30,(height-190)/2);
         g.drawCenteredString(font,title,width/2,y+5,0xFFFFD8E8);
