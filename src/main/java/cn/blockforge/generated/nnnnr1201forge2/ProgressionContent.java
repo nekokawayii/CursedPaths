@@ -40,7 +40,7 @@ public final class ProgressionContent {
             if(pages&&!Journey.nine(p)){for(var r:PAGES)take(p,r.get(),1);Journey.give(sp,new ItemStack(NINE.get()));sp.sendSystemMessage(Component.literal("九相归一，咒胎九相图已合成。长按右键吞噬。"));}else sp.sendSystemMessage(Component.literal(Journey.guide(p)));}return InteractionResult.sidedSuccess(level.isClientSide);}
     });
     public static final DeferredHolder<Item, Item> ALTAR_ITEM=item("cursed_altar",()->new BlockItem(ALTAR.get(),new Item.Properties().rarity(Rarity.EPIC).fireResistant()));
-    public static final DeferredHolder<Item, Item> DAITIAN_EGG=item("daitian_spawn_egg",()->new net.neoforged.neoforge.common.ForgeSpawnEggItem(Content.DAITIAN,0x756981,0xbf733c,new Item.Properties()));
+    public static final DeferredHolder<Item, Item> DAITIAN_EGG=item("daitian_spawn_egg",()->new net.neoforged.neoforge.common.DeferredSpawnEggItem(Content.DAITIAN,0x756981,0xbf733c,new Item.Properties()));
     private static void take(Player p,Item item,int n){for(int i=0;i<p.getInventory().getContainerSize();i++){ItemStack s=p.getInventory().getItem(i);if(s.is(item)){int amount=Math.min(n,s.getCount());s.shrink(amount);n-=amount;if(n==0)return;}}}
     public static void init(IEventBus bus){BLOCKS.register(bus);}
     private static void tabs(BuildCreativeModeTabContentsEvent e){if(e.getTabKey()==CreativeModeTabs.COMBAT)for(var r:ALL)e.accept(r.get());}

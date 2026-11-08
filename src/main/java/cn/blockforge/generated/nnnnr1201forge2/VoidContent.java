@@ -124,8 +124,8 @@ public final class VoidContent {
                 +BalanceRules.number(Shinbuke.DAMAGE_PER_STEP*100)+"%，且本体近战永久 +"+BalanceRules.number(Shinbuke.MELEE_PERMANENT_PER_STEP*100)+"%").withStyle(ChatFormatting.DARK_PURPLE));
         }
     });
-    public static final DeferredHolder<Item, Item> EGG=Content.ITEMS.register("gojo_spawn_egg",()->new net.neoforged.neoforge.common.ForgeSpawnEggItem(GOJO,0x0b0b12,0x8fd0ff,new Item.Properties()));
-    public static final DeferredHolder<Item, Item> MAHORAGA_EGG=Content.ITEMS.register("mahoraga_spawn_egg",()->new net.neoforged.neoforge.common.ForgeSpawnEggItem(MAHORAGA,0x2b2118,0xffd24a,new Item.Properties()));
+    public static final DeferredHolder<Item, Item> EGG=Content.ITEMS.register("gojo_spawn_egg",()->new net.neoforged.neoforge.common.DeferredSpawnEggItem(GOJO,0x0b0b12,0x8fd0ff,new Item.Properties()));
+    public static final DeferredHolder<Item, Item> MAHORAGA_EGG=Content.ITEMS.register("mahoraga_spawn_egg",()->new net.neoforged.neoforge.common.DeferredSpawnEggItem(MAHORAGA,0x2b2118,0xffd24a,new Item.Properties()));
     public static final DeferredHolder<Item, Item> CONTROLLER=Content.ITEMS.register("void_controller",()->new Item(new Item.Properties().stacksTo(1).rarity(Rarity.EPIC).fireResistant()){
         @Override public InteractionResultHolder<ItemStack> use(Level l,Player p,InteractionHand h){if(l.isClientSide)cn.blockforge.generated.nnnnr1201forge2.CompatClient.runWhenClient(()->net.minecraft.client.Minecraft.getInstance().setScreen(new VoidControllerScreen()));else if(p instanceof ServerPlayer sp)Network.sendController(sp);return InteractionResultHolder.sidedSuccess(p.getItemInHand(h),l.isClientSide);}
     });
