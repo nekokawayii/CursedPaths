@@ -244,7 +244,7 @@ public final class MahitoCombat {
             for(LivingEntity target:cast.caster.level().getEntitiesOfClass(LivingEntity.class,new AABB(cast.origin,cast.origin).inflate(radius,4,radius),t->can(cast.caster,t))){
                 Vec3 to=target.position().subtract(cast.origin);if(cast.kind==TAIL&&(to.horizontalDistanceSqr()>81||to.multiply(1,0,1).dot(cast.direction)<0||!body(cast.caster).hasLineOfSight(target)))continue;
                 if(cast.kind==TAIL){soulDamage(cast.caster,target,14);Vec3 push=to.multiply(1,0,1).normalize().scale(2.1);target.setDeltaMovement(push.x,.7,push.z);target.getPersistentData().putLong("MahitoLaunchedUntil",now(target)+12);root(target,24);}
-                else{soulDamage(cast.caster,target,7);target.setDeltaMovement(target.getDeltaMovement().add(0,1,0));target.addEffect(new MobEffectInstance(MahitoContent.BLEEDING.get(),100));}
+                else{soulDamage(cast.caster,target,7);target.setDeltaMovement(target.getDeltaMovement().add(0,1,0));target.addEffect(new MobEffectInstance(MahitoContent.BLEEDING,100));}
                 target.hurtMarked=true;
             }
             cast.caster.serverLevel().playSound(null,BlockPos.containing(cast.origin),SoundEvents.GENERIC_EXPLODE.value(),SoundSource.HOSTILE,1,.6f);
