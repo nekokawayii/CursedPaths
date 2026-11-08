@@ -89,7 +89,7 @@ public final class Skills {
         burns.entrySet().removeIf(entry->{if(entry.getKey().getUUID().equals(target)&&entry.getValue().owner.equals(owner.getUUID())){entry.getKey().clearFire();return true;}return false;});
     }
     @SubscribeEvent(priority=net.neoforged.bus.api.EventPriority.LOWEST)
-    public static void fistDamage(net.neoforged.neoforge.event.entity.living.LivingDamageEvent event){
+    public static void fistDamage(net.neoforged.neoforge.event.entity.living.LivingIncomingDamageEvent event){
         ServerPlayer p=CombatSettings.caster(event.getSource());if(event.isCanceled()||event.getAmount()<=0||p==null)return;
         LivingEntity target=event.getEntity();if(!canHit(p,target))return;
         remember(p,target);

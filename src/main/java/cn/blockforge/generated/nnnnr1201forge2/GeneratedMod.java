@@ -8,9 +8,12 @@ import net.neoforged.neoforge.event.tick.ServerTickEvent;
 @Mod(GeneratedMod.MOD_ID)
 public final class GeneratedMod {
     public static final String MOD_ID = "jujutsu_kaisen_cursed_paths";
-    public GeneratedMod() {
+    /** 1.21 起 FMLJavaModLoadingContext 被移除，构造器注入总线后存这里给全工程用。 */
+    public static net.neoforged.bus.api.IEventBus MOD_BUS;
+    public GeneratedMod(net.neoforged.bus.api.IEventBus modBus, net.neoforged.fml.ModContainer container) {
+        MOD_BUS = modBus;
         GrowthConfig.register();
-        net.neoforged.fml.javafmlmod.FMLJavaModLoadingContext.get().getModEventBus()
+        GeneratedMod.MOD_BUS
             .addListener((net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent e) -> SimpleChannel.register(e));
         if(net.neoforged.fml.loading.FMLEnvironment.dist==net.neoforged.api.distmarker.Dist.CLIENT)
             net.neoforged.fml.DistExecutor.unsafeRunWhenOn(net.neoforged.api.distmarker.Dist.CLIENT,()->ConfigClient::registerScreen);
@@ -19,15 +22,15 @@ public final class GeneratedMod {
         NeoForge.EVENT_BUS.register(CombatExpansion.class);
         NeoForge.EVENT_BUS.register(SixfoldFinale.class);
         SkillDestruction.init();
-        IceContent.init(net.neoforged.fml.javafmlmod.FMLJavaModLoadingContext.get().getModEventBus());
+        IceContent.init(GeneratedMod.MOD_BUS);
         NeoForge.EVENT_BUS.register(SukunaBranches.class);
         NeoForge.EVENT_BUS.register(Uraume.class);
-        SukunaTempleStructure.TYPES.register(net.neoforged.fml.javafmlmod.FMLJavaModLoadingContext.get().getModEventBus());
+        SukunaTempleStructure.TYPES.register(GeneratedMod.MOD_BUS);
         NeoForge.EVENT_BUS.register(SukunaTempleStructure.class);
-        net.neoforged.fml.javafmlmod.FMLJavaModLoadingContext.get().getModEventBus().addListener(
+        GeneratedMod.MOD_BUS.addListener(
             (net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent event)->event.enqueueWork(ControllerCraftingCondition::register));
         StageFood.init();
-        TechniqueEffects.EFFECTS.register(net.neoforged.fml.javafmlmod.FMLJavaModLoadingContext.get().getModEventBus());
+        TechniqueEffects.EFFECTS.register(GeneratedMod.MOD_BUS);
         NeoForge.EVENT_BUS.register(StageFood.class);
         NeoForge.EVENT_BUS.register(MaidBridge.class);
         NeoForge.EVENT_BUS.register(GuardianPlayerSkills.class);
@@ -37,7 +40,7 @@ public final class GeneratedMod {
         // 原版生命属性会把5000截为1024；两端同步提升数值容许上限。
         var health=(net.minecraft.world.entity.ai.attributes.RangedAttribute)net.minecraft.world.entity.ai.attributes.Attributes.MAX_HEALTH;
         if(health.getMaxValue()<150000){try{double cap=health.getMaxValue();for(var field:net.minecraft.world.entity.ai.attributes.RangedAttribute.class.getDeclaredFields())if(field.getType()==double.class){field.setAccessible(true);if(field.getDouble(health)==cap){field.setDouble(health,1000000);break;}}if(health.getMaxValue()<150000)throw new IllegalStateException("生命属性上限未能提高");}catch(ReflectiveOperationException ex){throw new IllegalStateException("无法启用即身佛5000生命",ex);}}
-        VoidContent.init(net.neoforged.fml.javafmlmod.FMLJavaModLoadingContext.get().getModEventBus());
+        VoidContent.init(GeneratedMod.MOD_BUS);
         NeoForge.EVENT_BUS.register(VoidJourney.class);
         NeoForge.EVENT_BUS.register(GojoEntity.class);
         NeoForge.EVENT_BUS.register(MahoragaEntity.class);
@@ -48,20 +51,20 @@ public final class GeneratedMod {
         NeoForge.EVENT_BUS.register(BossTargets.class);
         NeoForge.EVENT_BUS.register(BossControl.class);
         NeoForge.EVENT_BUS.register(IwateWaterRepair.class);
-        SoulContent.init(net.neoforged.fml.javafmlmod.FMLJavaModLoadingContext.get().getModEventBus());
-        ShadowContent.init(net.neoforged.fml.javafmlmod.FMLJavaModLoadingContext.get().getModEventBus());
+        SoulContent.init(GeneratedMod.MOD_BUS);
+        ShadowContent.init(GeneratedMod.MOD_BUS);
         PrisonContent.init();
         NeoForge.EVENT_BUS.register(SoulJourney.class);
         NeoForge.EVENT_BUS.register(RuinAtmosphere.class);
         NeoForge.EVENT_BUS.register(SoulCombat.class);
-        ModTab.init(net.neoforged.fml.javafmlmod.FMLJavaModLoadingContext.get().getModEventBus());
+        ModTab.init(GeneratedMod.MOD_BUS);
         var armor=(net.minecraft.world.entity.ai.attributes.RangedAttribute)net.minecraft.world.entity.ai.attributes.Attributes.ARMOR;
         try{double cap=armor.getMaxValue();for(var field:net.minecraft.world.entity.ai.attributes.RangedAttribute.class.getDeclaredFields())if(field.getType()==double.class){field.setAccessible(true);if(field.getDouble(armor)==cap){field.setDouble(armor,1000000);break;}}}catch(ReflectiveOperationException ex){throw new IllegalStateException("无法启用净土守护者防御属性",ex);}
-        ExpeditionContent.init(net.neoforged.fml.javafmlmod.FMLJavaModLoadingContext.get().getModEventBus());
-        character.mahito.MahitoContent.init(net.neoforged.fml.javafmlmod.FMLJavaModLoadingContext.get().getModEventBus());
+        ExpeditionContent.init(GeneratedMod.MOD_BUS);
+        character.mahito.MahitoContent.init(GeneratedMod.MOD_BUS);
         NeoForge.EVENT_BUS.register(ExpeditionWorldgen.class);
         NeoForge.EVENT_BUS.register(ExpeditionEvents.class);
-        CurseRoster.init(net.neoforged.fml.javafmlmod.FMLJavaModLoadingContext.get().getModEventBus());
+        CurseRoster.init(GeneratedMod.MOD_BUS);
         NeoForge.EVENT_BUS.register(CurseHostility.class);
         NeoForge.EVENT_BUS.register(CurseSpawning.class);
         NeoForge.EVENT_BUS.register(HyakkiArena.class);
@@ -69,11 +72,11 @@ public final class GeneratedMod {
         NeoForge.EVENT_BUS.register(SoulEchoes.class);
         NeoForge.EVENT_BUS.register(ExpeditionProgress.class);
         NeoForge.EVENT_BUS.register(ExpeditionCommands.class);
-        ProgressionContent.init(net.neoforged.fml.javafmlmod.FMLJavaModLoadingContext.get().getModEventBus());
+        ProgressionContent.init(GeneratedMod.MOD_BUS);
         net.neoforged.neoforge.common.NeoForge.EVENT_BUS.register(Journey.class);
         Authority.init();
-        Content.init(net.neoforged.fml.javafmlmod.FMLJavaModLoadingContext.get().getModEventBus());
-        SkillSounds.init(net.neoforged.fml.javafmlmod.FMLJavaModLoadingContext.get().getModEventBus());
+        Content.init(GeneratedMod.MOD_BUS);
+        SkillSounds.init(GeneratedMod.MOD_BUS);
         Network.init();
         character.CharacterPackets.register();
         // 乙骨忧太：两格轮盘的服务端效果（只登记一次，重复登记会抛异常）。

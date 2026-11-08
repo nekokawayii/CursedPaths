@@ -16,7 +16,7 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
 
-import net.neoforged.neoforge.event.entity.living.LivingDamageEvent;
+import net.neoforged.neoforge.event.entity.living.LivingIncomingDamageEvent;
 import net.neoforged.bus.api.SubscribeEvent;
 import java.util.*;
 import net.neoforged.neoforge.event.tick.ServerTickEvent;
@@ -128,7 +128,7 @@ public final class JogoCombat {
     private static final Map<UUID,Long> BEAM_EXPIRE=new HashMap<>();
     private static final Map<UUID,Long> PILLAR_STAMP=new HashMap<>();
     /** 盖棺铁围山：界内敌人只要受伤，脚下就窜出一根火柱（同一目标 8 刻内不重复）。 */
-    @SubscribeEvent public static void domainPillar(LivingDamageEvent e) {
+    @SubscribeEvent public static void domainPillar(LivingIncomingDamageEvent e) {
         LivingEntity victim=e.getEntity();
         if(DOMAINS.isEmpty())return;
         ServerLevel level=null;ServerPlayer owner=null;
@@ -147,7 +147,7 @@ public final class JogoCombat {
     }
 
     /** 被动「火焰附着」：漏壶造成的伤害附带火焰；隐身后的第一击额外 50% 暴击伤害。 */
-    @SubscribeEvent public static void jogoDamage(LivingDamageEvent e) {
+    @SubscribeEvent public static void jogoDamage(LivingIncomingDamageEvent e) {
         ServerPlayer caster=CombatSettings.caster(e.getSource());if(caster==null)return;
         var target=e.getEntity();if(target==caster)return;
         var d=CharacterService.selected(caster);if(d==null||!d.id().equals("jogo"))return;
@@ -489,7 +489,7 @@ public final class JogoCombat {
     }
 
     // ---------------------------------------------------------------- 被动：免疫火焰与岩浆；第一章泡岩浆
-    @SubscribeEvent public static void immune(LivingDamageEvent e) {
+    @SubscribeEvent public static void immune(LivingIncomingDamageEvent e) {
         if(!(e.getEntity() instanceof ServerPlayer p))return;
         var d=CharacterService.selected(p);if(d==null||!d.id().equals("jogo"))return;
         var source=e.getSource();

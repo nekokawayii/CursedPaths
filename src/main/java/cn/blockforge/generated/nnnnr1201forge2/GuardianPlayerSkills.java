@@ -184,7 +184,7 @@ public final class GuardianPlayerSkills {
         if(melee&&s.v("MeleeImmune")>0){event.setCanceled(true);if(source.getEntity() instanceof LivingEntity attacker)attacker.knockback(1,p.getX()-attacker.getX(),p.getZ()-attacker.getZ());}
         else if(source.is(DamageTypeTags.IS_PROJECTILE)||source.getEntity()!=null&&p.distanceToSqr(source.getEntity())>s.v("Reach")*s.v("Reach"))event.setAmount(event.getAmount()*(float)Math.max(0,1-s.v("RangedReduction")/100));
     }
-    @SubscribeEvent public static void interrupt(LivingDamageEvent event){if(event.getAmount()<=0||!(event.getEntity() instanceof ServerPlayer p))return;State s=states.get(p.getUUID());if(s!=null&&s.casting==7&&(event.getSource().is(DamageTypeTags.IS_PROJECTILE)||event.getSource().getEntity()!=null&&p.distanceToSqr(event.getSource().getEntity())>s.v("Reach")*s.v("Reach"))){s.casting=-1;s.stunUntil=p.level().getGameTime()+s.ticks("HealStun");p.displayClientMessage(Component.literal("反转术式被远程攻击打断"),true);}}
+    @SubscribeEvent public static void interrupt(LivingIncomingDamageEvent event){if(event.getAmount()<=0||!(event.getEntity() instanceof ServerPlayer p))return;State s=states.get(p.getUUID());if(s!=null&&s.casting==7&&(event.getSource().is(DamageTypeTags.IS_PROJECTILE)||event.getSource().getEntity()!=null&&p.distanceToSqr(event.getSource().getEntity())>s.v("Reach")*s.v("Reach"))){s.casting=-1;s.stunUntil=p.level().getGameTime()+s.ticks("HealStun");p.displayClientMessage(Component.literal("反转术式被远程攻击打断"),true);}}
     @SubscribeEvent public static void stop(ServerStoppedEvent event){for(State s:states.values())cleanup(s);states.clear();delayed.clear();blood.clear();poisons.clear();grids.clear();}
     private GuardianPlayerSkills(){}
 }

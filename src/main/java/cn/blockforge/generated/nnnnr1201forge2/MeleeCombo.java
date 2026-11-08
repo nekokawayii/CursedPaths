@@ -4,7 +4,7 @@ import java.util.*;
 import java.util.function.Consumer;
 import net.minecraft.server.level.ServerPlayer;
 
-import net.neoforged.neoforge.event.entity.living.LivingDamageEvent;
+import net.neoforged.neoforge.event.entity.living.LivingIncomingDamageEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerEvent;
 import net.neoforged.neoforge.event.server.ServerStoppedEvent;
 import net.neoforged.bus.api.*;
@@ -60,7 +60,7 @@ public final class MeleeCombo {
             if(chain.level!=p.level()||!allowed(p)||chain.sequence.expired(p.level().getGameTime()))cancel(p);
         }
     }
-    @SubscribeEvent(priority=EventPriority.LOWEST) public static void hurt(LivingDamageEvent e){if(e.getAmount()>0&&e.getEntity() instanceof ServerPlayer p)cancel(p);}
+    @SubscribeEvent(priority=EventPriority.LOWEST) public static void hurt(LivingIncomingDamageEvent e){if(e.getAmount()>0&&e.getEntity() instanceof ServerPlayer p)cancel(p);}
     @SubscribeEvent public static void logout(PlayerEvent.PlayerLoggedOutEvent e){if(e.getEntity() instanceof ServerPlayer p)cancel(p);}
     @SubscribeEvent public static void dimension(PlayerEvent.PlayerChangedDimensionEvent e){if(e.getEntity() instanceof ServerPlayer p)cancel(p);}
     @SubscribeEvent public static void stop(ServerStoppedEvent e){chains.clear();}

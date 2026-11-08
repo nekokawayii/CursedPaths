@@ -142,7 +142,7 @@ public final class ShadowSystem {
         LivingEntity current=e.getTarget();if(e.validTarget(current)&&e.distanceToSqr(current)<64*64)return current;
         return nearby.stream().filter(x->x instanceof Enemy).min(Comparator.comparingDouble(e::distanceToSqr)).orElse(null);
     }
-    @SubscribeEvent public static void inheritAttack(net.neoforged.neoforge.event.entity.living.LivingDamageEvent event){
+    @SubscribeEvent public static void inheritAttack(net.neoforged.neoforge.event.entity.living.LivingIncomingDamageEvent event){
         ServerPlayer p=CombatSettings.caster(event.getSource());
         if(event.getAmount()>0&&p!=null&&TenShadows.canUse(p)&&!friendly(p,event.getEntity()))p.setLastHurtMob(event.getEntity());
     }

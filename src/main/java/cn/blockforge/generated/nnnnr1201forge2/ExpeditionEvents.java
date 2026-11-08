@@ -106,7 +106,7 @@ public final class ExpeditionEvents {
             }
         }finally{AttackTypes.consume();}
     }
-    @SubscribeEvent(priority=EventPriority.LOWEST) public static void damage(LivingDamageEvent e){
+    @SubscribeEvent(priority=EventPriority.LOWEST) public static void damage(LivingIncomingDamageEvent e){
         if(e.getEntity() instanceof ServerPlayer p){
             if(e.getAmount()>=p.getHealth()&&discActive(p)){e.setAmount(0);p.getPersistentData().remove("ExpeditionDiscUntil");p.sendSystemMessage(Component.literal("简易领域阵盘破碎，抵挡了这次致命伤害。"));return;}
             if(e.getAmount()>=p.getMaxHealth()*.25f){for(BlockPos pos:BlockPos.betweenClosed(p.blockPosition().offset(-6,-3,-6),p.blockPosition().offset(6,3,6))){if(!p.level().hasChunkAt(pos))continue;if(p.level().getBlockEntity(pos) instanceof RitualBlockEntity be&&be.running()&&p.getUUID().equals(be.owner)&&!be.internalDamage)be.fail("施术者受到高额伤害");}}

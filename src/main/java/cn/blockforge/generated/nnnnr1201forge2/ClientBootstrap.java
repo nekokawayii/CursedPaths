@@ -3,7 +3,7 @@ package cn.blockforge.generated.nnnnr1201forge2;
 import com.mojang.logging.LogUtils;
 import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.bus.api.EventPriority;
-import net.neoforged.fml.javafmlmod.FMLJavaModLoadingContext;
+
 
 /** 由模组构造器在客户端显式调用，不依赖自动扫描来接入关键渲染事件。 */
 public final class ClientBootstrap {
@@ -13,7 +13,7 @@ public final class ClientBootstrap {
         if(installed)return;
         installed=true;
         character.CharacterClient.install();
-        var modBus=FMLJavaModLoadingContext.get().getModEventBus();
+        var modBus=GeneratedMod.MOD_BUS;
         modBus.register(Client.Registration.class);
         modBus.register(TenShadowsClient.Registration.class);
         modBus.addListener(DismantleMotionClient.Registration::layers);

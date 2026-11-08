@@ -96,7 +96,7 @@ public final class CombatSettings {
             SlashImpact.after(owner,target,attackType,before,true);
         }return accepted;}finally{AttackTypes.consume();if(previousOwner==null)spellOwners.remove(source);else spellOwners.put(source,previousOwner);}
     }
-    /** 同队禁伤会早于LivingDamageEvent返回，只为明确标敌的咒术近战补上入口。 */
+    /** 同队禁伤会早于LivingIncomingDamageEvent返回，只为明确标敌的咒术近战补上入口。 */
     @SubscribeEvent(priority=net.neoforged.bus.api.EventPriority.LOWEST)
     public static void enemyMelee(net.neoforged.neoforge.event.entity.player.AttackEntityEvent event){
         if(!(event.getEntity() instanceof ServerPlayer p)||MaidBridge.isCaster(p)||!(event.getTarget() instanceof Player target))return;

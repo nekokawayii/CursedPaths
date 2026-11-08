@@ -47,7 +47,7 @@ public final class BossTargets {
     public static List<LivingEntity> around(Mob boss,Vec3 center,double radius,boolean domain){return boss.level().getEntitiesOfClass(LivingEntity.class,new AABB(center,center).inflate(radius),e->(domain?valid(boss,e):hostile(boss,e))&&e.position().distanceToSqr(center)<=radius*radius);}
     public static void move(LivingEntity target,Vec3 point){if(target instanceof net.minecraft.server.level.ServerPlayer p)target=MaidBridge.body(p);target.teleportTo(point.x,point.y,point.z);}
     // 只在最终伤害未被取消时建立仇恨，避免免伤/挚爱保护也激怒首领。
-    @SubscribeEvent(priority=EventPriority.LOWEST) public static void retaliate(LivingDamageEvent event){
+    @SubscribeEvent(priority=EventPriority.LOWEST) public static void retaliate(LivingIncomingDamageEvent event){
         if(event.getAmount()<=0||event.getEntity().level().isClientSide||!(event.getEntity() instanceof Mob boss)||!managed(boss)||boss instanceof GuardianEntity g&&g.friendly()||boss instanceof YujiEntity y&&y.familyMember())return;
         if(event.getSource().getEntity() instanceof LivingEntity source){LivingEntity attacker=source instanceof ServerPlayer p?MaidBridge.body(p):source;if(valid(boss,attacker)){boss.setLastHurtByMob(attacker);boss.setTarget(attacker);}}
     }

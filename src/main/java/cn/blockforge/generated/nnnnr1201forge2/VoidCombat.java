@@ -32,7 +32,7 @@ public final class VoidCombat {
     private static net.minecraft.world.damagesource.DamageSource fixedSource;
     private static float fixedAmount;
     @SubscribeEvent(priority=net.neoforged.bus.api.EventPriority.LOWEST)
-    public static void exactDamage(LivingDamageEvent e){if(e.getEntity()==fixedTarget&&(e.getSource()==fixedSource||fixedSource!=null&&CombatSettings.caster(e.getSource())==fixedSource.getEntity()))e.setAmount(fixedAmount);}
+    public static void exactDamage(LivingIncomingDamageEvent e){if(e.getEntity()==fixedTarget&&(e.getSource()==fixedSource||fixedSource!=null&&CombatSettings.caster(e.getSource())==fixedSource.getEntity()))e.setAmount(fixedAmount);}
     private record ContactHit(ServerPlayer owner,LivingEntity target){}
     private static final List<ContactHit> contacts=new ArrayList<>();
     private static boolean valid(Wound w){return w.owner.isAlive()&&!w.owner.isRemoved()&&w.owner.level()==w.level&&w.target.level()==w.level&&!w.target.isRemoved()&&CombatSettings.canHit(w.owner,w.target);}
@@ -212,7 +212,7 @@ public final class VoidCombat {
             scaledDamage(p,t,amount/2,false,false,fraction);
         }
     }
-    @SubscribeEvent public static void melee(LivingDamageEvent e){
+    @SubscribeEvent public static void melee(LivingIncomingDamageEvent e){
         ServerPlayer p=CombatSettings.caster(e.getSource());if(dealing||e.getAmount()<=0||p==null||!VoidJourney.evolved(p)||!Curse.data(p).getBoolean("Fist")||!(e.getSource().is(DamageTypes.PLAYER_ATTACK)||(MaidBridge.isCaster(p)||p instanceof NpcBridge.NpcActor)&&e.getSource().is(DamageTypes.MOB_ATTACK))||SoulCombat.suppressed(p)||!Curse.canUseTechnique(p))return;
         if(p.distanceToSqr(e.getEntity())>16||!CombatSettings.canHit(p,e.getEntity()))return;
         long now=p.level().getGameTime();if(now<p.getPersistentData().getLong("VoidContactCooldown")||!Curse.spend(p,30))return;

@@ -158,7 +158,7 @@ public final class Content {
     public static final DeferredHolder<Item, Item> SLAUGHTER_DEMON=ITEMS.register("slaughter_demon",()->new net.minecraft.world.item.SwordItem(
             net.minecraft.world.item.Tiers.IRON,2,-2.4f,new Item.Properties().stacksTo(1).rarity(Rarity.RARE)));
     /** 屠坐魔：手持此剑攻击亡灵时伤害翻倍。 */
-    @net.neoforged.bus.api.SubscribeEvent public static void slaughterDemonUndead(net.neoforged.neoforge.event.entity.living.LivingDamageEvent e){
+    @net.neoforged.bus.api.SubscribeEvent public static void slaughterDemonUndead(net.neoforged.neoforge.event.entity.living.LivingIncomingDamageEvent e){
         if(!(e.getSource().getEntity() instanceof net.minecraft.server.level.ServerPlayer p))return;
         if(!(p.getMainHandItem().is(SLAUGHTER_DEMON.get())))return;
         if(e.getEntity().getMobType()!=net.minecraft.world.entity.MobType.UNDEAD)return;

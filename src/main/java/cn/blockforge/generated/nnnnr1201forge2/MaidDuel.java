@@ -42,7 +42,7 @@ public final class MaidDuel {
         for(net.minecraft.server.level.ServerLevel level:p.server.getAllLevels())for(net.minecraft.world.entity.Entity entity:level.getAllEntities())
             if(entity instanceof EntityMaid maid&&p.getUUID().equals(maid.getOwnerUUID())&&duel(maid))finishDuel(maid,p,false);
     }
-    @SubscribeEvent(priority=EventPriority.LOWEST) public static void duelDamage(LivingDamageEvent event){
+    @SubscribeEvent(priority=EventPriority.LOWEST) public static void duelDamage(LivingIncomingDamageEvent event){
         if(event.getEntity().level().isClientSide||!(event.getEntity() instanceof EntityMaid maid)||event.getAmount()<=0)return;
         if(EternalLove.settling(maid)){event.setCanceled(true);return;}
         // 扣除护甲和吸收生命后，再判断是否会跌至一血。

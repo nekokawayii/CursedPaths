@@ -118,7 +118,7 @@ public final class HigurumaCombat {
         if (main.getTag().contains(GavelItem.SEAL_DAMAGE)) e.setAmount(main.getTag().getFloat(GavelItem.SEAL_DAMAGE));
     }
 
-    @SubscribeEvent public static void executed(net.neoforged.neoforge.event.entity.living.LivingDamageEvent e){
+    @SubscribeEvent public static void executed(net.neoforged.neoforge.event.entity.living.LivingIncomingDamageEvent e){
         var p=cn.blockforge.generated.nnnnr1201forge2.CombatSettings.caster(e.getSource());
         if(p instanceof cn.blockforge.generated.nnnnr1201forge2.NpcBridge.NpcActor&&e.getAmount()>0&&e.getSource().getDirectEntity()==cn.blockforge.generated.nnnnr1201forge2.MaidBridge.body(p)&&p.getMainHandItem().is(cn.blockforge.generated.nnnnr1201forge2.Content.EXECUTIONER_SWORD.get()))p.getMainHandItem().shrink(1);
     }

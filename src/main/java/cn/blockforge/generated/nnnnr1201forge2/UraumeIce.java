@@ -111,7 +111,7 @@ public final class UraumeIce {
 
     /** 被冻成冰雕的目标，如果这段时间内被重击（≥20 伤害）就直接碎掉（普通生物即死，Boss 额外高伤）。 */
     @SubscribeEvent
-    public static void statueShatter(net.neoforged.neoforge.event.entity.living.LivingDamageEvent e) {
+    public static void statueShatter(net.neoforged.neoforge.event.entity.living.LivingIncomingDamageEvent e) {
         LivingEntity victim = e.getEntity();
         if (victim.level().isClientSide || !victim.getPersistentData().getBoolean("IceStatue")) return;
         if (e.getAmount() < 20f) return;

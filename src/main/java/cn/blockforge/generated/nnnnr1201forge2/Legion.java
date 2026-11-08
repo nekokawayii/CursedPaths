@@ -141,7 +141,7 @@ public final class Legion {
         // 原生技能同样从军团池扣费，普通近战不另外扣费。
         if(source instanceof LivingEntity mob&&member(mob)&&!CombatSettings.scripted(e.getSource())&&p!=null&&!e.getSource().is(net.minecraft.world.damagesource.DamageTypes.MOB_ATTACK)){long now=p.level().getGameTime();if(mob.getPersistentData().getLong("AuthorityNativePaid")!=now){if(!Curse.spend(p,10))e.setCanceled(true);else mob.getPersistentData().putLong("AuthorityNativePaid",now);}}
     }
-    @SubscribeEvent(priority=EventPriority.LOWEST) public static void damaged(LivingDamageEvent e){if(member(e.getEntity())&&!e.isCanceled()&&e.getAmount()>0&&e.getEntity() instanceof Mob mob){ServerPlayer p=owner(mob);if(p!=null&&p.isAlive()&&p.level()==mob.level()){Vec3 at=landing(p,mob);mob.teleportTo(at.x,at.y,at.z);mob.fallDistance=0;mob.getNavigation().stop();}else mob.getPersistentData().putBoolean("AuthorityRecall",true);}}
+    @SubscribeEvent(priority=EventPriority.LOWEST) public static void damaged(LivingIncomingDamageEvent e){if(member(e.getEntity())&&!e.isCanceled()&&e.getAmount()>0&&e.getEntity() instanceof Mob mob){ServerPlayer p=owner(mob);if(p!=null&&p.isAlive()&&p.level()==mob.level()){Vec3 at=landing(p,mob);mob.teleportTo(at.x,at.y,at.z);mob.fallDistance=0;mob.getNavigation().stop();}else mob.getPersistentData().putBoolean("AuthorityRecall",true);}}
     @SubscribeEvent public static void joined(EntityJoinLevelEvent e){
         if(!(e.getLevel() instanceof ServerLevel level)||!member(e.getEntity())||!(e.getEntity() instanceof Mob mob))return;
         var army=LegionStore.get(level.getServer()).army(ownerId(mob));

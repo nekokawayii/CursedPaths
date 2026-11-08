@@ -92,7 +92,7 @@ public final class Curse {
         if(event.getSource().is(net.minecraft.world.damagesource.DamageTypes.PLAYER_ATTACK)||event.getSource().is(net.minecraft.world.damagesource.DamageTypes.MOB_ATTACK))factor*=residueFactor(p);
         event.setAmount((float)(event.getAmount()*factor));
     }
-    @SubscribeEvent(priority=net.neoforged.bus.api.EventPriority.LOWEST) public static void repairedDamage(net.neoforged.neoforge.event.entity.living.LivingDamageEvent event){ServerPlayer p=CombatSettings.caster(event.getSource());if(p!=null&&repaired(p)&&!DeathStar.source(event.getSource()))event.setAmount(event.getAmount()*1.1f);}
+    @SubscribeEvent(priority=net.neoforged.bus.api.EventPriority.LOWEST) public static void repairedDamage(net.neoforged.neoforge.event.entity.living.LivingIncomingDamageEvent event){ServerPlayer p=CombatSettings.caster(event.getSource());if(p!=null&&repaired(p)&&!DeathStar.source(event.getSource()))event.setAmount(event.getAmount()*1.1f);}
     public static void permanentSoulFire(ServerPlayer p,net.minecraft.world.entity.LivingEntity target){
         target.igniteForSeconds(8);var tag=target.getPersistentData();tag.putBoolean("SukunaSoulFire",true);tag.putUUID("SukunaSoulFireOwner",p.getUUID());tag.putBoolean("SukunaSoulFireMaid",MaidBridge.isCaster(p));tag.putBoolean("SukunaNoHeal",true);
     }

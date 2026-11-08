@@ -93,7 +93,7 @@ public final class Journey {
         else positions.remove(p.getUUID());
         if(i==7&&p.tickCount%20==0&&!Curse.active(p,"Combat")&&p.level().getEntitiesOfClass(Monster.class,p.getBoundingBox().inflate(32),LivingEntity::isAlive).isEmpty())add(p,7,20);
     }
-    @SubscribeEvent(priority=EventPriority.LOWEST) public static void damage(LivingDamageEvent e){if(e.getAmount()<=0||e.isCanceled())return;
+    @SubscribeEvent(priority=EventPriority.LOWEST) public static void damage(LivingIncomingDamageEvent e){if(e.getAmount()<=0||e.isCanceled())return;
         ServerPlayer attacker=CombatSettings.caster(e.getSource());if(attacker!=null&&e.getEntity()!=MaidBridge.body(attacker))Curse.status(attacker,"Combat",200);
         ServerPlayer p=MaidBridge.progression(e.getEntity());if(p==null)return;
         float actual=Math.min(p.getHealth(),e.getAmount());

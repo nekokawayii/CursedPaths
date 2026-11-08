@@ -285,7 +285,7 @@ public final class BloodArts {
         float taken=Math.min(s.shield,event.getAmount());s.shield-=taken;event.setAmount(event.getAmount()-taken);if(s.shield<=0){fx(p,FX_SHATTER,p.position().add(0,1,0),Vec3.ZERO,3,25,0);for(LivingEntity t:near(p,p.position(),5+rank(p)))hit(p,t,18,1,false);BloodExpansion.novaEchoes(p,p.position().add(0,1,0),false);}
     }
     @SubscribeEvent public static void knockback(LivingKnockBackEvent event){State s=states.get(event.getEntity().getUUID());if(s!=null&&s.shield>0&&s.shieldEnd>s.level.getGameTime())event.setCanceled(true);}
-    @SubscribeEvent public static void blade(LivingDamageEvent event){
+    @SubscribeEvent public static void blade(LivingIncomingDamageEvent event){
         if(bloodDamage||event.getAmount()<=0)return;ServerPlayer p=CombatSettings.caster(event.getSource());if(p==null)return;State s=states.get(p.getUUID());long now=p.level().getGameTime();if(s==null||s.blade<=now||s.lastBlade==now||!CombatSafety.canAffect(p,event.getEntity()))return;
         String type=AttackTypes.peek();boolean slash=AttackTypes.DISMANTLE.equals(type)||AttackTypes.CLEAVE.equals(type)||event.getSource().is(DamageTypes.PLAYER_ATTACK)||event.getSource().is(DamageTypes.MOB_ATTACK);if(!slash)return;
         s.lastBlade=now;for(int i=0;i<=rank(p)&&follows.size()<512;i++)follows.add(new Follow(p,p.serverLevel(),event.getEntity().getUUID(),now+1+i*3));fx(p,FX+5,event.getEntity().getBoundingBox().getCenter(),p.getLookAngle(),2,12,1);

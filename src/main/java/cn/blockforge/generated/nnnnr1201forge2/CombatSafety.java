@@ -12,7 +12,7 @@ import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.event.entity.living.LivingIncomingDamageEvent;
 import net.neoforged.neoforge.event.entity.living.LivingIncomingDamageEvent;
-import net.neoforged.neoforge.event.entity.living.LivingDamageEvent;
+import net.neoforged.neoforge.event.entity.living.LivingIncomingDamageEvent;
 import net.neoforged.neoforge.event.entity.player.AttackEntityEvent;
 import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.SubscribeEvent;
@@ -91,7 +91,7 @@ public final class CombatSafety {
     @SubscribeEvent(priority=EventPriority.HIGHEST)
     public static void hurt(LivingIncomingDamageEvent event){if(denied(event.getEntity(),event.getSource()))event.setCanceled(true);}
     @SubscribeEvent(priority=EventPriority.HIGHEST)
-    public static void damage(LivingDamageEvent event){if(denied(event.getEntity(),event.getSource()))event.setCanceled(true);}
+    public static void damage(LivingIncomingDamageEvent event){if(denied(event.getEntity(),event.getSource()))event.setCanceled(true);}
     @SubscribeEvent(priority=EventPriority.HIGHEST)
     public static void melee(AttackEntityEvent event){if(event.getEntity() instanceof ServerPlayer p&&event.getTarget() instanceof LivingEntity target&&(DeathStar.charging(p)||!canAffect(p,target)))event.setCanceled(true);}
     private CombatSafety(){}
