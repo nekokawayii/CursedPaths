@@ -76,11 +76,11 @@ public final class WallpaperSlash {
         var window=WallpaperClient.window();var desktop=WallpaperClient.desktop();
         double ox=(window.x()-desktop.x())/desktop.width(),oy=(window.y()-desktop.y())/desktop.height(),sx=window.width()/desktop.width(),sy=window.height()/desktop.height();
         org.joml.Matrix4f projection=new org.joml.Matrix4f(RenderSystem.getProjectionMatrix());var sorting=RenderSystem.getVertexSorting();
-        var modelView=RenderSystem.getModelViewStack();org.joml.Matrix4f transform=new org.joml.Matrix4f(projection).mul(RenderSystem.getModelViewMatrix()).mul(ps.last().pose());
+        var modelView=new com.mojang.blaze3d.vertex.PoseStack();org.joml.Matrix4f transform=new org.joml.Matrix4f(projection).mul(RenderSystem.getModelViewMatrix()).mul(ps.last().pose());
         int texture=RenderSystem.getShaderTexture(0);float[] color=RenderSystem.getShaderColor().clone();
         Map<UUID,List<Cut>> byOwner=new LinkedHashMap<>();for(Cut c:pending)byOwner.computeIfAbsent(c.owner,k->new ArrayList<>()).add(c);
         modelView.pushPose();try{
-            modelView.setIdentity();RenderSystem.applyModelViewMatrix();RenderSystem.setProjectionMatrix(new org.joml.Matrix4f(),sorting);RenderSystem.setShaderColor(1,1,1,1);RenderSystem.enableBlend();RenderSystem.defaultBlendFunc();RenderSystem.disableCull();
+            modelView.last().pose().identity();RenderSystem.setProjectionMatrix(new org.joml.Matrix4f(),sorting);RenderSystem.setShaderColor(1,1,1,1);RenderSystem.enableBlend();RenderSystem.defaultBlendFunc();RenderSystem.disableCull();
             for(var entry:byOwner.entrySet()){
                 ResourceLocation image=WallpaperClient.texture(entry.getKey());if(image==null)continue;
                 boolean dedicated=shader!=null;
@@ -94,7 +94,7 @@ public final class WallpaperSlash {
                 }
                 BufferUploader.drawWithShader(b.buildOrThrow());
             }
-        }finally{pending.clear();modelView.popPose();RenderSystem.applyModelViewMatrix();RenderSystem.setProjectionMatrix(projection,sorting);RenderSystem.setShaderTexture(0,texture);RenderSystem.setShaderColor(color[0],color[1],color[2],color[3]);RenderSystem.setShader(GameRenderer::getPositionColorShader);}
+        }finally{pending.clear();modelView.popPose();RenderSystem.setProjectionMatrix(projection,sorting);RenderSystem.setShaderTexture(0,texture);RenderSystem.setShaderColor(color[0],color[1],color[2],color[3]);RenderSystem.setShader(GameRenderer::getPositionColorShader);}
     }
     private static WallpaperProjection.Point project(org.joml.Matrix4f matrix,Vec3 p){var v=new org.joml.Vector4f((float)p.x,(float)p.y,(float)p.z,1).mul(matrix);return new WallpaperProjection.Point(v.x,v.y,v.z,v.w);}
     private static void screenVertex(BufferBuilder b,WallpaperProjection.Point p,float alpha,double ox,double oy,double sx,double sy){double x=p.x()/p.w(),y=p.y()/p.w(),z=p.z()/p.w();double[] uv=WallpaperProjection.setUv(x,y,ox,oy,sx,sy);b.addVertex(x,y,z-.000001);if(shader==null)b.setUv((float)uv[0],(float)uv[1]);b.setColor(1f,1f,1f,alpha);}
