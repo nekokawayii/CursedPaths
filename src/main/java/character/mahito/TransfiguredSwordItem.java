@@ -13,7 +13,7 @@ import net.minecraft.world.item.Tier;
  */
 public class TransfiguredSwordItem extends SwordItem {
     public TransfiguredSwordItem(Tier tier, int damage, float speed, Properties properties) {
-        super(tier, damage, speed, properties);
+        super(tier, properties.attributes(SwordItem.createAttributes(tier, damage, speed)));
     }
 
     @Override public boolean hurtEnemy(ItemStack stack, LivingEntity target, LivingEntity attacker) {

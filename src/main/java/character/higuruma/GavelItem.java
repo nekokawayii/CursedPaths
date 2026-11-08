@@ -19,7 +19,7 @@ public class GavelItem extends SwordItem {
     public static final String SEAL_DAMAGE = "GavelDamage";
     public static final String SEAL_SPEED = "GavelSpeed";
 
-    public GavelItem(Properties properties) { super(Tiers.NETHERITE, 4, -2.4f, properties); }
+    public GavelItem(Properties properties) { super(Tiers.NETHERITE, properties.attributes(SwordItem.createAttributes(Tiers.NETHERITE, 4, -2.4f))); }
 
     @Override public boolean onDroppedByPlayer(ItemStack item, Player player) { return false; }
     @Override public boolean isDamageable(ItemStack stack) { return false; }

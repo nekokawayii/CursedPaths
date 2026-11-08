@@ -13,7 +13,7 @@ import java.util.List;
 
 /** 处刑人之剑：命中直接把目标生命设为 0（不走伤害事件），耐久 1。 */
 public class ExecutionerSwordItem extends SwordItem {
-    public ExecutionerSwordItem(Properties properties) { super(Tiers.NETHERITE, 0, -2.4f, properties); }
+    public ExecutionerSwordItem(Properties properties) { super(Tiers.NETHERITE, properties.attributes(SwordItem.createAttributes(Tiers.NETHERITE, 0, -2.4f))); }
 
     @Override public boolean hurtEnemy(ItemStack stack, LivingEntity target, LivingEntity attacker) {
         target.setHealth(0f);

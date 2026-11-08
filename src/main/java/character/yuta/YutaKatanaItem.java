@@ -33,7 +33,7 @@ public final class YutaKatanaItem extends SwordItem {
 
     public YutaKatanaItem(Properties properties) {
         // 木剑基底：普通挥砍只贡献极低的物理伤害，真实伤害走下面的魔法结算。
-        super(Tiers.WOOD, 0, -2.2f, properties);
+        super(Tiers.WOOD, properties.attributes(SwordItem.createAttributes(Tiers.WOOD, 0, -2.2f)));
     }
 
     @Override

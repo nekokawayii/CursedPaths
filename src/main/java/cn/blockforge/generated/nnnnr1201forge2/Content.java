@@ -128,7 +128,7 @@ public final class Content {
         ()->EntityType.Builder.of(TodoAnchorEntity::new,MobCategory.MISC).sized(0.25f,0.25f)
             .clientTrackingRange(10).updateInterval(20).build("jujutsu_kaisen_cursed_paths:todo_anchor"));
     /** 咒具·游云：三节棍，伤害 18，右键横扫 10 格。 */
-    public static final DeferredHolder<Item, Item> YUYUN=ITEMS.register("yuyun",()->new net.minecraft.world.item.SwordItem(
+    public static final DeferredHolder<Item, Item> YUYUN=ITEMS.register("yuyun",()->new cn.blockforge.generated.nnnnr1201forge2.CompatSwordItem(
             net.minecraft.world.item.Tiers.IRON,15,-2.4f,new Item.Properties().stacksTo(1).rarity(Rarity.RARE)){
         @Override public InteractionResultHolder<ItemStack> use(Level level,Player player,InteractionHand hand){
             ItemStack stack=player.getItemInHand(hand);
@@ -155,7 +155,7 @@ public final class Content {
     }
 
     /** 剑「屠坐魔」：基础伤害 5，对亡灵造成双倍伤害。 */
-    public static final DeferredHolder<Item, Item> SLAUGHTER_DEMON=ITEMS.register("slaughter_demon",()->new net.minecraft.world.item.SwordItem(
+    public static final DeferredHolder<Item, Item> SLAUGHTER_DEMON=ITEMS.register("slaughter_demon",()->new cn.blockforge.generated.nnnnr1201forge2.CompatSwordItem(
             net.minecraft.world.item.Tiers.IRON,2,-2.4f,new Item.Properties().stacksTo(1).rarity(Rarity.RARE)));
     /** 屠坐魔：手持此剑攻击亡灵时伤害翻倍。 */
     @net.neoforged.bus.api.SubscribeEvent public static void slaughterDemonUndead(net.neoforged.neoforge.event.entity.living.LivingIncomingDamageEvent e){
@@ -165,7 +165,7 @@ public final class Content {
         e.setAmount(e.getAmount()*2f);
     }
     /** 咒具第一条分支：黑绳。左键甩出，抽打 10 格内正前方的敌人。 */
-    public static final DeferredHolder<Item, Item> BLACK_ROPE=ITEMS.register("black_rope",()->new net.minecraft.world.item.SwordItem(
+    public static final DeferredHolder<Item, Item> BLACK_ROPE=ITEMS.register("black_rope",()->new cn.blockforge.generated.nnnnr1201forge2.CompatSwordItem(
             net.minecraft.world.item.Tiers.NETHERITE,5,-2.4f,new Item.Properties().stacksTo(1).rarity(Rarity.EPIC)){
         @Override public InteractionResultHolder<ItemStack> use(Level level,Player player,InteractionHand hand){
             if(!level.isClientSide&&player instanceof ServerPlayer sp)blackRopeSweep(sp);
