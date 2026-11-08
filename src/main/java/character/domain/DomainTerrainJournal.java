@@ -51,7 +51,7 @@ public final class DomainTerrainJournal extends SavedData {
         }
     }
     public int size(){return entries.size();}
-    @Override public CompoundTag save(CompoundTag tag) {
+    @Override public CompoundTag save(CompoundTag tag, net.minecraft.core.HolderLookup.Provider provider) {
         var list=new ListTag();
         for(var e:entries.values()){
             var t=new CompoundTag();t.putUUID("Owner",e.owner);t.putLong("Pos",e.pos.asLong());

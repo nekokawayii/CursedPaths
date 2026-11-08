@@ -14,7 +14,7 @@ public final class MegumiRuins {
     public static final class Found extends SavedData {
         final Map<Long,Long> chests=new HashMap<>();
         static Found load(CompoundTag tag){Found f=new Found();CompoundTag entries=tag.getCompound("Chests");for(String key:entries.getAllKeys())try{f.chests.put(Long.parseLong(key),entries.getLong(key));}catch(NumberFormatException ignored){}return f;}
-        @Override public CompoundTag save(CompoundTag tag){CompoundTag entries=new CompoundTag();chests.forEach((k,v)->entries.putLong(k.toString(),v));tag.put("Chests",entries);return tag;}
+        @Override public CompoundTag save(CompoundTag tag, net.minecraft.core.HolderLookup.Provider provider){CompoundTag entries=new CompoundTag();chests.forEach((k,v)->entries.putLong(k.toString(),v));tag.put("Chests",entries);return tag;}
     }
     public static void visit(ServerPlayer p,BlockPos origin,boolean enter){
         ServerLevel level=p.serverLevel();Found found=level.getDataStorage().computeIfAbsent(new net.minecraft.world.level.saveddata.SavedData.Factory<>(Found::new, (tag, prov)->Found.load(tag)), "sukuna_megumi_ruins");long key=origin.asLong();

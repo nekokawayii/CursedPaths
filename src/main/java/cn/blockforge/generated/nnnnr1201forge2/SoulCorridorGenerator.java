@@ -20,8 +20,8 @@ public final class SoulCorridorGenerator extends FlatLevelSource {
     @Override public int getGenDepth(){return 1536;}
     @Override public int getSpawnHeight(net.minecraft.world.level.LevelHeightAccessor level){return IWATE_Y+2;}
     @Override public int getBaseHeight(int x,int z,Heightmap.Types type,net.minecraft.world.level.LevelHeightAccessor level,RandomState random){return IwateTerrain.surface(x,z)+1;}
-    @Override public CompletableFuture<ChunkAccess> fillFromNoise(Executor executor,Blender blender,RandomState random,StructureManager structures,ChunkAccess chunk){
-        return super.fillFromNoise(executor,blender,random,structures,chunk).thenApply(c->{generate(c,false);return c;});
+    @Override public CompletableFuture<ChunkAccess> fillFromNoise(Blender blender, RandomState random, StructureManager structures, ChunkAccess chunk){
+        return super.fillFromNoise(blender, random, structures, chunk).thenApply(c->{generate(c,false);return c;});
     }
     public static void rebuild(LevelChunk chunk){generate(chunk,true);if(chunk.getLevel() instanceof net.minecraft.server.level.ServerLevel level)IwateStructures.place(level,chunk);chunk.setUnsaved(true);chunk.initializeLightSources();}
     @Override public CompletableFuture<ChunkAccess> createBiomes(Executor executor,RandomState random,Blender blender,StructureManager structures,ChunkAccess chunk){

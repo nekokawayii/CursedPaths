@@ -140,7 +140,7 @@ public final class DomainTerrain extends SavedData {
         }
         return store;
     }
-    @Override public CompoundTag save(CompoundTag tag){
+    @Override public CompoundTag save(CompoundTag tag, net.minecraft.core.HolderLookup.Provider provider){
         var list=new ListTag();
         for(var e:cells.entrySet()){
             var t=new CompoundTag();t.putLong("Pos",e.getKey().asLong());

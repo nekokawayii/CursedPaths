@@ -16,7 +16,7 @@ public final class BossControl extends SavedData {
     private CompoundTag values=new CompoundTag();
     public static BossControl get(MinecraftServer server){return server.overworld().getDataStorage().computeIfAbsent(new net.minecraft.world.level.saveddata.SavedData.Factory<>(BossControl::new, (tag, prov)->BossControl.load(tag)), "sukuna_boss_control");}
     public static BossControl load(CompoundTag tag){BossControl s=new BossControl();s.values=tag.copy();return s;}
-    @Override public CompoundTag save(CompoundTag tag){tag.merge(values);return tag;}
+    @Override public CompoundTag save(CompoundTag tag, net.minecraft.core.HolderLookup.Provider provider){tag.merge(values);return tag;}
     public double value(String key,double fallback){return values.contains(key)?values.getDouble(key):fallback;}
     public void set(MinecraftServer server,String key,double value){values.putDouble(key,value);setDirty();for(ServerLevel level:server.getAllLevels())for(var e:level.getAllEntities())if(e instanceof LivingEntity living)apply(living,key);}
     public static double value(LivingEntity boss,String key,double fallback){return boss.getServer()==null?fallback:get(boss.getServer()).value(key,fallback);}

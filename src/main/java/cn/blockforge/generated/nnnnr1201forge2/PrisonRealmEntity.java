@@ -48,5 +48,5 @@ public final class PrisonRealmEntity extends Entity {
     }
     @Override protected void addAdditionalSaveData(CompoundTag t){if(owner!=null)t.putUUID("Owner",owner);t.putBoolean("Open",open());t.putInt("Frame",frame());}
     @Override protected void readAdditionalSaveData(CompoundTag t){owner=t.hasUUID("Owner")?t.getUUID("Owner"):null;entityData.set(OPEN,t.getBoolean("Open"));entityData.set(FRAME,Math.max(0,Math.min(PrisonRules.OPEN_TICKS,t.getInt("Frame"))));}
-    @Override public Packet<ClientGamePacketListener> getAddEntityPacket(){return NetworkHooks.getEntitySpawningPacket(this);}
+    @Override public Packet<ClientGamePacketListener> getAddEntityPacket(net.minecraft.server.level.ServerEntity entity){return super.getAddEntityPacket(entity);}
 }

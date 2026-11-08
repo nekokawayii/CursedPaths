@@ -11,5 +11,5 @@ public final class LegionStore extends SavedData {
     private LegionStore(CompoundTag tag){armies=tag.getCompound("Armies");}
     public static LegionStore get(MinecraftServer server){return server.overworld().getDataStorage().computeIfAbsent(LegionStore::new,LegionStore::new,"sukuna_authority_legions");}
     public CompoundTag army(java.util.UUID owner){String key=owner.toString();if(!armies.contains(key)){armies.put(key,new CompoundTag());setDirty();}return armies.getCompound(key);}
-    @Override public CompoundTag save(CompoundTag tag){tag.put("Armies",armies);return tag;}
+    @Override public CompoundTag save(CompoundTag tag, net.minecraft.core.HolderLookup.Provider provider){tag.put("Armies",armies);return tag;}
 }

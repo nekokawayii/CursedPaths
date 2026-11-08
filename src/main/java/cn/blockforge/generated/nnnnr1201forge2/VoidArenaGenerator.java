@@ -15,8 +15,8 @@ public final class VoidArenaGenerator extends FlatLevelSource {
     public static final Codec<VoidArenaGenerator> CODEC=FlatLevelGeneratorSettings.CODEC.fieldOf("settings").xmap(VoidArenaGenerator::new,VoidArenaGenerator::settings).codec();
     public VoidArenaGenerator(FlatLevelGeneratorSettings s){super(s);}
     @Override protected Codec<? extends ChunkGenerator> codec(){return CODEC;}
-    @Override public CompletableFuture<ChunkAccess> fillFromNoise(Executor executor,Blender blender,RandomState random,StructureManager structures,ChunkAccess chunk){
-        return super.fillFromNoise(executor,blender,random,structures,chunk).thenApply(c->{
+    @Override public CompletableFuture<ChunkAccess> fillFromNoise(Blender blender, RandomState random, StructureManager structures, ChunkAccess chunk){
+        return super.fillFromNoise(blender, random, structures, chunk).thenApply(c->{
             BlockPos.MutableBlockPos pos=new BlockPos.MutableBlockPos();
             for(int x=c.getPos().getMinBlockX();x<=c.getPos().getMaxBlockX();x++)for(int z=c.getPos().getMinBlockZ();z<=c.getPos().getMaxBlockZ();z++){
                 double r=Math.sqrt(x*x+z*z);if(r>50)continue;

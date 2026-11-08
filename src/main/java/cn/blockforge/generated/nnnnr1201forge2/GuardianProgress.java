@@ -15,7 +15,7 @@ public final class GuardianProgress extends SavedData {
     private CompoundTag victories=new CompoundTag(),profiles=new CompoundTag(),completed=new CompoundTag(),pendingLegacy=new CompoundTag();
     private static GuardianProgress get(MinecraftServer server){return server.overworld().getDataStorage().computeIfAbsent(new net.minecraft.world.level.saveddata.SavedData.Factory<>(GuardianProgress::new, (tag, prov)->GuardianProgress.load(tag)), "sukuna_guardian_progress");}
     public static GuardianProgress load(CompoundTag tag){GuardianProgress state=new GuardianProgress();state.victories=tag.getCompound("Victories").copy();state.profiles=tag.getCompound("Profiles").copy();state.completed=tag.getCompound("CompletedBattles").copy();state.pendingLegacy=tag.getCompound("PendingLegacy").copy();return state;}
-    @Override public CompoundTag save(CompoundTag tag){tag.put("Victories",victories.copy());tag.put("Profiles",profiles.copy());tag.put("CompletedBattles",completed.copy());tag.put("PendingLegacy",pendingLegacy.copy());return tag;}
+    @Override public CompoundTag save(CompoundTag tag, net.minecraft.core.HolderLookup.Provider provider){tag.put("Victories",victories.copy());tag.put("Profiles",profiles.copy());tag.put("CompletedBattles",completed.copy());tag.put("PendingLegacy",pendingLegacy.copy());return tag;}
     private boolean snapshot(ServerPlayer p){
         CompoundTag profile=new CompoundTag();profile.putString("Name",p.getGameProfile().getName());profile.put("Relations",Curse.data(p).getCompound("Relations").copy());
         String id=p.getUUID().toString();boolean changed=!profile.equals(profiles.getCompound(id));

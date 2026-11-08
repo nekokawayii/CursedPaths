@@ -82,8 +82,8 @@ public final class HyakkiCathedralGenerator extends FlatLevelSource {
     @Override public int getBaseHeight(int x,int z,Heightmap.Types type,net.minecraft.world.level.LevelHeightAccessor level,RandomState state){
         for(int y=44;y>=0;y--)if(type.isOpaque().test(block(x,y,z).defaultBlockState()))return FLOOR+y+1;return FLOOR+1;
     }
-    @Override public CompletableFuture<ChunkAccess> fillFromNoise(Executor executor,Blender blender,RandomState random,StructureManager manager,ChunkAccess input){
-        return super.fillFromNoise(executor,blender,random,manager,input).thenApply(chunk->{
+    @Override public CompletableFuture<ChunkAccess> fillFromNoise(Blender blender, RandomState random, StructureManager manager, ChunkAccess input){
+        return super.fillFromNoise(blender, random, manager, input).thenApply(chunk->{
             for(int x=chunk.getPos().getMinBlockX();x<=chunk.getPos().getMaxBlockX();x++)for(int z=chunk.getPos().getMinBlockZ();z<=chunk.getPos().getMaxBlockZ();z++){
                 for(int y=chunk.getMinBuildHeight();y<=FLOOR+44;y++){
                     Block b=y==chunk.getMinBuildHeight()?Blocks.BEDROCK:block(x,y-FLOOR,z);

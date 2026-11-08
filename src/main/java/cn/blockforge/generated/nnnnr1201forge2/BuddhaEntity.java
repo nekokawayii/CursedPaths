@@ -132,7 +132,7 @@ public class BuddhaEntity extends Monster {
         if(hit&&reflect&&source.getEntity() instanceof LivingEntity p){p.hurt(damageSources().sonicBoom(this),BalanceRules.damage(amount*(revealed?0.85f:phase()==2?0.45f:0.3f),BalanceRules.Category.BOSS_ATTACK));effect(42,p.getEyePosition(),Vec3.ZERO,amount*(revealed?0.85f:phase()==2?0.45f:0.3f),12,p.getId());sound(SoundEvents.AMETHYST_BLOCK_HIT,1.8f);}
         return hit;
     }
-    @Override protected void dropCustomDeathLoot(DamageSource source,int looting,boolean recentlyHit){super.dropCustomDeathLoot(source,looting,recentlyHit);spawnAtLocation(Content.BODY.get());spawnAtLocation(Content.RELIC.get());spawnAtLocation(ProgressionContent.FETUS.get());effect(43,position(),Vec3.ZERO,8,80,0);sound(SoundEvents.PLAYER_LEVELUP,0.6f);}
+    @Override protected void dropCustomDeathLoot(net.minecraft.server.level.ServerLevel serverLevel, DamageSource source, boolean recentlyHit){super.dropCustomDeathLoot(serverLevel, source, recentlyHit);spawnAtLocation(Content.BODY.get());spawnAtLocation(Content.RELIC.get());spawnAtLocation(ProgressionContent.FETUS.get());effect(43,position(),Vec3.ZERO,8,80,0);sound(SoundEvents.PLAYER_LEVELUP,0.6f);}
     @Override public void die(DamageSource source){super.die(source);bar.removeAllPlayers();countdown.removeAllPlayers();if(!level().isClientSide){for(ParasiteEntity e:server().getEntitiesOfClass(ParasiteEntity.class,getBoundingBox().inflate(96)))if(getUUID().equals(e.owner))e.discard();}}
     @Override public void remove(RemovalReason reason){super.remove(reason);bar.removeAllPlayers();countdown.removeAllPlayers();}
     @Override protected SoundEvent getHurtSound(DamageSource source){return SoundEvents.SKELETON_HURT;}

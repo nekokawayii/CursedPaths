@@ -42,5 +42,5 @@ public final class JacobsLadderEntity extends Entity {
     }
     @Override protected void addAdditionalSaveData(CompoundTag t){if(owner!=null)t.putUUID("Owner",owner);t.putInt("Age",age());}
     @Override protected void readAdditionalSaveData(CompoundTag t){owner=t.hasUUID("Owner")?t.getUUID("Owner"):null;entityData.set(AGE,t.getInt("Age"));}
-    @Override public Packet<ClientGamePacketListener> getAddEntityPacket(){return NetworkHooks.getEntitySpawningPacket(this);}
+    @Override public Packet<ClientGamePacketListener> getAddEntityPacket(net.minecraft.server.level.ServerEntity entity){return super.getAddEntityPacket(entity);}
 }

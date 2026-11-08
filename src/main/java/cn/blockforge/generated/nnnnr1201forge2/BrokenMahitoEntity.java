@@ -67,7 +67,7 @@ public final class BrokenMahitoEntity extends Monster {
         if(source.is(net.minecraft.world.damagesource.DamageTypes.PLAYER_ATTACK))amount=Math.min(BalanceRules.damage(100),amount);
         quietTicks=0;boolean hit=super.hurt(source,amount);return hit;
     }
-    @Override protected void dropCustomDeathLoot(DamageSource source,int looting,boolean recentlyHit){super.dropCustomDeathLoot(source,looting,recentlyHit);spawnAtLocation(Content.IDLE_TRANSFIGURATION_CURSE.get());spawnAtLocation(Content.MAHITO_FINGER.get());}
+    @Override protected void dropCustomDeathLoot(net.minecraft.server.level.ServerLevel serverLevel, DamageSource source, boolean recentlyHit){super.dropCustomDeathLoot(serverLevel, source, recentlyHit);spawnAtLocation(Content.IDLE_TRANSFIGURATION_CURSE.get());spawnAtLocation(Content.MAHITO_FINGER.get());}
     @Override public void die(DamageSource source){boolean wasDead=dead;super.die(source);if(!level().isClientSide&&dead&&!wasDead)SoulJourney.brokenMahitoDefeated(this);if(dead)bar.removeAllPlayers();}
     @Override public void remove(RemovalReason reason){bar.removeAllPlayers();super.remove(reason);}
     @Override public void addAdditionalSaveData(CompoundTag tag){super.addAdditionalSaveData(tag);tag.putInt("QuietTicks",quietTicks);tag.putInt("StunTicks",stunTicks);if(target!=null)tag.putUUID("Target",target);}

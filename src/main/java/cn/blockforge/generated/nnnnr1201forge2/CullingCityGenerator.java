@@ -19,7 +19,7 @@ public final class CullingCityGenerator extends FlatLevelSource {
     @Override public int getGenDepth(){return 512;}
     @Override public int getSpawnHeight(net.minecraft.world.level.LevelHeightAccessor l){return 65;}
     @Override public int getBaseHeight(int x,int z,Heightmap.Types t,net.minecraft.world.level.LevelHeightAccessor l,RandomState r){return 65;}
-    @Override public CompletableFuture<ChunkAccess> fillFromNoise(Executor executor,Blender blender,RandomState random,StructureManager manager,ChunkAccess c){return super.fillFromNoise(executor,blender,random,manager,c).thenApply(chunk->{generate(chunk);return chunk;});}
+    @Override public CompletableFuture<ChunkAccess> fillFromNoise(Blender blender, RandomState random, StructureManager manager, ChunkAccess c){return super.fillFromNoise(blender, random, manager, c).thenApply(chunk->{generate(chunk);return chunk;});}
     private static void generate(ChunkAccess c){
         for(int x=c.getPos().getMinBlockX();x<=c.getPos().getMaxBlockX();x++)for(int z=c.getPos().getMinBlockZ();z<=c.getPos().getMaxBlockZ();z++){
             if(x< -256||x>255||z< -256||z>255){

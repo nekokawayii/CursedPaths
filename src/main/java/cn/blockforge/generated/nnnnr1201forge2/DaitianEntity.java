@@ -50,7 +50,7 @@ public final class DaitianEntity extends Monster {
         if(--cooldown<=0&&distanceToSqr(target)<100){int skill=distanceToSqr(target)>16?1:1+random.nextInt(2);entityData.set(ACTION,skill);castBonus=BossRevelation.roll(this,skill==1?"污浊诅咒：剥夺增益，前摇时离开24格或躲到墙后":"含恨而立：重击与冲击波，前摇时离开16格");revealed=castBonus>0;windup=(skill==1?60:50)+(revealed?20:0);victim=target.getUUID();SkillSounds.play(this,skill==1?"daitian_curse":"daitian_slam");if(revealed){fx(66,position(),windup,skill);SkillSounds.play(this,"boss_reveal");}fx(55,position(),windup,skill);level().playSound(null,blockPosition(),SoundEvents.EVOKER_PREPARE_ATTACK,SoundSource.HOSTILE,1.5f,0.6f);return;}
         if(distanceToSqr(target)<4&&melee==0){doHurtTarget(target);melee=25;}
     }
-    @Override protected void dropCustomDeathLoot(DamageSource source,int looting,boolean hit){super.dropCustomDeathLoot(source,looting,hit);spawnAtLocation(Content.FINGER.get());}
+    @Override protected void dropCustomDeathLoot(net.minecraft.server.level.ServerLevel serverLevel, DamageSource source, boolean hit){super.dropCustomDeathLoot(serverLevel, source, hit);spawnAtLocation(Content.FINGER.get());}
     @Override public void die(DamageSource s){super.die(s);bar.removeAllPlayers();}
     @Override public void remove(RemovalReason reason){super.remove(reason);bar.removeAllPlayers();}
     @Override public void addAdditionalSaveData(CompoundTag tag){super.addAdditionalSaveData(tag);tag.putInt("SkillCooldown",cooldown);}

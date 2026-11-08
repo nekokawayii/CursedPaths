@@ -44,7 +44,7 @@ public final class PrisonStore extends SavedData {
         for(Tag value:tag.getList("Prisoners",Tag.TAG_COMPOUND)){CompoundTag t=(CompoundTag)value;s.prisoners.put(t.getUUID("Id"),t);}
         return s;
     }
-    @Override public CompoundTag save(CompoundTag tag){
+    @Override public CompoundTag save(CompoundTag tag, net.minecraft.core.HolderLookup.Provider provider){
         tag.putInt("NextCell",nextCell);ListTag rs=new ListTag(),ps=new ListTag();realms.values().forEach(t->rs.add(t.copy()));prisoners.values().forEach(t->ps.add(t.copy()));tag.put("Realms",rs);tag.put("Prisoners",ps);return tag;
     }
 }

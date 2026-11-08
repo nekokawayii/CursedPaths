@@ -24,7 +24,7 @@ public final class RuinAtmosphere {
     public static final class Sites extends SavedData {
         final List<BlockPos> origins=new ArrayList<>();
         static Sites load(CompoundTag tag){Sites s=new Sites();for(long n:tag.getLongArray("Origins"))s.origins.add(BlockPos.of(n));return s;}
-        @Override public CompoundTag save(CompoundTag tag){tag.putLongArray("Origins",origins.stream().mapToLong(BlockPos::asLong).toArray());return tag;}
+        @Override public CompoundTag save(CompoundTag tag, net.minecraft.core.HolderLookup.Provider provider){tag.putLongArray("Origins",origins.stream().mapToLong(BlockPos::asLong).toArray());return tag;}
     }
     private static Sites sites(ServerLevel l){return l.getDataStorage().computeIfAbsent(new net.minecraft.world.level.saveddata.SavedData.Factory<>(Sites::new, (tag, prov)->Sites.load(tag)), "sukuna_ruins_r20");}
     public static boolean build(ServerPlayer p){

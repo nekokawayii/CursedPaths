@@ -47,7 +47,7 @@ public final class SoulWorldState extends SavedData {
     public void markMahitoDefeated(long now){mahitoSpawned=true;mahitoDefeated=true;mahitoRespawnAt=now+1200;setDirty();}
     public void markYujiSummoned(){yujiSummoned=true;setDirty();}
     public void reset(){mahitoSpawned=mahitoDefeated;yujiSummoned=false;guardianSummoned=false;setDirty();}
-    @Override public CompoundTag save(CompoundTag tag){
+    @Override public CompoundTag save(CompoundTag tag, net.minecraft.core.HolderLookup.Provider provider){
         tag.put("CondensedMaidOwners",condensedMaidOwners.copy());
         tag.putBoolean("MahitoSpawned",mahitoSpawned);
         tag.putBoolean("MahitoDefeated",mahitoDefeated);
