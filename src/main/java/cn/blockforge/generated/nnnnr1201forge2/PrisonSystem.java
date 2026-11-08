@@ -175,7 +175,7 @@ public final class PrisonSystem {
         if(!(e.getLevel() instanceof ServerLevel level)||!(e.getEntity() instanceof LivingEntity living)||living instanceof net.minecraft.world.entity.player.Player)return;
         CompoundTag record=PrisonStore.get(level.getServer()).prisoner(living.getUUID());if(record==null)return;
         if(level.dimension().equals(DIMENSION)){
-            living.canUpdate(false);living.setInvulnerable(true);if(living instanceof Mob mob){mob.setNoAi(true);mob.setPersistenceRequired();}
+            living.setInvulnerable(true);if(living instanceof Mob mob){mob.setNoAi(true);mob.setPersistenceRequired();}
         }
     }
     @SubscribeEvent(priority=EventPriority.HIGHEST) public static void targeting(LivingChangeTargetEvent e){if(locked(e.getEntity())||locked(e.getNewAboutToBeSetTarget()))e.setNewAboutToBeSetTarget(null);}
@@ -187,7 +187,7 @@ public final class PrisonSystem {
     @SubscribeEvent(priority=EventPriority.HIGHEST) public static void death(LivingDeathEvent e){if(locked(e.getEntity())){e.setCanceled(true);e.getEntity().setHealth(Math.max(1,e.getEntity().getHealth()));}}
     @SubscribeEvent(priority=EventPriority.HIGHEST) public static void use(PlayerInteractEvent e){if(locked(e.getEntity()))cn.blockforge.generated.nnnnr1201forge2.CompatEvents.cancel(e);}
     @SubscribeEvent(priority=EventPriority.HIGHEST) public static void attack(AttackEntityEvent e){if(locked(e.getEntity()))e.setCanceled(true);}
-    @SubscribeEvent(priority=EventPriority.HIGHEST) public static void pickup(net.neoforged.neoforge.event.entity.player.ItemEntityPickupEvent.Pre e){if(locked(e.getPlayer()))e.setCanceled(true);}
+    @SubscribeEvent(priority=EventPriority.HIGHEST) public static void pickup(net.neoforged.neoforge.event.entity.player.ItemEntityPickupEvent.Pre e){if(locked(e.getPlayer()))e.getItemEntity().discard();}
     @SubscribeEvent(priority=EventPriority.HIGHEST) public static void breakBlock(BlockEvent.BreakEvent e){if(locked(e.getPlayer())||e.getLevel() instanceof ServerLevel l&&l.dimension().equals(DIMENSION))e.setCanceled(true);}
     @SubscribeEvent(priority=EventPriority.HIGHEST) public static void place(BlockEvent.EntityPlaceEvent e){if(locked(e.getEntity())||e.getLevel() instanceof ServerLevel l&&l.dimension().equals(DIMENSION))e.setCanceled(true);}
     @SubscribeEvent(priority=EventPriority.HIGHEST) public static void livingTick(net.neoforged.neoforge.event.tick.EntityTickEvent.Post e){if(!(e.getEntity() instanceof net.minecraft.world.entity.player.Player)&&locked(e.getEntity()))cn.blockforge.generated.nnnnr1201forge2.CompatEvents.cancel(e);}

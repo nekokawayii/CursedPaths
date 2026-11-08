@@ -104,7 +104,7 @@ public final class TenShadowsClient {
         private static final ResourceLocation SKIN=ResourceLocation.fromNamespaceAndPath("jujutsu_kaisen_cursed_paths", "textures/entity/megumi.png");
         MegumiRenderer(EntityRendererProvider.Context c){super(c,new MegumiModel(c),.3f);}
         @Override public ResourceLocation getTextureLocation(MegumiEntity e){return SKIN;}
-        @Override protected void setupRotations(MegumiEntity e,PoseStack ps,float age,float yaw,float partial){if(e.downed()){ps.mulPose(Axis.YP.rotationDegrees(180-yaw));ps.translate(0,.2,-.8);ps.mulPose(Axis.XP.rotationDegrees(90));}else super.setupRotations(e,ps,age,yaw,partial);}
+        @Override protected void setupRotations(MegumiEntity e,PoseStack ps,float age,float yaw,float partial,float scale){if(e.downed()){ps.mulPose(Axis.YP.rotationDegrees(180-yaw));ps.translate(0,.2,-.8);ps.mulPose(Axis.XP.rotationDegrees(90));}else super.setupRotations(e,ps,age,yaw,partial,scale);}
     }
     private TenShadowsClient(){}
 }
