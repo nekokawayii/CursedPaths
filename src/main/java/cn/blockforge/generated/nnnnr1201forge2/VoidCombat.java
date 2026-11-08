@@ -49,7 +49,7 @@ public final class VoidCombat {
         if(flames.isEmpty()){root.remove("SukunaVoidFlames");root.remove("SukunaVoidFlameDamage");root.remove("SukunaVoidFlameCastersR63");root.remove("SukunaVoidFlameScaleR64");}else{root.put("SukunaVoidFlames",flames);root.put("SukunaVoidFlameDamage",damage);root.put("SukunaVoidFlameCastersR63",casters);root.put("SukunaVoidFlameScaleR64",scales);}
     }
     @SubscribeEvent public static void persistentFire(net.neoforged.neoforge.event.tick.EntityTickEvent.Post event){
-        LivingEntity target=event.getEntity();if(!(target.level() instanceof ServerLevel level)||!target.isAlive()||target.tickCount%20!=0||!target.getPersistentData().contains("SukunaVoidFlames"))return;
+        if(!(event.getEntity() instanceof LivingEntity target))return;if(!(target.level() instanceof ServerLevel level)||!target.isAlive()||target.tickCount%20!=0||!target.getPersistentData().contains("SukunaVoidFlames"))return;
         var flames=target.getPersistentData().getCompound("SukunaVoidFlames");
         for(String id:Set.copyOf(flames.getAllKeys())){
             UUID owner;try{owner=UUID.fromString(id);}catch(IllegalArgumentException ex){flames.remove(id);continue;}
@@ -173,7 +173,7 @@ public final class VoidCombat {
     }
     /** 虚空灶附带的原版着火伤害也需识别女仆；不叠加成长、不重复减半。 */
     public static void ignitionDamage(LivingIncomingDamageEvent event){
-        LivingEntity target=event.getEntity();var tag=target.getPersistentData();
+        if(!(event.getEntity() instanceof LivingEntity target))return;var tag=target.getPersistentData();
         if(!tag.hasUUID("SukunaVoidIgnitionOwner")||tag.getLong("SukunaVoidIgnitionUntil")<=target.level().getGameTime())return;
         UUID id=tag.getUUID("SukunaVoidIgnitionOwner");ServerPlayer owner=target.level() instanceof ServerLevel level?MaidBridge.find(level,id):null;
         if(owner==null){event.setCanceled(true);return;}

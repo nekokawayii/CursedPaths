@@ -50,7 +50,7 @@ public final class StageFood extends Item {
     public static ServerPlayer killer(net.minecraft.world.damagesource.DamageSource source){ServerPlayer p=CombatSettings.caster(source);return p!=null?p:MaidBridge.caster(source.getEntity());}
     @SubscribeEvent(priority=EventPriority.LOWEST) public static void drop(LivingDeathEvent event){
         if(event.isCanceled()||event.getEntity().level().isClientSide)return;
-        LivingEntity victim=event.getEntity();ServerPlayer p=killer(event.getSource());
+        if(!(event.getEntity() instanceof LivingEntity victim))return;ServerPlayer p=killer(event.getSource());
         LivingEntity credit=victim.getKillCredit();if(p==null&&credit!=null)p=credit instanceof ServerPlayer player?player:MaidBridge.caster(credit);
         if(victim instanceof Player||victim instanceof net.minecraft.world.entity.decoration.ArmorStand)return;
         if((p!=null||credit!=null)&&victim.getRandom().nextInt(ShrineRules.RESIDUE_DROP_DENOMINATOR)==0)victim.spawnAtLocation(RESIDUE.get());

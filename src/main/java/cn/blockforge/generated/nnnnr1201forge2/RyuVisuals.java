@@ -49,7 +49,7 @@ public final class RyuVisuals {
     private static final int[] COLORS = {0xFFFFFF, 0xFF5A5A, 0xFFD24A, 0x7CFF6B, 0x6BE8FF, 0x6B8CFF, 0xFF6BE8, 0xFFA24A};
     /** 内部天际图（用户给的落日晚霞，原图原分辨率）。 */
     private static final net.minecraft.resources.ResourceLocation SKY_TEXTURE =
-        new net.minecraft.resources.ResourceLocation("jujutsu_kaisen_cursed_paths", "textures/effect/domain_sunset.png");
+        net.minecraft.resources.ResourceLocation.fromNamespaceAndPath("jujutsu_kaisen_cursed_paths", "textures/effect/domain_sunset.png");
     private static Sky SKY;
     private static Object world;
 

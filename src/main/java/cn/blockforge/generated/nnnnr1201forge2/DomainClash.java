@@ -361,7 +361,7 @@ public final class DomainClash {
     @SubscribeEvent public static void logout(PlayerEvent.PlayerLoggedOutEvent event){if(event.getEntity() instanceof ServerPlayer p){Match m=matches.get(p.getUUID());if(m!=null)finish(m,m.a.field.owner==p?-1:1);}}
     static void testReset(ServerPlayer p){Match m=matches.get(p.getUUID());if(m!=null)finish(m,0);fields.remove(p.getUUID());restoreGravity(p);}
     private static void restoreGravity(LivingEntity e){e=body(e);var saved=e.getPersistentData();if(saved.contains("ClashPreviousGravity")){e.setNoGravity(saved.getBoolean("ClashPreviousGravity"));saved.remove("ClashPreviousGravity");}}
-    @SubscribeEvent public static void recoverGravity(net.neoforged.neoforge.event.tick.EntityTickEvent.Post event){LivingEntity e=event.getEntity();if(!e.level().isClientSide&&!active(e))restoreGravity(e);}
+    @SubscribeEvent public static void recoverGravity(net.neoforged.neoforge.event.tick.EntityTickEvent.Post event){if(!(event.getEntity() instanceof LivingEntity e))return;if(!e.level().isClientSide&&!active(e))restoreGravity(e);}
     @SubscribeEvent public static void stopping(net.neoforged.neoforge.event.server.ServerStoppingEvent event){for(Match m:new HashSet<>(matches.values()))finish(m,0);}
     @SubscribeEvent public static void stop(ServerStoppedEvent event){for(Match m:new HashSet<>(matches.values())){restoreGravity(m.a.field.owner);restoreGravity(m.b.field.owner);}matches.clear();fields.clear();}
     private DomainClash(){}

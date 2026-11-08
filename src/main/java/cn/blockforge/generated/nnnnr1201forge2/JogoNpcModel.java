@@ -16,7 +16,7 @@ import net.neoforged.fml.common.EventBusSubscriber;
 @net.neoforged.fml.common.EventBusSubscriber(modid="jujutsu_kaisen_cursed_paths", value=net.neoforged.api.distmarker.Dist.CLIENT, bus=net.neoforged.fml.common.EventBusSubscriber.Bus.MOD)
 public final class JogoNpcModel extends EntityModel<JogoNpcEntity> {
     public static final net.minecraft.client.model.geom.ModelLayerLocation LAYER =
-        new net.minecraft.client.model.geom.ModelLayerLocation(new net.minecraft.resources.ResourceLocation("jujutsu_kaisen_cursed_paths", "jogo_npc"), "main");
+        new net.minecraft.client.model.geom.ModelLayerLocation(net.minecraft.resources.ResourceLocation.fromNamespaceAndPath("jujutsu_kaisen_cursed_paths", "jogo_npc"), "main");
     private final ModelPart root;
 
     public JogoNpcModel(ModelPart root) { this.root = root; }

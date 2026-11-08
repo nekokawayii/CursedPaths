@@ -28,7 +28,7 @@ public final class HighResIcon {
     public static boolean convert(String name,int maxSide){
         try{
             var rm=Minecraft.getInstance().getResourceManager();
-            var res=rm.getResource(new net.minecraft.resources.ResourceLocation("jujutsu_kaisen_cursed_paths",sourcePath(name)));
+            var res=rm.getResource(net.minecraft.resources.ResourceLocation.fromNamespaceAndPath("jujutsu_kaisen_cursed_paths",sourcePath(name)));
             if(res.isEmpty())return false;
             NativeImage src;
             try(InputStream in=res.get().open()){src=NativeImage.read(in);}

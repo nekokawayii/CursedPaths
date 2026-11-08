@@ -91,7 +91,7 @@ public final class Skills {
     @SubscribeEvent(priority=net.neoforged.bus.api.EventPriority.LOWEST)
     public static void fistDamage(net.neoforged.neoforge.event.entity.living.LivingIncomingDamageEvent event){
         ServerPlayer p=CombatSettings.caster(event.getSource());if(event.isCanceled()||event.getAmount()<=0||p==null)return;
-        LivingEntity target=event.getEntity();if(!canHit(p,target))return;
+        if(!(event.getEntity() instanceof LivingEntity target))return;if(!canHit(p,target))return;
         remember(p,target);
         if(!(event.getSource().is(net.minecraft.world.damagesource.DamageTypes.PLAYER_ATTACK)||(MaidBridge.isCaster(p)||p instanceof NpcBridge.NpcActor)&&event.getSource().is(net.minecraft.world.damagesource.DamageTypes.MOB_ATTACK))||!character.CharacterService.permits(p,character.CharacterDefinition.Family.SHRINE)||Curse.fingers(p)<5||MaidBridge.recovering(p)||SoulCombat.suppressed(p)||!Curse.canUseTechnique(p))return;
         // 取本次普通攻击结算伤害；附加解不再叠术式成长，不递归触发普攻事件。
@@ -108,7 +108,7 @@ public final class Skills {
     private static boolean remembered(ServerPlayer p,LivingEntity target){return cleaveMemory.getOrDefault(p.getUUID(),Set.of()).contains(target.getUUID());}
     @SubscribeEvent public static void burnDamage(net.neoforged.neoforge.event.entity.living.LivingIncomingDamageEvent event){
         if(!event.getSource().is(net.minecraft.world.damagesource.DamageTypes.ON_FIRE))return;
-        LivingEntity target=event.getEntity();Burn burn=burns.get(target);
+        if(!(event.getEntity() instanceof LivingEntity target))return;Burn burn=burns.get(target);
         if(burn==null&&target.getPersistentData().getBoolean("SukunaSoulFire")&&target.getPersistentData().hasUUID("SukunaSoulFireOwner")){
             var tag=target.getPersistentData();UUID id=tag.getUUID("SukunaSoulFireOwner");ServerPlayer caster=target.level() instanceof ServerLevel level?MaidBridge.find(level,id):null;
             if(caster!=null)tag.putBoolean("SukunaSoulFireMaid",MaidBridge.isCaster(caster));

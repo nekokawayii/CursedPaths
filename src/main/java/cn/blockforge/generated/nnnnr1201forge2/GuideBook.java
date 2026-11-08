@@ -46,7 +46,7 @@ public final class GuideBook {
 
     public static ItemStack book() {
         var patchouli = net.minecraft.core.registries.BuiltInRegistries.ITEM
-            .get(new net.minecraft.resources.ResourceLocation("patchouli", "guide_book"));
+            .get(net.minecraft.resources.ResourceLocation.fromNamespaceAndPath("patchouli", "guide_book"));
         if (patchouli != net.minecraft.world.item.Items.AIR
             && net.neoforged.fml.ModList.get().isLoaded("patchouli")) {
             ItemStack stack = new ItemStack(patchouli);

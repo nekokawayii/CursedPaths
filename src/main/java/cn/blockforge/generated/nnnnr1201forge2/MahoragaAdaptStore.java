@@ -317,7 +317,7 @@ public final class MahoragaAdaptStore {
     @net.neoforged.bus.api.SubscribeEvent(priority=net.neoforged.bus.api.EventPriority.LOW)
     public static void hurt(net.neoforged.neoforge.event.entity.living.LivingIncomingDamageEvent event){
         if(event.getAmount()<=0)return;
-        LivingEntity victim=event.getEntity();
+        if(!(event.getEntity() instanceof LivingEntity victim))return;
         // 玩家本体或"女仆施术上下文"都归到同一个玩家身上
         ServerPlayer wearer=victim instanceof ServerPlayer self?self:MaidBridge.progression(victim);
         if(wearer==null)return;
@@ -347,7 +347,7 @@ public final class MahoragaAdaptStore {
     @net.neoforged.bus.api.SubscribeEvent(priority=net.neoforged.bus.api.EventPriority.LOW)
     public static void dealt(net.neoforged.neoforge.event.entity.living.LivingIncomingDamageEvent event){
         if(trueDamage||event.getAmount()<=0||event.getSource().getDirectEntity() instanceof MahoragaEntity)return;
-        LivingEntity victim=event.getEntity();
+        if(!(event.getEntity() instanceof LivingEntity victim))return;
         if(victim.level().isClientSide)return;
         ServerPlayer p=CombatSettings.caster(event.getSource());
         if(p==null&&event.getSource().getEntity() instanceof ServerPlayer sp)p=sp;

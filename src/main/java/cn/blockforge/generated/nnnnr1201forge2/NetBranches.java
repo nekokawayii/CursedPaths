@@ -162,7 +162,7 @@ public final class NetBranches {
             if(merged||q.fragments.isEmpty())projectiles.remove(q);
         }
     }
-    @SubscribeEvent(priority=EventPriority.HIGHEST) public static void freeze(net.neoforged.neoforge.event.tick.EntityTickEvent.Post event){LivingEntity t=event.getEntity();if(t.level().isClientSide||!locked(t))return;hold(crosses.get(t.getUUID()));if(!(t instanceof net.minecraft.world.entity.player.Player))cn.blockforge.generated.nnnnr1201forge2.CompatEvents.cancel(event);}
+    @SubscribeEvent(priority=EventPriority.HIGHEST) public static void freeze(net.neoforged.neoforge.event.tick.EntityTickEvent.Post event){if(!(event.getEntity() instanceof LivingEntity t))return;if(t.level().isClientSide||!locked(t))return;hold(crosses.get(t.getUUID()));if(!(t instanceof net.minecraft.world.entity.player.Player))cn.blockforge.generated.nnnnr1201forge2.CompatEvents.cancel(event);}
     @SubscribeEvent(priority=EventPriority.HIGHEST) public static void attack(AttackEntityEvent event){if(locked(event.getEntity()))event.setCanceled(true);}
     @SubscribeEvent(priority=EventPriority.HIGHEST) public static void interact(PlayerInteractEvent event){if(true&&locked(event.getEntity()))cn.blockforge.generated.nnnnr1201forge2.CompatEvents.cancel(event);}
     @SubscribeEvent(priority=EventPriority.HIGHEST) public static void outgoing(LivingIncomingDamageEvent event){if(event.getSource().getEntity() instanceof LivingEntity living&&locked(living))event.setCanceled(true);}

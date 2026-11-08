@@ -141,7 +141,7 @@ public final class AttackTypes {
     public static String bySource(DamageSource source){
         if(source==null)return UNARMED;
         if(source.getMsgId().equals("soul_edge")||source.getMsgId().equals("soul_devourer"))return SOUL;
-        if(source.is(DeathStar.DAMAGE)||source.is(net.minecraft.resources.ResourceKey.create(net.minecraft.core.registries.Registries.DAMAGE_TYPE,new net.minecraft.resources.ResourceLocation("jujutsu_kaisen_cursed_paths","blood")))||source.is(net.minecraft.resources.ResourceKey.create(net.minecraft.core.registries.Registries.DAMAGE_TYPE,new net.minecraft.resources.ResourceLocation("jujutsu_kaisen_cursed_paths","blood_true"))))return BLOOD;
+        if(source.is(DeathStar.DAMAGE)||source.is(net.minecraft.resources.ResourceKey.create(net.minecraft.core.registries.Registries.DAMAGE_TYPE,net.minecraft.resources.ResourceLocation.fromNamespaceAndPath("jujutsu_kaisen_cursed_paths","blood")))||source.is(net.minecraft.resources.ResourceKey.create(net.minecraft.core.registries.Registries.DAMAGE_TYPE,net.minecraft.resources.ResourceLocation.fromNamespaceAndPath("jujutsu_kaisen_cursed_paths","blood_true"))))return BLOOD;
         if(source.getEntity() instanceof ShadowEntity||source.getDirectEntity() instanceof ShadowEntity||source.getEntity() instanceof MahoragaEntity||source.getDirectEntity() instanceof MahoragaEntity)return TEN_SHADOWS;
         if(source.is(DamageTypeTags.IS_EXPLOSION))return EXPLOSION;
         if(source.is(DamageTypeTags.IS_LIGHTNING))return LIGHTNING;

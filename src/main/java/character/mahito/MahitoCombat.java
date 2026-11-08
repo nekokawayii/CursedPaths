@@ -215,7 +215,7 @@ public final class MahitoCombat {
         if(event.getEntity().getPersistentData().getLong("MahitoDodgeUntil")>now(event.getEntity())&&!event.getSource().is(net.minecraft.tags.DamageTypeTags.BYPASSES_INVULNERABILITY))event.setCanceled(true);
     }
     @SubscribeEvent public static void status(net.neoforged.neoforge.event.tick.EntityTickEvent.Post event){
-        LivingEntity e=event.getEntity();if(e.level().isClientSide)return;var data=e.getPersistentData();long now=now(e);
+        if(!(event.getEntity() instanceof LivingEntity e))return;if(e.level().isClientSide)return;var data=e.getPersistentData();long now=now(e);
         if(data.contains("MahitoRootUntil")){
             var speed=e.getAttribute(Attributes.MOVEMENT_SPEED);
             if(now>=data.getLong("MahitoRootUntil")){if(speed!=null)speed.removeModifier(CompatAttr.id(ROOT));data.remove("MahitoRootUntil");}
@@ -254,7 +254,7 @@ public final class MahitoCombat {
         }
     }
     @SubscribeEvent(priority=EventPriority.LOWEST) public static void death(LivingDeathEvent event){
-        LivingEntity victim=event.getEntity();if(!(victim.level() instanceof ServerLevel level))return;
+        if(!(event.getEntity() instanceof LivingEntity victim))return;if(!(victim.level() instanceof ServerLevel level))return;
         if(isMahito(victim))closeRealm(victim.getUUID());restoreSoul(victim);
         Entity cause=event.getSource().getEntity();LivingEntity killer=cause instanceof NpcBridge.NpcActor actor?actor.mob:cause instanceof LivingEntity living?living:null;
         if(killer==null||!isMahito(killer)||killer.distanceToSqr(victim)>24*24||victim instanceof MahitoPuppetEntity)return;

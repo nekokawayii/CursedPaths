@@ -298,7 +298,7 @@ public final class FurnaceMax {
     @SubscribeEvent(priority=net.neoforged.bus.api.EventPriority.LOW)
     public static void hurt(LivingIncomingDamageEvent event){
         if(event.getAmount()<=0)return;
-        LivingEntity victim=event.getEntity();
+        if(!(event.getEntity() instanceof LivingEntity victim))return;
         ServerPlayer p=victim instanceof ServerPlayer self?self:MaidBridge.progression(victim);
         if(p==null||!charges.containsKey(p.getUUID()))return;
         cancel(p,"受伤");
