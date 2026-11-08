@@ -9,6 +9,7 @@ import net.minecraft.world.item.*;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.effect.*;
+import cn.blockforge.generated.nnnnr1201forge2.CompatNbt;
 
 public final class ExpeditionItem extends Item {
     public final String id;
@@ -46,7 +47,7 @@ public final class ExpeditionItem extends Item {
             case "cold_resistance"->{p.addEffect(new MobEffectInstance(MobEffects.FIRE_RESISTANCE,9600));consume(p,s,40);}
             case "special_blueprint"->{ExpeditionProgress.data(p).putBoolean("ExpeditionSpecialBlueprint",true);p.sendSystemMessage(Component.literal("已掌握特级咒具图纸：可在天元降灵坛打造天逆鉾、释魂刀和游云。"));consume(p,s,20);}
             case "alloy_blueprint"->{ExpeditionProgress.data(p).putBoolean("ExpeditionAlloyBlueprint",true);p.sendSystemMessage(Component.literal("高专合金：在淬炼台投入高专原矿×2、铁锭×2、金锭×1、低浓度残秽×3。"));return InteractionResultHolder.success(s);}
-            case "soul_edge","poison_coating"->{ItemStack weapon=p.getOffhandItem();if(!(weapon.getItem() instanceof SwordItem)){p.sendSystemMessage(Component.literal("请把要强化的剑放在副手，再右键材料。"));return InteractionResultHolder.fail(s);}if(id.equals("soul_edge"))weapon.enchant(ExpeditionContent.SOUL_EDGE.get(),1);else weapon.getOrCreateTag().putBoolean("ExpeditionPoison",true);consume(p,s,20);}
+            case "soul_edge","poison_coating"->{ItemStack weapon=p.getOffhandItem();if(!(weapon.getItem() instanceof SwordItem)){p.sendSystemMessage(Component.literal("请把要强化的剑放在副手，再右键材料。"));return InteractionResultHolder.fail(s);}if(id.equals("soul_edge"))weapon.enchant(ExpeditionContent.SOUL_EDGE.get(),1);else CompatNbt.update(weapon, t -> t.putBoolean("ExpeditionPoison",true));consume(p,s,20);}
             case "overtime_binding"->{p.getPersistentData().putLong("ExpeditionOvertime",level.getGameTime()+1200);consume(p,s,20);}
             case "furnace_scroll","ice_scroll","ultimate_scroll"->{
                 if(id.equals("ice_scroll")&&!Uraume.unlocked(p)&&!Uraume.consumeMemory(p)){p.sendSystemMessage(Component.literal("冰凝卷轴只回应未选择冲突术式的玩家，或里梅角色。"));return InteractionResultHolder.fail(s);}

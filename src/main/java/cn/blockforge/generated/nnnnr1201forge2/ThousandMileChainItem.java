@@ -55,7 +55,7 @@ public final class ThousandMileChainItem extends Item {
                 tell(p, "请先空出副手，再潜行右键拆下天逆蛑");
                 return;
             }
-            chain.getOrCreateTag().remove(ATTACHMENT);
+            CompatNbt.readOrEmpty(chain).remove(ATTACHMENT);
             p.setItemInHand(InteractionHand.OFF_HAND, installed);
             tell(p, "天逆蛑已完整退回副手");
         } else {
@@ -66,7 +66,7 @@ public final class ThousandMileChainItem extends Item {
             }
             ItemStack saved = source.copy();
             saved.setCount(1);
-            chain.getOrCreateTag().put(ATTACHMENT, saved.save(new CompoundTag()));
+            CompatNbt.update(chain, t -> t.put(ATTACHMENT, saved.save(new CompoundTag())));
             // 创造模式也转移这一件实体物品，拆装不能凭空复制附件。
             source.shrink(1);
             tell(p, "已装上天逆蛑：命中切断术式，缠绕期间持续封锁咒术");

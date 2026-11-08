@@ -11,6 +11,7 @@ import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
 
 import java.util.List;
+import cn.blockforge.generated.nnnnr1201forge2.CompatNbt;
 
 /** 日车宽见的「法槌」：不可丢弃、无限耐久，刻印数据存在 NBT「GavelSeal」。 */
 public class GavelItem extends SwordItem {
@@ -34,7 +35,7 @@ public class GavelItem extends SwordItem {
             return;
         }
         lines.add(Component.literal("刻印：" + tag.getString("name")).withStyle(ChatFormatting.GOLD));
-        lines.add(Component.literal("伤害：" + String.format("%.1f", stack.getOrCreateTag().getFloat(SEAL_DAMAGE))
-            + "  攻速：" + String.format("%.2f", stack.getOrCreateTag().getFloat(SEAL_SPEED))).withStyle(ChatFormatting.GRAY));
+        lines.add(Component.literal("伤害：" + String.format("%.1f", CompatNbt.readOrEmpty(stack).getFloat(SEAL_DAMAGE))
+            + "  攻速：" + String.format("%.2f", CompatNbt.readOrEmpty(stack).getFloat(SEAL_SPEED))).withStyle(ChatFormatting.GRAY));
     }
 }

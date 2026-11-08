@@ -128,7 +128,7 @@ public final class ThousandMileChain {
             if(m.cancel()||!m.token().equals(NONE))return;
             ItemStack stack=p.getMainHandItem();
             if(stack.getCount()!=1){tell(p,"请先把叠放的万里之锁拆成单条");return;}
-            UUID itemId=UUID.randomUUID();stack.getOrCreateTag().putUUID("ThousandMileId",itemId);
+            UUID itemId=UUID.randomUUID();CompatNbt.update(stack, t -> t.putUUID("ThousandMileId",itemId));
             s=new Session(p,itemId);SESSIONS.put(p.getUUID(),s);MeleeCombo.cancel(p);
             sound(s);sync(s);tell(p,"首端已抛下 · 转开视线或用墙遮住它，再左键延伸");return;
         }

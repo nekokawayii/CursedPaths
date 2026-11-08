@@ -20,7 +20,7 @@ public final class PrisonRealmItem extends Item {
     public static ItemStack packed(CompoundTag snapshot){
         ItemStack stack=new ItemStack(PrisonContent.PRISON.get());CompoundTag room=snapshot.getCompound("Room"),seal=new CompoundTag();
         seal.putUUID("Realm",room.getUUID("Id"));seal.putUUID("Token",room.getUUID("PortableToken"));seal.putInt("Count",snapshot.getList("Prisoners",Tag.TAG_COMPOUND).size());seal.put("Snapshot",snapshot);
-        stack.getOrCreateTag().put(SEAL,seal);return stack;
+        CompatNbt.update(stack, t -> t.put(SEAL,seal));return stack;
     }
     @Override public InteractionResult interactLivingEntity(ItemStack stack,net.minecraft.world.entity.player.Player player,net.minecraft.world.entity.LivingEntity target,net.minecraft.world.InteractionHand hand){
         if(player.level().isClientSide)return InteractionResult.SUCCESS;

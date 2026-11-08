@@ -11,5 +11,13 @@ public final class CompatNbt {
         CompoundTag tag = stack.getOrDefault(DataComponents.CUSTOM_DATA, CustomData.EMPTY).copyTag();
         return tag.isEmpty() ? null : tag;
     }
+    /** 读路径：返回空 tag 而不是 null，方便链式 getXxx。 */
+    public static CompoundTag readOrEmpty(ItemStack stack) {
+        return stack.getOrDefault(DataComponents.CUSTOM_DATA, CustomData.EMPTY).copyTag();
+    }
+    /** 写路径：旧 getOrCreateTag().putXxx(...) 的替代，读-改-写回组件。 */
+    public static void update(ItemStack stack, java.util.function.Consumer<CompoundTag> action) {
+        CustomData.update(DataComponents.CUSTOM_DATA, stack, action);
+    }
     private CompatNbt() { }
 }

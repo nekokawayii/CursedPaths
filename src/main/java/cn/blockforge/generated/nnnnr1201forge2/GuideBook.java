@@ -12,6 +12,7 @@ import net.neoforged.neoforge.event.entity.player.PlayerEvent;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.neoforge.event.tick.PlayerTickEvent;
 import net.minecraft.core.registries.BuiltInRegistries;
+import cn.blockforge.generated.nnnnr1201forge2.CompatNbt;
 
 /**
  * 开局赠送《游玩方法手册》（r171）：涵盖全部角色、全流程、全术式、全物品，不含隐藏支线。
@@ -49,7 +50,7 @@ public final class GuideBook {
         if (patchouli != net.minecraft.world.item.Items.AIR
             && net.neoforged.fml.ModList.get().isLoaded("patchouli")) {
             ItemStack stack = new ItemStack(patchouli);
-            stack.getOrCreateTag().putString("patchouli:book", "jujutsu_kaisen_cursed_paths:guide");
+            CompatNbt.update(stack, t -> t.putString("patchouli:book", "jujutsu_kaisen_cursed_paths:guide"));
             return stack;
         }
         ItemStack stack = new ItemStack(Content.MANUAL.get());

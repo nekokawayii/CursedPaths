@@ -53,8 +53,8 @@ public final class HigurumaCombat {
         ItemStack gavel = new ItemStack(GAVEL.get());
         gavel.setHoverName(Component.literal("法槌").withStyle(ChatFormatting.GOLD));
         // NBT 绑定：该法槌属于这名玩家，不可丢弃、不可被清除/复制
-        gavel.getOrCreateTag().putBoolean("GavelLock", true);
-        gavel.getOrCreateTag().putString("GavelOwner", p.getUUID().toString());
+        CompatNbt.update(gavel, t -> t.putBoolean("GavelLock", true));
+        CompatNbt.update(gavel, t -> t.putString("GavelOwner", p.getUUID().toString()));
         if(p instanceof cn.blockforge.generated.nnnnr1201forge2.NpcBridge.NpcActor)p.setItemSlot(EquipmentSlot.MAINHAND,gavel);
         else if (!p.getInventory().add(gavel)) p.drop(gavel, false);
         p.sendSystemMessage(Component.literal("诛伏赐死：法槌已授予（不可丢弃）").withStyle(ChatFormatting.GOLD));
@@ -83,9 +83,9 @@ public final class HigurumaCombat {
             if (entry.getKey() == Attributes.ATTACK_DAMAGE) damage += entry.getValue().getAmount();
             if (entry.getKey() == Attributes.ATTACK_SPEED) speed += entry.getValue().getAmount();
         }
-        gavel.getOrCreateTag().put(GavelItem.SEAL, seal);
-        gavel.getOrCreateTag().putFloat(GavelItem.SEAL_DAMAGE, (float) damage);
-        gavel.getOrCreateTag().putFloat(GavelItem.SEAL_SPEED, (float) speed);
+        CompatNbt.update(gavel, t -> t.put(GavelItem.SEAL, seal));
+        CompatNbt.update(gavel, t -> t.putFloat(GavelItem.SEAL_DAMAGE, (float) damage));
+        CompatNbt.update(gavel, t -> t.putFloat(GavelItem.SEAL_SPEED, (float) speed));
         p.sendSystemMessage(Component.literal("刻印完成：" + off.getHoverName().getString()
             + "（伤害 " + String.format("%.1f", damage) + "）").withStyle(ChatFormatting.GOLD));
     }

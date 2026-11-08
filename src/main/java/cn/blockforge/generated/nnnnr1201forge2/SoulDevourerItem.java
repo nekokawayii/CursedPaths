@@ -11,7 +11,7 @@ public final class SoulDevourerItem extends SwordItem {
     public SoulDevourerItem(){super(Tiers.NETHERITE,8,-2.4f,new Item.Properties().rarity(Rarity.EPIC).fireResistant());}
     public static long hits(ItemStack stack){return stack.hasTag()?Math.max(0,CompatNbt.read(stack).getLong("SoulDevourerHits")):0;}
     public static float multiplier(ItemStack stack){return (float)(1d+hits(stack)*.05d);}
-    public static void recordHit(ItemStack stack){long n=hits(stack);if(n<Long.MAX_VALUE)stack.getOrCreateTag().putLong("SoulDevourerHits",n+1);}
+    public static void recordHit(ItemStack stack){long n=hits(stack);if(n<Long.MAX_VALUE)CompatNbt.update(stack, t -> t.putLong("SoulDevourerHits",n+1));}
     @Override public void appendHoverText(ItemStack stack,Level level,List<Component> lines,TooltipFlag flag){
         lines.add(Component.literal("无视护甲、盾牌、防御附魔和抗性提升"));
         lines.add(Component.literal("每次有效命中后永久累加基础伤害的5%，不按复利计算"));

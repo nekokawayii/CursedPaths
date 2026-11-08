@@ -118,7 +118,7 @@ public final class Authority {
     }
     public static void inscribe(ServerPlayer p,int skill,int hand){
         if(!unlocked(p)||!editorHeld(p)||!AuthoritySkills.owned(p,skill)||hand<0||hand>1)return;
-        ItemStack item=new ItemStack(MEDIUM.get());item.getOrCreateTag().putInt("AuthoritySkill",skill);
+        ItemStack item=new ItemStack(MEDIUM.get());CompatNbt.update(item, t -> t.putInt("AuthoritySkill",skill));
         InteractionHand slot=hand==0?InteractionHand.MAIN_HAND:InteractionHand.OFF_HAND;
         ItemStack old=p.getItemInHand(slot).copy();p.setItemInHand(slot,item);if(!old.isEmpty())Journey.give(p,old);AuthorityPackets.sync(p);
     }

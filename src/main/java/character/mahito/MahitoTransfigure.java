@@ -17,6 +17,7 @@ import net.neoforged.bus.api.SubscribeEvent;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
+import cn.blockforge.generated.nnnnr1201forge2.CompatNbt;
 
 /**
  * 无为转变（r211 起打击与贮存合并）：
@@ -258,7 +259,7 @@ public final class MahitoTransfigure {
             living.discard();
         }
         p.getPersistentData().remove(PENDING_TARGET);
-        body.getOrCreateTag().put(BASE_TAG, snap);
+        CompatNbt.update(body, t -> t.put(BASE_TAG, snap));
         p.getPersistentData().remove(PENDING);
         body.setHoverName(Component.literal("贮存体·" + snap.getString("name")).withStyle(ChatFormatting.AQUA));
         body.setDamageValue(0);
@@ -321,7 +322,7 @@ public final class MahitoTransfigure {
     private static void finish(ServerPlayer p, ItemStack held, ItemStack out, String label, boolean cursed) {
         CompoundTag base = held.getTagElement(BASE_TAG);
         if (base == null) return;
-        out.getOrCreateTag().put(BASE_TAG, base.copy());
+        CompatNbt.update(out, t -> t.put(BASE_TAG, base.copy()));
         out.setHoverName(Component.literal(label + "·" + base.getString("name")).withStyle(ChatFormatting.AQUA));
         if (cursed) {
             int max = out.getMaxDamage();
