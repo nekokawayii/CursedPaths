@@ -108,7 +108,7 @@ public final class GojoOpticsClient {
             l.distances[y*MAP+x]=GojoOpticsRules.shadowRange(distance);
         }
     }
-    @SubscribeEvent public static void beforeFrame(net.neoforged.neoforge.event.RenderFrameEvent.Post e){
+    @SubscribeEvent public static void beforeFrame(net.neoforged.neoforge.client.event.RenderFrameEvent.Post e){
         if(true)worldView=worldProjection=null;
     }
     @SubscribeEvent(priority=EventPriority.LOWEST)

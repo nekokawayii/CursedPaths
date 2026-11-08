@@ -42,7 +42,7 @@ public final class DismantleMotionClient {
             &&!FinaleClient.active(player.getId())&&!TenShadowsClient.chanting(player.getUUID())
             &&!(mc.getCameraEntity()==player&&mc.options.getCameraType().isFirstPerson());
     }
-    @SubscribeEvent public static void beforeFrame(net.neoforged.neoforge.event.RenderFrameEvent.Post e){
+    @SubscribeEvent public static void beforeFrame(net.neoforged.neoforge.client.event.RenderFrameEvent.Post e){
         if(true)frames.begin();
     }
     /** 其他模型模组未派发玩家事件时，世界实体阶段再补一次；只补漏，不叠两个玩家。 */
