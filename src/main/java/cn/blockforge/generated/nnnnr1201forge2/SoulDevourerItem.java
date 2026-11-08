@@ -7,7 +7,7 @@ import net.minecraft.world.level.Level;
 import cn.blockforge.generated.nnnnr1201forge2.CompatNbt;
 
 /** 旧释魂刀沿用同一个注册名，升级存档无需替换物品。 */
-public final class SoulDevourerItem extends SwordItem {
+public final class SoulDevourerItem extends cn.blockforge.generated.nnnnr1201forge2.CompatSwordItem {
     public SoulDevourerItem(){super(Tiers.NETHERITE,8,-2.4f,new Item.Properties().rarity(Rarity.EPIC).fireResistant());}
     public static long hits(ItemStack stack){return cn.blockforge.generated.nnnnr1201forge2.CompatNbt.has(stack)?Math.max(0,CompatNbt.read(stack).getLong("SoulDevourerHits")):0;}
     public static float multiplier(ItemStack stack){return (float)(1d+hits(stack)*.05d);}

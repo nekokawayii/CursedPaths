@@ -28,7 +28,7 @@ import net.minecraft.world.level.Level;
  *
  * <p>模型 display 数值不要改：用户明确要求原样保留。</p>
  */
-public class TenkaSpearItem extends SwordItem {
+public class TenkaSpearItem extends cn.blockforge.generated.nnnnr1201forge2.CompatSwordItem {
     /** 术式封印时长：3 秒。 */
     public static final int SEAL_TICKS = 60;
     /** 右键「术式切断」冷却：30 秒。 */
