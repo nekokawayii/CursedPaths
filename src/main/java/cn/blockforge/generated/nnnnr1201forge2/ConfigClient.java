@@ -1,7 +1,7 @@
 package cn.blockforge.generated.nnnnr1201forge2;
 
 import net.neoforged.api.distmarker.Dist;
-import net.neoforged.neoforge.client.ConfigScreenHandler;
+import net.neoforged.neoforge.client.gui.IConfigScreenFactory;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.ModLoadingContext;
 import net.neoforged.fml.common.Mod;
@@ -19,8 +19,8 @@ public final class ConfigClient {
 
     /** 由 GeneratedMod 在构造期调用（Forge 的配置界面扩展点必须在构造期注册，否则模组列表不显示 Config 按钮）。 */
     public static void registerScreen() {
-        ModLoadingContext.get().registerExtensionPoint(ConfigScreenHandler.ConfigScreenFactory.class,
-            () -> new ConfigScreenHandler.ConfigScreenFactory((minecraft, parent) -> new SukunaConfigScreen(parent)));
+        GeneratedMod.CONTAINER.registerExtensionPoint(IConfigScreenFactory.class,
+            (modContainer, parent) -> new SukunaConfigScreen(parent));
     }
 
     private ConfigClient() {}
