@@ -44,8 +44,7 @@ public class TransfiguredItem extends Item {
 
     @Override public int getBarColor(ItemStack stack) { return 0xFF6FD3E8; }
 
-    @Override public void appendHoverText(ItemStack stack, @org.jetbrains.annotations.Nullable Level level,
-                                          List<Component> lines, TooltipFlag flag) {
+    @Override public void appendHoverText(ItemStack stack, net.minecraft.world.item.Item.TooltipContext context, java.util.List<Component> lines, TooltipFlag flag) {
         CompoundTag tag = stored(stack);
         if (tag == null) {
             lines.add(Component.literal("未贮存任何生物").withStyle(ChatFormatting.GRAY));

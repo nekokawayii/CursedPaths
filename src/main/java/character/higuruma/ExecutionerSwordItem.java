@@ -29,8 +29,7 @@ public class ExecutionerSwordItem extends SwordItem {
         HigurumaClient.item(consumer);
     }
 
-    @Override public void appendHoverText(ItemStack stack, @org.jetbrains.annotations.Nullable Level level,
-                                          List<Component> lines, TooltipFlag flag) {
+    @Override public void appendHoverText(ItemStack stack, net.minecraft.world.item.Item.TooltipContext context, java.util.List<Component> lines, TooltipFlag flag) {
         lines.add(Component.literal("处刑人之剑 · 一击处刑（耐久 1）").withStyle(ChatFormatting.DARK_RED));
     }
 }

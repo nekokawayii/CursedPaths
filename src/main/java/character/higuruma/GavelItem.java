@@ -26,8 +26,7 @@ public class GavelItem extends SwordItem {
     @Override public boolean isBarVisible(ItemStack stack) { return false; }
     @Override public boolean canBeDepleted() { return false; }
 
-    @Override public void appendHoverText(ItemStack stack, @org.jetbrains.annotations.Nullable Level level,
-                                          List<Component> lines, TooltipFlag flag) {
+    @Override public void appendHoverText(ItemStack stack, net.minecraft.world.item.Item.TooltipContext context, java.util.List<Component> lines, TooltipFlag flag) {
         CompoundTag tag = stack.getTagElement(SEAL);
         lines.add(Component.literal("不可丢弃 · 无限耐久").withStyle(ChatFormatting.DARK_GRAY));
         if (tag == null || tag.isEmpty()) {
