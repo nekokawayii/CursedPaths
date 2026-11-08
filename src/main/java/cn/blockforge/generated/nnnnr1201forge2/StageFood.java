@@ -20,7 +20,7 @@ public final class StageFood extends Item {
     public static final DeferredHolder<Item, Item> VOID=Content.ITEMS.register("void_phase_fetus",()->new StageFood(Stage.VOID));
     public static final DeferredHolder<Item, Item> LEGACY=Content.ITEMS.register("legacy",()->new StageFood(Stage.LEGACY));
     private final Stage stage;
-    private StageFood(Stage stage){super(new Properties().rarity(Rarity.EPIC).food(new FoodProperties.Builder().nutrition(1).saturationMod(0).alwaysEat().build()));this.stage=stage;}
+    private StageFood(Stage stage){super(new Properties().rarity(Rarity.EPIC).food(new FoodProperties.Builder().nutrition(1).saturationMod(0f).alwaysEat().build()));this.stage=stage;}
     public static void init(){}
     public static boolean allowed(Player p,Stage stage){return character.CharacterService.permits(p,character.CharacterDefinition.Family.SHRINE)&&ShrineRules.allows(stage.ordinal(),Journey.nine(p),Curse.data(p).getInt("ResidueUpgrades"),SoulJourney.evolved(p),VoidJourney.evolved(p),GuardianCombat.awakened(p));}
     public static boolean consume(ServerPlayer p,Stage stage){

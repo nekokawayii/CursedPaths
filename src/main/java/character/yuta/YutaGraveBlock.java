@@ -29,12 +29,11 @@ public class YutaGraveBlock extends Block implements EntityBlock {
     }
 
     @Override
-    public InteractionResult use(BlockState state, Level level, BlockPos pos, Player player,
-            InteractionHand hand, BlockHitResult hit) {
-        if (level.isClientSide) return InteractionResult.SUCCESS;
-        if (!(player instanceof ServerPlayer p)) return InteractionResult.PASS;
+    public net.minecraft.world.ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
+        if (level.isClientSide) return net.minecraft.world.ItemInteractionResult.SUCCESS;
+        if (!(player instanceof ServerPlayer p)) return net.minecraft.world.ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
         if (!(level.getBlockEntity(pos) instanceof YutaGraveBlockEntity grave) || grave.taken()) {
-            return InteractionResult.PASS;
+            return net.minecraft.world.ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
         }
         grave.taken(true);
         // 拔出：给一把鬼妖村正，方块本身移除（领域还原时该格会按记录回到原状）。
@@ -46,6 +45,6 @@ public class YutaGraveBlock extends Block implements EntityBlock {
         level.removeBlock(pos, false);
         level.playSound(null, pos, SoundEvents.ITEM_PICKUP, SoundSource.PLAYERS, 1f, 1.2f);
         p.displayClientMessage(net.minecraft.network.chat.Component.literal("拔出了太刀"), true);
-        return InteractionResult.CONSUME;
+        return net.minecraft.world.ItemInteractionResult.CONSUME;
     }
 }
