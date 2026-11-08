@@ -20,8 +20,8 @@ import net.minecraft.core.registries.BuiltInRegistries;
 public final class IceContent {
     public static final DeferredHolder<Item, Item> MEMORY=Content.ITEMS.register("uraume_memory",()->new IceFood(true));
     public static final DeferredHolder<Item, Item> FISH=Content.ITEMS.register("ice_fish",()->new IceFood(false));
-    private static final DeferredRegister<RecipeSerializer<?>> RECIPES=DeferredRegister.create(BuiltInRegistries.RECIPE_SERIALIZERS,"jujutsu_kaisen_cursed_paths");
-    public static final DeferredHolder<?, SimpleCraftingRecipeSerializer<IceFishRecipe>> FISH_RECIPE=RECIPES.register("ice_fish",()->new SimpleCraftingRecipeSerializer<>(IceFishRecipe::new));
+    private static final DeferredRegister<RecipeSerializer<?>> RECIPES=DeferredRegister.create(BuiltInRegistries.RECIPE_SERIALIZER,"jujutsu_kaisen_cursed_paths");
+    public static final DeferredHolder<RecipeSerializer<?>, SimpleCraftingRecipeSerializer<IceFishRecipe>> FISH_RECIPE=RECIPES.register("ice_fish",()->new SimpleCraftingRecipeSerializer<>(IceFishRecipe::new));
     public static void init(IEventBus bus){RECIPES.register(bus);}
     private static final class IceFood extends Item {
         private final boolean memory;
@@ -37,7 +37,7 @@ public final class IceContent {
         }
         /** 冰鱼是"使用"而不是"吃"：按住右键连续使用，每条之间隔 {@link #FISH_USE_GAP} 刻。 */
         private static final int FISH_USE_GAP=2,FISH_HOLD_TICKS=72000;
-        @Override public int getUseDuration(ItemStack stack){return memory?32:FISH_HOLD_TICKS;}
+        @Override public int getUseDuration(ItemStack stack, net.minecraft.world.entity.LivingEntity entity){return memory?32:FISH_HOLD_TICKS;}
         @Override public net.minecraft.world.item.UseAnim getUseAnimation(ItemStack stack){return memory?net.minecraft.world.item.UseAnim.EAT:net.minecraft.world.item.UseAnim.NONE;}
         @Override public void onUseTick(Level l,net.minecraft.world.entity.LivingEntity user,ItemStack stack,int remaining){
             if(l.isClientSide)return;
@@ -63,11 +63,11 @@ public final class IceContent {
         }
     }
     public static final class IceFishRecipe extends CustomRecipe {
-        public IceFishRecipe(ResourceLocation id,CraftingBookCategory category){super(id,category);}
-        @Override public boolean matches(CraftingContainer c,Level l){List<ItemStack> items=new ArrayList<>();for(int i=0;i<c.getContainerSize();i++)if(!c.getItem(i).isEmpty())items.add(c.getItem(i));return items.size()==2&&((ice(items.get(0))&&fish(items.get(1)))||(ice(items.get(1))&&fish(items.get(0))));}
-        @Override public ItemStack assemble(CraftingContainer c,RegistryAccess a){return new ItemStack(FISH.get());}
+        public IceFishRecipe(CraftingBookCategory category){super(category);}
+        @Override public boolean matches(net.minecraft.world.item.crafting.CraftingInput c,Level l){List<ItemStack> items=new ArrayList<>();for(int i=0;i<c.size();i++)if(!c.getItem(i).isEmpty())items.add(c.getItem(i));return items.size()==2&&((ice(items.get(0))&&fish(items.get(1)))||(ice(items.get(1))&&fish(items.get(0))));}
+        @Override public ItemStack assemble(net.minecraft.world.item.crafting.CraftingInput c,net.minecraft.core.HolderLookup.Provider a){return new ItemStack(FISH.get());}
         @Override public boolean canCraftInDimensions(int w,int h){return w*h>=2;}
-        @Override public ItemStack getResultItem(RegistryAccess a){return new ItemStack(FISH.get());}
+        @Override public ItemStack getResultItem(net.minecraft.core.HolderLookup.Provider a){return new ItemStack(FISH.get());}
         @Override public RecipeSerializer<?> getSerializer(){return FISH_RECIPE.get();}
     }
     private static final Map<String,Map<String,String>> chinese=new HashMap<>();
