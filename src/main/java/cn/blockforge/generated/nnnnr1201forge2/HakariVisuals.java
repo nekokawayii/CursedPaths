@@ -44,8 +44,8 @@ public final class HakariVisuals {
         com.mojang.blaze3d.systems.RenderSystem.defaultBlendFunc();
         com.mojang.blaze3d.systems.RenderSystem.disableCull();
         com.mojang.blaze3d.systems.RenderSystem.depthMask(false);
-        var builder = com.mojang.blaze3d.vertex.Tesselator.getInstance().getBuilder();
-        builder.begin(com.mojang.blaze3d.vertex.VertexFormat.Mode.QUADS,
+        BufferBuilder builder;
+        builder = Tesselator.getInstance().begin(com.mojang.blaze3d.vertex.VertexFormat.Mode.QUADS,
             com.mojang.blaze3d.vertex.DefaultVertexFormat.POSITION_COLOR);
         for (Door door : DOORS) {
             float t = Math.min(1f, (now - door.born()) / (float) door.life());

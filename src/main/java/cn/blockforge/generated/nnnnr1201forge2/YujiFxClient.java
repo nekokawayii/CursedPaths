@@ -88,8 +88,8 @@ public final class YujiFxClient {
         com.mojang.blaze3d.systems.RenderSystem.disableCull();
         com.mojang.blaze3d.systems.RenderSystem.depthMask(false);
         com.mojang.blaze3d.systems.RenderSystem.setShader(net.minecraft.client.renderer.GameRenderer::getPositionColorShader);
-        var b = com.mojang.blaze3d.vertex.Tesselator.getInstance().getBuilder();
-        b.begin(com.mojang.blaze3d.vertex.VertexFormat.Mode.QUADS, com.mojang.blaze3d.vertex.DefaultVertexFormat.POSITION_COLOR);
+        BufferBuilder b;
+        b = Tesselator.getInstance().begin(com.mojang.blaze3d.vertex.VertexFormat.Mode.QUADS, com.mojang.blaze3d.vertex.DefaultVertexFormat.POSITION_COLOR);
         for (var it = RINGS.iterator(); it.hasNext(); ) {
             Ring r = it.next();
             float t = (now - r.born) / (r.life * 50f);

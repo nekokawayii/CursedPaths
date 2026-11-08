@@ -62,10 +62,10 @@ public final class DomainWorldRenderer {
         return camera.distanceToSqr(f.center())<f.radius()*f.radius()?Math.max(2,f.radius()-2.4):f.radius()+.3;
     }
     private static void sphere(PoseStack ps,DomainPresentation.Frame f,Vec3 camera,double time,boolean textured,int alpha){
-        var b=Tesselator.getInstance().getBuilder();
+        BufferBuilder b;
         if(textured){RenderSystem.setShader(GameRenderer::getPositionTexColorShader);RenderSystem.setShaderTexture(0,ResourceLocation.parse(f.style().texture()));}
         else RenderSystem.setShader(GameRenderer::getPositionColorShader);
-        b.begin(VertexFormat.Mode.TRIANGLES,textured?DefaultVertexFormat.POSITION_TEX_COLOR:DefaultVertexFormat.POSITION_COLOR);
+        b = Tesselator.getInstance().begin(VertexFormat.Mode.TRIANGLES,textured?DefaultVertexFormat.POSITION_TEX_COLOR:DefaultVertexFormat.POSITION_COLOR);
         // 内视图在实际方块壳内侧，外视图在外侧；同一切面驱动两面与边缘光环。
         boolean inside=camera.distanceToSqr(f.center())<f.radius()*f.radius();
         int lon=64,lat=32;double radius=surfaceRadius(f,camera);

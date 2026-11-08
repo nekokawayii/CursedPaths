@@ -74,9 +74,9 @@ public final class CullingCubeClient {
         RenderSystem.depthMask(false);
         RenderSystem.setShader(GameRenderer::getPositionColorShader);
         Vec3 mn = center.add(-half, -half * .6, -half), mx = center.add(half, half * .9, half);
-        BufferBuilder b = Tesselator.getInstance().getBuilder();
+        BufferBuilder b;
         // 六个面（半透明黑）
-        b.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_COLOR);
+        b = Tesselator.getInstance().begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_COLOR);
         int face = (Math.min(200, alpha / 2) << 24);
         Client.quad(b, ps, new Vec3(mn.x, mn.y, mn.z), new Vec3(mx.x, mn.y, mn.z), new Vec3(mx.x, mn.y, mx.z), new Vec3(mn.x, mn.y, mx.z), face);
         Client.quad(b, ps, new Vec3(mn.x, mx.y, mn.z), new Vec3(mn.x, mx.y, mx.z), new Vec3(mx.x, mx.y, mx.z), new Vec3(mx.x, mx.y, mn.z), face);
@@ -86,8 +86,8 @@ public final class CullingCubeClient {
         Client.quad(b, ps, new Vec3(mn.x, mn.y, mx.z), new Vec3(mx.x, mn.y, mx.z), new Vec3(mx.x, mx.y, mx.z), new Vec3(mn.x, mx.y, mx.z), face);
         BufferUploader.drawWithShader(b.buildOrThrow());
         // 十二条棱（暗红发光）
-        b = Tesselator.getInstance().getBuilder();
-        b.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_COLOR);
+        
+        b = Tesselator.getInstance().begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_COLOR);
         int edge = (Math.min(255, alpha + 40) << 24) | 0x401018;
         Vec3[] v = {
             new Vec3(mn.x, mn.y, mn.z), new Vec3(mx.x, mn.y, mn.z), new Vec3(mx.x, mn.y, mx.z), new Vec3(mn.x, mn.y, mx.z),
