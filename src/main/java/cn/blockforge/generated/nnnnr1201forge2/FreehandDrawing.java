@@ -17,7 +17,7 @@ public final class FreehandDrawing {
     }
     private static final Map<UUID,Drawing> drawings=new HashMap<>();
     private static boolean allowed(ServerPlayer p){return Journey.unlocked(p)&&p.isAlive()&&!p.isRemoved()&&!p.isSpectator()&&Curse.canUseTechnique(p)&&!SoulCombat.suppressed(p)&&!DismantleMotion.active(p)&&!EternalLove.settling(MaidBridge.body(p))&&!Skills.sealing(p);}
-    private static void reply(ServerPlayer p,UUID id,int state,double pixels){Network.CHANNEL.send(SimpleChannel.Target.player(p),new Network.DrawState(id,state,pixels));}
+    private static void reply(ServerPlayer p,UUID id,int state,double pixels){Network.CHANNEL.send(cn.blockforge.generated.nnnnr1201forge2.SimpleChannel.Target.player(p),new Network.DrawState(id,state,pixels));}
     public static void input(ServerPlayer p,Network.DrawInput m){
         if(m.operation()==CANCEL){Drawing d=drawings.get(p.getUUID());if(d!=null&&d.id.equals(m.id()))cancel(p);return;}
         if(!allowed(p)){cancel(p);reply(p,m.id(),0,0);CastFeedback.unavailable(p,0);return;}

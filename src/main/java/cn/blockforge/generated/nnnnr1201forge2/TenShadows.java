@@ -158,7 +158,7 @@ public final class TenShadows {
     @SubscribeEvent public static void interact(PlayerInteractEvent e){if(true&&locked(e.getEntity()))cn.blockforge.generated.nnnnr1201forge2.CompatEvents.cancel(e);}
     @SubscribeEvent public static void attack(AttackEntityEvent e){if(locked(e.getEntity()))e.setCanceled(true);}
     @SubscribeEvent public static void breaking(PlayerEvent.BreakSpeed e){if(locked(e.getEntity()))e.setCanceled(true);}
-    @SubscribeEvent public static void login(PlayerEvent.PlayerLoggedInEvent e){if(e.getEntity() instanceof ServerPlayer p){for(ServerPlayer other:p.server.getPlayerList().getPlayers())Network.CHANNEL.send(SimpleChannel.Target.player(p),state(other));sync(p);}}
+    @SubscribeEvent public static void login(PlayerEvent.PlayerLoggedInEvent e){if(e.getEntity() instanceof ServerPlayer p){for(ServerPlayer other:p.server.getPlayerList().getPlayers())Network.CHANNEL.send(cn.blockforge.generated.nnnnr1201forge2.SimpleChannel.Target.player(p),state(other));sync(p);}}
     @SubscribeEvent public static void tracking(PlayerEvent.StartTracking e){if(e.getEntity() instanceof ServerPlayer listener&&e.getTarget() instanceof ServerPlayer target)Network.CHANNEL.send(SimpleChannel.Target.player(listener),state(target));}
     @SubscribeEvent public static void respawn(PlayerEvent.PlayerRespawnEvent e){if(e.getEntity() instanceof ServerPlayer p)sync(p);}
     @SubscribeEvent public static void dimension(PlayerEvent.PlayerChangedDimensionEvent e){if(e.getEntity() instanceof ServerPlayer p){cancel(p);sync(p);}}

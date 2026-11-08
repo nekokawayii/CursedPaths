@@ -15,6 +15,6 @@ public final class MainlinePackets {
             .decoder(b->new State(b.readVarInt(),b.readVarInt(),b.readVarInt(),b.readVarInt()))
             .consumerMainThread((m,c)->{MainlineState.mask=m.mask();MainlineState.simple=m.simple();MainlineState.domain=m.domain();MainlineState.kills=m.kills();c.get().setPacketHandled(true);}).add();
     }
-    public static void send(ServerPlayer p,int mask,int simple,int domain,int kills){Network.CHANNEL.send(SimpleChannel.Target.player(p),new State(mask,simple,domain,kills));}
+    public static void send(ServerPlayer p,int mask,int simple,int domain,int kills){Network.CHANNEL.send(cn.blockforge.generated.nnnnr1201forge2.SimpleChannel.Target.player(p),new State(mask,simple,domain,kills));}
     private MainlinePackets() { }
 }

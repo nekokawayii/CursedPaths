@@ -48,7 +48,7 @@ public final class ShadowSystem {
     public static void sync(ServerPlayer p){
         prune(p);int[] counts=new int[11],seconds=new int[11];long now=p.level().getGameTime();
         for(String key:book(p).getAllKeys()){var row=book(p).getCompound(key);int k=row.getInt("Kind");if(TenShadowRules.valid(k)){counts[k]++;seconds[k]=Math.max(seconds[k],(int)Math.max(0,(row.getLong("End")-now+19)/20));}}
-        Network.CHANNEL.send(SimpleChannel.Target.player(p),new State(mask(p),fused(p),counts,seconds));
+        Network.CHANNEL.send(cn.blockforge.generated.nnnnr1201forge2.SimpleChannel.Target.player(p),new State(mask(p),fused(p),counts,seconds));
     }
     private static void tell(ServerPlayer p,String message){p.displayClientMessage(Component.literal(message),true);}
     public static void request(ServerPlayer p,Request request){

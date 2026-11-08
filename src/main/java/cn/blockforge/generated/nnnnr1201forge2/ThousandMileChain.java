@@ -377,7 +377,7 @@ public final class ThousandMileChain {
         if(!SESSIONS.remove(s.owner.getUUID(),s))return;
         if(s.target!=null){CAPTIVES.remove(s.target.getUUID(),s);restore(s.target);s.target.setDeltaMovement(Vec3.ZERO);s.target.fallDistance=0;s.target.hurtMarked=true;}
         Snapshot packet=snapshot(s,END);
-        for(UUID id:s.viewers){ServerPlayer p=s.owner.server.getPlayerList().getPlayer(id);if(p!=null)Network.CHANNEL.send(SimpleChannel.Target.player(p),packet);}
+        for(UUID id:s.viewers){ServerPlayer p=s.owner.server.getPlayerList().getPlayer(id);if(p!=null)Network.CHANNEL.send(cn.blockforge.generated.nnnnr1201forge2.SimpleChannel.Target.player(p),packet);}
     }
     private static void leave(Entity e){Session own=SESSIONS.get(e.getUUID()),captive=CAPTIVES.get(e.getUUID());if(own!=null)finish(own);if(captive!=null)finish(captive);}
     private static void sound(Session s){s.level.playSound(null,s.owner.blockPosition(),SoundEvents.CHAIN_PLACE,SoundSource.PLAYERS,.8f,1);}

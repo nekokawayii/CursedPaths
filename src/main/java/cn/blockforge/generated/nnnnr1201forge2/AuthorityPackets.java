@@ -17,8 +17,8 @@ public final class AuthorityPackets {
     public static Runnable openReceiver=()->{};
     private static int[] array(FriendlyByteBuf b,int max){int n=b.readVarInt();if(n<0||n>max)throw new IllegalArgumentException("权限目录超限");int[] out=new int[n];for(int i=0;i<n;i++)out[i]=b.readVarInt();return out;}
     private static void array(FriendlyByteBuf b,int[] values){b.writeVarInt(values.length);for(int i:values)b.writeVarInt(i);}
-    public static void sync(ServerPlayer p){if(p instanceof net.neoforged.neoforge.common.util.FakePlayer)return;boolean enabled=Authority.unlocked(p);Network.CHANNEL.send(SimpleChannel.Target.player(p),new State(enabled,enabled?Legion.count(p):0,enabled?Legion.stored(p):0,enabled?Legion.targetIds(p).stream().mapToInt(Integer::intValue).toArray():new int[0],enabled?AuthoritySkills.owned(p).stream().mapToInt(Integer::intValue).toArray():new int[0]));}
-    public static void open(ServerPlayer p){if(!Authority.unlocked(p)||ObserverRitual.active(p))return;sync(p);Network.CHANNEL.send(SimpleChannel.Target.player(p),new Open());}
+    public static void sync(ServerPlayer p){if(p instanceof net.neoforged.neoforge.common.util.FakePlayer)return;boolean enabled=Authority.unlocked(p);Network.CHANNEL.send(cn.blockforge.generated.nnnnr1201forge2.SimpleChannel.Target.player(p),new State(enabled,enabled?Legion.count(p):0,enabled?Legion.stored(p):0,enabled?Legion.targetIds(p).stream().mapToInt(Integer::intValue).toArray():new int[0],enabled?AuthoritySkills.owned(p).stream().mapToInt(Integer::intValue).toArray():new int[0]));}
+    public static void open(ServerPlayer p){if(!Authority.unlocked(p)||ObserverRitual.active(p))return;sync(p);Network.CHANNEL.send(cn.blockforge.generated.nnnnr1201forge2.SimpleChannel.Target.player(p),new Open());}
     public static void send(int op,int value,int extra){Network.CHANNEL.sendToServer(new Action(op,value,extra));}
     private static void handle(ServerPlayer p,Action m){
         if(p==null||!Authority.unlocked(p)||!p.isAlive()||p.isSpectator()||ObserverRitual.active(p))return;

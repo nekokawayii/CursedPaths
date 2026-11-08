@@ -121,7 +121,7 @@ public final class BlackFlashMarks {
         fx(p,target.getEyePosition(),dir);
     }
     private static void fx(ServerPlayer p,Vec3 at,Vec3 dir){
-        Network.CHANNEL.send(net.neoforged.neoforge.network.SimpleChannel.Target.tracking(p),
+        Network.CHANNEL.send(cn.blockforge.generated.nnnnr1201forge2.SimpleChannel.Target.tracking(p),
             new Network.Effect(85,p.getId(),at,dir,1,16,p.getId()));
         SkillSounds.play(p,"black_flash",3.5f);   // 打击感：音效更响
     }

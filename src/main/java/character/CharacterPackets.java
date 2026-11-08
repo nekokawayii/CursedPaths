@@ -20,11 +20,11 @@ public final class CharacterPackets {
         Network.CHANNEL.messageBuilder(State.class,43,cn.blockforge.generated.nnnnr1201forge2.SimpleChannel.NetworkDirection.PLAY_TO_CLIENT).encoder((m,b)->{b.writeUtf(m.id(),48);b.writeDouble(m.stamina());b.writeDouble(m.maximum());b.writeVarInt(m.rank());b.writeBoolean(m.changed());b.writeVarInt(m.copies().length);for(int id:m.copies())b.writeVarInt(id);}).decoder(b->{String id=b.readUtf(48);double st=b.readDouble();double mx=b.readDouble();int rk=b.readVarInt();boolean ch=b.readBoolean();int n=b.readVarInt();int[] cs=new int[n];for(int i=0;i<n;i++)cs[i]=b.readVarInt();return new State(id,st,mx,rk,ch,cs);}).consumerMainThread((m,c)->{receiver.accept(m);c.get().setPacketHandled(true);}).add();
         Network.CHANNEL.messageBuilder(Physical.class,44,SimpleChannel.NetworkDirection.PLAY_TO_SERVER).encoder((m,b)->b.writeVarInt(m.kind())).decoder(b->new Physical(b.readVarInt())).consumerMainThread((m,c)->{var p=c.get().getSender();if(p!=null){if(m.kind()>=200)character.naoya.NaoyaCombat.input(p,m.kind()-200);else TojiCombat.cast(p,m.kind());}c.get().setPacketHandled(true);}).add();
     }
-    public static void open(ServerPlayer p) { sync(p,false);Network.CHANNEL.send(SimpleChannel.Target.player(p),new Open()); }
+    public static void open(ServerPlayer p) { sync(p,false);Network.CHANNEL.send(cn.blockforge.generated.nnnnr1201forge2.SimpleChannel.Target.player(p),new Open()); }
     public static void sync(ServerPlayer p,boolean changed) {
         if(p instanceof net.neoforged.neoforge.common.util.FakePlayer)return;
         var d=CharacterService.selected(p);
-        Network.CHANNEL.send(SimpleChannel.Target.player(p),new State(d==null?"":d.id(),TojiCombat.stamina(p),TojiCombat.maximum(p),CharacterService.rank(p),changed,character.yuta.YutaCopies.array(p)));
+        Network.CHANNEL.send(cn.blockforge.generated.nnnnr1201forge2.SimpleChannel.Target.player(p),new State(d==null?"":d.id(),TojiCombat.stamina(p),TojiCombat.maximum(p),CharacterService.rank(p),changed,character.yuta.YutaCopies.array(p)));
     }
     private CharacterPackets() {}
 }

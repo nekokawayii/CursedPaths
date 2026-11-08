@@ -178,6 +178,6 @@ public final class ObserverRitual {
     }
     @SubscribeEvent public static void stop(net.neoforged.neoforge.event.server.ServerStoppedEvent e){sessions.clear();}
     private static void sound(ServerPlayer p,SoundEvent sound,float volume,float pitch){p.playNotifySound(sound,SoundSource.MASTER,volume,pitch);}
-    private static void fire(ServerPlayer p,int kind,int value){Network.CHANNEL.send(SimpleChannel.Target.player(p),new Network.Effect(kind,p.getId(),p.position(),Vec3.ZERO,0,value,value));}
+    private static void fire(ServerPlayer p,int kind,int value){Network.CHANNEL.send(cn.blockforge.generated.nnnnr1201forge2.SimpleChannel.Target.player(p),new Network.Effect(kind,p.getId(),p.position(),Vec3.ZERO,0,value,value));}
     private ObserverRitual(){}
 }

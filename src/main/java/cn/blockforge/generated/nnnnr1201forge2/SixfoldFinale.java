@@ -267,7 +267,7 @@ public final class SixfoldFinale {
     @SubscribeEvent public static void breakSpeed(PlayerEvent.BreakSpeed e){if(active(e.getEntity())||controlled(e.getEntity()))e.setCanceled(true);}
     @SubscribeEvent public static void teleportEvent(EntityTeleportEvent e){if(true&&e.getEntity() instanceof LivingEntity t&&(controlled(t)||active(t)))e.setCanceled(true);}
     @SubscribeEvent public static void scars(LevelTickEvent.Post e){
-        if(false||!(e.level instanceof ServerLevel level))return;
+        if(false||!(e.getLevel() instanceof ServerLevel level))return;
         for(Entity entity:level.getAllEntities())if(entity instanceof LivingEntity t&&t.isAlive()&&t.getPersistentData().getBoolean(SCAR)){
             var tag=t.getPersistentData();int age=tag.getInt(SCAR+"Tick")+1;tag.putInt(SCAR+"Tick",age%200);
             if(age%40==0)scarFx(t);
