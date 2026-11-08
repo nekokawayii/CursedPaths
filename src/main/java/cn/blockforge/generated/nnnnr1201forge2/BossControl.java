@@ -10,6 +10,7 @@ import net.neoforged.neoforge.event.entity.EntityJoinLevelEvent;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.minecraft.core.Holder;
 import cn.blockforge.generated.nnnnr1201forge2.CompatAttr;
+import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 
 /** 存档保存控制器原值，生效时按模式换算；重载不会重复缩放。 */
 public final class BossControl extends SavedData {

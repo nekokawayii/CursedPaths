@@ -37,10 +37,19 @@ public final class SimpleChannel {
     public static final class Target {
         private final ServerPlayer player; private final boolean all; private final net.minecraft.world.entity.Entity tracked;
         private Target(ServerPlayer p, boolean all) { this(p, all, null); }
-        private Target(ServerPlayer p, boolean all, net.minecraft.world.entity.Entity tracked) { this.player = p; this.all = all; this.tracked = tracked; }
+        private Target(ServerPlayer p, boolean all, net.minecraft.world.entity.Entity tracked) { this.player = p; this.all = all; this.tracked = tracked; this.nearDim = null; this.nx=this.ny=this.nz=this.nr=0; }
         public static Target player(ServerPlayer p) { return new Target(p, false); }
         public static Target all() { return new Target(null, true); }
         public static Target tracking(net.minecraft.world.entity.Entity e) { return new Target(null, false, e); }
+
+        private final net.minecraft.resources.ResourceKey<net.minecraft.world.level.Level> nearDim;
+        private final double nx, ny, nz, nr;
+        public static Target near(net.minecraft.resources.ResourceKey<net.minecraft.world.level.Level> dim, double x, double y, double z, double radius) {
+            return new Target(dim, x, y, z, radius);
+        }
+        private Target(net.minecraft.resources.ResourceKey<net.minecraft.world.level.Level> dim, double x, double y, double z, double radius) {
+            this.player = null; this.all = false; this.tracked = null; this.nearDim = dim; this.nx = x; this.ny = y; this.nz = z; this.nr = radius;
+        }
     }
 
     private static final Map<Integer, Entry<?>> ENTRIES = new HashMap<>();
@@ -132,7 +141,11 @@ public final class SimpleChannel {
         static <T> void send(Target target, T msg) {
             int id = idOf(msg);
             Frame frame = new Frame(id, encode(id, msg));
-            if (target.all) PacketDistributor.sendToAllPlayers(frame);
+            if (target.nearDim != null) {
+                var server = net.neoforged.neoforge.server.ServerLifecycleHooks.getCurrentServer();
+                if (server != null) { var level = server.getLevel(target.nearDim); if (level != null)
+                    PacketDistributor.sendToPlayersNear(level, null, target.nx, target.ny, target.nz, target.nr, frame); }
+            } else if (target.all) PacketDistributor.sendToAllPlayers(frame);
             else if (target.tracked != null) PacketDistributor.sendToPlayersTrackingEntityAndSelf(target.tracked, frame);
             else if (target.player != null) PacketDistributor.sendToPlayer(target.player, frame);
         }

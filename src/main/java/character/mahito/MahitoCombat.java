@@ -29,6 +29,7 @@ import cn.blockforge.generated.nnnnr1201forge2.CompatAttr;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.minecraft.core.Holder;
 import net.minecraft.world.effect.MobEffect;
+import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 
 /** 真人共用战斗规则。延迟命中重查敌友；临时属性均使用独立修饰符，不改基础存档数值。 */
 @EventBusSubscriber(modid="jujutsu_kaisen_cursed_paths")

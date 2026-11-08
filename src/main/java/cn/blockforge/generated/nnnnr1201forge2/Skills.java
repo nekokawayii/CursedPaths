@@ -12,6 +12,7 @@ import net.neoforged.bus.api.SubscribeEvent;
 import java.util.*;
 import net.neoforged.neoforge.event.tick.ServerTickEvent;
 import cn.blockforge.generated.nnnnr1201forge2.CompatAttr;
+import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 
 public final class Skills {
     public static final String[] NAMES={"解 · 远程斩击","解 · 八方罗网","捌 · 必断斩击","开 · 炎弓","灶 · 粉尘爆炸","领域展开 · 伏魔御厨子","灵魂剥离"};

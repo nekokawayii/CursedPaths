@@ -40,7 +40,7 @@ public final class TenShadowsClient {
         long left=s.manifestEnd()-tick;
         return left<=0?0:(int)((left+19)/20);
     }
-    public static ResourceLocation skin(AbstractClientPlayer p){return has(p.getUUID())?SKIN:p.getSkinTextureLocation();}
+    public static ResourceLocation skin(AbstractClientPlayer p){return has(p.getUUID())?SKIN:p.getSkin().texture();}
     public static final class Registration {
         @SubscribeEvent public static void layers(EntityRenderersEvent.AddLayers e){renderer=new VesselRenderer(e.getContext());arms=new PlayerModel<>(e.getContext().bakeLayer(ModelLayers.PLAYER),false);}
     }

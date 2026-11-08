@@ -13,6 +13,7 @@ import net.neoforged.bus.api.*;
 import net.neoforged.neoforge.event.tick.ServerTickEvent;
 import net.neoforged.neoforge.event.tick.PlayerTickEvent;
 import cn.blockforge.generated.nnnnr1201forge2.CompatAttr;
+import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 
 /** 所有控制、层数和治疗限制均在服务端执行。 */
 public final class SoulCombat {

@@ -16,6 +16,7 @@ import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.neoforge.event.tick.ServerTickEvent;
 import net.minecraft.core.Holder;
 import cn.blockforge.generated.nnnnr1201forge2.CompatAttr;
+import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 
 /**
  * 死灭洄游结界内的刷新与敌对（r218）。

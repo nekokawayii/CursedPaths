@@ -22,6 +22,7 @@ import net.neoforged.bus.api.*;
 import net.neoforged.neoforge.event.tick.ServerTickEvent;
 import net.minecraft.core.Holder;
 import cn.blockforge.generated.nnnnr1201forge2.CompatAttr;
+import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 
 /** 赤血操术服务端。客户端只能提交按键，耗能、冷却、命中和状态均在这里核验。 */
 public final class BloodArts {

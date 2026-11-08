@@ -17,6 +17,7 @@ import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.sounds.*;
+import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 
 public final class DaitianEntity extends Monster {
     private static final EntityDataAccessor<Integer> ACTION=SynchedEntityData.defineId(DaitianEntity.class,EntityDataSerializers.INT);

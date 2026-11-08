@@ -12,7 +12,7 @@ public final class ObserverRenderer extends MobRenderer<ObserverEntity,ObserverR
     public ObserverRenderer(EntityRendererProvider.Context context){super(context,new Model(),0.5f);}
     @Override public ResourceLocation getTextureLocation(ObserverEntity entity){
         var player=Minecraft.getInstance().player;
-        if(player!=null){var skin=player.getSkinTextureLocation();if(skin!=null)return skin;}
+        if(player!=null){var skin=player.getSkin().texture();if(skin!=null)return skin;}
         return DEFAULT_SKIN;
     }
     public static final class Model extends PlayerModel<ObserverEntity> {

@@ -20,6 +20,7 @@ import net.neoforged.neoforge.event.tick.ServerTickEvent;
 import net.minecraft.core.Holder;
 import cn.blockforge.generated.nnnnr1201forge2.CompatAttr;
 import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 
 /** 不引用女仆类；可选联动为每个实体提供独立施术上下文，共用玩家技能队列。 */
 public final class MaidBridge {

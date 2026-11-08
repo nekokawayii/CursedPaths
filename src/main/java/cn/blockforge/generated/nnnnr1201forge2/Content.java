@@ -221,13 +221,13 @@ public final class Content {
         net.minecraft.world.item.Tiers.GOLD, net.minecraft.world.item.Tiers.IRON,
         net.minecraft.world.item.Tiers.DIAMOND, net.minecraft.world.item.Tiers.NETHERITE};
     @SuppressWarnings("unchecked")
-    public static final DeferredHolder<Item, Item>[] TRANSFIGURED_AXES=new RegistryObject[6];
+    public static final DeferredHolder<Item, Item>[] TRANSFIGURED_AXES=new DeferredHolder[6];
     @SuppressWarnings("unchecked")
-    public static final DeferredHolder<Item, Item>[] TRANSFIGURED_PICKAXES=new RegistryObject[6];
+    public static final DeferredHolder<Item, Item>[] TRANSFIGURED_PICKAXES=new DeferredHolder[6];
     @SuppressWarnings("unchecked")
-    public static final DeferredHolder<Item, Item>[] TRANSFIGURED_HOES=new RegistryObject[6];
+    public static final DeferredHolder<Item, Item>[] TRANSFIGURED_HOES=new DeferredHolder[6];
     @SuppressWarnings("unchecked")
-    public static final DeferredHolder<Item, Item>[] TRANSFIGURED_SHOVELS=new RegistryObject[6];
+    public static final DeferredHolder<Item, Item>[] TRANSFIGURED_SHOVELS=new DeferredHolder[6];
     static {
         for(int i=0;i<6;i++){
             final int k=i;

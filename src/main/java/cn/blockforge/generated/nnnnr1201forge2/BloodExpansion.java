@@ -13,6 +13,7 @@ import net.neoforged.neoforge.event.server.ServerStoppedEvent;
 import net.neoforged.neoforge.event.tick.ServerTickEvent;
 import cn.blockforge.generated.nnnnr1201forge2.CompatAttr;
 import net.neoforged.fml.common.EventBusSubscriber;
+import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 
 /** 有界弹幕队列与逻辑血海：不放置方块、不强载区块，每格最多一次自动索敌。 */
 @net.neoforged.fml.common.EventBusSubscriber(modid="jujutsu_kaisen_cursed_paths")

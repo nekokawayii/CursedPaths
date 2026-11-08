@@ -19,6 +19,7 @@ import net.neoforged.bus.api.*;
 import net.neoforged.neoforge.event.tick.ServerTickEvent;
 import net.minecraft.core.Holder;
 import cn.blockforge.generated.nnnnr1201forge2.CompatAttr;
+import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 
 /** 通关后第二页的守护者同款招式：服务端校验资格、消耗、冷却、目标及敌友。 */
 public final class GuardianPlayerSkills {

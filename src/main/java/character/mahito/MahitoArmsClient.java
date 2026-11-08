@@ -60,7 +60,7 @@ public final class MahitoArmsClient {
             int arms = ARMS.getOrDefault(player.getId(), 0);
             if (arms <= 0) return;
             PlayerModel<AbstractClientPlayer> model = getParentModel();
-            var vc = buffers.getBuffer(RenderType.entityCutoutNoCull(player.getSkinTextureLocation()));
+            var vc = buffers.getBuffer(RenderType.entityCutoutNoCull(player.getSkin().texture()));
             for (int i = 0; i < arms; i++) {
                 boolean right = (i % 2) == 0;
                 int pair = i / 2 + 1;

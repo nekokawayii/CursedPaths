@@ -21,6 +21,7 @@ import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.neoforge.event.tick.PlayerTickEvent;
 import net.minecraft.core.Holder;
 import cn.blockforge.generated.nnnnr1201forge2.CompatAttr;
+import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 
 /** 纯肉体技能：独立体术余额，不借用咒力，不触发咒术伤害；敌友仍走统一结算。 */
 public final class TojiCombat {

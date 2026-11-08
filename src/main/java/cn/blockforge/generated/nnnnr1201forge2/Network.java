@@ -251,7 +251,7 @@ public final class Network {
         Effect visual=e.wallpaperOwner()==null&&!e.desktopSlashes()&&caster!=null&&!targetEffect?e.fromCaster(caster):e;
         Effect tint=caster==null?null:new Effect(144,e.owner(),e.position(),Vec3.ZERO,1,400,GuardianCombat.awakened(caster)?1:0);
         if(e.size()==SlashReach.INFINITE){for(ServerPlayer listener:level.players()){var audience=SimpleChannel.Target.player(listener);if(tint!=null)CHANNEL.send(audience,tint);CHANNEL.send(audience,visual);}return;}
-        var audience=PacketDistributor.NEAR.with(()->new PacketDistributor.TargetPoint(e.position.x,e.position.y,e.position.z,512,level.dimension()));if(tint!=null)CHANNEL.send(audience,tint);CHANNEL.send(audience,visual);
+        var audience=SimpleChannel.Target.near(level.dimension(), e.position.x, e.position.y, e.position.z, 512);if(tint!=null)CHANNEL.send(audience,tint);CHANNEL.send(audience,visual);
     }
     public static void sendController(ServerPlayer p) { if(p instanceof net.neoforged.neoforge.common.util.FakePlayer)return;CHANNEL.send(SimpleChannel.Target.player(p),VoidController.state(p)); }
     public static void sendControllerRequest(int field, int delta) { CHANNEL.sendToServer(new ControllerRequest(field,delta)); }

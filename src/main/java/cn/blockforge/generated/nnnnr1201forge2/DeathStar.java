@@ -22,6 +22,7 @@ import net.neoforged.bus.api.*;
 import net.neoforged.neoforge.event.tick.ServerTickEvent;
 import net.neoforged.neoforge.event.tick.PlayerTickEvent;
 import cn.blockforge.generated.nnnnr1201forge2.CompatAttr;
+import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 
 /** 极之番服务端：单次扣费、40刻蓄力、扫掠碰撞、每次命中重新核验敌友。 */
 public final class DeathStar {

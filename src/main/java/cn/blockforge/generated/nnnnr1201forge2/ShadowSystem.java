@@ -33,7 +33,7 @@ public final class ShadowSystem {
         Network.CHANNEL.messageBuilder(Fx.class,40,SimpleChannel.NetworkDirection.PLAY_TO_CLIENT).encoder((s,b)->{b.writeVarInt(s.kind);b.writeDouble(s.from.x);b.writeDouble(s.from.y);b.writeDouble(s.from.z);b.writeDouble(s.to.x);b.writeDouble(s.to.y);b.writeDouble(s.to.z);b.writeFloat(s.radius);b.writeVarInt(s.ticks);}).decoder(b->new Fx(b.readVarInt(),new Vec3(b.readDouble(),b.readDouble(),b.readDouble()),new Vec3(b.readDouble(),b.readDouble(),b.readDouble()),b.readFloat(),b.readVarInt())).consumerMainThread((s,c)->{fxReceiver.accept(s);c.get().setPacketHandled(true);}).add();
     }
     public static void fx(ServerLevel level,int kind,Vec3 from,Vec3 to,float radius,int ticks){
-        Network.CHANNEL.send(PacketDistributor.NEAR.with(()->new PacketDistributor.TargetPoint(from.x,from.y,from.z,160,level.dimension())),new Fx(kind,from,to,radius,ticks));
+        Network.CHANNEL.send(SimpleChannel.Target.near(level.dimension(), from.x, from.y, from.z, 160), new Fx(kind,from,to,radius,ticks));
     }
     public static boolean fused(Player p){return Curse.data(p).getBoolean(FUSED);}
     public static int mask(Player p){return TenShadowRules.mask(Curse.data(p).getInt(TAMED),fused(p));}
