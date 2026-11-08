@@ -40,3 +40,4 @@ defaultconfigs/
 client-photon.log
 client-play*.log
 server-play*.log
+client-*.log
