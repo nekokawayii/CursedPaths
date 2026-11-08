@@ -23,7 +23,7 @@ public final class GuiEntityPreview {
                 System.out.println("[宿傩] 实体预览缺少渲染器，已改用二维占位："+net.minecraft.core.registries.BuiltInRegistries.ENTITY_TYPE.getKey(entity.getType()));
                 return false;
             }
-            InventoryScreen.renderEntityInInventoryFollowsMouse(g,x,y,scale,angleX,angleY,entity);
+            InventoryScreen.renderEntityInInventoryFollowsMouse(g,(int)x-40,(int)y-80,(int)x+40,(int)y,scale,0f,angleX,angleY,entity);
             return true;
         }catch(Throwable t){
             System.out.println("[宿傩] 实体预览绘制抛错，已改用二维占位："+net.minecraft.core.registries.BuiltInRegistries.ENTITY_TYPE.getKey(entity.getType())+" "+t);

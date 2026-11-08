@@ -162,7 +162,7 @@ public final class Curse {
         double cost=ShrineRules.repairCost(maximum(p));if(!spendEffective(p,cost))return;
         clearBurnout(p);status(p,"TechniqueRepairedUntil",ShrineRules.REPAIR_BUFF_TICKS);sync(p);p.displayClientMessage(Component.literal("术式熔断已修复：全部伤害提升10%，持续5秒"),true);
     }
-    @SubscribeEvent public static void tick(PlayerTickEvent.Post e){if(true&&e.getPlayer() instanceof ServerPlayer p&&p.tickCount%20==0)tickCaster(p);}
+    @SubscribeEvent public static void tick(PlayerTickEvent.Post e){if(e.getEntity() instanceof ServerPlayer p&&p.tickCount%20==0)tickCaster(p);}
     public static void tickCaster(ServerPlayer p){
         if(character.CharacterService.toji(p)){data(p).putDouble("Energy",0);data(p).putBoolean("Fist",false);apply(p);sync(p);return;}
         if(Authority.pool(p)!=null){if(data(p).getBoolean("TechniqueBurnout")&&!active(p,"TechniqueBurnoutUntil"))clearBurnout(p);return;} // 军团不凭空为共享池叠加回咒。

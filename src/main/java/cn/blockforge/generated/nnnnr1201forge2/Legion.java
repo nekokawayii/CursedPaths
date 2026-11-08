@@ -58,7 +58,7 @@ public final class Legion {
         if(existing==null){members.add(NbtUtils.createUUID(mob.getUUID()));army.put("Members",members);store.setDirty();}
         army.putBoolean("RecallPending",false);store.setDirty();
         mob.getPersistentData().putUUID(OWNER,p.getUUID());if(existing==null){var versions=army.getCompound("Versions");versions.putInt(mob.getStringUUID(),1);army.put("Versions",versions);mob.getPersistentData().putInt("AuthorityRevision",1);store.setDirty();}mob.setPersistenceRequired();mob.setTarget(null);mob.setLastHurtByMob(null);mob.setLastHurtByPlayer(null);
-        if(mob instanceof TamableAnimal pet){pet.setOwnerUUID(p.getUUID());pet.setTame(true);pet.setOrderedToSit(false);}
+        if(mob instanceof TamableAnimal pet){pet.setOwnerUUID(p.getUUID());pet.setTame(true,true);pet.setOrderedToSit(false);}
         var actor=MaidBridge.actor(mob);AuthoritySkills.inherit(p,actor);Skills.protectAlly(p,mob.getUUID());SoulCombat.protect(p,mob);
         mob.clearFire();for(String key:List.of("SukunaSoulFire","SukunaNoHeal","SukunaSoulSlashOwner","SukunaVoidIgnitionUntil"))mob.getPersistentData().remove(key);
         p.displayClientMessage(Component.literal("言灵·恩赐："+mob.getName().getString()),true);AuthorityPackets.sync(p);

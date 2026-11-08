@@ -57,7 +57,6 @@ public final class PrisonRealmItem extends Item {
         if(!seal.hasUUID("Realm")||!seal.hasUUID("Token"))return;PrisonStore store=PrisonStore.get(holder.getServer());
         if(store.canPlace(seal.getUUID("Realm"),seal.getUUID("Token"))){CompoundTag snapshot=store.portableSnapshot(seal.getUUID("Realm"));if(snapshot!=null){seal.put("Snapshot",snapshot);seal.putInt("Count",snapshot.getList("Prisoners",Tag.TAG_COMPOUND).size());}}
     }
-    @Override public boolean canBeHurtBy(DamageSource source){return false;}
     @Override public boolean onEntityItemUpdate(ItemStack stack,ItemEntity entity){
         if(!entity.level().isClientSide){entity.setUnlimitedLifetime();entity.setInvulnerable(true);if(entity.getY()<entity.level().getMinBuildHeight()){entity.setPos(entity.getX(),entity.level().getMinBuildHeight()+4,entity.getZ());entity.setNoGravity(true);entity.setDeltaMovement(net.minecraft.world.phys.Vec3.ZERO);}}return false;
     }
