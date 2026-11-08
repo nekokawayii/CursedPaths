@@ -5,7 +5,7 @@ import character.hakari.HakariState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.api.distmarker.Dist;
-import net.neoforged.neoforge.client.event.RegisterGuiOverlaysEvent;
+import net.neoforged.neoforge.client.event.RegisterGuiLayersEvent;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.common.EventBusSubscriber;
@@ -83,8 +83,10 @@ public final class HakariClient {
     }
 
     /** 屏幕上方：三格老虎机 + 幸运值进度条；中奖时是金色横幅与倒计时。 */
-    @SubscribeEvent public static void overlay(RegisterGuiOverlaysEvent event) {
-        event.registerAboveAll("sukuna_hakari_slot", (gui, graphics, partialTick, width, height) -> {
+    @SubscribeEvent public static void overlay(RegisterGuiLayersEvent event) {
+        event.registerAboveAll(net.minecraft.resources.ResourceLocation.fromNamespaceAndPath(GeneratedMod.MOD_ID, "sukuna_hakari_slot"), (graphics, delta) -> {
+            int width = graphics.guiWidth(), height = graphics.guiHeight();
+            float partialTick = delta.getGameTimeDeltaPartialTick(true);
             var mc = Minecraft.getInstance();
             if (mc.level == null || mc.player == null) return;
             long now = mc.level.getGameTime();
