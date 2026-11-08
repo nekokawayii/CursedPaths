@@ -3,7 +3,7 @@ package cn.blockforge.generated.nnnnr1201forge2;
 import java.util.*;
 import java.util.function.Consumer;
 import net.minecraft.network.FriendlyByteBuf;
-import net.neoforged.neoforge.network.NetworkDirection;
+
 
 /** 高位专用通道消息：会话令牌防止上一次战斗的延迟输入落入下一局。 */
 public final class ObserverPackets {
@@ -42,12 +42,12 @@ public final class ObserverPackets {
     public static Consumer<Cursors> cursorReceiver=s->{};
     public static Consumer<State> receiver=s->{};
     public static void register(){
-        Network.CHANNEL.messageBuilder(Cursors.class,32,NetworkDirection.PLAY_TO_CLIENT).encoder(Cursors::write).decoder(Cursors::read).consumerMainThread((m,c)->{cursorReceiver.accept(m);c.get().setPacketHandled(true);}).add();
-        Network.CHANNEL.messageBuilder(Input.class,27,NetworkDirection.PLAY_TO_SERVER)
+        Network.CHANNEL.messageBuilder(Cursors.class,32,SimpleChannel.NetworkDirection.PLAY_TO_CLIENT).encoder(Cursors::write).decoder(Cursors::read).consumerMainThread((m,c)->{cursorReceiver.accept(m);c.get().setPacketHandled(true);}).add();
+        Network.CHANNEL.messageBuilder(Input.class,27,SimpleChannel.NetworkDirection.PLAY_TO_SERVER)
             .encoder((m,b)->{b.writeUUID(m.session);b.writeVarInt(m.operation);b.writeVarInt(m.value);b.writeFloat(m.x);b.writeFloat(m.y);})
             .decoder(b->new Input(b.readUUID(),b.readVarInt(),b.readVarInt(),b.readFloat(),b.readFloat()))
             .consumerMainThread((m,c)->{var p=c.get().getSender();if(p!=null)ObserverRitual.input(p,m);c.get().setPacketHandled(true);}).add();
-        Network.CHANNEL.messageBuilder(State.class,28,NetworkDirection.PLAY_TO_CLIENT).encoder(State::write).decoder(State::read)
+        Network.CHANNEL.messageBuilder(State.class,28,SimpleChannel.NetworkDirection.PLAY_TO_CLIENT).encoder(State::write).decoder(State::read)
             .consumerMainThread((m,c)->{receiver.accept(m);c.get().setPacketHandled(true);}).add();
     }
     private ObserverPackets(){}

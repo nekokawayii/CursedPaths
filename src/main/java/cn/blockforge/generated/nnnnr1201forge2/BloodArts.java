@@ -247,7 +247,7 @@ public final class BloodArts {
             if(s.mirror>now)reflect(s);
             if(now%5==0){
                 if(s.compressed>now)fx(p,FX_READY,p.getEyePosition(),p.getLookAngle(),1,7,0);
-                if(s.flow>now){fx(p,FX+4,p.position(),p.getDeltaMovement(),1,7,s.vision?1:0);if(s.vision&&!(p instanceof net.neoforged.neoforge.common.util.FakePlayer))for(LivingEntity t:near(p,p.getEyePosition(),40+rank(p)*8))if(visible(p,p.getEyePosition(),t)){Vec3 velocity=t.position().subtract(t.xo,t.yo,t.zo);Network.CHANNEL.send(net.neoforged.neoforge.network.PacketDistributor.PLAYER.with(()->p),new Network.Effect(FX_HEART,t.getId(),t.position(),velocity,1+rank(p)*.25f,7,0));}}
+                if(s.flow>now){fx(p,FX+4,p.position(),p.getDeltaMovement(),1,7,s.vision?1:0);if(s.vision&&!(p instanceof net.neoforged.neoforge.common.util.FakePlayer))for(LivingEntity t:near(p,p.getEyePosition(),40+rank(p)*8))if(visible(p,p.getEyePosition(),t)){Vec3 velocity=t.position().subtract(t.xo,t.yo,t.zo);Network.CHANNEL.send(net.neoforged.neoforge.network.SimpleChannel.Target.player(p),new Network.Effect(FX_HEART,t.getId(),t.position(),velocity,1+rank(p)*.25f,7,0));}}
                 if(s.blade>now)fx(p,FX+5,p.position(),p.getLookAngle(),1,7,0);
                 if(s.shield>0)fx(p,FX+7,p.position(),Vec3.ZERO,s.shield,7,0);
                 if(s.wings>now)fx(p,FX+10,p.position(),p.getLookAngle(),1,7,0);

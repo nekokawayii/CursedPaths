@@ -151,7 +151,7 @@ public final class CombatSettings {
         sorted.sort(Comparator.comparing(Network.RelationRow::online).reversed().thenComparing(Network.RelationRow::name,String.CASE_INSENSITIVE_ORDER).thenComparing(r->r.id().toString()));
         int pages=Math.max(1,(sorted.size()+PAGE_SIZE-1)/PAGE_SIZE),page=Math.max(0,Math.min(pages-1,requestedPage));
         int start=page*PAGE_SIZE,end=Math.min(sorted.size(),start+PAGE_SIZE);
-        Network.CHANNEL.send(PacketDistributor.PLAYER.with(()->owner),new Network.Relations(page,pages,multiplier(owner),voidFloor(owner),List.copyOf(sorted.subList(start,end))));
+        Network.CHANNEL.send(SimpleChannel.Target.player(owner),new Network.Relations(page,pages,multiplier(owner),voidFloor(owner),List.copyOf(sorted.subList(start,end))));
     }
     @SubscribeEvent public static void commands(RegisterCommandsEvent event){
         event.getDispatcher().register(Commands.literal("jujutsu_kaisen_cursed_paths").then(Commands.literal("balance").executes(c->{

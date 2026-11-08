@@ -341,9 +341,9 @@ public final class DomainClash {
         }
     }
     private static void result(Side s,UUID id,int winner){if(player(s.field.owner)&&s.field.owner instanceof ServerPlayer p){if(winner>0&&character.CharacterService.selected(p)!=null&&"jogo".equals(character.CharacterService.selected(p).id()))character.jogo.JogoCombat.onClashWon(p);
-        Network.CHANNEL.send(PacketDistributor.PLAYER.with(()->p),new Network.ClashState(id,false,DomainClashRules.percent(winner*25),0,0,0,"",winner));p.sendSystemMessage(Component.literal(winner>0?"领域对拼获胜：本方领域完全展开，剩余时间额外延长30秒。":winner<0?"领域对拼失败，领域已解除。":"领域对拼中止：双方领域解除，不追加对拼败北惩罚。"));}}
+        Network.CHANNEL.send(SimpleChannel.Target.player(p),new Network.ClashState(id,false,DomainClashRules.percent(winner*25),0,0,0,"",winner));p.sendSystemMessage(Component.literal(winner>0?"领域对拼获胜：本方领域完全展开，剩余时间额外延长30秒。":winner<0?"领域对拼失败，领域已解除。":"领域对拼中止：双方领域解除，不追加对拼败北惩罚。"));}}
     private static void sync(Match m){sync(m,m.a,m.b,m.lead);sync(m,m.b,m.a,-m.lead);}
-    private static void sync(Match m,Side self,Side other,int lead){if(player(self.field.owner)&&self.field.owner instanceof ServerPlayer p){String name=body(other.field.owner).getDisplayName().getString();if(name.length()>128)name=name.substring(0,128);Network.CHANNEL.send(PacketDistributor.PLAYER.with(()->p),new Network.ClashState(m.id,true,DomainClashRules.percent(lead),Math.max(0,DomainClashRules.READY_TICKS-m.age),Math.max(0,DomainClashRules.READY_TICKS+m.limit()-m.age),other.cps,name,0));}}
+    private static void sync(Match m,Side self,Side other,int lead){if(player(self.field.owner)&&self.field.owner instanceof ServerPlayer p){String name=body(other.field.owner).getDisplayName().getString();if(name.length()>128)name=name.substring(0,128);Network.CHANNEL.send(SimpleChannel.Target.player(p),new Network.ClashState(m.id,true,DomainClashRules.percent(lead),Math.max(0,DomainClashRules.READY_TICKS-m.age),Math.max(0,DomainClashRules.READY_TICKS+m.limit()-m.age),other.cps,name,0));}}
     @SubscribeEvent(priority=EventPriority.HIGHEST) public static void attack(LivingAttackEvent event){
         if(event.getSource().is(DamageTypeTags.BYPASSES_INVULNERABILITY))return;
         Entity source=event.getSource().getEntity();ServerPlayer caster=CombatSettings.caster(event.getSource());

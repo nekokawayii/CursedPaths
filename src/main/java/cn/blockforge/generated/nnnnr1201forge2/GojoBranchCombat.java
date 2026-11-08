@@ -144,7 +144,7 @@ public final class GojoBranchCombat {
             default -> ok[0] = false;
         }
         if (ok[0]) Curse.data(p).putLong(key, now + GojoBranches.cooldown(skill));
-        Network.CHANNEL.send(net.neoforged.neoforge.network.PacketDistributor.PLAYER.with(() -> p),
+        Network.CHANNEL.send(net.neoforged.neoforge.network.SimpleChannel.Target.player(p),
             new Network.Effect(GojoBranches.FX_METEOR + 50, p.getId(), Vec3.ZERO, Vec3.ZERO, 0f, 0, 0));
     }
 

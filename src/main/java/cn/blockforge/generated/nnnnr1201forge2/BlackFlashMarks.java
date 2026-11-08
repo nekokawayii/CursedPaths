@@ -41,7 +41,7 @@ public final class BlackFlashMarks {
     private static final Map<UUID,Map<Integer,Long>> MARKS=new HashMap<>();
 
     private record ServerMark(UUID entity,Vec3 offset,long until,boolean extended){}
-    public static void extendBloodVision(ServerPlayer p){var points=POINTS.get(p.getUUID());var mine=MARKS.get(p.getUUID());if(points==null||mine==null)return;long now=p.level().getGameTime();for(var entry:List.copyOf(points.entrySet())){ServerMark m=entry.getValue();if(m.extended||m.until<now)continue;if(!(p.level().getEntity(entry.getKey()) instanceof LivingEntity target)||!m.entity.equals(target.getUUID())||!CombatSafety.canTarget(p,target))continue;long until=m.until+40;points.put(entry.getKey(),new ServerMark(m.entity,m.offset,until,true));mine.put(entry.getKey(),until);Network.CHANNEL.send(net.neoforged.neoforge.network.PacketDistributor.PLAYER.with(()->p),new Network.Effect(FX_MARK,target.getId(),target.position().add(m.offset),Vec3.ZERO,1,(int)(until-now),0));}}
+    public static void extendBloodVision(ServerPlayer p){var points=POINTS.get(p.getUUID());var mine=MARKS.get(p.getUUID());if(points==null||mine==null)return;long now=p.level().getGameTime();for(var entry:List.copyOf(points.entrySet())){ServerMark m=entry.getValue();if(m.extended||m.until<now)continue;if(!(p.level().getEntity(entry.getKey()) instanceof LivingEntity target)||!m.entity.equals(target.getUUID())||!CombatSafety.canTarget(p,target))continue;long until=m.until+40;points.put(entry.getKey(),new ServerMark(m.entity,m.offset,until,true));mine.put(entry.getKey(),until);Network.CHANNEL.send(net.neoforged.neoforge.network.SimpleChannel.Target.player(p),new Network.Effect(FX_MARK,target.getId(),target.position().add(m.offset),Vec3.ZERO,1,(int)(until-now),0));}}
     private static final Map<UUID,Map<Integer,ServerMark>> POINTS=new HashMap<>();
     /** 穿血使用服务端生成的红圈位置，不能仅因目标有红圈就算弱点。 */
     public static boolean bloodWeakPoint(ServerPlayer p,LivingEntity target,Vec3 start,Vec3 end){
@@ -83,7 +83,7 @@ public final class BlackFlashMarks {
             mine.put(e.getId(),until);
             var points=POINTS.computeIfAbsent(p.getUUID(),k->new HashMap<>());points.entrySet().removeIf(entry->entry.getValue().until<p.level().getGameTime());
             points.put(e.getId(),new ServerMark(e.getUUID(),at.subtract(e.position()),until,BloodArts.vision(p)));
-            Network.CHANNEL.send(net.neoforged.neoforge.network.PacketDistributor.PLAYER.with(()->p),
+            Network.CHANNEL.send(net.neoforged.neoforge.network.SimpleChannel.Target.player(p),
                 new Network.Effect(FX_MARK,e.getId(),at,Vec3.ZERO,1,duration,0));
             SkillSounds.play(p,"domainshatter",3.5f);   // 红圈出现音效（声音要大）
         }

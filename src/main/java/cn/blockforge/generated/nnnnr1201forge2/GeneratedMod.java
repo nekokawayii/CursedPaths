@@ -10,6 +10,8 @@ public final class GeneratedMod {
     public static final String MOD_ID = "jujutsu_kaisen_cursed_paths";
     public GeneratedMod() {
         GrowthConfig.register();
+        net.neoforged.fml.javafmlmod.FMLJavaModLoadingContext.get().getModEventBus()
+            .addListener((net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent e) -> SimpleChannel.register(e));
         if(net.neoforged.fml.loading.FMLEnvironment.dist==net.neoforged.api.distmarker.Dist.CLIENT)
             net.neoforged.fml.DistExecutor.unsafeRunWhenOn(net.neoforged.api.distmarker.Dist.CLIENT,()->ConfigClient::registerScreen);
         TechniqueConfig.register();

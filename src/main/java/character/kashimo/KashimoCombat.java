@@ -599,7 +599,7 @@ public final class KashimoCombat {
         KashimoZones.release(p);
         if (p.level() instanceof ServerLevel level) {
             for (int kind : new int[]{KashimoFx.ULT, KashimoFx.CRASH, KashimoFx.ATTACH, KashimoFx.MAGNET, KashimoFx.CHAIN_DARK}) {
-                Network.CHANNEL.send(net.neoforged.neoforge.network.PacketDistributor.PLAYER.with(() -> p),
+                Network.CHANNEL.send(net.neoforged.neoforge.network.SimpleChannel.Target.player(p),
                     new Network.Effect(kind, p.getId(), p.position(), Vec3.ZERO, 0f, 0, 0));
             }
             KashimoCharges.syncNegative(p);

@@ -17,8 +17,8 @@ public final class AuthorityPackets {
     public static Runnable openReceiver=()->{};
     private static int[] array(FriendlyByteBuf b,int max){int n=b.readVarInt();if(n<0||n>max)throw new IllegalArgumentException("权限目录超限");int[] out=new int[n];for(int i=0;i<n;i++)out[i]=b.readVarInt();return out;}
     private static void array(FriendlyByteBuf b,int[] values){b.writeVarInt(values.length);for(int i:values)b.writeVarInt(i);}
-    public static void sync(ServerPlayer p){if(p instanceof net.neoforged.neoforge.common.util.FakePlayer)return;boolean enabled=Authority.unlocked(p);Network.CHANNEL.send(PacketDistributor.PLAYER.with(()->p),new State(enabled,enabled?Legion.count(p):0,enabled?Legion.stored(p):0,enabled?Legion.targetIds(p).stream().mapToInt(Integer::intValue).toArray():new int[0],enabled?AuthoritySkills.owned(p).stream().mapToInt(Integer::intValue).toArray():new int[0]));}
-    public static void open(ServerPlayer p){if(!Authority.unlocked(p)||ObserverRitual.active(p))return;sync(p);Network.CHANNEL.send(PacketDistributor.PLAYER.with(()->p),new Open());}
+    public static void sync(ServerPlayer p){if(p instanceof net.neoforged.neoforge.common.util.FakePlayer)return;boolean enabled=Authority.unlocked(p);Network.CHANNEL.send(SimpleChannel.Target.player(p),new State(enabled,enabled?Legion.count(p):0,enabled?Legion.stored(p):0,enabled?Legion.targetIds(p).stream().mapToInt(Integer::intValue).toArray():new int[0],enabled?AuthoritySkills.owned(p).stream().mapToInt(Integer::intValue).toArray():new int[0]));}
+    public static void open(ServerPlayer p){if(!Authority.unlocked(p)||ObserverRitual.active(p))return;sync(p);Network.CHANNEL.send(SimpleChannel.Target.player(p),new Open());}
     public static void send(int op,int value,int extra){Network.CHANNEL.sendToServer(new Action(op,value,extra));}
     private static void handle(ServerPlayer p,Action m){
         if(p==null||!Authority.unlocked(p)||!p.isAlive()||p.isSpectator()||ObserverRitual.active(p))return;
@@ -34,9 +34,9 @@ public final class AuthorityPackets {
         }
     }
     public static void register(){
-        Network.CHANNEL.messageBuilder(State.class,29,NetworkDirection.PLAY_TO_CLIENT).encoder((m,b)->{b.writeBoolean(m.enabled);b.writeVarInt(m.members);b.writeVarInt(m.stored);array(b,m.targets);array(b,m.skills);}).decoder(b->new State(b.readBoolean(),b.readVarInt(),b.readVarInt(),array(b,32),array(b,128))).consumerMainThread((m,c)->{receiver.accept(m);c.get().setPacketHandled(true);}).add();
-        Network.CHANNEL.messageBuilder(Open.class,30,NetworkDirection.PLAY_TO_CLIENT).encoder((m,b)->{}).decoder(b->new Open()).consumerMainThread((m,c)->{openReceiver.run();c.get().setPacketHandled(true);}).add();
-        Network.CHANNEL.messageBuilder(Action.class,31,NetworkDirection.PLAY_TO_SERVER).encoder((m,b)->{b.writeVarInt(m.operation);b.writeVarInt(m.value);b.writeVarInt(m.extra);}).decoder(b->new Action(b.readVarInt(),b.readVarInt(),b.readVarInt())).consumerMainThread((m,c)->{handle(c.get().getSender(),m);c.get().setPacketHandled(true);}).add();
+        Network.CHANNEL.messageBuilder(State.class,29,SimpleChannel.NetworkDirection.PLAY_TO_CLIENT).encoder((m,b)->{b.writeBoolean(m.enabled);b.writeVarInt(m.members);b.writeVarInt(m.stored);array(b,m.targets);array(b,m.skills);}).decoder(b->new State(b.readBoolean(),b.readVarInt(),b.readVarInt(),array(b,32),array(b,128))).consumerMainThread((m,c)->{receiver.accept(m);c.get().setPacketHandled(true);}).add();
+        Network.CHANNEL.messageBuilder(Open.class,30,SimpleChannel.NetworkDirection.PLAY_TO_CLIENT).encoder((m,b)->{}).decoder(b->new Open()).consumerMainThread((m,c)->{openReceiver.run();c.get().setPacketHandled(true);}).add();
+        Network.CHANNEL.messageBuilder(Action.class,31,SimpleChannel.NetworkDirection.PLAY_TO_SERVER).encoder((m,b)->{b.writeVarInt(m.operation);b.writeVarInt(m.value);b.writeVarInt(m.extra);}).decoder(b->new Action(b.readVarInt(),b.readVarInt(),b.readVarInt())).consumerMainThread((m,c)->{handle(c.get().getSender(),m);c.get().setPacketHandled(true);}).add();
     }
     private AuthorityPackets(){}
 }

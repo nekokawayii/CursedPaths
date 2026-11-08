@@ -43,7 +43,7 @@ public final class TenkaPendantSync {
     @SubscribeEvent public static void startTracking(PlayerEvent.StartTracking event) {
         if (event.getTarget() instanceof ServerPlayer target && event.getEntity() instanceof ServerPlayer viewer
             && target != viewer) {
-            Network.CHANNEL.send(PacketDistributor.PLAYER.with(() -> viewer),
+            Network.CHANNEL.send(SimpleChannel.Target.player(viewer),
                 new Network.PendantState(target.getId(), has(target)));
         }
     }

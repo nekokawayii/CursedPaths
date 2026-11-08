@@ -8,7 +8,7 @@ import net.neoforged.neoforge.event.entity.living.LivingDamageEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerEvent;
 import net.neoforged.neoforge.event.server.ServerStoppedEvent;
 import net.neoforged.bus.api.*;
-import net.neoforged.neoforge.network.NetworkDirection;
+
 import net.neoforged.neoforge.network.PacketDistributor;
 import net.neoforged.neoforge.event.tick.ServerTickEvent;
 
@@ -25,10 +25,10 @@ public final class MeleeCombo {
     }
     private static final Map<UUID,Chain> chains=new HashMap<>();
     public static void register(){
-        Network.CHANNEL.messageBuilder(Press.class,36,NetworkDirection.PLAY_TO_SERVER)
+        Network.CHANNEL.messageBuilder(Press.class,36,SimpleChannel.NetworkDirection.PLAY_TO_SERVER)
             .encoder((m,b)->b.writeBoolean(m.cancel())).decoder(b->new Press(b.readBoolean()))
             .consumerMainThread((m,c)->{var p=c.get().getSender();if(p!=null){if(m.cancel())cancel(p);else press(p);}c.get().setPacketHandled(true);}).add();
-        Network.CHANNEL.messageBuilder(State.class,37,NetworkDirection.PLAY_TO_CLIENT)
+        Network.CHANNEL.messageBuilder(State.class,37,SimpleChannel.NetworkDirection.PLAY_TO_CLIENT)
             .encoder((m,b)->{b.writeVarInt(m.owner());b.writeUUID(m.player());b.writeVarInt(m.stage());b.writeVarInt(m.delay());})
             .decoder(b->new State(b.readVarInt(),b.readUUID(),b.readVarInt(),b.readVarInt()))
             .consumerMainThread((m,c)->{receiver.accept(m);c.get().setPacketHandled(true);}).add();

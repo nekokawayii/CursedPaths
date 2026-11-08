@@ -5,14 +5,14 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.phys.Vec3;
-import net.neoforged.neoforge.network.NetworkRegistry;
-import net.neoforged.neoforge.network.NetworkDirection;
+
+
 import net.neoforged.neoforge.network.PacketDistributor;
-import net.neoforged.neoforge.network.simple.SimpleChannel;
+
 import java.util.function.Consumer;
 
 public final class Network {
-    public static final SimpleChannel CHANNEL = NetworkRegistry.newSimpleChannel(ResourceLocation.fromNamespaceAndPath("jujutsu_kaisen_cursed_paths", "skills"), () -> "sukuna-chain-r295", "sukuna-chain-r295"::equals, "sukuna-chain-r295"::equals);
+    public static final SimpleChannel CHANNEL = SimpleChannel.create(ResourceLocation.fromNamespaceAndPath("jujutsu_kaisen_cursed_paths", "skills"), () -> "sukuna-chain-r295", "sukuna-chain-r295"::equals, "sukuna-chain-r295"::equals);
     public static Consumer<Effect> clientReceiver = e -> {};
     /** 天逆蛑腰间挂件：服务端告诉客户端某个玩家背包里有没有这件咒具。 */
     public static Consumer<PendantState> pendantReceiver = p -> {};
@@ -27,7 +27,7 @@ public final class Network {
     public static Runnable testResetReceiver=()->{};
     public static Consumer<CombatState> combatReceiver=s->{};
     public record CombatState(boolean finaleReady,int lingers,boolean stream,int noRecovery,int finaleBurnout){}
-    public static void syncCombat(ServerPlayer p){if(p instanceof net.neoforged.neoforge.common.util.FakePlayer)return;long now=p.level().getGameTime();CHANNEL.send(PacketDistributor.PLAYER.with(()->p),new CombatState(SixfoldFinale.ready(p),CombatExpansion.lingerCount(p),CombatExpansion.streaming(p),(int)Math.max(0,Curse.data(p).getLong("FinaleNoRecovery")-now),(int)Math.max(0,Curse.data(p).getLong("FinaleBurnout")-now)));}
+    public static void syncCombat(ServerPlayer p){if(p instanceof net.neoforged.neoforge.common.util.FakePlayer)return;long now=p.level().getGameTime();CHANNEL.send(SimpleChannel.Target.player(p),new CombatState(SixfoldFinale.ready(p),CombatExpansion.lingerCount(p),CombatExpansion.streaming(p),(int)Math.max(0,Curse.data(p).getLong("FinaleNoRecovery")-now),(int)Math.max(0,Curse.data(p).getLong("FinaleBurnout")-now)));}
     public static Consumer<MotionState> motionReceiver=m->{};
     public record MotionState(int owner,java.util.UUID token,int kind,int age,float yaw,Vec3 position,boolean end){
         static MotionState read(FriendlyByteBuf b){return new MotionState(b.readVarInt(),b.readUUID(),b.readVarInt(),b.readVarInt(),b.readFloat(),vec(b),b.readBoolean());}
@@ -122,7 +122,7 @@ public final class Network {
         ShadowSystem.register();
         MeleeCombo.register();
         ThousandMileChain.register();
-        CHANNEL.messageBuilder(Cast.class,0,NetworkDirection.PLAY_TO_SERVER).encoder((m,b)->b.writeUtf(m.action().name(),32)).decoder(b->new Cast(SkillAction.valueOf(b.readUtf(32)))).consumerMainThread((m,c)->{
+        CHANNEL.messageBuilder(Cast.class,0,SimpleChannel.NetworkDirection.PLAY_TO_SERVER).encoder((m,b)->b.writeUtf(m.action().name(),32)).decoder(b->new Cast(SkillAction.valueOf(b.readUtf(32)))).consumerMainThread((m,c)->{
             var p=c.get().getSender();
             if(p!=null&&!character.CharacterService.allowsAction(p,m.action())){c.get().setPacketHandled(true);return;}
             if(p!=null&&m.action()!=SkillAction.CANCEL_CHARGE)MeleeCombo.cancel(p);
@@ -190,48 +190,48 @@ public final class Network {
             }
             c.get().setPacketHandled(true);
         }).add();
-        CHANNEL.messageBuilder(Effect.class,1,NetworkDirection.PLAY_TO_CLIENT).encoder(Effect::write).decoder(Effect::read).consumerMainThread((m,c)->{clientReceiver.accept(m);c.get().setPacketHandled(true);}).add();
-        CHANNEL.messageBuilder(Progress.class,2,NetworkDirection.PLAY_TO_CLIENT).encoder(Progress::write).decoder(Progress::read).consumerMainThread((m,c)->{clientModpackMode=m.modpackMode();progressReceiver.accept(m);c.get().setPacketHandled(true);}).add();
-        CHANNEL.messageBuilder(RelationRequest.class,3,NetworkDirection.PLAY_TO_SERVER).encoder((m,b)->b.writeVarInt(m.page())).decoder(b->new RelationRequest(b.readVarInt())).consumerMainThread((m,c)->{var p=c.get().getSender();if(p!=null)CombatSettings.sync(p,m.page());c.get().setPacketHandled(true);}).add();
-        CHANNEL.messageBuilder(RelationChange.class,4,NetworkDirection.PLAY_TO_SERVER).encoder((m,b)->{b.writeUUID(m.target());b.writeVarInt(m.mode());b.writeVarInt(m.page());}).decoder(b->new RelationChange(b.readUUID(),b.readVarInt(),b.readVarInt())).consumerMainThread((m,c)->{var p=c.get().getSender();if(p!=null)CombatSettings.change(p,m.target(),m.mode(),m.page());c.get().setPacketHandled(true);}).add();
-        CHANNEL.messageBuilder(Relations.class,5,NetworkDirection.PLAY_TO_CLIENT).encoder(Relations::write).decoder(Relations::read).consumerMainThread((m,c)->{relationsReceiver.accept(m);c.get().setPacketHandled(true);}).add();
-        CHANNEL.messageBuilder(SettingsToggle.class,6,NetworkDirection.PLAY_TO_SERVER).encoder((m,b)->b.writeVarInt(m.kind())).decoder(b->new SettingsToggle(b.readVarInt())).consumerMainThread((m,c)->{var p=c.get().getSender();if(p!=null)CombatSettings.toggle(p,m.kind());c.get().setPacketHandled(true);}).add();
-        CHANNEL.messageBuilder(ControllerRequest.class,7,NetworkDirection.PLAY_TO_SERVER).encoder((m,b)->{b.writeVarInt(m.field());b.writeInt(m.delta());}).decoder(b->new ControllerRequest(b.readVarInt(),b.readInt())).consumerMainThread((m,c)->{var p=c.get().getSender();if(p!=null)VoidController.change(p,m.field(),m.delta());c.get().setPacketHandled(true);}).add();
-        CHANNEL.messageBuilder(ControllerState.class,8,NetworkDirection.PLAY_TO_CLIENT).encoder(ControllerState::write).decoder(ControllerState::read).consumerMainThread((m,c)->{controllerReceiver.accept(m);c.get().setPacketHandled(true);}).add();
-        CHANNEL.messageBuilder(ControllerValueRequest.class,9,NetworkDirection.PLAY_TO_SERVER).encoder((m,b)->{b.writeVarInt(m.field());b.writeUtf(m.value(),256);}).decoder(b->new ControllerValueRequest(b.readVarInt(),b.readUtf(256))).consumerMainThread((m,c)->{var p=c.get().getSender();if(p!=null)VoidController.setValue(p,m.field(),m.value());c.get().setPacketHandled(true);}).add();
-        CHANNEL.messageBuilder(ClashPress.class,10,NetworkDirection.PLAY_TO_SERVER).encoder((m,b)->{b.writeUUID(m.id());b.writeBoolean(m.down());}).decoder(b->new ClashPress(b.readUUID(),b.readBoolean())).consumerMainThread((m,c)->{var p=c.get().getSender();if(p!=null)DomainClash.press(p,m.id(),m.down());c.get().setPacketHandled(true);}).add();
-        CHANNEL.messageBuilder(ClashWithdraw.class,47,NetworkDirection.PLAY_TO_SERVER).encoder((m,b)->b.writeUUID(m.id())).decoder(b->new ClashWithdraw(b.readUUID())).consumerMainThread((m,c)->{var p=c.get().getSender();if(p!=null)DomainClash.withdraw(p,m.id());c.get().setPacketHandled(true);}).add();
-        CHANNEL.messageBuilder(ClashState.class,11,NetworkDirection.PLAY_TO_CLIENT).encoder(ClashState::write).decoder(ClashState::read).consumerMainThread((m,c)->{clashReceiver.accept(m);c.get().setPacketHandled(true);}).add();
-        CHANNEL.messageBuilder(WallOptions.class,12,NetworkDirection.PLAY_TO_SERVER).encoder((m,b)->{b.writeVarInt(m.halfBlocks());b.writeBoolean(m.diagonal());}).decoder(b->new WallOptions(b.readVarInt(),b.readBoolean())).consumerMainThread((m,c)->{var p=c.get().getSender();if(p!=null&&Journey.unlocked(p)&&Curse.awakened(p)){SukunaBranches.configure(p,m.halfBlocks(),m.diagonal());Curse.sync(p);}c.get().setPacketHandled(true);}).add();
+        CHANNEL.messageBuilder(Effect.class,1,SimpleChannel.NetworkDirection.PLAY_TO_CLIENT).encoder(Effect::write).decoder(Effect::read).consumerMainThread((m,c)->{clientReceiver.accept(m);c.get().setPacketHandled(true);}).add();
+        CHANNEL.messageBuilder(Progress.class,2,SimpleChannel.NetworkDirection.PLAY_TO_CLIENT).encoder(Progress::write).decoder(Progress::read).consumerMainThread((m,c)->{clientModpackMode=m.modpackMode();progressReceiver.accept(m);c.get().setPacketHandled(true);}).add();
+        CHANNEL.messageBuilder(RelationRequest.class,3,SimpleChannel.NetworkDirection.PLAY_TO_SERVER).encoder((m,b)->b.writeVarInt(m.page())).decoder(b->new RelationRequest(b.readVarInt())).consumerMainThread((m,c)->{var p=c.get().getSender();if(p!=null)CombatSettings.sync(p,m.page());c.get().setPacketHandled(true);}).add();
+        CHANNEL.messageBuilder(RelationChange.class,4,SimpleChannel.NetworkDirection.PLAY_TO_SERVER).encoder((m,b)->{b.writeUUID(m.target());b.writeVarInt(m.mode());b.writeVarInt(m.page());}).decoder(b->new RelationChange(b.readUUID(),b.readVarInt(),b.readVarInt())).consumerMainThread((m,c)->{var p=c.get().getSender();if(p!=null)CombatSettings.change(p,m.target(),m.mode(),m.page());c.get().setPacketHandled(true);}).add();
+        CHANNEL.messageBuilder(Relations.class,5,SimpleChannel.NetworkDirection.PLAY_TO_CLIENT).encoder(Relations::write).decoder(Relations::read).consumerMainThread((m,c)->{relationsReceiver.accept(m);c.get().setPacketHandled(true);}).add();
+        CHANNEL.messageBuilder(SettingsToggle.class,6,SimpleChannel.NetworkDirection.PLAY_TO_SERVER).encoder((m,b)->b.writeVarInt(m.kind())).decoder(b->new SettingsToggle(b.readVarInt())).consumerMainThread((m,c)->{var p=c.get().getSender();if(p!=null)CombatSettings.toggle(p,m.kind());c.get().setPacketHandled(true);}).add();
+        CHANNEL.messageBuilder(ControllerRequest.class,7,SimpleChannel.NetworkDirection.PLAY_TO_SERVER).encoder((m,b)->{b.writeVarInt(m.field());b.writeInt(m.delta());}).decoder(b->new ControllerRequest(b.readVarInt(),b.readInt())).consumerMainThread((m,c)->{var p=c.get().getSender();if(p!=null)VoidController.change(p,m.field(),m.delta());c.get().setPacketHandled(true);}).add();
+        CHANNEL.messageBuilder(ControllerState.class,8,SimpleChannel.NetworkDirection.PLAY_TO_CLIENT).encoder(ControllerState::write).decoder(ControllerState::read).consumerMainThread((m,c)->{controllerReceiver.accept(m);c.get().setPacketHandled(true);}).add();
+        CHANNEL.messageBuilder(ControllerValueRequest.class,9,SimpleChannel.NetworkDirection.PLAY_TO_SERVER).encoder((m,b)->{b.writeVarInt(m.field());b.writeUtf(m.value(),256);}).decoder(b->new ControllerValueRequest(b.readVarInt(),b.readUtf(256))).consumerMainThread((m,c)->{var p=c.get().getSender();if(p!=null)VoidController.setValue(p,m.field(),m.value());c.get().setPacketHandled(true);}).add();
+        CHANNEL.messageBuilder(ClashPress.class,10,SimpleChannel.NetworkDirection.PLAY_TO_SERVER).encoder((m,b)->{b.writeUUID(m.id());b.writeBoolean(m.down());}).decoder(b->new ClashPress(b.readUUID(),b.readBoolean())).consumerMainThread((m,c)->{var p=c.get().getSender();if(p!=null)DomainClash.press(p,m.id(),m.down());c.get().setPacketHandled(true);}).add();
+        CHANNEL.messageBuilder(ClashWithdraw.class,47,SimpleChannel.NetworkDirection.PLAY_TO_SERVER).encoder((m,b)->b.writeUUID(m.id())).decoder(b->new ClashWithdraw(b.readUUID())).consumerMainThread((m,c)->{var p=c.get().getSender();if(p!=null)DomainClash.withdraw(p,m.id());c.get().setPacketHandled(true);}).add();
+        CHANNEL.messageBuilder(ClashState.class,11,SimpleChannel.NetworkDirection.PLAY_TO_CLIENT).encoder(ClashState::write).decoder(ClashState::read).consumerMainThread((m,c)->{clashReceiver.accept(m);c.get().setPacketHandled(true);}).add();
+        CHANNEL.messageBuilder(WallOptions.class,12,SimpleChannel.NetworkDirection.PLAY_TO_SERVER).encoder((m,b)->{b.writeVarInt(m.halfBlocks());b.writeBoolean(m.diagonal());}).decoder(b->new WallOptions(b.readVarInt(),b.readBoolean())).consumerMainThread((m,c)->{var p=c.get().getSender();if(p!=null&&Journey.unlocked(p)&&Curse.awakened(p)){SukunaBranches.configure(p,m.halfBlocks(),m.diagonal());Curse.sync(p);}c.get().setPacketHandled(true);}).add();
         // 24 = 空格三击跳上神龛（0-23 已被占用，见上面各处 messageBuilder 的 ID）。
-        CHANNEL.messageBuilder(ShrineLeap.class,24,NetworkDirection.PLAY_TO_SERVER).encoder((m,b)->{}).decoder(b->new ShrineLeap()).consumerMainThread((m,c)->{var p=c.get().getSender();if(p!=null)Skills.leapToShrine(p);c.get().setPacketHandled(true);}).add();
+        CHANNEL.messageBuilder(ShrineLeap.class,24,SimpleChannel.NetworkDirection.PLAY_TO_SERVER).encoder((m,b)->{}).decoder(b->new ShrineLeap()).consumerMainThread((m,c)->{var p=c.get().getSender();if(p!=null)Skills.leapToShrine(p);c.get().setPacketHandled(true);}).add();
         // 25 = 伏魔御厨子的点数分配（界面「确定」时发来）。这里只校验"能开御厨子的玩家"再落盘，不查冷却/结印：
         // 玩家通常在结印那 3 秒里按确定，用 Skills.available 会把这次保存挡掉。
-        CHANNEL.messageBuilder(DomainOptions.class,25,NetworkDirection.PLAY_TO_SERVER).encoder((m,b)->{b.writeVarInt(m.radiusPts());b.writeVarInt(m.damagePts());b.writeVarInt(m.speedPts());b.writeBoolean(m.verticalKill());}).decoder(b->new DomainOptions(b.readVarInt(),b.readVarInt(),b.readVarInt(),b.readBoolean())).consumerMainThread((m,c)->{var p=c.get().getSender();if(p!=null&&Journey.unlocked(p)){SukunaBranches.configureDomain(p,m.radiusPts(),m.damagePts(),m.speedPts(),m.verticalKill());Curse.sync(p);}c.get().setPacketHandled(true);}).add();
+        CHANNEL.messageBuilder(DomainOptions.class,25,SimpleChannel.NetworkDirection.PLAY_TO_SERVER).encoder((m,b)->{b.writeVarInt(m.radiusPts());b.writeVarInt(m.damagePts());b.writeVarInt(m.speedPts());b.writeBoolean(m.verticalKill());}).decoder(b->new DomainOptions(b.readVarInt(),b.readVarInt(),b.readVarInt(),b.readBoolean())).consumerMainThread((m,c)->{var p=c.get().getSender();if(p!=null&&Journey.unlocked(p)){SukunaBranches.configureDomain(p,m.radiusPts(),m.damagePts(),m.speedPts(),m.verticalKill());Curse.sync(p);}c.get().setPacketHandled(true);}).add();
     // 26：黑闪标记打击（PLAY_TO_SERVER）；237 标记特效复用 Effect 包
-    CHANNEL.messageBuilder(BlackFlashStrike.class,26,NetworkDirection.PLAY_TO_SERVER)
+    CHANNEL.messageBuilder(BlackFlashStrike.class,26,SimpleChannel.NetworkDirection.PLAY_TO_SERVER)
         .encoder((m,b)->b.writeVarInt(m.targetId())).decoder(b->new BlackFlashStrike(b.readVarInt()))
         .consumerMainThread((m,c)->{var p=c.get().getSender();if(p!=null)BlackFlashMarks.strike(p,m.targetId());c.get().setPacketHandled(true);}).add();
         // 49 = 探索卷轴解锁；客户端仅显示，施法资格仍由服务端裁决。
-        CHANNEL.messageBuilder(ExpeditionProgress.State.class,49,NetworkDirection.PLAY_TO_CLIENT)
+        CHANNEL.messageBuilder(ExpeditionProgress.State.class,49,SimpleChannel.NetworkDirection.PLAY_TO_CLIENT)
             .encoder((m,b)->b.writeVarInt(m.scrollMask())).decoder(b->new ExpeditionProgress.State(b.readVarInt()))
             .consumerMainThread((m,c)->{ExpeditionProgress.receiver.accept(m);c.get().setPacketHandled(true);}).add();
         // 48 = 天逆蛑腰间挂件的可见状态（PLAY_TO_CLIENT）：只同步"背包里有没有"，不需要每刻发。
-        CHANNEL.messageBuilder(PendantState.class,48,NetworkDirection.PLAY_TO_CLIENT)
+        CHANNEL.messageBuilder(PendantState.class,48,SimpleChannel.NetworkDirection.PLAY_TO_CLIENT)
             .encoder((m,b)->{b.writeVarInt(m.entityId());b.writeBoolean(m.visible());})
             .decoder(b->new PendantState(b.readVarInt(),b.readBoolean()))
             .consumerMainThread((m,c)->{pendantReceiver.accept(m);c.get().setPacketHandled(true);}).add();
     }
     public static void registerDrawing(){
         WallpaperPackets.register();
-        CHANNEL.messageBuilder(AimState.class,23,NetworkDirection.PLAY_TO_CLIENT).encoder((m,b)->{b.writeBoolean(m.enabled());b.writeDouble(m.angle());b.writeDouble(m.range());b.writeBoolean(m.circle());}).decoder(b->new AimState(b.readBoolean(),b.readDouble(),b.readDouble(),b.readBoolean())).consumerMainThread((m,c)->{aimReceiver.accept(m);c.get().setPacketHandled(true);}).add();
-        CHANNEL.messageBuilder(TestReset.class,22,NetworkDirection.PLAY_TO_CLIENT).encoder((m,b)->{}).decoder(b->new TestReset()).consumerMainThread((m,c)->{testResetReceiver.run();c.get().setPacketHandled(true);}).add();
-        CHANNEL.messageBuilder(CombatState.class,18,NetworkDirection.PLAY_TO_CLIENT).encoder((m,b)->{b.writeBoolean(m.finaleReady());b.writeVarInt(m.lingers());b.writeBoolean(m.stream());b.writeVarInt(m.noRecovery());b.writeVarInt(m.finaleBurnout());}).decoder(b->new CombatState(b.readBoolean(),b.readVarInt(),b.readBoolean(),b.readVarInt(),b.readVarInt())).consumerMainThread((m,c)->{combatReceiver.accept(m);c.get().setPacketHandled(true);}).add();
-        CHANNEL.messageBuilder(TechniqueInput.Input.class,16,NetworkDirection.PLAY_TO_SERVER).encoder((m,b)->{b.writeVarInt(m.skill());b.writeByte(m.phase());b.writeBoolean(m.forward());b.writeBoolean(m.backward());b.writeBoolean(m.jump());b.writeBoolean(m.crouch());b.writeVarInt(m.motion());b.writeVarInt(m.wheelSkill());}).decoder(b->new TechniqueInput.Input(b.readVarInt(),b.readUnsignedByte(),b.readBoolean(),b.readBoolean(),b.readBoolean(),b.readBoolean(),b.readVarInt(),b.readVarInt())).consumerMainThread((m,c)->{var p=c.get().getSender();if(p!=null)TechniqueInput.receive(p,m);c.get().setPacketHandled(true);}).add();
-        CHANNEL.messageBuilder(StreamToggle.class,17,NetworkDirection.PLAY_TO_SERVER).encoder((m,b)->{}).decoder(b->new StreamToggle()).consumerMainThread((m,c)->{var p=c.get().getSender();if(p!=null)CombatExpansion.toggleStream(p);c.get().setPacketHandled(true);}).add();
-        CHANNEL.messageBuilder(MotionState.class,15,NetworkDirection.PLAY_TO_CLIENT).encoder(MotionState::write).decoder(MotionState::read).consumerMainThread((m,c)->{motionReceiver.accept(m);c.get().setPacketHandled(true);}).add();
-        CHANNEL.messageBuilder(DrawInput.class,13,NetworkDirection.PLAY_TO_SERVER).encoder(DrawInput::write).decoder(DrawInput::read).consumerMainThread((m,c)->{var p=c.get().getSender();if(p!=null)FreehandDrawing.input(p,m);c.get().setPacketHandled(true);}).add();
-        CHANNEL.messageBuilder(DrawState.class,14,NetworkDirection.PLAY_TO_CLIENT).encoder((m,b)->{b.writeUUID(m.id());b.writeVarInt(m.state());b.writeDouble(m.pixels());}).decoder(b->new DrawState(b.readUUID(),b.readVarInt(),b.readDouble())).consumerMainThread((m,c)->{drawReceiver.accept(m);c.get().setPacketHandled(true);}).add();
+        CHANNEL.messageBuilder(AimState.class,23,SimpleChannel.NetworkDirection.PLAY_TO_CLIENT).encoder((m,b)->{b.writeBoolean(m.enabled());b.writeDouble(m.angle());b.writeDouble(m.range());b.writeBoolean(m.circle());}).decoder(b->new AimState(b.readBoolean(),b.readDouble(),b.readDouble(),b.readBoolean())).consumerMainThread((m,c)->{aimReceiver.accept(m);c.get().setPacketHandled(true);}).add();
+        CHANNEL.messageBuilder(TestReset.class,22,SimpleChannel.NetworkDirection.PLAY_TO_CLIENT).encoder((m,b)->{}).decoder(b->new TestReset()).consumerMainThread((m,c)->{testResetReceiver.run();c.get().setPacketHandled(true);}).add();
+        CHANNEL.messageBuilder(CombatState.class,18,SimpleChannel.NetworkDirection.PLAY_TO_CLIENT).encoder((m,b)->{b.writeBoolean(m.finaleReady());b.writeVarInt(m.lingers());b.writeBoolean(m.stream());b.writeVarInt(m.noRecovery());b.writeVarInt(m.finaleBurnout());}).decoder(b->new CombatState(b.readBoolean(),b.readVarInt(),b.readBoolean(),b.readVarInt(),b.readVarInt())).consumerMainThread((m,c)->{combatReceiver.accept(m);c.get().setPacketHandled(true);}).add();
+        CHANNEL.messageBuilder(TechniqueInput.Input.class,16,SimpleChannel.NetworkDirection.PLAY_TO_SERVER).encoder((m,b)->{b.writeVarInt(m.skill());b.writeByte(m.phase());b.writeBoolean(m.forward());b.writeBoolean(m.backward());b.writeBoolean(m.jump());b.writeBoolean(m.crouch());b.writeVarInt(m.motion());b.writeVarInt(m.wheelSkill());}).decoder(b->new TechniqueInput.Input(b.readVarInt(),b.readUnsignedByte(),b.readBoolean(),b.readBoolean(),b.readBoolean(),b.readBoolean(),b.readVarInt(),b.readVarInt())).consumerMainThread((m,c)->{var p=c.get().getSender();if(p!=null)TechniqueInput.receive(p,m);c.get().setPacketHandled(true);}).add();
+        CHANNEL.messageBuilder(StreamToggle.class,17,SimpleChannel.NetworkDirection.PLAY_TO_SERVER).encoder((m,b)->{}).decoder(b->new StreamToggle()).consumerMainThread((m,c)->{var p=c.get().getSender();if(p!=null)CombatExpansion.toggleStream(p);c.get().setPacketHandled(true);}).add();
+        CHANNEL.messageBuilder(MotionState.class,15,SimpleChannel.NetworkDirection.PLAY_TO_CLIENT).encoder(MotionState::write).decoder(MotionState::read).consumerMainThread((m,c)->{motionReceiver.accept(m);c.get().setPacketHandled(true);}).add();
+        CHANNEL.messageBuilder(DrawInput.class,13,SimpleChannel.NetworkDirection.PLAY_TO_SERVER).encoder(DrawInput::write).decoder(DrawInput::read).consumerMainThread((m,c)->{var p=c.get().getSender();if(p!=null)FreehandDrawing.input(p,m);c.get().setPacketHandled(true);}).add();
+        CHANNEL.messageBuilder(DrawState.class,14,SimpleChannel.NetworkDirection.PLAY_TO_CLIENT).encoder((m,b)->{b.writeUUID(m.id());b.writeVarInt(m.state());b.writeDouble(m.pixels());}).decoder(b->new DrawState(b.readUUID(),b.readVarInt(),b.readDouble())).consumerMainThread((m,c)->{drawReceiver.accept(m);c.get().setPacketHandled(true);}).add();
     }
     /**
      * 只发给一名玩家：**开界面/弹面板这类"个人 UI"必须用这个**。
@@ -239,7 +239,7 @@ public final class Network {
      */
     public static void sendTo(ServerPlayer p, Effect e) {
         if(p instanceof net.neoforged.neoforge.common.util.FakePlayer)return;
-        CHANNEL.send(PacketDistributor.PLAYER.with(() -> p), e);
+        CHANNEL.send(SimpleChannel.Target.player(p), e);
     }
     public static void send(ServerLevel level, Effect e) {
         // 东堂葵：登记这条特效的位置，之后"纯客户端特效"能被注入成实体（不义游戏换位用）
@@ -250,10 +250,10 @@ public final class Network {
         boolean targetEffect=e.kind()==7||e.kind()==10||e.kind()==11||e.kind()==FinaleRules.FX_SCAR||e.kind()==93&&e.direction().lengthSqr()<.01;
         Effect visual=e.wallpaperOwner()==null&&!e.desktopSlashes()&&caster!=null&&!targetEffect?e.fromCaster(caster):e;
         Effect tint=caster==null?null:new Effect(144,e.owner(),e.position(),Vec3.ZERO,1,400,GuardianCombat.awakened(caster)?1:0);
-        if(e.size()==SlashReach.INFINITE){for(ServerPlayer listener:level.players()){var audience=PacketDistributor.PLAYER.with(()->listener);if(tint!=null)CHANNEL.send(audience,tint);CHANNEL.send(audience,visual);}return;}
+        if(e.size()==SlashReach.INFINITE){for(ServerPlayer listener:level.players()){var audience=SimpleChannel.Target.player(listener);if(tint!=null)CHANNEL.send(audience,tint);CHANNEL.send(audience,visual);}return;}
         var audience=PacketDistributor.NEAR.with(()->new PacketDistributor.TargetPoint(e.position.x,e.position.y,e.position.z,512,level.dimension()));if(tint!=null)CHANNEL.send(audience,tint);CHANNEL.send(audience,visual);
     }
-    public static void sendController(ServerPlayer p) { if(p instanceof net.neoforged.neoforge.common.util.FakePlayer)return;CHANNEL.send(PacketDistributor.PLAYER.with(()->p),VoidController.state(p)); }
+    public static void sendController(ServerPlayer p) { if(p instanceof net.neoforged.neoforge.common.util.FakePlayer)return;CHANNEL.send(SimpleChannel.Target.player(p),VoidController.state(p)); }
     public static void sendControllerRequest(int field, int delta) { CHANNEL.sendToServer(new ControllerRequest(field,delta)); }
     public static void sendControllerValue(int field,String value) { CHANNEL.sendToServer(new ControllerValueRequest(field,value)); }
 }

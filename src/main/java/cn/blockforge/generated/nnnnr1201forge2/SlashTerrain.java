@@ -24,7 +24,7 @@ public final class SlashTerrain {
     public static java.util.function.Consumer<Frame> receiver=f->{};
     private static long next;
     public static long id(){return ++next;}
-    public static void register(){Network.CHANNEL.messageBuilder(Frame.class,33,NetworkDirection.PLAY_TO_CLIENT).encoder(Frame::write).decoder(Frame::read).consumerMainThread((m,c)->{receiver.accept(m);c.get().setPacketHandled(true);}).add();}
+    public static void register(){Network.CHANNEL.messageBuilder(Frame.class,33,SimpleChannel.NetworkDirection.PLAY_TO_CLIENT).encoder(Frame::write).decoder(Frame::read).consumerMainThread((m,c)->{receiver.accept(m);c.get().setPacketHandled(true);}).add();}
     public static void send(ServerPlayer owner,long id,List<Sweep> lines,Vec3 at){
         var appearance=new Network.Effect(0,owner.getId(),at,Vec3.ZERO,1,1,0).fromCaster(owner);
         int batches=Math.max(1,(lines.size()+511)/512);
@@ -33,7 +33,7 @@ public final class SlashTerrain {
         for(int batch=0;batch<batches&&batch<128;batch++){
             var part=List.copyOf(lines.subList(batch*512,Math.min(lines.size(),(batch+1)*512)));
             Frame frame=new Frame(id,owner.getId(),batch,Math.min(128,batches),appearance.wallpaperOwner(),appearance.desktopSlashes(),part);
-            for(ServerPlayer listener:audience)Network.CHANNEL.send(PacketDistributor.PLAYER.with(()->listener),frame);
+            for(ServerPlayer listener:audience)Network.CHANNEL.send(SimpleChannel.Target.player(listener),frame);
         }
     }
     public record Result(List<SlashForms.Line> remaining,List<Sweep> swept){}

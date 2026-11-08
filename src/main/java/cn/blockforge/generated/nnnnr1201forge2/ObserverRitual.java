@@ -137,8 +137,8 @@ public final class ObserverRitual {
     private static void sync(Session s,int line){
         var b=s.battle;
         List<ObserverPackets.Cursor> cursors=new ArrayList<>();for(Session other:sessions.values())if(other.party==s.party&&other!=s&&cursors.size()<32)cursors.add(new ObserverPackets.Cursor(other.player.getUUID(),other.player.getScoreboardName(),other.cursorX,other.cursorY));
-        Network.CHANNEL.send(PacketDistributor.PLAYER.with(()->s.player),new ObserverPackets.Cursors(s.token,List.copyOf(cursors)));
-        Network.CHANNEL.send(PacketDistributor.PLAYER.with(()->s.player),new ObserverPackets.State(s.token,s.boss==null?-1:s.boss.getId(),b.age,b.phase,b.hits,b.shield(),b.weakId,b.weakPart,b.weak()?b.weakUntil-b.age:0,b.attack,Math.max(0,b.attackUntil-b.age),Math.max(0,b.staggerUntil-b.age),b.keysDone,b.keys.clone(),b.dodgeProgress(),b.move,line,b.meleeX,b.meleeY,s.at,List.copyOf(b.blades)));
+        Network.CHANNEL.send(SimpleChannel.Target.player(s.player),new ObserverPackets.Cursors(s.token,List.copyOf(cursors)));
+        Network.CHANNEL.send(SimpleChannel.Target.player(s.player),new ObserverPackets.State(s.token,s.boss==null?-1:s.boss.getId(),b.age,b.phase,b.hits,b.shield(),b.weakId,b.weakPart,b.weak()?b.weakUntil-b.age:0,b.attack,Math.max(0,b.attackUntil-b.age),Math.max(0,b.staggerUntil-b.age),b.keysDone,b.keys.clone(),b.dodgeProgress(),b.move,line,b.meleeX,b.meleeY,s.at,List.copyOf(b.blades)));
     }
     private static void restore(ServerPlayer p){
         var d=Curse.data(p);p.setNoGravity(d.getBoolean("ObserverOldGravity"));p.setInvulnerable(d.getBoolean("ObserverOldInvulnerable"));p.setInvisible(d.getBoolean("ObserverOldInvisible"));
@@ -178,6 +178,6 @@ public final class ObserverRitual {
     }
     @SubscribeEvent public static void stop(net.neoforged.neoforge.event.server.ServerStoppedEvent e){sessions.clear();}
     private static void sound(ServerPlayer p,SoundEvent sound,float volume,float pitch){p.playNotifySound(sound,SoundSource.MASTER,volume,pitch);}
-    private static void fire(ServerPlayer p,int kind,int value){Network.CHANNEL.send(PacketDistributor.PLAYER.with(()->p),new Network.Effect(kind,p.getId(),p.position(),Vec3.ZERO,0,value,value));}
+    private static void fire(ServerPlayer p,int kind,int value){Network.CHANNEL.send(SimpleChannel.Target.player(p),new Network.Effect(kind,p.getId(),p.position(),Vec3.ZERO,0,value,value));}
     private ObserverRitual(){}
 }

@@ -3,7 +3,7 @@ package cn.blockforge.generated.nnnnr1201forge2;
 import java.util.UUID;
 import java.util.function.Consumer;
 import net.minecraft.network.FriendlyByteBuf;
-import net.neoforged.neoforge.network.NetworkDirection;
+
 
 public final class WallpaperPackets {
     public static Consumer<Download> receiver=p->{};
@@ -17,9 +17,9 @@ public final class WallpaperPackets {
         void write(FriendlyByteBuf b){b.writeUUID(owner);b.writeLong(revision);b.writeVarInt(index);b.writeVarInt(count);b.writeVarInt(total);b.writeByteArray(data);}
     }
     public static void register(){
-        Network.CHANNEL.messageBuilder(Consent.class,19,NetworkDirection.PLAY_TO_SERVER).encoder((m,b)->b.writeBoolean(m.allowed())).decoder(b->new Consent(b.readBoolean())).consumerMainThread((m,c)->{var p=c.get().getSender();if(p!=null)WallpaperServer.consent(p,m.allowed());c.get().setPacketHandled(true);}).add();
-        Network.CHANNEL.messageBuilder(Upload.class,20,NetworkDirection.PLAY_TO_SERVER).encoder(Upload::write).decoder(Upload::read).consumerMainThread((m,c)->{var p=c.get().getSender();if(p!=null)WallpaperServer.upload(p,m);c.get().setPacketHandled(true);}).add();
-        Network.CHANNEL.messageBuilder(Download.class,21,NetworkDirection.PLAY_TO_CLIENT).encoder(Download::write).decoder(Download::read).consumerMainThread((m,c)->{receiver.accept(m);c.get().setPacketHandled(true);}).add();
+        Network.CHANNEL.messageBuilder(Consent.class,19,SimpleChannel.NetworkDirection.PLAY_TO_SERVER).encoder((m,b)->b.writeBoolean(m.allowed())).decoder(b->new Consent(b.readBoolean())).consumerMainThread((m,c)->{var p=c.get().getSender();if(p!=null)WallpaperServer.consent(p,m.allowed());c.get().setPacketHandled(true);}).add();
+        Network.CHANNEL.messageBuilder(Upload.class,20,SimpleChannel.NetworkDirection.PLAY_TO_SERVER).encoder(Upload::write).decoder(Upload::read).consumerMainThread((m,c)->{var p=c.get().getSender();if(p!=null)WallpaperServer.upload(p,m);c.get().setPacketHandled(true);}).add();
+        Network.CHANNEL.messageBuilder(Download.class,21,SimpleChannel.NetworkDirection.PLAY_TO_CLIENT).encoder(Download::write).decoder(Download::read).consumerMainThread((m,c)->{receiver.accept(m);c.get().setPacketHandled(true);}).add();
     }
     private WallpaperPackets(){}
 }

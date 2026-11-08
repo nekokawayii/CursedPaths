@@ -33,7 +33,7 @@ public final class WallpaperServer {
         allowed.remove(id);incoming.remove(id);generation.put(id,++revision);
         if(pictures.remove(id)!=null){
             outgoing.values().forEach(q->q.removeIf(d->d.owner.equals(id)));
-            Network.CHANNEL.send(PacketDistributor.ALL.noArg(),new WallpaperPackets.Download(id,revision,0,0,0,new byte[0]));
+            Network.CHANNEL.send(SimpleChannel.Target.all(),new WallpaperPackets.Download(id,revision,0,0,0,new byte[0]));
         }
     }
     public static void upload(ServerPlayer p,WallpaperPackets.Upload packet){
@@ -68,7 +68,7 @@ public final class WallpaperServer {
         var keys=new ArrayList<>(outgoing.keySet());if(!keys.isEmpty())Collections.rotate(keys,(int)(tick%keys.size()));
         for(UUID id:keys){if(budget<=0)break;var server=net.neoforged.neoforge.server.ServerLifecycleHooks.getCurrentServer();ServerPlayer p=server==null?null:server.getPlayerList().getPlayer(id);if(p==null){outgoing.remove(id);continue;}
             var q=outgoing.get(id);for(int i=0;i<2&&!q.isEmpty()&&budget>0;i++,budget--){Delivery d=q.peek();byte[] bytes=d.image.data;int count=(bytes.length+WallpaperRules.CHUNK-1)/WallpaperRules.CHUNK,from=d.part*WallpaperRules.CHUNK;
-                Network.CHANNEL.send(PacketDistributor.PLAYER.with(()->p),new WallpaperPackets.Download(d.owner,d.image.revision,d.part,count,bytes.length,Arrays.copyOfRange(bytes,from,Math.min(bytes.length,from+WallpaperRules.CHUNK))));
+                Network.CHANNEL.send(SimpleChannel.Target.player(p),new WallpaperPackets.Download(d.owner,d.image.revision,d.part,count,bytes.length,Arrays.copyOfRange(bytes,from,Math.min(bytes.length,from+WallpaperRules.CHUNK))));
                 if(++d.part>=count)q.remove();
             }if(q.isEmpty())outgoing.remove(id);
         }

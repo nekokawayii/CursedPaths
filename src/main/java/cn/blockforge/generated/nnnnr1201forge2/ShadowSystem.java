@@ -28,9 +28,9 @@ public final class ShadowSystem {
     public static java.util.function.Consumer<Fx> fxReceiver=s->{};
     private static final String BOOK="ShadowActive",TAMED="ShadowTamed",FUSED="ShadowDogsFused";
     public static void register(){
-        Network.CHANNEL.messageBuilder(Request.class,38,NetworkDirection.PLAY_TO_SERVER).encoder((s,b)->{b.writeVarInt(s.operation);b.writeVarInt(s.kind);b.writeVarInt(s.count);}).decoder(b->new Request(b.readVarInt(),b.readVarInt(),b.readVarInt())).consumerMainThread((s,c)->{var p=c.get().getSender();if(p!=null)request(p,s);c.get().setPacketHandled(true);}).add();
-        Network.CHANNEL.messageBuilder(State.class,39,NetworkDirection.PLAY_TO_CLIENT).encoder((s,b)->{b.writeVarInt(s.mask);b.writeBoolean(s.fused);for(int i=0;i<TenShadowRules.COUNT;i++){b.writeVarInt(s.active[i]);b.writeVarInt(s.seconds[i]);}}).decoder(b->{int mask=b.readVarInt();boolean fused=b.readBoolean();int[] n=new int[11],time=new int[11];for(int i=0;i<11;i++){n[i]=b.readVarInt();time[i]=b.readVarInt();}return new State(mask,fused,n,time);}).consumerMainThread((s,c)->{receiver.accept(s);c.get().setPacketHandled(true);}).add();
-        Network.CHANNEL.messageBuilder(Fx.class,40,NetworkDirection.PLAY_TO_CLIENT).encoder((s,b)->{b.writeVarInt(s.kind);b.writeDouble(s.from.x);b.writeDouble(s.from.y);b.writeDouble(s.from.z);b.writeDouble(s.to.x);b.writeDouble(s.to.y);b.writeDouble(s.to.z);b.writeFloat(s.radius);b.writeVarInt(s.ticks);}).decoder(b->new Fx(b.readVarInt(),new Vec3(b.readDouble(),b.readDouble(),b.readDouble()),new Vec3(b.readDouble(),b.readDouble(),b.readDouble()),b.readFloat(),b.readVarInt())).consumerMainThread((s,c)->{fxReceiver.accept(s);c.get().setPacketHandled(true);}).add();
+        Network.CHANNEL.messageBuilder(Request.class,38,SimpleChannel.NetworkDirection.PLAY_TO_SERVER).encoder((s,b)->{b.writeVarInt(s.operation);b.writeVarInt(s.kind);b.writeVarInt(s.count);}).decoder(b->new Request(b.readVarInt(),b.readVarInt(),b.readVarInt())).consumerMainThread((s,c)->{var p=c.get().getSender();if(p!=null)request(p,s);c.get().setPacketHandled(true);}).add();
+        Network.CHANNEL.messageBuilder(State.class,39,SimpleChannel.NetworkDirection.PLAY_TO_CLIENT).encoder((s,b)->{b.writeVarInt(s.mask);b.writeBoolean(s.fused);for(int i=0;i<TenShadowRules.COUNT;i++){b.writeVarInt(s.active[i]);b.writeVarInt(s.seconds[i]);}}).decoder(b->{int mask=b.readVarInt();boolean fused=b.readBoolean();int[] n=new int[11],time=new int[11];for(int i=0;i<11;i++){n[i]=b.readVarInt();time[i]=b.readVarInt();}return new State(mask,fused,n,time);}).consumerMainThread((s,c)->{receiver.accept(s);c.get().setPacketHandled(true);}).add();
+        Network.CHANNEL.messageBuilder(Fx.class,40,SimpleChannel.NetworkDirection.PLAY_TO_CLIENT).encoder((s,b)->{b.writeVarInt(s.kind);b.writeDouble(s.from.x);b.writeDouble(s.from.y);b.writeDouble(s.from.z);b.writeDouble(s.to.x);b.writeDouble(s.to.y);b.writeDouble(s.to.z);b.writeFloat(s.radius);b.writeVarInt(s.ticks);}).decoder(b->new Fx(b.readVarInt(),new Vec3(b.readDouble(),b.readDouble(),b.readDouble()),new Vec3(b.readDouble(),b.readDouble(),b.readDouble()),b.readFloat(),b.readVarInt())).consumerMainThread((s,c)->{fxReceiver.accept(s);c.get().setPacketHandled(true);}).add();
     }
     public static void fx(ServerLevel level,int kind,Vec3 from,Vec3 to,float radius,int ticks){
         Network.CHANNEL.send(PacketDistributor.NEAR.with(()->new PacketDistributor.TargetPoint(from.x,from.y,from.z,160,level.dimension())),new Fx(kind,from,to,radius,ticks));
@@ -48,7 +48,7 @@ public final class ShadowSystem {
     public static void sync(ServerPlayer p){
         prune(p);int[] counts=new int[11],seconds=new int[11];long now=p.level().getGameTime();
         for(String key:book(p).getAllKeys()){var row=book(p).getCompound(key);int k=row.getInt("Kind");if(TenShadowRules.valid(k)){counts[k]++;seconds[k]=Math.max(seconds[k],(int)Math.max(0,(row.getLong("End")-now+19)/20));}}
-        Network.CHANNEL.send(PacketDistributor.PLAYER.with(()->p),new State(mask(p),fused(p),counts,seconds));
+        Network.CHANNEL.send(SimpleChannel.Target.player(p),new State(mask(p),fused(p),counts,seconds));
     }
     private static void tell(ServerPlayer p,String message){p.displayClientMessage(Component.literal(message),true);}
     public static void request(ServerPlayer p,Request request){

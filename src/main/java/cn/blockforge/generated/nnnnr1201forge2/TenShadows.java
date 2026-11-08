@@ -60,10 +60,10 @@ public final class TenShadows {
     public static boolean locked(Player p){return chants.containsKey(p.getUUID());}
     private static State state(ServerPlayer p){Chant c=chants.get(p.getUUID());return new State(p.getUUID(),incarnated(p),tamed(p),partial(p),c==null?0:(int)Math.max(0,c.end-c.level.getGameTime()),(int)manifestLeft(p));}
     public static void register(){
-        Network.CHANNEL.messageBuilder(State.class,34,NetworkDirection.PLAY_TO_CLIENT).encoder((s,b)->{b.writeUUID(s.player);b.writeBoolean(s.incarnated);b.writeBoolean(s.tamed);b.writeBoolean(s.partial);b.writeVarInt(s.remaining);b.writeVarInt(s.manifest);}).decoder(b->new State(b.readUUID(),b.readBoolean(),b.readBoolean(),b.readBoolean(),b.readVarInt(),b.readVarInt())).consumerMainThread((s,c)->{receiver.accept(s);c.get().setPacketHandled(true);}).add();
-        Network.CHANNEL.messageBuilder(Summon.class,35,NetworkDirection.PLAY_TO_SERVER).encoder((s,b)->b.writeVarInt(s.mode)).decoder(b->new Summon(b.readVarInt())).consumerMainThread((s,c)->{var p=c.get().getSender();if(p!=null)manifest(p,s.mode);c.get().setPacketHandled(true);}).add();
+        Network.CHANNEL.messageBuilder(State.class,34,SimpleChannel.NetworkDirection.PLAY_TO_CLIENT).encoder((s,b)->{b.writeUUID(s.player);b.writeBoolean(s.incarnated);b.writeBoolean(s.tamed);b.writeBoolean(s.partial);b.writeVarInt(s.remaining);b.writeVarInt(s.manifest);}).decoder(b->new State(b.readUUID(),b.readBoolean(),b.readBoolean(),b.readBoolean(),b.readVarInt(),b.readVarInt())).consumerMainThread((s,c)->{receiver.accept(s);c.get().setPacketHandled(true);}).add();
+        Network.CHANNEL.messageBuilder(Summon.class,35,SimpleChannel.NetworkDirection.PLAY_TO_SERVER).encoder((s,b)->b.writeVarInt(s.mode)).decoder(b->new Summon(b.readVarInt())).consumerMainThread((s,c)->{var p=c.get().getSender();if(p!=null)manifest(p,s.mode);c.get().setPacketHandled(true);}).add();
     }
-    public static void sync(ServerPlayer p){Network.CHANNEL.send(PacketDistributor.ALL.noArg(),state(p));}
+    public static void sync(ServerPlayer p){Network.CHANNEL.send(SimpleChannel.Target.all(),state(p));}
     public static void incarnate(ServerPlayer p){
         if(incarnated(p))return;
         if(!Journey.unlocked(p)){p.displayClientMessage(Component.literal("体内还没有能转移的宿傩灵魂"),true);return;}
@@ -158,8 +158,8 @@ public final class TenShadows {
     @SubscribeEvent public static void interact(PlayerInteractEvent e){if(e.isCancelable()&&locked(e.getEntity()))e.setCanceled(true);}
     @SubscribeEvent public static void attack(AttackEntityEvent e){if(locked(e.getEntity()))e.setCanceled(true);}
     @SubscribeEvent public static void breaking(PlayerEvent.BreakSpeed e){if(locked(e.getEntity()))e.setCanceled(true);}
-    @SubscribeEvent public static void login(PlayerEvent.PlayerLoggedInEvent e){if(e.getEntity() instanceof ServerPlayer p){for(ServerPlayer other:p.server.getPlayerList().getPlayers())Network.CHANNEL.send(PacketDistributor.PLAYER.with(()->p),state(other));sync(p);}}
-    @SubscribeEvent public static void tracking(PlayerEvent.StartTracking e){if(e.getEntity() instanceof ServerPlayer listener&&e.getTarget() instanceof ServerPlayer target)Network.CHANNEL.send(PacketDistributor.PLAYER.with(()->listener),state(target));}
+    @SubscribeEvent public static void login(PlayerEvent.PlayerLoggedInEvent e){if(e.getEntity() instanceof ServerPlayer p){for(ServerPlayer other:p.server.getPlayerList().getPlayers())Network.CHANNEL.send(SimpleChannel.Target.player(p),state(other));sync(p);}}
+    @SubscribeEvent public static void tracking(PlayerEvent.StartTracking e){if(e.getEntity() instanceof ServerPlayer listener&&e.getTarget() instanceof ServerPlayer target)Network.CHANNEL.send(SimpleChannel.Target.player(listener),state(target));}
     @SubscribeEvent public static void respawn(PlayerEvent.PlayerRespawnEvent e){if(e.getEntity() instanceof ServerPlayer p)sync(p);}
     @SubscribeEvent public static void dimension(PlayerEvent.PlayerChangedDimensionEvent e){if(e.getEntity() instanceof ServerPlayer p){cancel(p);sync(p);}}
     @SubscribeEvent public static void logout(PlayerEvent.PlayerLoggedOutEvent e){if(e.getEntity() instanceof ServerPlayer p)cancel(p);}

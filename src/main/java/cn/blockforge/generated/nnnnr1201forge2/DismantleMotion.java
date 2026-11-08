@@ -186,7 +186,7 @@ public final class DismantleMotion {
     }
     @SubscribeEvent public static void logout(PlayerEvent.PlayerLoggedOutEvent e){if(e.getEntity() instanceof ServerPlayer p)cancel(p);}
     @SubscribeEvent public static void dimension(PlayerEvent.PlayerChangedDimensionEvent e){if(e.getEntity() instanceof ServerPlayer p)cancel(p);}
-    @SubscribeEvent public static void tracking(PlayerEvent.StartTracking e){if(e.getEntity() instanceof ServerPlayer listener){Motion m=motions.get(e.getTarget().getUUID());if(m!=null)Network.CHANNEL.send(PacketDistributor.PLAYER.with(()->listener),packet(m,false));}}
+    @SubscribeEvent public static void tracking(PlayerEvent.StartTracking e){if(e.getEntity() instanceof ServerPlayer listener){Motion m=motions.get(e.getTarget().getUUID());if(m!=null)Network.CHANNEL.send(SimpleChannel.Target.player(listener),packet(m,false));}}
     @SubscribeEvent public static void stop(ServerStoppedEvent e){for(Motion m:List.copyOf(motions.values()))cancel(m.player);motions.clear();}
     private DismantleMotion(){}
 }

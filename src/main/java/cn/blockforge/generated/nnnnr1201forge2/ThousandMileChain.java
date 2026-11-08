@@ -79,11 +79,11 @@ public final class ThousandMileChain {
         }
     }
     public static void register() {
-        Network.CHANNEL.messageBuilder(Press.class,50,NetworkDirection.PLAY_TO_SERVER).encoder(Press::write).decoder(Press::read)
+        Network.CHANNEL.messageBuilder(Press.class,50,SimpleChannel.NetworkDirection.PLAY_TO_SERVER).encoder(Press::write).decoder(Press::read)
             .consumerMainThread((m,c)->{var p=c.get().getSender();if(p!=null)press(p,m);c.get().setPacketHandled(true);}).add();
-        Network.CHANNEL.messageBuilder(Snapshot.class,51,NetworkDirection.PLAY_TO_CLIENT).encoder(Snapshot::write).decoder(Snapshot::read)
+        Network.CHANNEL.messageBuilder(Snapshot.class,51,SimpleChannel.NetworkDirection.PLAY_TO_CLIENT).encoder(Snapshot::write).decoder(Snapshot::read)
             .consumerMainThread((m,c)->{receiver.accept(m);c.get().setPacketHandled(true);}).add();
-        Network.CHANNEL.messageBuilder(Configure.class,52,NetworkDirection.PLAY_TO_SERVER).encoder((m,b)->{}).decoder(b->new Configure())
+        Network.CHANNEL.messageBuilder(Configure.class,52,SimpleChannel.NetworkDirection.PLAY_TO_SERVER).encoder((m,b)->{}).decoder(b->new Configure())
             .consumerMainThread((m,c)->{var p=c.get().getSender();if(p!=null)ThousandMileChainItem.configure(p);c.get().setPacketHandled(true);}).add();
     }
     public static boolean active(Player p) { return SESSIONS.containsKey(p.getUUID()); }
@@ -368,7 +368,7 @@ public final class ThousandMileChain {
         Snapshot packet=snapshot(s,s.phase);
         for(ServerPlayer viewer:s.level.players()){
             if(viewer==s.owner||viewer==s.target||lineDistance(viewer.position(),packet.hand(),s.anchor)<128*128||lineDistance(viewer.position(),packet.hand(),s.tip)<128*128){
-                Network.CHANNEL.send(PacketDistributor.PLAYER.with(()->viewer),packet);s.viewers.add(viewer.getUUID());
+                Network.CHANNEL.send(SimpleChannel.Target.player(viewer),packet);s.viewers.add(viewer.getUUID());
             }
         }
     }
@@ -376,7 +376,7 @@ public final class ThousandMileChain {
         if(!SESSIONS.remove(s.owner.getUUID(),s))return;
         if(s.target!=null){CAPTIVES.remove(s.target.getUUID(),s);restore(s.target);s.target.setDeltaMovement(Vec3.ZERO);s.target.fallDistance=0;s.target.hurtMarked=true;}
         Snapshot packet=snapshot(s,END);
-        for(UUID id:s.viewers){ServerPlayer p=s.owner.server.getPlayerList().getPlayer(id);if(p!=null)Network.CHANNEL.send(PacketDistributor.PLAYER.with(()->p),packet);}
+        for(UUID id:s.viewers){ServerPlayer p=s.owner.server.getPlayerList().getPlayer(id);if(p!=null)Network.CHANNEL.send(SimpleChannel.Target.player(p),packet);}
     }
     private static void leave(Entity e){Session own=SESSIONS.get(e.getUUID()),captive=CAPTIVES.get(e.getUUID());if(own!=null)finish(own);if(captive!=null)finish(captive);}
     private static void sound(Session s){s.level.playSound(null,s.owner.blockPosition(),SoundEvents.CHAIN_PLACE,SoundSource.PLAYERS,.8f,1);}
