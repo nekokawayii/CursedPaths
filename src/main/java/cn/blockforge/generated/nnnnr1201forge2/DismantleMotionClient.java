@@ -135,7 +135,7 @@ public final class DismantleMotionClient {
         MotionRenderer renderer=renderer(player);if(renderer==null)return;
         rendering=true;var ps=e.getPoseStack();ps.pushPose();
         try{
-            renderer.render(player,player.getYRot(),e.getPartialTick().getGameTimeDeltaPartialTick(true),ps,e.getMultiBufferSource(),e.getPackedLight());
+            renderer.render(player,player.getYRot(),e.getPartialTick(),ps,e.getMultiBufferSource(),e.getPackedLight());
             frames.mark(player.getUUID());e.setCanceled(true);
         }catch(RuntimeException|LinkageError ex){report("玩家事件绘制",ex);}
         finally{ps.popPose();rendering=false;}
@@ -151,7 +151,7 @@ public final class DismantleMotionClient {
             if(!frames.missing(player.getUUID())){e.setCanceled(true);return;}
             MotionRenderer renderer=renderer(player);if(renderer==null)return;
             rendering=true;e.getPoseStack().pushPose();
-            try{renderer.render(player,player.getYRot(),e.getPartialTick().getGameTimeDeltaPartialTick(true),e.getPoseStack(),e.getMultiBufferSource(),e.getPackedLight());frames.mark(player.getUUID());e.setCanceled(true);}
+            try{renderer.render(player,player.getYRot(),e.getPartialTick(),e.getPoseStack(),e.getMultiBufferSource(),e.getPackedLight());frames.mark(player.getUUID());e.setCanceled(true);}
             catch(RuntimeException|LinkageError ex){report("生物事件绘制",ex);}
             finally{e.getPoseStack().popPose();rendering=false;}
             return;
@@ -159,10 +159,10 @@ public final class DismantleMotionClient {
         if(!MaidBridge.isMaid(entity))return;
         e.setCanceled(true);rendering=true;var ps=e.getPoseStack();ps.pushPose();
         try{
-            transform(entity,ps,e.getPartialTick().getGameTimeDeltaPartialTick(true));
+            transform(entity,ps,e.getPartialTick());
             // YSM 的深层 renderer 不一定覆写原版 render；从实体原入口重入才能保留其 geoRender 分流。
             var motionRenderer=Minecraft.getInstance().getEntityRenderDispatcher().getRenderer(entity);
-            if(motionRenderer!=null)motionRenderer.render(entity,entity.getYRot(),e.getPartialTick().getGameTimeDeltaPartialTick(true),ps,e.getMultiBufferSource(),e.getPackedLight());
+            if(motionRenderer!=null)motionRenderer.render(entity,entity.getYRot(),e.getPartialTick(),ps,e.getMultiBufferSource(),e.getPackedLight());
         }
         finally{ps.popPose();rendering=false;}
     }

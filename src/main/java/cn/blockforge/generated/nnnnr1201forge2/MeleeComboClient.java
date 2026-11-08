@@ -120,8 +120,8 @@ public final class MeleeComboClient {
         var mc=Minecraft.getInstance();if(mc.player==null||CastHands.sealing())return;
         boolean slim="slim".equals(mc.player.getModelName());var hands=slim?slimHands:normalHands;if(hands==null)return;
         Clip c=current(mc.player.getId());if(c==null)return;
-        double age=clock-c.start()+e.getPartialTick().getGameTimeDeltaPartialTick(true),power=MeleeComboRules.drive(c.stage(),age);
-        var pose=pose(mc.player.getId(),e.getPartialTick().getGameTimeDeltaPartialTick(true));
+        double age=clock-c.start()+e.getPartialTick(),power=MeleeComboRules.drive(c.stage(),age);
+        var pose=pose(mc.player.getId(),e.getPartialTick());
         MotionPlayerGeometry.reset(hands,slim);
         if(!mc.player.getMainHandItem().isEmpty()||!mc.player.getOffhandItem().isEmpty()){
             // 持物时保留原物品，只画一次气流，不额外叠一对手。

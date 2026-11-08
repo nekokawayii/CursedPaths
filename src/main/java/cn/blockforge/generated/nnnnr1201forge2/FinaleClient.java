@@ -100,7 +100,7 @@ public final class FinaleClient {
     }
     @SubscribeEvent public static void interaction(InputEvent.InteractionKeyMappingTriggered e){if(local()){e.setCanceled(true);e.setSwingHand(false);}}
     @SubscribeEvent(priority=EventPriority.LOWEST) public static void angles(ViewportEvent.ComputeCameraAngles e){
-        if(!local())return;var mc=Minecraft.getInstance();State s=states.get(mc.player.getId());float partial=(float)e.getPartialTick().getGameTimeDeltaPartialTick(true);camera(s,partial);
+        if(!local())return;var mc=Minecraft.getInstance();State s=states.get(mc.player.getId());float partial=(float)e.getPartialTick();camera(s,partial);
         double age=s.age+partial;var shot=FinaleCameraRules.shot(age);Vec3 at=mc.player.getPosition(partial);
         double yaw=Math.toRadians(age>=FinaleRules.TRIGGERS[1]&&age<FinaleRules.STARTS[2]?mc.player.yBodyRot:s.e.direction().x);
         Vec3 forward=new Vec3(-Math.sin(yaw),0,Math.cos(yaw)),side=new Vec3(Math.cos(yaw),0,Math.sin(yaw));
@@ -114,7 +114,7 @@ public final class FinaleClient {
         e.setYaw((float)Math.toDegrees(Math.atan2(-direction.x,direction.z))+(float)shake*.4f);
         e.setPitch((float)-Math.toDegrees(Math.atan2(direction.y,Math.hypot(direction.x,direction.z)))+(float)shake);e.setRoll((float)shake*.5f);
     }
-    @SubscribeEvent(priority=EventPriority.LOWEST) public static void fov(ViewportEvent.ComputeFov e){if(local()&&e.usedConfiguredFov())e.setFOV(FinaleCameraRules.shot(age(Minecraft.getInstance().player.getId())+e.getPartialTick().getGameTimeDeltaPartialTick(true)).fov());}
+    @SubscribeEvent(priority=EventPriority.LOWEST) public static void fov(ViewportEvent.ComputeFov e){if(local()&&e.usedConfiguredFov())e.setFOV(FinaleCameraRules.shot(age(Minecraft.getInstance().player.getId())+e.getPartialTick()).fov());}
     @SubscribeEvent public static void models(RenderLevelStageEvent e){
         if(e.getStage()!=RenderLevelStageEvent.Stage.AFTER_ENTITIES)return;var mc=Minecraft.getInstance();if(mc.level==null)return;
         Vec3 cam=e.getCamera().getPosition();PoseStack ps=e.getPoseStack();MultiBufferSource.BufferSource buffers=mc.renderBuffers().bufferSource();
@@ -172,7 +172,7 @@ public final class FinaleClient {
         State local=states.get(mc.player.getId());if(local!=null&&local.age<FinaleRules.CHARGE){float f=local.age/FinaleRules.CHARGE;g.fill(w/2-80,h/2+35,w/2+80,h/2+41,0xAA17131B);g.fill(w/2-80,h/2+35,w/2-80+(int)(160*f),h/2+41,0xFFF2E5C3);g.drawCenteredString(mc.font,"终式蓄力 "+String.format(Locale.ROOT,"%.1f",Math.max(0,8-local.age/20))+"秒 · 可移动",w/2,h/2+46,0xFFFFFFFF);}
         if(mc.screen==null)overlay(g,e.getPartialTick().getGameTimeDeltaPartialTick(true));
     }
-    @SubscribeEvent(priority=EventPriority.LOWEST) public static void screen(ScreenEvent.Render.Post e){overlay(e.getGuiGraphics(),e.getPartialTick().getGameTimeDeltaPartialTick(true));}
+    @SubscribeEvent(priority=EventPriority.LOWEST) public static void screen(ScreenEvent.Render.Post e){overlay(e.getGuiGraphics(),e.getPartialTick());}
     private static void overlay(GuiGraphics g,float partial){
         var mc=Minecraft.getInstance();if(mc.player==null)return;int w=mc.getWindow().getGuiScaledWidth(),h=mc.getWindow().getGuiScaledHeight();
         g.pose().pushPose();g.pose().translate(0,0,1000);

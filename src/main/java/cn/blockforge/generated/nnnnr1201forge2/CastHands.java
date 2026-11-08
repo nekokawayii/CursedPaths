@@ -56,7 +56,7 @@ public final class CastHands {
     @SubscribeEvent public static void hand(RenderHandEvent e){
         var mc=Minecraft.getInstance();if(mc.player==null||mc.level==null)return;
         Pose pose=active(mc.player.getId());if(pose==null)return;
-        float age=mc.level.getGameTime()-pose.start+e.getPartialTick().getGameTimeDeltaPartialTick(true);
+        float age=mc.level.getGameTime()-pose.start+e.getPartialTick();
         e.setCanceled(true);if(e.getHand()!=InteractionHand.MAIN_HAND)return;
         var ps=e.getPoseStack();var base=mc.getEntityRenderDispatcher().getRenderer(mc.player);
         if(!(base instanceof PlayerRenderer renderer)){Client.watchRenderers(mc);return;} // 渲染表被换掉时本帧不画手，绝不 NPE
