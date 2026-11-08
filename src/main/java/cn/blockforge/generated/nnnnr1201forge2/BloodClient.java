@@ -80,7 +80,7 @@ public final class BloodClient {
         var previous=RenderSystem.getShader();float[] color=RenderSystem.getShaderColor().clone();
         ps.pushPose();try{
             ps.translate(-camera.x,-camera.y,-camera.z);RenderSystem.enableDepthTest();RenderSystem.enableBlend();RenderSystem.defaultBlendFunc();RenderSystem.disableCull();RenderSystem.depthMask(false);RenderSystem.setShaderColor(1,1,1,1);RenderSystem.setShaderTexture(0,TEXTURE);
-            if(shader!=null){shader.safeGetUniform("BloodTime").set((float)(time/20));shader.safeGetUniform("FluidMode").set(0f);RenderSystem.setShader(()->shader);}else RenderSystem.setShader(GameRenderer::getPositionColorTexShader);
+            if(shader!=null){shader.safeGetUniform("BloodTime").set((float)(time/20));shader.safeGetUniform("FluidMode").set(0f);RenderSystem.setShader(()->shader);}else RenderSystem.setShader(GameRenderer::getPositionTexColorShader);
             BufferBuilder b=Tesselator.getInstance().begin(VertexFormat.Mode.QUADS,DefaultVertexFormat.POSITION_TEX_COLOR);
             for(Visual v:visuals)if(v.e.position().distanceToSqr(camera)<180*180)draw(b,ps,v,camera,time);
             for(Visual v:oceans.values())if(v.e.position().distanceToSqr(camera)<240*240)ocean(b,ps,v,camera,time);
@@ -93,7 +93,7 @@ public final class BloodClient {
             RenderSystem.setShader(GameRenderer::getPositionColorShader);b = Tesselator.getInstance().begin(VertexFormat.Mode.QUADS,DefaultVertexFormat.POSITION_COLOR);
             for(Visual v:domains.values())eyes(b,ps,v,camera,time);
             BufferUploader.drawWithShader(b.buildOrThrow());
-            if(shader!=null){shader.safeGetUniform("FluidMode").set(0f);RenderSystem.setShader(()->shader);}else RenderSystem.setShader(GameRenderer::getPositionColorTexShader);
+            if(shader!=null){shader.safeGetUniform("FluidMode").set(0f);RenderSystem.setShader(()->shader);}else RenderSystem.setShader(GameRenderer::getPositionTexColorShader);
             // 预测轨迹不修改服务端时间，也不会标记友方。
             RenderSystem.disableDepthTest();b = Tesselator.getInstance().begin(VertexFormat.Mode.QUADS,DefaultVertexFormat.POSITION_TEX_COLOR);
             for(Visual v:visuals)if(v.e.kind()==BloodArts.FX_HEART){Entity target=mc.level.getEntity(v.e.owner());Vec3 at=target==null?v.e.position():target.position();heart(b,ps,at.add(0,target==null?2:target.getEyeHeight()+.3,0),camera,time);prediction(b,ps,at,v.e.direction(),v.e.size(),camera,time);}
