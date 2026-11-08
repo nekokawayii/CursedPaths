@@ -11,6 +11,7 @@ import net.minecraft.world.level.Level;
  * 作用就是给那一团特效一个真实坐标，让不义游戏可以跟它换位。换位消耗后立刻 discard。
  */
 public class TodoAnchorEntity extends Entity {
+    @Override protected void defineSynchedData(net.minecraft.network.syncher.SynchedEntityData.Builder builder){}
     public TodoAnchorEntity(EntityType<? extends TodoAnchorEntity> type, Level level) {
         super(type, level);
         noPhysics = true;

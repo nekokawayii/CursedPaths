@@ -37,7 +37,7 @@ public final class LowCurseEntity extends Monster {
         if(!level().isClientSide){getAttribute(Attributes.MAX_HEALTH).setBaseValue(f.health());getAttribute(Attributes.ATTACK_DAMAGE).setBaseValue(f.damage());setHealth(getMaxHealth());xpReward=5+(4-f.grade())*8;}
         refreshDimensions();
     }
-    @Override public EntityDimensions getDimensions(Pose pose){
+    @Override protected EntityDimensions getDefaultDimensions(Pose pose){
         // 父构造器定义同步字段之前会查询一次尺寸。
         if(!modelReady)return super.getDimensions(pose);
         var f=form();return EntityDimensions.scalable(f.width(),f.height());

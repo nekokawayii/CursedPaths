@@ -54,7 +54,7 @@ public final class CharacterRewards {
         p.giveExperiencePoints(reward.experience());Curse.add(p,reward.energy());
         for(var item:reward.items()){
             var type=BuiltInRegistries.ITEM.get(ResourceLocation.parse(item.id()));int left=item.count();
-            while(left>0){var stack=new ItemStack(type,Math.min(left,type.getMaxStackSize()));left-=stack.getCount();Journey.give(p,stack);}
+            while(left>0){var stack=new ItemStack(type,Math.min(left,type.getDefaultMaxStackSize()));left-=stack.getCount();Journey.give(p,stack);}
         }
         if(!reward.equals(CharacterReward.NONE))p.sendSystemMessage(Component.literal("已领取「"+title+"」奖励："+summary));
     }
