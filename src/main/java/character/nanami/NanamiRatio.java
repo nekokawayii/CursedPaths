@@ -158,8 +158,8 @@ public final class NanamiRatio {
     }
 
     // ------------------------------------------------------------ 暴击
-    /** 在 LivingHurtEvent 里把这一下改成弱点暴击：伤害 ×3 + 临时削掉 70% 护甲。 */
-    public static void amplify(ServerPlayer p, LivingEntity target, net.neoforged.neoforge.event.entity.living.LivingHurtEvent event) {
+    /** 在 LivingIncomingDamageEvent 里把这一下改成弱点暴击：伤害 ×3 + 临时削掉 70% 护甲。 */
+    public static void amplify(ServerPlayer p, LivingEntity target, net.neoforged.neoforge.event.entity.living.LivingIncomingDamageEvent event) {
         event.setAmount(event.getAmount() * (float) CRIT_MULTIPLIER);
         stripArmor(target);
         finishCrit(p, target);

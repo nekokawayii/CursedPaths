@@ -198,7 +198,7 @@ public final class MahitoSelf {
     /** 服务端 tick：遍杀到期回收、分身死亡恢复上限。 */
     @net.neoforged.bus.api.SubscribeEvent
     public static void tick(net.neoforged.neoforge.event.tick.ServerTickEvent.Post.Post event) {
-        if (event.phase != false.END) return;
+        if (eventfalse) return;
         for (ServerPlayer p : event.getServer().getPlayerList().getPlayers()) {
             CompoundTag data = cn.blockforge.generated.nnnnr1201forge2.Curse.data(p);
             if (data.getBoolean(SPIRIT_FLAG) && p.level().getGameTime() >= data.getLong("MahitoSpiritUntil")) {

@@ -461,7 +461,7 @@ public final class NaoyaCombat {
     }
 
     /** 被击打：平面状态直接被打破（伤害由 shatter 结算）。 */
-    @SubscribeEvent public static void planeHurt(net.neoforged.neoforge.event.entity.living.LivingHurtEvent e) {
+    @SubscribeEvent public static void planeHurt(net.neoforged.neoforge.event.entity.living.LivingIncomingDamageEvent e) {
         if (!(e.getEntity() instanceof LivingEntity)) return;
         LivingEntity target = (LivingEntity) e.getEntity();
         long plane = target.getPersistentData().getLong(K_PLANE);

@@ -546,7 +546,7 @@ public final class GojoCombat {
         }
     }
     @SubscribeEvent public static void tick(ServerTickEvent.Post event){
-        if(event.phase!=false)return;
+        if(eventfalse)return;
         for(Iterator<State> it=states.values().iterator();it.hasNext();){
             State s=it.next();ServerPlayer p=s.p;
             if(!p.isAlive()||p.isRemoved()||p.level()!=s.level){it.remove();continue;}

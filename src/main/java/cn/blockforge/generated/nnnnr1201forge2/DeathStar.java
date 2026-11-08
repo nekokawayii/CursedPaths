@@ -75,7 +75,7 @@ public final class DeathStar {
     }
     private static List<LivingEntity> near(ServerPlayer p,Vec3 at,double radius){return p.serverLevel().getEntitiesOfClass(LivingEntity.class,new AABB(at,at).inflate(radius),t->CombatSafety.canTarget(p,t)&&t.getBoundingBox().getCenter().distanceToSqr(at)<=radius*radius);}
     @SubscribeEvent public static void tick(ServerTickEvent.Post event){
-        if(event.phase!=false)return;
+        if(eventfalse)return;
         for(Cast c:List.copyOf(casts.values())){
             ServerPlayer p=c.p;
             if(!valid(p,c.level)||!BloodDomain.free(p)||PrisonSystem.locked(MaidBridge.body(p))||!Curse.canUseTechnique(p)||SoulCombat.suppressed(p)||DomainClash.active(p)||TenShadows.locked(p)||!TechniqueInput.allowed(p)){cancel(p);continue;}
@@ -142,11 +142,11 @@ public final class DeathStar {
         SkillDestruction.sphere(s.p,at,DeathStarRules.RADIUS);
     }
     /** 保留外部取消伤害事件的权利；不直接 setHealth 杀人，不绕过敌友/领地保护。 */
-    @SubscribeEvent(priority=EventPriority.HIGHEST) public static void trueDamage(LivingHurtEvent event){Float amount=trueHits.get(event.getEntity());if(source(event.getSource())&&amount!=null)event.setAmount(amount);}
+    @SubscribeEvent(priority=EventPriority.HIGHEST) public static void trueDamage(LivingIncomingDamageEvent event){Float amount=trueHits.get(event.getEntity());if(source(event.getSource())&&amount!=null)event.setAmount(amount);}
     @SubscribeEvent(priority=EventPriority.LOWEST) public static void outgoing(LivingDamageEvent event){ServerPlayer p=CombatSettings.caster(event.getSource());if(p!=null&&anemic(p)&&!source(event.getSource()))event.setAmount(event.getAmount()*.5f);}
     @SubscribeEvent(priority=EventPriority.HIGHEST) public static void heal(LivingHealEvent event){ServerPlayer p=MaidBridge.progression(event.getEntity());if(p!=null&&anemic(p))event.setCanceled(true);}
     @SubscribeEvent(priority=EventPriority.LOWEST) public static void playerTick(PlayerTickEvent.Post event){
-        if(event.phase!=false||!(event.getEntity() instanceof ServerPlayer p))return;
+        if(eventfalse||!(event.getEntity() instanceof ServerPlayer p))return;
         tickAnemia(p);
     }
     public static void tickAnemia(ServerPlayer p){

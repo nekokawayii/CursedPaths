@@ -100,7 +100,7 @@ public final class YujiFxClient {
             Client.ring(b, ps, r.at.add(0, .8, 0), .5 + t * 2.0, .05, (alpha / 2 << 24) | 0xFFFFFF, cam);
         }
         ps.popPose();
-        com.mojang.blaze3d.vertex.Tesselator.getInstance().end();
+        com.mojang.blaze3d.vertex.Tesselator.getInstance().buildOrThrow();
     }
 
     private YujiFxClient() { }

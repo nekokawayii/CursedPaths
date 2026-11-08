@@ -10,7 +10,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
-import net.neoforged.neoforge.event.entity.living.LivingHurtEvent;
+import net.neoforged.neoforge.event.entity.living.LivingIncomingDamageEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
 import net.neoforged.bus.api.SubscribeEvent;
 
@@ -75,7 +75,7 @@ public final class MahitoTransfigure {
     }
 
     /** 剑（及其它无为转变武器）：最终伤害改成贮存生物的攻击力。 */
-    @SubscribeEvent public static void swordDamage(LivingHurtEvent e) {
+    @SubscribeEvent public static void swordDamage(LivingIncomingDamageEvent e) {
         if (!(e.getSource().getEntity() instanceof ServerPlayer p)) return;
         if (e.getAmount() <= 0) return;
         ItemStack held = p.getMainHandItem();
@@ -85,7 +85,7 @@ public final class MahitoTransfigure {
         e.setAmount(Math.max(0.5f, tag.getFloat("attack")));
     }
 
-    @SubscribeEvent public static void hurt(LivingHurtEvent e) {
+    @SubscribeEvent public static void hurt(LivingIncomingDamageEvent e) {
         if (!(e.getSource().getEntity() instanceof ServerPlayer p)) return;
         Armed armed = ARMED.get(p.getUUID());
         if (armed == null) return;

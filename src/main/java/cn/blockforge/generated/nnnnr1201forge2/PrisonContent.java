@@ -9,13 +9,13 @@ import net.minecraft.world.item.*;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.*;
 import net.neoforged.neoforge.common.NeoForge;
-import net.neoforged.neoforge.registries.RegistryObject;
+import net.neoforged.neoforge.registries.DeferredHolder;
 
 public final class PrisonContent {
-    public static final RegistryObject<EntityType<PrisonRealmEntity>> REALM=Content.ENTITIES.register("prison_realm",()->EntityType.Builder.<PrisonRealmEntity>of(PrisonRealmEntity::new,MobCategory.MISC).sized(1,1.25f).fireImmune().clientTrackingRange(16).updateInterval(1).build("jujutsu_kaisen_cursed_paths:prison_realm"));
-    public static final RegistryObject<EntityType<JacobsLadderEntity>> LIGHT=Content.ENTITIES.register("jacobs_ladder",()->EntityType.Builder.<JacobsLadderEntity>of(JacobsLadderEntity::new,MobCategory.MISC).sized(10,16).fireImmune().clientTrackingRange(24).updateInterval(1).build("jujutsu_kaisen_cursed_paths:jacobs_ladder"));
-    public static final RegistryObject<Item> PRISON=Content.ITEMS.register("prison_realm",PrisonRealmItem::new);
-    public static final RegistryObject<Item> LADDER=Content.ITEMS.register("jacobs_ladder",()->new Item(new Item.Properties().stacksTo(1).rarity(Rarity.EPIC)){
+    public static final DeferredHolder<EntityType<?>, EntityType<PrisonRealmEntity>> REALM=Content.ENTITIES.register("prison_realm",()->EntityType.Builder.<PrisonRealmEntity>of(PrisonRealmEntity::new,MobCategory.MISC).sized(1,1.25f).fireImmune().clientTrackingRange(16).updateInterval(1).build("jujutsu_kaisen_cursed_paths:prison_realm"));
+    public static final DeferredHolder<EntityType<?>, EntityType<JacobsLadderEntity>> LIGHT=Content.ENTITIES.register("jacobs_ladder",()->EntityType.Builder.<JacobsLadderEntity>of(JacobsLadderEntity::new,MobCategory.MISC).sized(10,16).fireImmune().clientTrackingRange(24).updateInterval(1).build("jujutsu_kaisen_cursed_paths:jacobs_ladder"));
+    public static final DeferredHolder<Item, Item> PRISON=Content.ITEMS.register("prison_realm",PrisonRealmItem::new);
+    public static final DeferredHolder<Item, Item> LADDER=Content.ITEMS.register("jacobs_ladder",()->new Item(new Item.Properties().stacksTo(1).rarity(Rarity.EPIC)){
         @Override public InteractionResultHolder<ItemStack> use(Level level,Player player,InteractionHand hand){
             ItemStack stack=player.getItemInHand(hand);if(PrisonSystem.locked(player))return InteractionResultHolder.fail(stack);
             if(player instanceof ServerPlayer p){

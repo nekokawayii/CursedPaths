@@ -148,7 +148,7 @@ public final class GuardianPlayerSkills {
         }
     }
     @SubscribeEvent public static void tick(ServerTickEvent.Post event){
-        if(event.phase!=false)return;
+        if(eventfalse)return;
         for(Iterator<State> it=states.values().iterator();it.hasNext();){State s=it.next();if(!valid(s)){cleanup(s);it.remove();continue;}long now=s.level.getGameTime();
             if(DomainClash.active(s.p))continue;
             if(SoulCombat.suppressed(s.p)||Curse.burnout(s.p)){s.casting=-1;s.guardUntil=0;if(s.boostUntil>0){s.boostUntil=0;boost(s,false);}closeDomain(s);continue;}
@@ -176,10 +176,10 @@ public final class GuardianPlayerSkills {
         for(Iterator<Grid> it=grids.iterator();it.hasNext();){Grid grid=it.next();if(!valid(grid.s)){it.remove();continue;}for(LivingEntity t:grid.s.level.getEntitiesOfClass(LivingEntity.class,grid.bounds,e->CombatSettings.canHit(grid.s.p,e)&&!grid.hit.contains(e.getUUID())))if(hit(grid.s,t,grid.s.v("GridDamage"),false))grid.hit.add(t.getUUID());if(--grid.remaining<=0)it.remove();}
     }
     @SubscribeEvent public static void healing(LivingHealEvent event){if(event.getEntity().getPersistentData().getLong("GuardianSkillNoHeal")>event.getEntity().level().getGameTime())event.setCanceled(true);}
-    @SubscribeEvent(priority=EventPriority.HIGH) public static void guard(LivingHurtEvent event){
+    @SubscribeEvent(priority=EventPriority.HIGH) public static void guard(LivingIncomingDamageEvent event){
         if(event.getEntity() instanceof ServerPlayer p)guardCaster(p,event);
     }
-    public static void guardCaster(ServerPlayer p,LivingHurtEvent event){State s=states.get(p.getUUID());if(s==null||!valid(s)||s.guardUntil<=p.level().getGameTime()||SoulCombat.suppressed(p)||event.getSource().is(DamageTypeTags.BYPASSES_INVULNERABILITY))return;
+    public static void guardCaster(ServerPlayer p,LivingIncomingDamageEvent event){State s=states.get(p.getUUID());if(s==null||!valid(s)||s.guardUntil<=p.level().getGameTime()||SoulCombat.suppressed(p)||event.getSource().is(DamageTypeTags.BYPASSES_INVULNERABILITY))return;
         var source=event.getSource();boolean melee=source.is(DamageTypes.PLAYER_ATTACK)||source.is(DamageTypes.MOB_ATTACK);
         if(melee&&s.v("MeleeImmune")>0){event.setCanceled(true);if(source.getEntity() instanceof LivingEntity attacker)attacker.knockback(1,p.getX()-attacker.getX(),p.getZ()-attacker.getZ());}
         else if(source.is(DamageTypeTags.IS_PROJECTILE)||source.getEntity()!=null&&p.distanceToSqr(source.getEntity())>s.v("Reach")*s.v("Reach"))event.setAmount(event.getAmount()*(float)Math.max(0,1-s.v("RangedReduction")/100));

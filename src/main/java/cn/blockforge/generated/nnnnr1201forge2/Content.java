@@ -19,115 +19,115 @@ import net.minecraft.world.phys.Vec3;
 public final class Content {
     public static final DeferredRegister<Item> ITEMS=DeferredRegister.create(ForgeRegistries.ITEMS,"jujutsu_kaisen_cursed_paths");
     public static final DeferredRegister<EntityType<?>> ENTITIES=DeferredRegister.create(ForgeRegistries.ENTITY_TYPES,"jujutsu_kaisen_cursed_paths");
-    public static final RegistryObject<EntityType<BuddhaEntity>> BUDDHA=ENTITIES.register("sokushinbutsu",()->EntityType.Builder.of(BuddhaEntity::new,MobCategory.MONSTER).sized(1.7f,4.0f).clientTrackingRange(16).updateInterval(1).build("jujutsu_kaisen_cursed_paths:sokushinbutsu"));
-    public static final RegistryObject<EntityType<ParasiteEntity>> PARASITE=ENTITIES.register("parasitic_buddha",()->EntityType.Builder.of(ParasiteEntity::new,MobCategory.MONSTER).sized(1.5f,3.0f).clientTrackingRange(10).build("jujutsu_kaisen_cursed_paths:parasitic_buddha"));
-    public static final RegistryObject<EntityType<ParasiteEntity>> MOTHER=ENTITIES.register("buddha_mother",()->EntityType.Builder.of(ParasiteEntity::new,MobCategory.MONSTER).sized(1.8f,3).clientTrackingRange(14).build("jujutsu_kaisen_cursed_paths:buddha_mother"));
-    public static final RegistryObject<EntityType<DaitianEntity>> DAITIAN=ENTITIES.register("daitian",()->EntityType.Builder.of(DaitianEntity::new,MobCategory.MONSTER).sized(1.2f,3.5f).clientTrackingRange(12).updateInterval(1).build("jujutsu_kaisen_cursed_paths:daitian"));
-    public static final RegistryObject<EntityType<BrokenMahitoEntity>> BROKEN_MAHITO=ENTITIES.register("broken_mahito",()->EntityType.Builder.of(BrokenMahitoEntity::new,MobCategory.MONSTER).sized(1.0f,3.0f).clientTrackingRange(16).updateInterval(1).build("jujutsu_kaisen_cursed_paths:broken_mahito"));
-    public static final RegistryObject<EntityType<MahitoLimbEntity>> MAHITO_LIMB=ENTITIES.register("mahito_limb",()->EntityType.Builder.of(MahitoLimbEntity::new,MobCategory.MISC).sized(0.7f,0.7f).clientTrackingRange(16).updateInterval(1).build("jujutsu_kaisen_cursed_paths:mahito_limb"));
+    public static final DeferredHolder<EntityType<?>, EntityType<BuddhaEntity>> BUDDHA=ENTITIES.register("sokushinbutsu",()->EntityType.Builder.of(BuddhaEntity::new,MobCategory.MONSTER).sized(1.7f,4.0f).clientTrackingRange(16).updateInterval(1).build("jujutsu_kaisen_cursed_paths:sokushinbutsu"));
+    public static final DeferredHolder<EntityType<?>, EntityType<ParasiteEntity>> PARASITE=ENTITIES.register("parasitic_buddha",()->EntityType.Builder.of(ParasiteEntity::new,MobCategory.MONSTER).sized(1.5f,3.0f).clientTrackingRange(10).build("jujutsu_kaisen_cursed_paths:parasitic_buddha"));
+    public static final DeferredHolder<EntityType<?>, EntityType<ParasiteEntity>> MOTHER=ENTITIES.register("buddha_mother",()->EntityType.Builder.of(ParasiteEntity::new,MobCategory.MONSTER).sized(1.8f,3).clientTrackingRange(14).build("jujutsu_kaisen_cursed_paths:buddha_mother"));
+    public static final DeferredHolder<EntityType<?>, EntityType<DaitianEntity>> DAITIAN=ENTITIES.register("daitian",()->EntityType.Builder.of(DaitianEntity::new,MobCategory.MONSTER).sized(1.2f,3.5f).clientTrackingRange(12).updateInterval(1).build("jujutsu_kaisen_cursed_paths:daitian"));
+    public static final DeferredHolder<EntityType<?>, EntityType<BrokenMahitoEntity>> BROKEN_MAHITO=ENTITIES.register("broken_mahito",()->EntityType.Builder.of(BrokenMahitoEntity::new,MobCategory.MONSTER).sized(1.0f,3.0f).clientTrackingRange(16).updateInterval(1).build("jujutsu_kaisen_cursed_paths:broken_mahito"));
+    public static final DeferredHolder<EntityType<?>, EntityType<MahitoLimbEntity>> MAHITO_LIMB=ENTITIES.register("mahito_limb",()->EntityType.Builder.of(MahitoLimbEntity::new,MobCategory.MISC).sized(0.7f,0.7f).clientTrackingRange(16).updateInterval(1).build("jujutsu_kaisen_cursed_paths:mahito_limb"));
     /** 隐藏 Boss「观测者」：假玩家外观，不 AI、不受伤、只盯着镜头。 */
-    public static final RegistryObject<EntityType<ObserverEntity>> OBSERVER=ENTITIES.register("observer",()->EntityType.Builder.of(ObserverEntity::new,MobCategory.MONSTER).sized(0.6f,1.8f).clientTrackingRange(24).updateInterval(1).build("jujutsu_kaisen_cursed_paths:observer"));
+    public static final DeferredHolder<EntityType<?>, EntityType<ObserverEntity>> OBSERVER=ENTITIES.register("observer",()->EntityType.Builder.of(ObserverEntity::new,MobCategory.MONSTER).sized(0.6f,1.8f).clientTrackingRange(24).updateInterval(1).build("jujutsu_kaisen_cursed_paths:observer"));
     /** 夏油杰：第二章人形 Boss（HD 皮肤 geto.png + 原版玩家骨架）。 */
-    public static final RegistryObject<EntityType<GetoEntity>> GETO=ENTITIES.register("geto",()->EntityType.Builder.of(GetoEntity::new,MobCategory.MONSTER).sized(0.6f,1.8f).clientTrackingRange(16).updateInterval(1).build("jujutsu_kaisen_cursed_paths:geto"));
+    public static final DeferredHolder<EntityType<?>, EntityType<GetoEntity>> GETO=ENTITIES.register("geto",()->EntityType.Builder.of(GetoEntity::new,MobCategory.MONSTER).sized(0.6f,1.8f).clientTrackingRange(16).updateInterval(1).build("jujutsu_kaisen_cursed_paths:geto"));
     /** 低级咒灵：夏油杰「咒灵操术·群袭」的召唤物，运行时解析 basement_wanderer.bbmodel。 */
-    public static final RegistryObject<EntityType<LowCurseEntity>> LOW_CURSE=ENTITIES.register("low_curse",()->EntityType.Builder.of(LowCurseEntity::new,MobCategory.MONSTER).sized(0.7f,2.0f).clientTrackingRange(12).updateInterval(2).build("jujutsu_kaisen_cursed_paths:low_curse"));
+    public static final DeferredHolder<EntityType<?>, EntityType<LowCurseEntity>> LOW_CURSE=ENTITIES.register("low_curse",()->EntityType.Builder.of(LowCurseEntity::new,MobCategory.MONSTER).sized(0.7f,2.0f).clientTrackingRange(12).updateInterval(2).build("jujutsu_kaisen_cursed_paths:low_curse"));
     /** 里香：乙骨忧太的召唤物（无限血、两分钟、自动攻击）。 */
     /** 死灭洄游专用的「羂索」：只会召唤强化原版生物的轻量独立生物（r230）。 */
-    public static final RegistryObject<EntityType<character.culling.CullingGetoEntity>> CULLING_GETO=ENTITIES.register("culling_geto",()->EntityType.Builder.of(character.culling.CullingGetoEntity::new,MobCategory.MONSTER).sized(0.6f,1.8f).clientTrackingRange(16).updateInterval(2).build("jujutsu_kaisen_cursed_paths:culling_geto"));
-    public static final RegistryObject<EntityType<RikaEntity>> RIKA=ENTITIES.register("rika",()->EntityType.Builder.of(RikaEntity::new,MobCategory.CREATURE).sized(1.6f,4.0f).clientTrackingRange(16).updateInterval(1).build("jujutsu_kaisen_cursed_paths:rika"));
-    public static final RegistryObject<Item> IDLE_TRANSFIGURATION_CURSE=ITEMS.register("idle_transfiguration_curse",()->new Item(new Item.Properties().rarity(Rarity.EPIC).stacksTo(16)));
-    public static final RegistryObject<Item> MAHITO_FINGER=ITEMS.register("mahito_finger",()->new Item(new Item.Properties().rarity(Rarity.EPIC).stacksTo(16)));
-    public static final RegistryObject<Item> YUJI_FAMILY_PHOTO=ITEMS.register("yuji_family_photo",()->new Item(new Item.Properties().rarity(Rarity.RARE).stacksTo(1)));
+    public static final DeferredHolder<EntityType<?>, EntityType<character.culling.CullingGetoEntity>> CULLING_GETO=ENTITIES.register("culling_geto",()->EntityType.Builder.of(character.culling.CullingGetoEntity::new,MobCategory.MONSTER).sized(0.6f,1.8f).clientTrackingRange(16).updateInterval(2).build("jujutsu_kaisen_cursed_paths:culling_geto"));
+    public static final DeferredHolder<EntityType<?>, EntityType<RikaEntity>> RIKA=ENTITIES.register("rika",()->EntityType.Builder.of(RikaEntity::new,MobCategory.CREATURE).sized(1.6f,4.0f).clientTrackingRange(16).updateInterval(1).build("jujutsu_kaisen_cursed_paths:rika"));
+    public static final DeferredHolder<Item, Item> IDLE_TRANSFIGURATION_CURSE=ITEMS.register("idle_transfiguration_curse",()->new Item(new Item.Properties().rarity(Rarity.EPIC).stacksTo(16)));
+    public static final DeferredHolder<Item, Item> MAHITO_FINGER=ITEMS.register("mahito_finger",()->new Item(new Item.Properties().rarity(Rarity.EPIC).stacksTo(16)));
+    public static final DeferredHolder<Item, Item> YUJI_FAMILY_PHOTO=ITEMS.register("yuji_family_photo",()->new Item(new Item.Properties().rarity(Rarity.RARE).stacksTo(1)));
     /** 不属于这个世界的碎片：五条悟通关后从灵魂通道裂隙里掉出来的剧情道具，长得像一张网页截图/鼠标指针。 */
     /** 诛伏赐死：审判者 + 处刑人之剑。 */
-    public static final RegistryObject<EntityType<character.higuruma.HigurumaJudgeEntity>> HIGURUMA_JUDGE =
+    public static final DeferredHolder<EntityType<?>, EntityType<character.higuruma.HigurumaJudgeEntity>> HIGURUMA_JUDGE =
         ENTITIES.register("higuruma_judge", () -> EntityType.Builder.<character.higuruma.HigurumaJudgeEntity>of(
             character.higuruma.HigurumaJudgeEntity::new, MobCategory.CREATURE).sized(0.8f, 2.2f)
             .clientTrackingRange(10).updateInterval(2).build("jujutsu_kaisen_cursed_paths:higuruma_judge"));
-    public static final RegistryObject<Item> EXECUTIONER_SWORD=ITEMS.register("executioner_sword",
+    public static final DeferredHolder<Item, Item> EXECUTIONER_SWORD=ITEMS.register("executioner_sword",
         ()->new character.higuruma.ExecutionerSwordItem(new Item.Properties().stacksTo(1).durability(1).rarity(Rarity.EPIC)));
     /** 无为转变·分身 / 尾巴：玩家模型、友方。 */
-    public static final RegistryObject<EntityType<character.mahito.MahitoCloneEntity>> MAHITO_CLONE =
+    public static final DeferredHolder<EntityType<?>, EntityType<character.mahito.MahitoCloneEntity>> MAHITO_CLONE =
         ENTITIES.register("mahito_clone", () -> EntityType.Builder.<character.mahito.MahitoCloneEntity>of(
             character.mahito.MahitoCloneEntity::new, MobCategory.CREATURE).sized(0.6f, 1.8f)
             .clientTrackingRange(10).updateInterval(2).build("jujutsu_kaisen_cursed_paths:mahito_clone"));
     /** 圆钝果实：真人领域里的不可移动实体（渲染 一堆手.bbmodel）。 */
-    public static final RegistryObject<EntityType<YiduiShouEntity>> YIDUI = ENTITIES.register("yidui",
+    public static final DeferredHolder<EntityType<?>, EntityType<YiduiShouEntity>> YIDUI = ENTITIES.register("yidui",
         () -> EntityType.Builder.of(YiduiShouEntity::new, MobCategory.MONSTER).sized(2.0f, 2.0f).clientTrackingRange(10).updateInterval(20).build("jujutsu_kaisen_cursed_paths:yidui"));
     /** 漏壶（NPC）：敌对，使用漏壶技能；见到玩家开领域（冷却 300 秒）。 */
-    public static final RegistryObject<EntityType<JogoNpcEntity>> JOGO_NPC = ENTITIES.register("jogo_npc",
+    public static final DeferredHolder<EntityType<?>, EntityType<JogoNpcEntity>> JOGO_NPC = ENTITIES.register("jogo_npc",
         () -> EntityType.Builder.of(JogoNpcEntity::new, MobCategory.MONSTER).sized(1.0f, 3.0f).fireImmune().clientTrackingRange(16).updateInterval(1).build("jujutsu_kaisen_cursed_paths:jogo_npc"));
-    public static final RegistryObject<Item> JOGO_NPC_EGG = ITEMS.register("jogo_npc_spawn_egg",
+    public static final DeferredHolder<Item, Item> JOGO_NPC_EGG = ITEMS.register("jogo_npc_spawn_egg",
         () -> new net.neoforged.neoforge.common.ForgeSpawnEggItem(JOGO_NPC, 0xE6400A, 0x2A1410, new Item.Properties()));
     /** 里梅（NPC）：敌对，玩家模型 + 冰凝咒法。 */
-    public static final RegistryObject<EntityType<UraumeNpcEntity>> URAUME_NPC = ENTITIES.register("uraume_npc",
+    public static final DeferredHolder<EntityType<?>, EntityType<UraumeNpcEntity>> URAUME_NPC = ENTITIES.register("uraume_npc",
         () -> EntityType.Builder.of(UraumeNpcEntity::new, MobCategory.MONSTER).sized(0.6f, 1.8f).clientTrackingRange(16).updateInterval(1).build("jujutsu_kaisen_cursed_paths:uraume_npc"));
-    public static final RegistryObject<Item> URAUME_NPC_EGG = ITEMS.register("uraume_npc_spawn_egg",
+    public static final DeferredHolder<Item, Item> URAUME_NPC_EGG = ITEMS.register("uraume_npc_spawn_egg",
         () -> new net.neoforged.neoforge.common.ForgeSpawnEggItem(URAUME_NPC, 0xE8EEF2, 0x6FA8C8, new Item.Properties()));
     /** 胀相：中立角色，会赤血操术。 */
-    public static final RegistryObject<EntityType<ChosoEntity>> CHOSO=ENTITIES.register("choso",
+    public static final DeferredHolder<EntityType<?>, EntityType<ChosoEntity>> CHOSO=ENTITIES.register("choso",
         ()->EntityType.Builder.of(ChosoEntity::new,MobCategory.CREATURE).sized(0.6f,1.8f).clientTrackingRange(16).updateInterval(1).build("jujutsu_kaisen_cursed_paths:choso"));
-    public static final RegistryObject<Item> CHOSO_EGG=ITEMS.register("choso_spawn_egg",
+    public static final DeferredHolder<Item, Item> CHOSO_EGG=ITEMS.register("choso_spawn_egg",
         ()->new net.neoforged.neoforge.common.ForgeSpawnEggItem(CHOSO,0x2A1030,0x8C1E3A,new Item.Properties()));
     /** 东堂葵：玩家模型 NPC，用「不义游戏」（注入咒力 + 换位）。皮肤等用户给图，先用默认 Steve。 */
-    public static final RegistryObject<EntityType<TodoNpcEntity>> TODO_NPC=ENTITIES.register("todo_npc",
+    public static final DeferredHolder<EntityType<?>, EntityType<TodoNpcEntity>> TODO_NPC=ENTITIES.register("todo_npc",
         ()->EntityType.Builder.of(TodoNpcEntity::new,MobCategory.CREATURE).sized(0.6f,1.8f).clientTrackingRange(16).updateInterval(1).build("jujutsu_kaisen_cursed_paths:todo_npc"));
-    public static final RegistryObject<Item> TODO_NPC_EGG=ITEMS.register("todo_npc_spawn_egg",
+    public static final DeferredHolder<Item, Item> TODO_NPC_EGG=ITEMS.register("todo_npc_spawn_egg",
         ()->new net.neoforged.neoforge.common.ForgeSpawnEggItem(TODO_NPC,0x2A2038,0xB58CFF,new Item.Properties()));
     /** 石流龙：玩家模型 NPC，用「咒力强化/放出」（光炮 / 追踪弹 / 喷涌 / 甜品）。皮肤等用户给图，先用默认 Steve。 */
-    public static final RegistryObject<EntityType<RyuNpcEntity>> RYU_NPC=ENTITIES.register("ryu_npc",
+    public static final DeferredHolder<EntityType<?>, EntityType<RyuNpcEntity>> RYU_NPC=ENTITIES.register("ryu_npc",
         ()->EntityType.Builder.of(RyuNpcEntity::new,MobCategory.CREATURE).sized(0.6f,1.8f).clientTrackingRange(16).updateInterval(1).build("jujutsu_kaisen_cursed_paths:ryu_npc"));
-    public static final RegistryObject<Item> RYU_NPC_EGG=ITEMS.register("ryu_npc_spawn_egg",
+    public static final DeferredHolder<Item, Item> RYU_NPC_EGG=ITEMS.register("ryu_npc_spawn_egg",
         ()->new net.neoforged.neoforge.common.ForgeSpawnEggItem(RYU_NPC,0x0A1016,0x9FDFFF,new Item.Properties()));
-    public static final RegistryObject<EntityType<HakariNpcEntity>> HAKARI_NPC=ENTITIES.register("hakari_npc",
+    public static final DeferredHolder<EntityType<?>, EntityType<HakariNpcEntity>> HAKARI_NPC=ENTITIES.register("hakari_npc",
         ()->EntityType.Builder.of(HakariNpcEntity::new,net.minecraft.world.entity.MobCategory.CREATURE)
             .sized(0.6f,1.8f).clientTrackingRange(10).build("hakari_npc"));
-    public static final RegistryObject<Item> HAKARI_NPC_EGG=ITEMS.register("hakari_npc_spawn_egg",
+    public static final DeferredHolder<Item, Item> HAKARI_NPC_EGG=ITEMS.register("hakari_npc_spawn_egg",
         ()->new net.neoforged.neoforge.common.ForgeSpawnEggItem(HAKARI_NPC,0x7A1B0F,0x35E06A,new Item.Properties()));
-    public static final RegistryObject<EntityType<NaoyaNpcEntity>> NAOYA_NPC=ENTITIES.register("naoya_npc",
+    public static final DeferredHolder<EntityType<?>, EntityType<NaoyaNpcEntity>> NAOYA_NPC=ENTITIES.register("naoya_npc",
         ()->EntityType.Builder.of(NaoyaNpcEntity::new,net.minecraft.world.entity.MobCategory.CREATURE)
             .sized(0.6f,1.8f).clientTrackingRange(10).build("naoya_npc"));
-    public static final RegistryObject<Item> NAOYA_NPC_EGG=ITEMS.register("naoya_npc_spawn_egg",
+    public static final DeferredHolder<Item, Item> NAOYA_NPC_EGG=ITEMS.register("naoya_npc_spawn_egg",
         ()->new net.neoforged.neoforge.common.ForgeSpawnEggItem(NAOYA_NPC,0x2A2F3A,0x7FD8FF,new Item.Properties()));
-    public static final RegistryObject<EntityType<HigurumaNpcEntity>> HIGURUMA_NPC=ENTITIES.register("higuruma_npc",
+    public static final DeferredHolder<EntityType<?>, EntityType<HigurumaNpcEntity>> HIGURUMA_NPC=ENTITIES.register("higuruma_npc",
         ()->EntityType.Builder.of(HigurumaNpcEntity::new,net.minecraft.world.entity.MobCategory.CREATURE)
             .sized(0.6f,1.8f).clientTrackingRange(10).build("higuruma_npc"));
-    public static final RegistryObject<Item> HIGURUMA_NPC_EGG=ITEMS.register("higuruma_npc_spawn_egg",
+    public static final DeferredHolder<Item, Item> HIGURUMA_NPC_EGG=ITEMS.register("higuruma_npc_spawn_egg",
         ()->new net.neoforged.neoforge.common.ForgeSpawnEggItem(HIGURUMA_NPC,0x1B2340,0xC9A227,new Item.Properties()));
-    public static final RegistryObject<EntityType<SukunaNpcEntity>> SUKUNA_NPC=ENTITIES.register("sukuna_npc",
+    public static final DeferredHolder<EntityType<?>, EntityType<SukunaNpcEntity>> SUKUNA_NPC=ENTITIES.register("sukuna_npc",
         ()->EntityType.Builder.of(SukunaNpcEntity::new,net.minecraft.world.entity.MobCategory.CREATURE)
             .sized(0.6f,1.8f).clientTrackingRange(12).build("sukuna_npc"));
-    public static final RegistryObject<Item> SUKUNA_NPC_EGG=ITEMS.register("sukuna_npc_spawn_egg",
+    public static final DeferredHolder<Item, Item> SUKUNA_NPC_EGG=ITEMS.register("sukuna_npc_spawn_egg",
         ()->new net.neoforged.neoforge.common.ForgeSpawnEggItem(SUKUNA_NPC,0x1A0E12,0xE34D65,new Item.Properties()));
-    public static final RegistryObject<EntityType<KashimoNpcEntity>> KASHIMO_NPC=ENTITIES.register("kashimo_npc",
+    public static final DeferredHolder<EntityType<?>, EntityType<KashimoNpcEntity>> KASHIMO_NPC=ENTITIES.register("kashimo_npc",
         ()->EntityType.Builder.of(KashimoNpcEntity::new,net.minecraft.world.entity.MobCategory.CREATURE)
             .sized(0.6f,1.8f).clientTrackingRange(10).build("kashimo_npc"));
-    public static final RegistryObject<Item> KASHIMO_NPC_EGG=ITEMS.register("kashimo_npc_spawn_egg",
+    public static final DeferredHolder<Item, Item> KASHIMO_NPC_EGG=ITEMS.register("kashimo_npc_spawn_egg",
         ()->new net.neoforged.neoforge.common.ForgeSpawnEggItem(KASHIMO_NPC,0xFFE9F0,0x7FD8FF,new Item.Properties()));
-    public static final RegistryObject<EntityType<SorcererNpcEntity>> NANAMI_NPC=sorcerer("nanami");
-    public static final RegistryObject<EntityType<SorcererNpcEntity>> YUTA_NPC=sorcerer("yuta");
-    public static final RegistryObject<EntityType<SorcererNpcEntity>> YUKI_NPC=sorcerer("yuki");
-    public static final RegistryObject<EntityType<SorcererNpcEntity>> TOJI_NPC=sorcerer("toji");
-    public static final RegistryObject<EntityType<SorcererNpcEntity>> MAHITO_NPC=sorcerer("mahito");
-    public static final RegistryObject<Item> NANAMI_NPC_EGG=sorcererEgg("nanami",NANAMI_NPC,0xDDD17C,0xE6D9C9);
-    public static final RegistryObject<Item> YUTA_NPC_EGG=sorcererEgg("yuta",YUTA_NPC,0xEBF3F7,0x293944);
-    public static final RegistryObject<Item> YUKI_NPC_EGG=sorcererEgg("yuki",YUKI_NPC,0xD7C75C,0x243746);
-    public static final RegistryObject<Item> TOJI_NPC_EGG=sorcererEgg("toji",TOJI_NPC,0x282C2E,0xB4B4B4);
-    public static final RegistryObject<Item> MAHITO_NPC_EGG=sorcererEgg("mahito",MAHITO_NPC,0x96B4BC,0x252C39);
-    private static RegistryObject<EntityType<SorcererNpcEntity>> sorcerer(String role){
+    public static final DeferredHolder<EntityType<?>, EntityType<SorcererNpcEntity>> NANAMI_NPC=sorcerer("nanami");
+    public static final DeferredHolder<EntityType<?>, EntityType<SorcererNpcEntity>> YUTA_NPC=sorcerer("yuta");
+    public static final DeferredHolder<EntityType<?>, EntityType<SorcererNpcEntity>> YUKI_NPC=sorcerer("yuki");
+    public static final DeferredHolder<EntityType<?>, EntityType<SorcererNpcEntity>> TOJI_NPC=sorcerer("toji");
+    public static final DeferredHolder<EntityType<?>, EntityType<SorcererNpcEntity>> MAHITO_NPC=sorcerer("mahito");
+    public static final DeferredHolder<Item, Item> NANAMI_NPC_EGG=sorcererEgg("nanami",NANAMI_NPC,0xDDD17C,0xE6D9C9);
+    public static final DeferredHolder<Item, Item> YUTA_NPC_EGG=sorcererEgg("yuta",YUTA_NPC,0xEBF3F7,0x293944);
+    public static final DeferredHolder<Item, Item> YUKI_NPC_EGG=sorcererEgg("yuki",YUKI_NPC,0xD7C75C,0x243746);
+    public static final DeferredHolder<Item, Item> TOJI_NPC_EGG=sorcererEgg("toji",TOJI_NPC,0x282C2E,0xB4B4B4);
+    public static final DeferredHolder<Item, Item> MAHITO_NPC_EGG=sorcererEgg("mahito",MAHITO_NPC,0x96B4BC,0x252C39);
+    private static DeferredHolder<EntityType<?>, EntityType<SorcererNpcEntity>> sorcerer(String role){
         return ENTITIES.register(role+"_npc",()->EntityType.Builder.<SorcererNpcEntity>of(
             (type,level)->new SorcererNpcEntity(type,level,role),MobCategory.CREATURE)
             .sized(role.equals("mahito")?1f:.6f,role.equals("mahito")?3f:1.8f).clientTrackingRange(12).updateInterval(2).build("jujutsu_kaisen_cursed_paths:"+role+"_npc"));
     }
-    private static RegistryObject<Item> sorcererEgg(String role,RegistryObject<EntityType<SorcererNpcEntity>> type,int a,int b){
+    private static DeferredHolder<Item, Item> sorcererEgg(String role,DeferredHolder<EntityType<?>, EntityType<SorcererNpcEntity>> type,int a,int b){
         return ITEMS.register(role+"_npc_spawn_egg",()->new net.neoforged.neoforge.common.ForgeSpawnEggItem(type,a,b,new Item.Properties()));
     }
     /** 不义游戏：纯客户端特效被注入的一瞬间就地生成的锚点实体（不渲染、不可攻击）。 */
-    public static final RegistryObject<EntityType<TodoAnchorEntity>> TODO_ANCHOR=ENTITIES.register("todo_anchor",
+    public static final DeferredHolder<EntityType<?>, EntityType<TodoAnchorEntity>> TODO_ANCHOR=ENTITIES.register("todo_anchor",
         ()->EntityType.Builder.of(TodoAnchorEntity::new,MobCategory.MISC).sized(0.25f,0.25f)
             .clientTrackingRange(10).updateInterval(20).build("jujutsu_kaisen_cursed_paths:todo_anchor"));
     /** 咒具·游云：三节棍，伤害 18，右键横扫 10 格。 */
-    public static final RegistryObject<Item> YUYUN=ITEMS.register("yuyun",()->new net.minecraft.world.item.SwordItem(
+    public static final DeferredHolder<Item, Item> YUYUN=ITEMS.register("yuyun",()->new net.minecraft.world.item.SwordItem(
             net.minecraft.world.item.Tiers.IRON,15,-2.4f,new Item.Properties().stacksTo(1).rarity(Rarity.RARE)){
         @Override public InteractionResultHolder<ItemStack> use(Level level,Player player,InteractionHand hand){
             ItemStack stack=player.getItemInHand(hand);
@@ -154,7 +154,7 @@ public final class Content {
     }
 
     /** 剑「屠坐魔」：基础伤害 5，对亡灵造成双倍伤害。 */
-    public static final RegistryObject<Item> SLAUGHTER_DEMON=ITEMS.register("slaughter_demon",()->new net.minecraft.world.item.SwordItem(
+    public static final DeferredHolder<Item, Item> SLAUGHTER_DEMON=ITEMS.register("slaughter_demon",()->new net.minecraft.world.item.SwordItem(
             net.minecraft.world.item.Tiers.IRON,2,-2.4f,new Item.Properties().stacksTo(1).rarity(Rarity.RARE)));
     /** 屠坐魔：手持此剑攻击亡灵时伤害翻倍。 */
     @net.neoforged.bus.api.SubscribeEvent public static void slaughterDemonUndead(net.neoforged.neoforge.event.entity.living.LivingDamageEvent e){
@@ -164,7 +164,7 @@ public final class Content {
         e.setAmount(e.getAmount()*2f);
     }
     /** 咒具第一条分支：黑绳。左键甩出，抽打 10 格内正前方的敌人。 */
-    public static final RegistryObject<Item> BLACK_ROPE=ITEMS.register("black_rope",()->new net.minecraft.world.item.SwordItem(
+    public static final DeferredHolder<Item, Item> BLACK_ROPE=ITEMS.register("black_rope",()->new net.minecraft.world.item.SwordItem(
             net.minecraft.world.item.Tiers.NETHERITE,5,-2.4f,new Item.Properties().stacksTo(1).rarity(Rarity.EPIC)){
         @Override public InteractionResultHolder<ItemStack> use(Level level,Player player,InteractionHand hand){
             if(!level.isClientSide&&player instanceof ServerPlayer sp)blackRopeSweep(sp);
@@ -205,7 +205,7 @@ public final class Content {
     }
 
     /** 作弊道具：仅创造模式可得，右键立刻完成当前角色章节（漏壶按章节旗标推进，其他角色按击杀数推进）。 */
-    public static final RegistryObject<Item> TRANSFIGURED_BODY=ITEMS.register("transfigured_body",
+    public static final DeferredHolder<Item, Item> TRANSFIGURED_BODY=ITEMS.register("transfigured_body",
         ()->new character.mahito.TransfiguredItem(new Item.Properties().stacksTo(1).rarity(Rarity.EPIC)){
             @Override public net.minecraft.world.InteractionResultHolder<ItemStack> use(net.minecraft.world.level.Level level,
                     net.minecraft.world.entity.player.Player p, net.minecraft.world.InteractionHand hand){
@@ -221,13 +221,13 @@ public final class Content {
         net.minecraft.world.item.Tiers.GOLD, net.minecraft.world.item.Tiers.IRON,
         net.minecraft.world.item.Tiers.DIAMOND, net.minecraft.world.item.Tiers.NETHERITE};
     @SuppressWarnings("unchecked")
-    public static final RegistryObject<Item>[] TRANSFIGURED_AXES=new RegistryObject[6];
+    public static final DeferredHolder<Item, Item>[] TRANSFIGURED_AXES=new RegistryObject[6];
     @SuppressWarnings("unchecked")
-    public static final RegistryObject<Item>[] TRANSFIGURED_PICKAXES=new RegistryObject[6];
+    public static final DeferredHolder<Item, Item>[] TRANSFIGURED_PICKAXES=new RegistryObject[6];
     @SuppressWarnings("unchecked")
-    public static final RegistryObject<Item>[] TRANSFIGURED_HOES=new RegistryObject[6];
+    public static final DeferredHolder<Item, Item>[] TRANSFIGURED_HOES=new RegistryObject[6];
     @SuppressWarnings("unchecked")
-    public static final RegistryObject<Item>[] TRANSFIGURED_SHOVELS=new RegistryObject[6];
+    public static final DeferredHolder<Item, Item>[] TRANSFIGURED_SHOVELS=new RegistryObject[6];
     static {
         for(int i=0;i<6;i++){
             final int k=i;
@@ -242,12 +242,12 @@ public final class Content {
         }
     }
     /** 日车宽见的法槌：不可丢弃、无限耐久。 */
-    public static final RegistryObject<Item> GAVEL=ITEMS.register("gavel",
+    public static final DeferredHolder<Item, Item> GAVEL=ITEMS.register("gavel",
         ()->new character.higuruma.GavelItem(new Item.Properties().stacksTo(1).rarity(Rarity.EPIC)));
-    public static final RegistryObject<Item> TRANSFIGURED_SWORD=ITEMS.register("transfigured_sword",
+    public static final DeferredHolder<Item, Item> TRANSFIGURED_SWORD=ITEMS.register("transfigured_sword",
         ()->new character.mahito.TransfiguredSwordItem(net.minecraft.world.item.Tiers.NETHERITE,5,-2.4f,
             new Item.Properties().stacksTo(1).rarity(Rarity.EPIC)));
-    public static final RegistryObject<Item> CHAPTER_CHEAT=ITEMS.register("chapter_cheat",()->new Item(new Item.Properties().stacksTo(1).rarity(Rarity.EPIC)){
+    public static final DeferredHolder<Item, Item> CHAPTER_CHEAT=ITEMS.register("chapter_cheat",()->new Item(new Item.Properties().stacksTo(1).rarity(Rarity.EPIC)){
         @Override public InteractionResultHolder<ItemStack> use(Level level,Player player,InteractionHand hand){
             ItemStack stack=player.getItemInHand(hand);
             if(!level.isClientSide&&player instanceof ServerPlayer sp){
@@ -279,66 +279,66 @@ public final class Content {
             return InteractionResultHolder.sidedSuccess(stack,level.isClientSide);
         }
     });
-    public static final RegistryObject<Item> BEYOND_FRAGMENT=ITEMS.register("beyond_fragment",()->new Item(new Item.Properties().rarity(Rarity.EPIC).stacksTo(1).fireResistant()){
+    public static final DeferredHolder<Item, Item> BEYOND_FRAGMENT=ITEMS.register("beyond_fragment",()->new Item(new Item.Properties().rarity(Rarity.EPIC).stacksTo(1).fireResistant()){
         /** 在虚空竞技场对它右键：开启第三阶段（场地坍塌 → 纯白空间 → 观测者）。 */
         @Override public InteractionResultHolder<ItemStack> use(Level level,Player p,InteractionHand hand){
             if(p instanceof ServerPlayer sp)BeyondRift.activateFragment(sp,hand);
             return InteractionResultHolder.sidedSuccess(p.getItemInHand(hand),level.isClientSide);
         }
     });
-    public static final RegistryObject<Item> SOUL_SEPARATION_NEEDLE=ITEMS.register("soul_separation_needle",()->new PickaxeItem(Tiers.NETHERITE,1,-2.4f,new Item.Properties().rarity(Rarity.EPIC).fireResistant().durability(2031)){
+    public static final DeferredHolder<Item, Item> SOUL_SEPARATION_NEEDLE=ITEMS.register("soul_separation_needle",()->new PickaxeItem(Tiers.NETHERITE,1,-2.4f,new Item.Properties().rarity(Rarity.EPIC).fireResistant().durability(2031)){
         @Override public boolean canAttackBlock(net.minecraft.world.level.block.state.BlockState state,Level level,net.minecraft.core.BlockPos pos,Player player){return state.is(ProgressionContent.TRANSFIGURED_FLESH.get());}
         @Override public float getDestroySpeed(ItemStack stack,net.minecraft.world.level.block.state.BlockState state){return state.is(ProgressionContent.TRANSFIGURED_FLESH.get())?18:0;}
         @Override public boolean isCorrectToolForDrops(net.minecraft.world.level.block.state.BlockState state){return state.is(ProgressionContent.TRANSFIGURED_FLESH.get());}
     });
-    public static final RegistryObject<Item> FINGER=ITEMS.register("sukuna_finger",()->new GrowthFood(false));
-    public static final RegistryObject<Item> BODY=ITEMS.register("buddha_body",()->new GrowthFood(true));
-    public static final RegistryObject<Item> ORB=ITEMS.register("curse_orb",()->new Item(new Item.Properties().rarity(Rarity.UNCOMMON)){
+    public static final DeferredHolder<Item, Item> FINGER=ITEMS.register("sukuna_finger",()->new GrowthFood(false));
+    public static final DeferredHolder<Item, Item> BODY=ITEMS.register("buddha_body",()->new GrowthFood(true));
+    public static final DeferredHolder<Item, Item> ORB=ITEMS.register("curse_orb",()->new Item(new Item.Properties().rarity(Rarity.UNCOMMON)){
         @Override public InteractionResultHolder<ItemStack> use(Level level,Player p,InteractionHand hand){ItemStack stack=p.getItemInHand(hand);if(p instanceof ServerPlayer sp){Curse.addRaw(p,150);Curse.sync(sp);if(!p.isCreative())stack.shrink(1);}return InteractionResultHolder.sidedSuccess(stack,level.isClientSide);}
     });
-    public static final RegistryObject<Item> CREATIVE_RESTORER=ITEMS.register("creative_restorer",CreativeRestorer::new);
-    public static final RegistryObject<Item> RELIC=ITEMS.register("golden_relic",()->new Item(new Item.Properties().rarity(Rarity.RARE).fireResistant()));
-    public static final RegistryObject<Item> SEAL=ITEMS.register("severance_seal",()->new Item(new Item.Properties().rarity(Rarity.UNCOMMON)){
+    public static final DeferredHolder<Item, Item> CREATIVE_RESTORER=ITEMS.register("creative_restorer",CreativeRestorer::new);
+    public static final DeferredHolder<Item, Item> RELIC=ITEMS.register("golden_relic",()->new Item(new Item.Properties().rarity(Rarity.RARE).fireResistant()));
+    public static final DeferredHolder<Item, Item> SEAL=ITEMS.register("severance_seal",()->new Item(new Item.Properties().rarity(Rarity.UNCOMMON)){
         @Override public InteractionResultHolder<ItemStack> use(Level level,Player p,InteractionHand hand){ItemStack stack=p.getItemInHand(hand);if(!level.isClientSide){int count=0;for(BuddhaEntity boss:level.getEntitiesOfClass(BuddhaEntity.class,p.getBoundingBox().inflate(16)))if(boss.interruptSiphon())count++;if(count>0){if(!p.isCreative())stack.shrink(1);p.getCooldowns().addCooldown(this,60);}else p.displayClientMessage(Component.literal("附近没有正在虹吸的即身佛"),true);}return InteractionResultHolder.sidedSuccess(stack,level.isClientSide);}
     });
-    public static final RegistryObject<Item> INCENSE=ITEMS.register("buddha_incense",()->new Item(new Item.Properties().rarity(Rarity.EPIC)){
+    public static final DeferredHolder<Item, Item> INCENSE=ITEMS.register("buddha_incense",()->new Item(new Item.Properties().rarity(Rarity.EPIC)){
         @Override public InteractionResultHolder<ItemStack> use(Level level,Player p,InteractionHand hand){ItemStack stack=p.getItemInHand(hand);if(!level.isClientSide){
             if(level.getDifficulty()==net.minecraft.world.Difficulty.PEACEFUL){p.displayClientMessage(Component.literal("请先把游戏难度改为简单、普通或困难"),true);return InteractionResultHolder.fail(stack);}
             if(!level.getEntitiesOfClass(BuddhaEntity.class,p.getBoundingBox().inflate(96)).isEmpty()){p.displayClientMessage(Component.literal("附近已有即身佛"),true);return InteractionResultHolder.fail(stack);}
             Vec3 forward=new Vec3(p.getLookAngle().x,0,p.getLookAngle().z).normalize();if(forward.lengthSqr()<0.1)forward=new Vec3(0,0,1);Vec3 q=p.position().add(forward.scale(8));BuddhaEntity boss=BUDDHA.get().create(level);if(boss!=null){boss.moveTo(q.x,q.y,q.z,p.getYRot()+180,0);if(!level.noCollision(boss)){p.displayClientMessage(Component.literal("前方8格需要留出空地"),true);return InteractionResultHolder.fail(stack);}level.addFreshEntity(boss);boss.setTarget(p);if(!p.isCreative())stack.shrink(1);p.getCooldowns().addCooldown(this,100);}}
             return InteractionResultHolder.sidedSuccess(stack,level.isClientSide);}
     });
-    public static final RegistryObject<Item> EGG=ITEMS.register("buddha_spawn_egg",()->new net.neoforged.neoforge.common.ForgeSpawnEggItem(BUDDHA,0x493d2b,0x9a47b6,new Item.Properties()));
+    public static final DeferredHolder<Item, Item> EGG=ITEMS.register("buddha_spawn_egg",()->new net.neoforged.neoforge.common.ForgeSpawnEggItem(BUDDHA,0x493d2b,0x9a47b6,new Item.Properties()));
     /** 咒灵操术之符：右键召唤夏油杰（正常游玩入口）。 */
-    public static final RegistryObject<Item> SUMMON_TALISMAN=ITEMS.register("curse_summon_talisman",
+    public static final DeferredHolder<Item, Item> SUMMON_TALISMAN=ITEMS.register("curse_summon_talisman",
         ()->new SummonTalismanItem(new Item.Properties().stacksTo(16).rarity(Rarity.RARE)));
 
     /** 领域内的坟头（插着鬼妖村正，右键拔出）。 */
     public static final net.neoforged.neoforge.registries.DeferredRegister<net.minecraft.world.level.block.Block> YUTA_BLOCKS=
         net.neoforged.neoforge.registries.DeferredRegister.create(net.neoforged.neoforge.registries.ForgeRegistries.BLOCKS,"jujutsu_kaisen_cursed_paths");
-    public static final RegistryObject<net.minecraft.world.level.block.Block> YUTA_GRAVE=YUTA_BLOCKS.register("yuta_grave",
+    public static final DeferredHolder<?, net.minecraft.world.level.block.Block> YUTA_GRAVE=YUTA_BLOCKS.register("yuta_grave",
         ()->new character.yuta.YutaGraveBlock(net.minecraft.world.level.block.state.BlockBehaviour.Properties.of()
             .noCollission().strength(0.4f).noOcclusion().lightLevel(st->7)));
     /** 星轨坠亡的外壳方块：贴一张星空图。 */
-    public static final RegistryObject<net.minecraft.world.level.block.Block> YUKI_STAR_SHELL=YUTA_BLOCKS.register("yuki_star_shell",
+    public static final DeferredHolder<?, net.minecraft.world.level.block.Block> YUKI_STAR_SHELL=YUTA_BLOCKS.register("yuki_star_shell",
         ()->new DomainMaskBlock(net.minecraft.world.level.block.state.BlockBehaviour.Properties.of()
             .strength(-1f,3600000f).lightLevel(st->15)));
 
     public static final net.neoforged.neoforge.registries.DeferredRegister<net.minecraft.world.level.block.entity.BlockEntityType<?>> YUTA_BES=
         net.neoforged.neoforge.registries.DeferredRegister.create(net.neoforged.neoforge.registries.ForgeRegistries.BLOCK_ENTITY_TYPES,"jujutsu_kaisen_cursed_paths");
-    public static final RegistryObject<net.minecraft.world.level.block.entity.BlockEntityType<character.yuta.YutaGraveBlockEntity>> YUTA_GRAVE_BE=
+    public static final DeferredHolder<?, net.minecraft.world.level.block.entity.BlockEntityType<character.yuta.YutaGraveBlockEntity>> YUTA_GRAVE_BE=
         YUTA_BES.register("yuta_grave",()->net.minecraft.world.level.block.entity.BlockEntityType.Builder
             .of(character.yuta.YutaGraveBlockEntity::new,YUTA_GRAVE.get()).build(null));
-    public static final RegistryObject<Item> YUTA_GRAVE_ITEM=ITEMS.register("yuta_grave",
+    public static final DeferredHolder<Item, Item> YUTA_GRAVE_ITEM=ITEMS.register("yuta_grave",
         ()->new net.minecraft.world.item.BlockItem(YUTA_GRAVE.get(),new Item.Properties()));
 
     /** 天逆鉾：甚尔的咒具短刀，命中清除目标全部增益（连招 6）。 */
 
     /** 天逆蛑：用户上传的 Blockbench 长矛模型；右键切断附近一切术式与领域，封印 3 秒。 */
-    public static final RegistryObject<Item> TENKA_SPEAR = ITEMS.register("tenka_spear", TenkaSpearItem::new);
-    public static final RegistryObject<Item> MANUAL = ITEMS.register("gameplay_manual", ManualItem::new);
+    public static final DeferredHolder<Item, Item> TENKA_SPEAR = ITEMS.register("tenka_spear", TenkaSpearItem::new);
+    public static final DeferredHolder<Item, Item> MANUAL = ITEMS.register("gameplay_manual", ManualItem::new);
     /** 死灭回游「点数」：白色圆形代币，使用后 +100 死灭回游积分。 */
-    public static final RegistryObject<Item> CULLING_POINTS = ITEMS.register("culling_points", () ->
+    public static final DeferredHolder<Item, Item> CULLING_POINTS = ITEMS.register("culling_points", () ->
         new Item(new Item.Properties().stacksTo(16).rarity(Rarity.RARE)) {
             @Override public InteractionResultHolder<ItemStack> use(Level level, Player player, net.minecraft.world.InteractionHand hand) {
                 ItemStack stack = player.getItemInHand(hand);
@@ -357,25 +357,25 @@ public final class Content {
 
     /** 领域方块（石流龙打上花火的内壳材料）：六个面显示同一张图，image 0~7 切不同外观。 */
     /** 立方体结界的红色缝隙：走进去就被拉进死灭洄游（r256）。 */
-    public static final RegistryObject<net.minecraft.world.level.block.Block> CULLING_SEAM =
+    public static final DeferredHolder<?, net.minecraft.world.level.block.Block> CULLING_SEAM =
         YUTA_BLOCKS.register("culling_seam", () -> new CullingSeamBlock(
             net.minecraft.world.level.block.state.BlockBehaviour.Properties.of()
                 .noCollission().noOcclusion().strength(-1, 3600000f).lightLevel(s -> 15)));
 
-    public static final RegistryObject<net.minecraft.world.level.block.Block> DOMAIN_SCREEN =
+    public static final DeferredHolder<?, net.minecraft.world.level.block.Block> DOMAIN_SCREEN =
         YUTA_BLOCKS.register("domain_screen", () -> new DomainScreenBlock(
             net.minecraft.world.level.block.state.BlockBehaviour.Properties.of()
                 .strength(-1.0f, 3600000.0f).noOcclusion().lightLevel(st -> 0)));
-    public static final RegistryObject<Item> DOMAIN_SCREEN_ITEM = ITEMS.register("domain_screen",
+    public static final DeferredHolder<Item, Item> DOMAIN_SCREEN_ITEM = ITEMS.register("domain_screen",
         () -> new DomainScreenItem(DOMAIN_SCREEN.get(), new Item.Properties()));
 
-    public static final RegistryObject<net.minecraft.world.level.block.entity.BlockEntityType<DomainMaskBlockEntity>> DOMAIN_MASK_BE =
+    public static final DeferredHolder<?, net.minecraft.world.level.block.entity.BlockEntityType<DomainMaskBlockEntity>> DOMAIN_MASK_BE =
         YUTA_BES.register("domain_mask",()->net.minecraft.world.level.block.entity.BlockEntityType.Builder.of(DomainMaskBlockEntity::new,YUKI_STAR_SHELL.get(),DOMAIN_SCREEN.get()).build(null));
 
     /** 鬼妖村正：领域内从坟头拔出的刀（左键 20 无视护甲，右键放复制术式×3 后报废）。 */
-    public static final RegistryObject<Item> YUTA_KATANA=ITEMS.register("yuta_katana",()->new character.yuta.YutaKatanaItem(new Item.Properties().stacksTo(1).rarity(Rarity.RARE)));
-    public static final RegistryObject<Item> GETO_EGG=ITEMS.register("geto_spawn_egg",()->new net.neoforged.neoforge.common.ForgeSpawnEggItem(GETO,0x2b2b3d,0x6b7fd7,new Item.Properties()));
-    public static final RegistryObject<Item> LOW_CURSE_EGG=ITEMS.register("low_curse_spawn_egg",()->new net.neoforged.neoforge.common.ForgeSpawnEggItem(LOW_CURSE,0x141414,0x4a4a55,new Item.Properties()));
+    public static final DeferredHolder<Item, Item> YUTA_KATANA=ITEMS.register("yuta_katana",()->new character.yuta.YutaKatanaItem(new Item.Properties().stacksTo(1).rarity(Rarity.RARE)));
+    public static final DeferredHolder<Item, Item> GETO_EGG=ITEMS.register("geto_spawn_egg",()->new net.neoforged.neoforge.common.ForgeSpawnEggItem(GETO,0x2b2b3d,0x6b7fd7,new Item.Properties()));
+    public static final DeferredHolder<Item, Item> LOW_CURSE_EGG=ITEMS.register("low_curse_spawn_egg",()->new net.neoforged.neoforge.common.ForgeSpawnEggItem(LOW_CURSE,0x141414,0x4a4a55,new Item.Properties()));
     public static void init(IEventBus bus){ITEMS.register(bus);ENTITIES.register(bus);YUTA_BLOCKS.register(bus);YUTA_BES.register(bus);bus.addListener(Content::attributes);}
     private static void attributes(EntityAttributeCreationEvent e){e.put(CULLING_GETO.get(),character.culling.CullingGetoEntity.createAttributes().build());e.put(NANAMI_NPC.get(),SorcererNpcEntity.attributes("nanami").build());e.put(YUTA_NPC.get(),SorcererNpcEntity.attributes("yuta").build());e.put(YUKI_NPC.get(),SorcererNpcEntity.attributes("yuki").build());e.put(TOJI_NPC.get(),SorcererNpcEntity.attributes("toji").build());e.put(MAHITO_NPC.get(),SorcererNpcEntity.attributes("mahito").build());e.put(DAITIAN.get(),Monster.createMonsterAttributes().add(Attributes.MAX_HEALTH,200).add(Attributes.MOVEMENT_SPEED,0.26).add(Attributes.ATTACK_DAMAGE,5).add(Attributes.FOLLOW_RANGE,32).add(Attributes.KNOCKBACK_RESISTANCE,0.4).build());e.put(BUDDHA.get(),Monster.createMonsterAttributes().add(Attributes.MAX_HEALTH,5000).add(Attributes.MOVEMENT_SPEED,0.24).add(Attributes.ATTACK_DAMAGE,10).add(Attributes.FOLLOW_RANGE,64).add(Attributes.KNOCKBACK_RESISTANCE,0.9).build());e.put(PARASITE.get(),Monster.createMonsterAttributes().add(Attributes.MAX_HEALTH,12).add(Attributes.MOVEMENT_SPEED,0.32).add(Attributes.ATTACK_DAMAGE,2).add(Attributes.FOLLOW_RANGE,48).build());e.put(MOTHER.get(),Monster.createMonsterAttributes().add(Attributes.MAX_HEALTH,160).add(Attributes.MOVEMENT_SPEED,0.23).add(Attributes.ATTACK_DAMAGE,12).add(Attributes.FOLLOW_RANGE,48).add(Attributes.KNOCKBACK_RESISTANCE,0.8).build());e.put(BROKEN_MAHITO.get(),Monster.createMonsterAttributes().add(Attributes.MAX_HEALTH,20000).add(Attributes.MOVEMENT_SPEED,0.34).add(Attributes.ATTACK_DAMAGE,40).add(Attributes.FOLLOW_RANGE,64).add(Attributes.ARMOR,20).add(Attributes.KNOCKBACK_RESISTANCE,0.55).build());e.put(MAHITO_LIMB.get(),MahitoLimbEntity.createAttributes());e.put(CHOSO.get(),ChosoEntity.createAttributes().build());e.put(TODO_NPC.get(),TodoNpcEntity.createAttributes().build());e.put(RYU_NPC.get(),RyuNpcEntity.createAttributes().build());e.put(HAKARI_NPC.get(),HakariNpcEntity.createAttributes().build());e.put(NAOYA_NPC.get(),NaoyaNpcEntity.createAttributes().build());e.put(HIGURUMA_NPC.get(),HigurumaNpcEntity.createAttributes().build());e.put(SUKUNA_NPC.get(),SukunaNpcEntity.createAttributes().build());e.put(KASHIMO_NPC.get(),KashimoNpcEntity.createAttributes().build());e.put(URAUME_NPC.get(),UraumeNpcEntity.createAttributes().build());e.put(JOGO_NPC.get(),JogoNpcEntity.createAttributes().build());e.put(MAHITO_CLONE.get(),character.mahito.MahitoCloneEntity.createAttributes().build());e.put(HIGURUMA_JUDGE.get(),character.higuruma.HigurumaJudgeEntity.createAttributes().build());e.put(YIDUI.get(),YiduiShouEntity.createAttributes().build());e.put(GETO.get(),GetoEntity.createAttributes().build());e.put(LOW_CURSE.get(),LowCurseEntity.createAttributes().build());e.put(RIKA.get(),RikaEntity.createAttributes().build());e.put(OBSERVER.get(),Monster.createMonsterAttributes().add(Attributes.MAX_HEALTH,1).add(Attributes.MOVEMENT_SPEED,0).add(Attributes.FOLLOW_RANGE,64).add(Attributes.KNOCKBACK_RESISTANCE,1).build());}
     private static void tabs(BuildCreativeModeTabContentsEvent e){

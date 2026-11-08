@@ -20,7 +20,7 @@ import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 
-import net.neoforged.neoforge.event.entity.living.LivingHurtEvent;
+import net.neoforged.neoforge.event.entity.living.LivingIncomingDamageEvent;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.neoforge.event.tick.PlayerTickEvent;
 import cn.blockforge.generated.nnnnr1201forge2.CompatAttr;
@@ -167,7 +167,7 @@ public final class HakariCombat {
     }
 
     // ── 受击/命中钩子 ────────────────────────────────────
-    @SubscribeEvent public static void hurt(LivingHurtEvent e) {
+    @SubscribeEvent public static void hurt(LivingIncomingDamageEvent e) {
         // ① 粗粝打击：秤金次的每次命中都撕裂目标并拨动老虎机
         ServerPlayer attackerCaster=CombatSettings.caster(e.getSource());
         if (attackerCaster != null && CharacterService.hakari(attackerCaster)

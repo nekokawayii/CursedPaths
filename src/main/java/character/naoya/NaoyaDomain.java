@@ -20,7 +20,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 
-import net.neoforged.neoforge.event.entity.living.LivingHurtEvent;
+import net.neoforged.neoforge.event.entity.living.LivingIncomingDamageEvent;
 import net.neoforged.bus.api.SubscribeEvent;
 
 /**
@@ -269,7 +269,7 @@ public final class NaoyaDomain {
 
     private static boolean echoing;
     // ── 领域效果①：影子复制动作（每 3 次命中一组，必中结算） ──
-    @SubscribeEvent public static void hurt(LivingHurtEvent e) {
+    @SubscribeEvent public static void hurt(LivingIncomingDamageEvent e) {
         ServerPlayer p=CombatSettings.caster(e.getSource());
         if(echoing||p==null||!NaoyaDomain.active(p)||DomainClash.active(p)||character.mainline.Mainline.simpleProtected(e.getEntity()))return;
         Realm realm = ACTIVE.get(p.getUUID());

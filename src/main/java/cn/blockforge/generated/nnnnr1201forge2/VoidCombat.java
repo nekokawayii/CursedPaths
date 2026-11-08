@@ -141,7 +141,7 @@ public final class VoidCombat {
     }
     private static ServerPlayer playerBlast;
     @SubscribeEvent(priority=net.neoforged.bus.api.EventPriority.HIGHEST)
-    public static void playerBlastDamage(LivingHurtEvent event){
+    public static void playerBlastDamage(LivingIncomingDamageEvent event){
         if(playerBlast!=null&&event.getSource().is(net.minecraft.tags.DamageTypeTags.IS_EXPLOSION)&&CombatSettings.caster(event.getSource())==playerBlast){
             if(!CombatSettings.canHit(playerBlast,event.getEntity())){event.setCanceled(true);return;}
             // 虚空灶的爆炸：对魔虚罗 ×20（灶/开系特攻）
@@ -172,7 +172,7 @@ public final class VoidCombat {
         }
     }
     /** 虚空灶附带的原版着火伤害也需识别女仆；不叠加成长、不重复减半。 */
-    public static void ignitionDamage(LivingHurtEvent event){
+    public static void ignitionDamage(LivingIncomingDamageEvent event){
         LivingEntity target=event.getEntity();var tag=target.getPersistentData();
         if(!tag.hasUUID("SukunaVoidIgnitionOwner")||tag.getLong("SukunaVoidIgnitionUntil")<=target.level().getGameTime())return;
         UUID id=tag.getUUID("SukunaVoidIgnitionOwner");ServerPlayer owner=target.level() instanceof ServerLevel level?MaidBridge.find(level,id):null;

@@ -40,7 +40,7 @@ public final class BloodDomain {
     public static void clear(){for(Domain d:List.copyOf(domains))close(d.owner);domains.clear();}
     public static void onHit(ServerPlayer p,LivingEntity target){if(DeathStar.anemic(p)||!free(p)||DomainClash.active(p)||character.mainline.Mainline.simpleProtected(target))return;for(Domain d:domains)if(d.owner==p&&BloodRules.inside(target.position().distanceToSqr(d.center))&&d.lastHeal+4<=d.level.getGameTime()){d.lastHeal=d.level.getGameTime();MaidBridge.body(p).heal(Math.max(.2f,MaidBridge.body(p).getMaxHealth()*.005f));BloodArts.fx(p,BloodArts.FX_DRAIN,target.getBoundingBox().getCenter(),p.getEyePosition(),1,12,0);break;}}
     @SubscribeEvent public static void tick(ServerTickEvent.Post event){
-        if(event.phase!=false)return;
+        if(eventfalse)return;
         for(Domain d:List.copyOf(domains)){
             long now=d.level.getGameTime();ServerPlayer p=d.owner;
             if(!p.isAlive()||p.isRemoved()||!(p instanceof MaidBridge.Actor)&&p.hasDisconnected()||p.level()!=d.level||MaidBridge.body(p).level()!=d.level||now>=d.end||PrisonSystem.locked(MaidBridge.body(p))){close(p);continue;}

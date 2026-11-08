@@ -54,7 +54,7 @@ public final class YutaProgress {
 
     /** 虎杖残影被乙骨打过就记账：死亡归属丢失时用它兜底。 */
     @SubscribeEvent
-    public static void yujiHurt(net.neoforged.neoforge.event.entity.living.LivingHurtEvent e) {
+    public static void yujiHurt(net.neoforged.neoforge.event.entity.living.LivingIncomingDamageEvent e) {
         if (!(e.getEntity() instanceof cn.blockforge.generated.nnnnr1201forge2.YujiEntity yuji)) return;
         if (yuji.decoy() || yuji.familyMember()) return;
         ServerPlayer attacker = CombatSettings.caster(e.getSource());

@@ -26,7 +26,7 @@ import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.common.util.FakePlayer;
 
 import net.neoforged.neoforge.event.entity.living.LivingDeathEvent;
-import net.neoforged.neoforge.event.entity.living.LivingHurtEvent;
+import net.neoforged.neoforge.event.entity.living.LivingIncomingDamageEvent;
 import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.neoforge.server.ServerLifecycleHooks;
@@ -401,7 +401,7 @@ public final class CullingRules {
 
     // ===================== 伤害 =====================
     @SubscribeEvent(priority=EventPriority.LOW)
-    public static void hurt(LivingHurtEvent e){
+    public static void hurt(LivingIncomingDamageEvent e){
         LivingEntity victim=e.getEntity();
         var attacker=e.getSource().getEntity();
         // r222：术式/平A 用模组自己的攻击类型标记判定。以前只看 damageType，

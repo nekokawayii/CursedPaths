@@ -441,7 +441,7 @@ public final class TojiQte {
     }
 
     /** 受到伤害时给天逆蛑记耐久，累计到上限就碎掉。 */
-    @SubscribeEvent public static void tenkaWear(net.neoforged.neoforge.event.entity.living.LivingHurtEvent e) {
+    @SubscribeEvent public static void tenkaWear(net.neoforged.neoforge.event.entity.living.LivingIncomingDamageEvent e) {
         LivingEntity victim = e.getEntity();
         if (e.getAmount() <= 0 || !isToji(victim) || tenkaBroken(victim)) return;
         if (!victim.getMainHandItem().is(Content.TENKA_SPEAR.get())) return;
@@ -468,7 +468,7 @@ public final class TojiQte {
             net.minecraft.sounds.SoundSource.PLAYERS, 1f, .7f);
     }
 
-    @SubscribeEvent public static void staggerOnHit(net.neoforged.neoforge.event.entity.living.LivingHurtEvent e) {
+    @SubscribeEvent public static void staggerOnHit(net.neoforged.neoforge.event.entity.living.LivingIncomingDamageEvent e) {
         if (e.isCanceled() || e.getAmount() <= 0) return;
         LivingEntity victim = e.getEntity();
         if (!(e.getSource().getEntity() instanceof LivingEntity attacker) || attacker == victim) return;
@@ -485,7 +485,7 @@ public final class TojiQte {
     }
 
     /** 闪避无敌帧 + 夺命挡箭牌：伤害转移给替死鬼。 */
-    @SubscribeEvent public static void hurt(net.neoforged.neoforge.event.entity.living.LivingHurtEvent e) {
+    @SubscribeEvent public static void hurt(net.neoforged.neoforge.event.entity.living.LivingIncomingDamageEvent e) {
         ServerPlayer p = MaidBridge.progression(e.getEntity());
         if (p == null || !CharacterService.toji(p)) return;
         if (invulnerable(p)) { e.setCanceled(true); return; }

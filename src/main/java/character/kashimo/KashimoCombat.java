@@ -30,7 +30,7 @@ import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 
 import net.neoforged.neoforge.event.entity.living.LivingDeathEvent;
-import net.neoforged.neoforge.event.entity.living.LivingHurtEvent;
+import net.neoforged.neoforge.event.entity.living.LivingIncomingDamageEvent;
 import net.neoforged.neoforge.event.entity.player.AttackEntityEvent;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.neoforge.event.tick.ServerTickEvent;
@@ -109,7 +109,7 @@ public final class KashimoCombat {
     public static boolean magnetized(ServerPlayer p) { return data(p).getLong(MAGNET_UNTIL) > now(p); }
 
     // ------------------------------------------------------------ 事件：命中挂电 / 格挡 / 反射 / 连打
-    @SubscribeEvent public static void hit(LivingHurtEvent e) {
+    @SubscribeEvent public static void hit(LivingIncomingDamageEvent e) {
         if (e.getAmount() <= 0) return;
         ServerPlayer victim=e.getEntity() instanceof ServerPlayer player?player:cn.blockforge.generated.nnnnr1201forge2.NpcBridge.existing(e.getEntity());
         if(victim!=null&&isKashimo(victim)){

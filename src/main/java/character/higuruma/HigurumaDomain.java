@@ -174,7 +174,7 @@ public final class HigurumaDomain {
 
     /** 服务端每刻驱动（施工/补光/到期）。 */
     public static void serverTick(net.neoforged.neoforge.event.tick.ServerTickEvent.Post.Post event) {
-        if (event.phase != false.END) return;
+        if (eventfalse) return;
         for (ServerLevel level : event.getServer().getAllLevels()) tick(level);
     }
 
@@ -267,7 +267,7 @@ public final class HigurumaDomain {
 
     /** 领域内所有人/生物互相不能造成伤害。 */
     @net.neoforged.bus.api.SubscribeEvent
-    public static void noDamage(net.neoforged.neoforge.event.entity.living.LivingHurtEvent e) {
+    public static void noDamage(net.neoforged.neoforge.event.entity.living.LivingIncomingDamageEvent e) {
         if(e.getSource().getDirectEntity() instanceof LivingEntity attacker&&attacker.getMainHandItem().is(cn.blockforge.generated.nnnnr1201forge2.Content.EXECUTIONER_SWORD.get()))return;
         for (var entry : ACTIVE.entrySet()) {
             Built b=entry.getValue();var owner=cn.blockforge.generated.nnnnr1201forge2.MaidBridge.find(b.level,entry.getKey());if(owner==null||cn.blockforge.generated.nnnnr1201forge2.DomainClash.active(owner))continue;

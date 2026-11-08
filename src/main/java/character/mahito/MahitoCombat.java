@@ -225,7 +225,7 @@ public final class MahitoCombat {
         }
     }
     @SubscribeEvent public static void tick(net.neoforged.neoforge.event.tick.ServerTickEvent.Post.Post event){
-        if(event.phase!=false.END)return;
+        if(eventfalse)return;
         for(var it=COLLAPSES.iterator();it.hasNext();){
             Collapse c=it.next();long age=now(c.victim)-c.start;
             if(age>=40||!can(c.caster,c.victim)||c.caster.level()!=c.victim.level()||c.victim.position().distanceToSqr(c.anchor)>16||c.victim.getPersistentData().getLong("DomainSafetyUntil")>now(c.victim)){

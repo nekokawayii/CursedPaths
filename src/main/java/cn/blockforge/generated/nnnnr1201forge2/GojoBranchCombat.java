@@ -9,7 +9,7 @@ import net.minecraft.world.entity.Mob;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 
-import net.neoforged.neoforge.event.entity.living.LivingHurtEvent;
+import net.neoforged.neoforge.event.entity.living.LivingIncomingDamageEvent;
 import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.neoforge.event.tick.ServerTickEvent;
@@ -189,7 +189,7 @@ public final class GojoBranchCombat {
     }
 
     @SubscribeEvent(priority = EventPriority.LOWEST)
-    public static void brainHurt(LivingHurtEvent e) {
+    public static void brainHurt(LivingIncomingDamageEvent e) {
         LivingEntity t = e.getEntity();
         if (t.level().isClientSide) return;
         if (t.getPersistentData().getLong("GojoBrainDeep") > t.level().getGameTime()) e.setAmount(e.getAmount() * 2f);

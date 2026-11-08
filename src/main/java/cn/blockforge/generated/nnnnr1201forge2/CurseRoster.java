@@ -3,13 +3,13 @@ package cn.blockforge.generated.nnnnr1201forge2;
 import java.util.*;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.item.*;
-import net.neoforged.neoforge.registries.RegistryObject;
+import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.event.entity.EntityAttributeCreationEvent;
 
 /** 每种咒灵都有独立实体编号和刷怪蛋，旧low_curse仍保留并随机选外形。 */
 public final class CurseRoster {
-    public static final Map<String,RegistryObject<EntityType<LowCurseEntity>>> TYPES=new LinkedHashMap<>();
-    public static final List<RegistryObject<Item>> EGGS=new ArrayList<>();
+    public static final Map<String,DeferredHolder<EntityType<?>, EntityType<LowCurseEntity>>> TYPES=new LinkedHashMap<>();
+    public static final List<DeferredHolder<Item, Item>> EGGS=new ArrayList<>();
     static {
         for(var form:CurseCatalog.FORMS){
             String id="curse_"+form.id();

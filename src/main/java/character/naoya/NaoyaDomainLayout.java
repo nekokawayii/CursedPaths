@@ -71,7 +71,7 @@ public final class NaoyaDomainLayout {
             while (offset < out.length && !inflater.finished()) {
                 offset += inflater.inflate(out, offset, out.length - offset);
             }
-            inflater.end();
+            inflater.buildOrThrow();
             bytes = out;
         } catch (java.util.zip.DataFormatException exception) {
             throw new IllegalStateException("领域结构损坏", exception);

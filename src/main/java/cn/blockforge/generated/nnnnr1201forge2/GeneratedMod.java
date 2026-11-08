@@ -228,7 +228,7 @@ public final class GeneratedMod {
         for(int id:new int[]{character.mahito.MahitoSkills.TAIL,character.mahito.MahitoSkills.COLLAPSE,character.mahito.MahitoSkills.ARMS,character.mahito.MahitoSkills.DODGE,character.mahito.MahitoSkills.REFORGE})
             character.CharacterCasting.registerEffect("mahito",id,(p,skill,rank)->character.mahito.MahitoCombat.cast(p,skill.id()));
         NeoForge.EVENT_BUS.register(character.mahito.MahitoTransfigure.class);
-        NeoForge.EVENT_BUS.addListener((net.neoforged.neoforge.event.entity.living.LivingHurtEvent ev)->{if(ev.getEntity() instanceof net.minecraft.server.level.ServerPlayer sp&&character.mahito.MahitoSelf.damageScale(sp)<1f)ev.setAmount(ev.getAmount()*character.mahito.MahitoSelf.damageScale(sp));});
+        NeoForge.EVENT_BUS.addListener((net.neoforged.neoforge.event.entity.living.LivingIncomingDamageEvent ev)->{if(ev.getEntity() instanceof net.minecraft.server.level.ServerPlayer sp&&character.mahito.MahitoSelf.damageScale(sp)<1f)ev.setAmount(ev.getAmount()*character.mahito.MahitoSelf.damageScale(sp));});
         NeoForge.EVENT_BUS.register(character.mahito.MahitoPowers.class);
         NeoForge.EVENT_BUS.register(character.mahito.MahitoSelf.class);
         character.CharacterCasting.registerEffect("mahito",character.mahito.MahitoSkills.SELF_EMBRYO,

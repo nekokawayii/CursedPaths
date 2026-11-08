@@ -19,7 +19,7 @@ import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.event.entity.EntityJoinLevelEvent;
 import net.neoforged.neoforge.event.entity.ProjectileImpactEvent;
 import net.neoforged.neoforge.event.entity.living.LivingDeathEvent;
-import net.neoforged.neoforge.event.entity.living.LivingHurtEvent;
+import net.neoforged.neoforge.event.entity.living.LivingIncomingDamageEvent;
 import net.neoforged.neoforge.event.entity.living.MobEffectEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
 import net.neoforged.bus.api.EventPriority;
@@ -51,7 +51,7 @@ public final class CullingExtras {
     private static boolean reapplying;
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
-    public static void telegraph(LivingHurtEvent e) {
+    public static void telegraph(LivingIncomingDamageEvent e) {
         if (reapplying || e.isCanceled() || e.getAmount() <= 0) return;
         if (!(e.getEntity() instanceof ServerPlayer vp) || !CullingRules.inDimension(vp)) return;
         if (!CullingRules.special(vp, "art_open")) return;

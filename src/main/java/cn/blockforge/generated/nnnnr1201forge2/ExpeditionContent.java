@@ -19,13 +19,13 @@ import net.neoforged.neoforge.registries.*;
 /** 生存探索物品统一登记；旧版可食用残秽不改用途，新燃料独立分级。 */
 public final class ExpeditionContent {
     public static final DeferredRegister<net.minecraft.world.item.enchantment.Enchantment> ENCHANTMENTS=DeferredRegister.create(ForgeRegistries.ENCHANTMENTS,"jujutsu_kaisen_cursed_paths");
-    public static final RegistryObject<net.minecraft.world.item.enchantment.Enchantment> SOUL_EDGE=ENCHANTMENTS.register("soul_edge",()->new net.minecraft.world.item.enchantment.Enchantment(net.minecraft.world.item.enchantment.Enchantment.Rarity.VERY_RARE,net.minecraft.world.item.enchantment.EnchantmentCategory.WEAPON,new net.minecraft.world.entity.EquipmentSlot[]{net.minecraft.world.entity.EquipmentSlot.MAINHAND}){@Override public boolean isTreasureOnly(){return true;}});
-    public static final Map<String,RegistryObject<Item>> ITEMS=new LinkedHashMap<>();
-    public static final Map<String,RegistryObject<Block>> BLOCKS=new LinkedHashMap<>();
+    public static final DeferredHolder<?, net.minecraft.world.item.enchantment.Enchantment> SOUL_EDGE=ENCHANTMENTS.register("soul_edge",()->new net.minecraft.world.item.enchantment.Enchantment(net.minecraft.world.item.enchantment.Enchantment.Rarity.VERY_RARE,net.minecraft.world.item.enchantment.EnchantmentCategory.WEAPON,new net.minecraft.world.entity.EquipmentSlot[]{net.minecraft.world.entity.EquipmentSlot.MAINHAND}){@Override public boolean isTreasureOnly(){return true;}});
+    public static final Map<String,DeferredHolder<Item, Item>> ITEMS=new LinkedHashMap<>();
+    public static final Map<String,DeferredHolder<Block, Block>> BLOCKS=new LinkedHashMap<>();
     public static final DeferredRegister<BlockEntityType<?>> BES=DeferredRegister.create(ForgeRegistries.BLOCK_ENTITY_TYPES,"jujutsu_kaisen_cursed_paths");
     public static final DeferredRegister<net.minecraft.world.effect.MobEffect> EFFECTS=DeferredRegister.create(ForgeRegistries.MOB_EFFECTS,"jujutsu_kaisen_cursed_paths");
-    public static final RegistryObject<net.minecraft.world.effect.MobEffect> OVERHEAT=EFFECTS.register("overheat",()->new ExpeditionEffect(0xE65A22));
-    public static final RegistryObject<net.minecraft.world.effect.MobEffect> RUNAWAY=EFFECTS.register("curse_runaway",()->new ExpeditionEffect(0xAD35DB));
+    public static final DeferredHolder<?, net.minecraft.world.effect.MobEffect> OVERHEAT=EFFECTS.register("overheat",()->new ExpeditionEffect(0xE65A22));
+    public static final DeferredHolder<?, net.minecraft.world.effect.MobEffect> RUNAWAY=EFFECTS.register("curse_runaway",()->new ExpeditionEffect(0xAD35DB));
     public static final String[] MATERIALS={"residue_low","residue_medium","residue_high","black_rope_fiber","blood_sakura_petal","ash_clump","eternal_fire","wraith_tear","raw_jujutsu_ore","jujutsu_alloy","star_iron_fragment","star_curse_core","soul_echo","volcanic_core","soul_molt","heavenly_bone","frame_retina","frozen_crystal","overtime_tie","seal_white","seal_black","seal_gold","kenjaku_thread","prison_fragment","curse_concentrate","ancient_talisman","deformed_bone","tainted_bone","mutant_gland","curse_crystal","gu_extract","broken_tool","alloy_blueprint","nine_paintings_manuscript","tengen_map","special_blueprint","curse_flesh","blood_wheat","nether_star_fragment","tenka_fragment","playful_cloud_parts","culling_key","kenjaku_invitation","simple_domain_disc","substitute_doll","reverse_injection","blood_sakura_wine","mental_resistance","cold_resistance","furnace_scroll","inferno_bomb","blood_blade","blood_armor","poison_coating","incarnation_reagent","soul_edge","frame_boots","foresight_goggles","overtime_binding","ice_scroll","ultimate_scroll","curtain_talisman","soul_capture_bottle","alloy_sword","alloy_chestplate","soul_splitter","thousand_mile_chain","forbidden_armor"};
     static {
         for(String id:MATERIALS) ITEMS.put(id,Content.ITEMS.register(id,()->makeItem(id)));
@@ -61,9 +61,9 @@ public final class ExpeditionContent {
         });
         block("culling_barrier",()->new GlassBlock(BlockBehaviour.Properties.copy(Blocks.BLACK_STAINED_GLASS).strength(-1,3600000).noOcclusion()));
     }
-    public static final RegistryObject<BlockEntityType<RitualBlockEntity>> RITUAL=BES.register("ritual",()->BlockEntityType.Builder.of(RitualBlockEntity::new,block("refining_altar"),block("gu_vat"),block("tengen_core")).build(null));
+    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<RitualBlockEntity>> RITUAL=BES.register("ritual",()->BlockEntityType.Builder.of(RitualBlockEntity::new,block("refining_altar"),block("gu_vat"),block("tengen_core")).build(null));
     static { block("site_anchor",ExpeditionSiteBlock::new); }
-    public static final RegistryObject<BlockEntityType<ExpeditionSiteEntity>> SITE=BES.register("expedition_site",()->BlockEntityType.Builder.of(ExpeditionSiteEntity::new,block("site_anchor")).build(null));
+    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<ExpeditionSiteEntity>> SITE=BES.register("expedition_site",()->BlockEntityType.Builder.of(ExpeditionSiteEntity::new,block("site_anchor")).build(null));
     private static Item makeItem(String id){
         if(id.equals("soul_splitter"))return new SoulDevourerItem();
         if(id.equals("thousand_mile_chain"))return new ThousandMileChainItem();

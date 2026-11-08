@@ -8,17 +8,17 @@ import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.item.*;
 import net.minecraft.world.level.Level;
 import net.minecraft.network.chat.Component;
-import net.neoforged.neoforge.registries.RegistryObject;
+import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.event.entity.living.LivingDeathEvent;
 import net.neoforged.bus.api.*;
 
 /** 玩家和女仆共用同一份阶段校验与奖励。 */
 public final class StageFood extends Item {
     public enum Stage { RESIDUE,SOUL,VOID,LEGACY }
-    public static final RegistryObject<Item> RESIDUE=Content.ITEMS.register("residue",()->new StageFood(Stage.RESIDUE));
-    public static final RegistryObject<Item> SOUL=Content.ITEMS.register("soul_shrine_fragment",()->new StageFood(Stage.SOUL));
-    public static final RegistryObject<Item> VOID=Content.ITEMS.register("void_phase_fetus",()->new StageFood(Stage.VOID));
-    public static final RegistryObject<Item> LEGACY=Content.ITEMS.register("legacy",()->new StageFood(Stage.LEGACY));
+    public static final DeferredHolder<Item, Item> RESIDUE=Content.ITEMS.register("residue",()->new StageFood(Stage.RESIDUE));
+    public static final DeferredHolder<Item, Item> SOUL=Content.ITEMS.register("soul_shrine_fragment",()->new StageFood(Stage.SOUL));
+    public static final DeferredHolder<Item, Item> VOID=Content.ITEMS.register("void_phase_fetus",()->new StageFood(Stage.VOID));
+    public static final DeferredHolder<Item, Item> LEGACY=Content.ITEMS.register("legacy",()->new StageFood(Stage.LEGACY));
     private final Stage stage;
     private StageFood(Stage stage){super(new Properties().rarity(Rarity.EPIC).food(new FoodProperties.Builder().nutrition(1).saturationMod(0).alwaysEat().build()));this.stage=stage;}
     public static void init(){}

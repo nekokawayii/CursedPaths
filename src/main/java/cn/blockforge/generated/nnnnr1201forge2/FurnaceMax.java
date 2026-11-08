@@ -13,7 +13,7 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 
-import net.neoforged.neoforge.event.entity.living.LivingHurtEvent;
+import net.neoforged.neoforge.event.entity.living.LivingIncomingDamageEvent;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.neoforge.event.tick.ServerTickEvent;
 import cn.blockforge.generated.nnnnr1201forge2.CompatAttr;
@@ -296,7 +296,7 @@ public final class FurnaceMax {
     }
     /** 受伤即中断（30 秒冷却）：只有正在蓄力的那个身体算数。 */
     @SubscribeEvent(priority=net.neoforged.bus.api.EventPriority.LOW)
-    public static void hurt(LivingHurtEvent event){
+    public static void hurt(LivingIncomingDamageEvent event){
         if(event.getAmount()<=0)return;
         LivingEntity victim=event.getEntity();
         ServerPlayer p=victim instanceof ServerPlayer self?self:MaidBridge.progression(victim);

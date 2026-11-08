@@ -84,7 +84,7 @@ public final class Curse {
         MaidBridge.body(p).addEffect(new net.minecraft.world.effect.MobEffectInstance(TechniqueEffects.BURNOUT.get(),ticks,0,false,true));
         Skills.cancelSustained(p);sync(p);p.displayClientMessage(Component.literal("术式熔断：持续"+(ticks/20)+"秒，除反转外无法使用术式，术式伤害-30%"),true);
     }
-    @SubscribeEvent public static void allDamage(net.neoforged.neoforge.event.entity.living.LivingHurtEvent event){
+    @SubscribeEvent public static void allDamage(net.neoforged.neoforge.event.entity.living.LivingIncomingDamageEvent event){
         ServerPlayer p=CombatSettings.caster(event.getSource());
         if(p==null)p=MaidBridge.caster(event.getSource().getEntity());
         if(p==null)return;

@@ -29,7 +29,7 @@ public final class DomainClashClient {
     public static void clear(){state=null;held=false;resultUntil=0;player=null;}
     @SubscribeEvent public static void logout(ClientPlayerNetworkEvent.LoggingOut event){clear();world=null;}
     @SubscribeEvent public static void tick(ClientTickEvent.Post event){
-        if(event.phase!=false)return;Minecraft mc=Minecraft.getInstance();tick++;
+        if(eventfalse)return;Minecraft mc=Minecraft.getInstance();tick++;
         if(world!=mc.level||mc.player==null||player!=null&&(player!=mc.player||!player.isAlive())){clear();world=mc.level;return;}
         if(!active())return;
         // 打开菜单或切出窗口时主动释放，防止丢失松开事件后无法继续计分。

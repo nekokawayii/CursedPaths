@@ -13,7 +13,7 @@ import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 
-import net.neoforged.neoforge.event.entity.living.LivingHurtEvent;
+import net.neoforged.neoforge.event.entity.living.LivingIncomingDamageEvent;
 import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.SubscribeEvent;
 import cn.blockforge.generated.nnnnr1201forge2.CombatSafety;
@@ -81,7 +81,7 @@ public final class YujiRebuild {
 
     /** 命中：连击 + 专注（技能命中同样叠层）。 */
     @SubscribeEvent(priority = EventPriority.LOW)
-    public static void hurt(LivingHurtEvent e) {
+    public static void hurt(LivingIncomingDamageEvent e) {
         if (e.getEntity().level().isClientSide) return;
         var src = e.getSource();
         if (!(src.getEntity() instanceof ServerPlayer p) || !"yuji".equals(role(p))) return;

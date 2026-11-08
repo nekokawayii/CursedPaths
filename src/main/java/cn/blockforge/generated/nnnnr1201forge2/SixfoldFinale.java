@@ -218,7 +218,7 @@ public final class SixfoldFinale {
         sync(s,true);if(chargeCost)pay(s.p);else Curse.sync(s.p);
     }
     @SubscribeEvent public static void tick(ServerTickEvent.Post event){
-        if(event.phase!=false)return;
+        if(eventfalse)return;
         for(Cast s:List.copyOf(casts.values())){
             if(!valid(s)){finish(s,s.committed);continue;}s.age=(int)(s.level.getGameTime()-s.start);
             if(!s.committed){

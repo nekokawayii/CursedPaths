@@ -27,7 +27,7 @@ import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 
 import net.neoforged.neoforge.event.entity.living.LivingDeathEvent;
-import net.neoforged.neoforge.event.entity.living.LivingHurtEvent;
+import net.neoforged.neoforge.event.entity.living.LivingIncomingDamageEvent;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.neoforge.event.tick.ServerTickEvent;
 import net.neoforged.neoforge.event.tick.PlayerTickEvent;
@@ -62,7 +62,7 @@ public final class NanamiCombat {
     }
 
     // ------------------------------------------------------------ 命中 / 格挡
-    @SubscribeEvent public static void hit(LivingHurtEvent e) {
+    @SubscribeEvent public static void hit(LivingIncomingDamageEvent e) {
         if (e.getAmount() <= 0) return;
         LivingEntity victim = e.getEntity();
         // 瓦落瓦落：架刀窗口内被打 → 完美格挡（不掉血）+ 强力反击

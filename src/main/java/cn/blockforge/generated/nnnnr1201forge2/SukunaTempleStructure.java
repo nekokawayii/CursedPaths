@@ -19,7 +19,7 @@ import net.neoforged.neoforge.event.level.LevelEvent;
 import net.neoforged.neoforge.event.server.ServerStoppedEvent;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.neoforge.registries.DeferredRegister;
-import net.neoforged.neoforge.registries.RegistryObject;
+import net.neoforged.neoforge.registries.DeferredHolder;
 
 /** 显式的记录编解码器保持扁平JSON；直接xmap验证型Codec会被结构分派当成value字段读取。 */
 public final class SukunaTempleStructure extends Structure {
@@ -34,7 +34,7 @@ public final class SukunaTempleStructure extends Structure {
         Codec.intRange(1,80).fieldOf("max_distance_from_center").forGetter(s->s.distance)
     ).apply(i,SukunaTempleStructure::new));
     public static final DeferredRegister<StructureType<?>> TYPES=DeferredRegister.create(Registries.STRUCTURE_TYPE,"jujutsu_kaisen_cursed_paths");
-    public static final RegistryObject<StructureType<SukunaTempleStructure>> TYPE=TYPES.register("overworld_temple",()->()->CODEC);
+    public static final DeferredHolder<?, StructureType<SukunaTempleStructure>> TYPE=TYPES.register("overworld_temple",()->()->CODEC);
     private static volatile ChunkGenerator overworldGenerator;
     private final Holder<StructureTemplatePool> pool;
     private final Optional<ResourceLocation> jigsawName;

@@ -11,7 +11,7 @@ import net.minecraft.world.entity.TamableAnimal;
 import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.event.entity.living.LivingAttackEvent;
-import net.neoforged.neoforge.event.entity.living.LivingHurtEvent;
+import net.neoforged.neoforge.event.entity.living.LivingIncomingDamageEvent;
 import net.neoforged.neoforge.event.entity.living.LivingDamageEvent;
 import net.neoforged.neoforge.event.entity.player.AttackEntityEvent;
 import net.neoforged.bus.api.EventPriority;
@@ -89,7 +89,7 @@ public final class CombatSafety {
     @SubscribeEvent(priority=EventPriority.HIGHEST)
     public static void attack(LivingAttackEvent event){if(denied(event.getEntity(),event.getSource()))event.setCanceled(true);}
     @SubscribeEvent(priority=EventPriority.HIGHEST)
-    public static void hurt(LivingHurtEvent event){if(denied(event.getEntity(),event.getSource()))event.setCanceled(true);}
+    public static void hurt(LivingIncomingDamageEvent event){if(denied(event.getEntity(),event.getSource()))event.setCanceled(true);}
     @SubscribeEvent(priority=EventPriority.HIGHEST)
     public static void damage(LivingDamageEvent event){if(denied(event.getEntity(),event.getSource()))event.setCanceled(true);}
     @SubscribeEvent(priority=EventPriority.HIGHEST)

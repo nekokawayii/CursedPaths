@@ -11,12 +11,12 @@ import net.minecraft.world.item.*;
 import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
 import net.neoforged.neoforge.event.entity.living.*;
 import net.neoforged.bus.api.*;
-import net.neoforged.neoforge.registries.RegistryObject;
+import net.neoforged.neoforge.registries.DeferredHolder;
 
 /** 每位施术者单独保存挚爱名单，目标端镜像用于离线持续伤害保护。 */
 public final class EternalLove {
-    public static final RegistryObject<Item> ITEM=Content.ITEMS.register("eternal_love",()->new Item(new Item.Properties().stacksTo(1).rarity(Rarity.EPIC)));
-    public static final RegistryObject<Item> TRUE_FALSE=Content.ITEMS.register("true_false_love",()->new Item(new Item.Properties().stacksTo(1).rarity(Rarity.EPIC)));
+    public static final DeferredHolder<Item, Item> ITEM=Content.ITEMS.register("eternal_love",()->new Item(new Item.Properties().stacksTo(1).rarity(Rarity.EPIC)));
+    public static final DeferredHolder<Item, Item> TRUE_FALSE=Content.ITEMS.register("true_false_love",()->new Item(new Item.Properties().stacksTo(1).rarity(Rarity.EPIC)));
     private static final String KEY="EternalLoved",OWNERS="SukunaLovedBy";
     public static boolean settling(LivingEntity maid){return maid.getPersistentData().getLong("SukunaDuelEndUntil")>maid.level().getGameTime();}
     public static boolean duel(LivingEntity maid){return net.neoforged.fml.ModList.get().isLoaded("touhou_little_maid")&&MaidBridge.isMaid(maid)&&MaidDuel.duel(maid);}

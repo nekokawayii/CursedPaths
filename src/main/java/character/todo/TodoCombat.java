@@ -7,7 +7,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
-import net.neoforged.neoforge.event.entity.living.LivingHurtEvent;
+import net.neoforged.neoforge.event.entity.living.LivingIncomingDamageEvent;
 import net.neoforged.bus.api.SubscribeEvent;
 
 /**
@@ -28,7 +28,7 @@ public final class TodoCombat {
     }
 
     /** 换位规避 + NPC 的自动闪避。 */
-    @SubscribeEvent public static void hit(LivingHurtEvent e) {
+    @SubscribeEvent public static void hit(LivingIncomingDamageEvent e) {
         LivingEntity victim = e.getEntity();
         if (e.getAmount() <= 0) return;
         if (e.getSource().is(net.minecraft.tags.DamageTypeTags.BYPASSES_INVULNERABILITY)) return;

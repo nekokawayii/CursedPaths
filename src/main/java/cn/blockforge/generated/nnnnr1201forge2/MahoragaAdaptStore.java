@@ -303,7 +303,7 @@ public final class MahoragaAdaptStore {
     // ------------------------------------------------------------ 事件
     /** 戴法轮的玩家每秒把进度同步到头顶法轮（客户端只用它画模型）。 */
     @net.neoforged.bus.api.SubscribeEvent public static void tick(net.neoforged.neoforge.event.tick.ServerTickEvent.Post.Post event){
-        if(event.phase!=false.END)return;
+        if(eventfalse)return;
         var server=event.getServer();if(server==null)return;
         if(server.getTickCount()%20!=0)return;
         for(ServerPlayer p:server.getPlayerList().getPlayers()){
@@ -313,7 +313,7 @@ public final class MahoragaAdaptStore {
     }
     /** 挨打：完全适应过的来源直接免疫；没满的记一次进度。 */
     @net.neoforged.bus.api.SubscribeEvent(priority=net.neoforged.bus.api.EventPriority.LOW)
-    public static void hurt(net.neoforged.neoforge.event.entity.living.LivingHurtEvent event){
+    public static void hurt(net.neoforged.neoforge.event.entity.living.LivingIncomingDamageEvent event){
         if(event.getAmount()<=0)return;
         LivingEntity victim=event.getEntity();
         // 玩家本体或"女仆施术上下文"都归到同一个玩家身上
@@ -343,7 +343,7 @@ public final class MahoragaAdaptStore {
     }
     /** 玩家打中某个生物：也计入"适应它的存在"（12 次后你打它、它打你都无效）。 */
     @net.neoforged.bus.api.SubscribeEvent(priority=net.neoforged.bus.api.EventPriority.LOW)
-    public static void dealt(net.neoforged.neoforge.event.entity.living.LivingHurtEvent event){
+    public static void dealt(net.neoforged.neoforge.event.entity.living.LivingIncomingDamageEvent event){
         if(trueDamage||event.getAmount()<=0||event.getSource().getDirectEntity() instanceof MahoragaEntity)return;
         LivingEntity victim=event.getEntity();
         if(victim.level().isClientSide)return;

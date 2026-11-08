@@ -226,7 +226,7 @@ public final class BloodArts {
     }
     private static void clear(State s){cancelCharge(s);s.flow=0;attributes(s);s.shield=0;s.wings=0;}
     @SubscribeEvent public static void tick(ServerTickEvent.Post event){
-        if(event.phase!=false)return;
+        if(eventfalse)return;
         for(State s:List.copyOf(states.values())){
             ServerPlayer p=s.p;long now=s.level.getGameTime();
             if(!valid(p,s.level)){clear(s);states.remove(p.getUUID());continue;}
@@ -279,7 +279,7 @@ public final class BloodArts {
             projectile.getPersistentData().putLong("BloodReflected",now+10);fx(s.p,FX+13,projectile.position(),look,1.4f,12,2);
         }
     }
-    @SubscribeEvent(priority=EventPriority.LOWEST) public static void shield(LivingHurtEvent event){
+    @SubscribeEvent(priority=EventPriority.LOWEST) public static void shield(LivingIncomingDamageEvent event){
         ServerPlayer p=MaidBridge.progression(event.getEntity());
         if(p==null||DeathStar.source(event.getSource())||event.getAmount()<=0||event.getSource().is(net.minecraft.tags.DamageTypeTags.BYPASSES_INVULNERABILITY))return;State s=states.get(p.getUUID());if(s==null||s.shield<=0||s.shieldEnd<p.level().getGameTime())return;
         float taken=Math.min(s.shield,event.getAmount());s.shield-=taken;event.setAmount(event.getAmount()-taken);if(s.shield<=0){fx(p,FX_SHATTER,p.position().add(0,1,0),Vec3.ZERO,3,25,0);for(LivingEntity t:near(p,p.position(),5+rank(p)))hit(p,t,18,1,false);BloodExpansion.novaEchoes(p,p.position().add(0,1,0),false);}

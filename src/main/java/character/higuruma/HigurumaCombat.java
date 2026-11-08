@@ -14,7 +14,7 @@ import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.phys.Vec3;
 
-import net.neoforged.neoforge.event.entity.living.LivingHurtEvent;
+import net.neoforged.neoforge.event.entity.living.LivingIncomingDamageEvent;
 import net.neoforged.bus.api.SubscribeEvent;
 
 import static cn.blockforge.generated.nnnnr1201forge2.Content.GAVEL;
@@ -108,7 +108,7 @@ public final class HigurumaCombat {
     /** 3 领域展开·诛伏赐死：再按一次收回。 */
     public static void domain(ServerPlayer p) { HigurumaDomain.toggle(p); }
 
-    @SubscribeEvent public static void hit(LivingHurtEvent e) {
+    @SubscribeEvent public static void hit(LivingIncomingDamageEvent e) {
         ServerPlayer p=cn.blockforge.generated.nnnnr1201forge2.CombatSettings.caster(e.getSource());if(p==null||e.getAmount()<=0)return;
         if(!(e.getSource().is(net.minecraft.world.damagesource.DamageTypes.MOB_ATTACK)||e.getSource().is(net.minecraft.world.damagesource.DamageTypes.PLAYER_ATTACK)))return;
         if(e.getSource().getDirectEntity()!=cn.blockforge.generated.nnnnr1201forge2.MaidBridge.body(p)&&e.getSource().getDirectEntity()!=p)return;
@@ -126,7 +126,7 @@ public final class HigurumaCombat {
     private static final java.util.List<Return> RETURNS=new java.util.ArrayList<>();
     public static boolean returning(ServerPlayer p){return RETURNS.stream().anyMatch(r->r.owner==p);}
     @SubscribeEvent public static void returns(ServerTickEvent.Post event){
-        if(event.phase!=false)return;
+        if(eventfalse)return;
         for(var it=RETURNS.iterator();it.hasNext();){var r=it.next();if(r.owner.isAlive()&&r.projectile.level().getGameTime()<r.at)continue;
             r.projectile.discard();if(r.owner.isAlive()&&r.owner.getMainHandItem().isEmpty())r.owner.setItemSlot(EquipmentSlot.MAINHAND,r.item);it.remove();}
     }

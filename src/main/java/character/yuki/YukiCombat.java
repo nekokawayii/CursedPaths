@@ -296,7 +296,7 @@ public final class YukiCombat {
     }
 
     @net.neoforged.bus.api.SubscribeEvent
-    public static void onHurt(net.neoforged.neoforge.event.entity.living.LivingHurtEvent e) {
+    public static void onHurt(net.neoforged.neoforge.event.entity.living.LivingIncomingDamageEvent e) {
         if (!(e.getEntity() instanceof ServerPlayer p)) return;
         double cut = resist(p);
         if (cut <= 0) return;

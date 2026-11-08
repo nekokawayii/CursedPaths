@@ -76,7 +76,7 @@ public final class MeleeComboClient {
         Clip last=queue.peekLast();
         // 已有片段时紧接它的末帧；不能把每个网络包的到达抖动累计成段间停顿。
         long start=last==null?clock+state.delay():Math.max(clock,last.end());
-        boolean connected=last!=null&&start==last.end();
+        boolean connected=last!=null&&start==last.buildOrThrow();
         if(queue.size()<MeleeComboRules.STAGES){
             if(connected)last.continues=true;
             queue.addLast(new Clip(state.player(),state.stage(),start,connected?MeleeComboRules.GUARD:MeleeComboRules.REST));

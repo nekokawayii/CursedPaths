@@ -19,7 +19,7 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.phys.Vec3;
 
 import net.neoforged.neoforge.event.entity.living.LivingDeathEvent;
-import net.neoforged.neoforge.event.entity.living.LivingHurtEvent;
+import net.neoforged.neoforge.event.entity.living.LivingIncomingDamageEvent;
 import net.neoforged.neoforge.event.entity.living.LivingKnockBackEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerEvent;
 import net.neoforged.neoforge.event.level.BlockEvent;
@@ -50,7 +50,7 @@ public final class CullingPerks {
 
     // ===== 伤害 =====
     @SubscribeEvent(priority = EventPriority.LOWEST)
-    public static void hurt(LivingHurtEvent e) {
+    public static void hurt(LivingIncomingDamageEvent e) {
         LivingEntity victim = e.getEntity();
         var src = e.getSource();
         LivingEntity attacker = src.getEntity() instanceof LivingEntity a ? a : null;

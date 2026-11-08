@@ -21,17 +21,17 @@ import net.neoforged.neoforge.event.entity.EntityAttributeCreationEvent;
 
 public final class VoidContent {
     private static final DeferredRegister<Codec<? extends ChunkGenerator>> GENERATORS=DeferredRegister.create(Registries.CHUNK_GENERATOR,"jujutsu_kaisen_cursed_paths");
-    public static final RegistryObject<Codec<? extends ChunkGenerator>> ARENA=GENERATORS.register("void_arena",()->VoidArenaGenerator.CODEC);
-    public static final RegistryObject<EntityType<GojoEntity>> GOJO=Content.ENTITIES.register("gojo",()->EntityType.Builder.of(GojoEntity::new,MobCategory.MONSTER).sized(0.6f,1.8f).fireImmune().clientTrackingRange(16).updateInterval(1).build("jujutsu_kaisen_cursed_paths:gojo"));
-    public static final RegistryObject<EntityType<MahoragaEntity>> MAHORAGA=Content.ENTITIES.register("mahoraga",()->EntityType.Builder.of(MahoragaEntity::new,MobCategory.MONSTER).sized(0.95f,3.6f).fireImmune().clientTrackingRange(16).updateInterval(1).build("jujutsu_kaisen_cursed_paths:mahoraga"));
-    public static final RegistryObject<Item> KEY=Content.ITEMS.register("void_key",()->new Item(new Item.Properties().stacksTo(1).rarity(Rarity.EPIC).fireResistant()){
+    public static final DeferredHolder<?, Codec<? extends ChunkGenerator>> ARENA=GENERATORS.register("void_arena",()->VoidArenaGenerator.CODEC);
+    public static final DeferredHolder<EntityType<?>, EntityType<GojoEntity>> GOJO=Content.ENTITIES.register("gojo",()->EntityType.Builder.of(GojoEntity::new,MobCategory.MONSTER).sized(0.6f,1.8f).fireImmune().clientTrackingRange(16).updateInterval(1).build("jujutsu_kaisen_cursed_paths:gojo"));
+    public static final DeferredHolder<EntityType<?>, EntityType<MahoragaEntity>> MAHORAGA=Content.ENTITIES.register("mahoraga",()->EntityType.Builder.of(MahoragaEntity::new,MobCategory.MONSTER).sized(0.95f,3.6f).fireImmune().clientTrackingRange(16).updateInterval(1).build("jujutsu_kaisen_cursed_paths:mahoraga"));
+    public static final DeferredHolder<Item, Item> KEY=Content.ITEMS.register("void_key",()->new Item(new Item.Properties().stacksTo(1).rarity(Rarity.EPIC).fireResistant()){
         @Override public InteractionResultHolder<ItemStack> use(Level l,Player p,InteractionHand h){if(p instanceof ServerPlayer sp)VoidJourney.enter(sp);return InteractionResultHolder.sidedSuccess(p.getItemInHand(h),l.isClientSide);}
     });
-    public static final RegistryObject<Item> FRAGMENT=Content.ITEMS.register("gojo_fragment",()->new Item(new Item.Properties().stacksTo(16).rarity(Rarity.EPIC).fireResistant()){
+    public static final DeferredHolder<Item, Item> FRAGMENT=Content.ITEMS.register("gojo_fragment",()->new Item(new Item.Properties().stacksTo(16).rarity(Rarity.EPIC).fireResistant()){
         @Override public InteractionResultHolder<ItemStack> use(Level l,Player p,InteractionHand h){ItemStack stack=p.getItemInHand(h);if(!l.isClientSide&&GojoPlayer.consume(p)&&!p.isCreative())stack.shrink(1);return InteractionResultHolder.sidedSuccess(stack,l.isClientSide);}
     });
     /** 调伏仪式召唤物：右键在脚下展开仪式法阵并召出魔虚罗（无阶段要求）。 */
-    public static final RegistryObject<Item> RITUAL=Content.ITEMS.register("mahoraga_ritual",()->new Item(new Item.Properties().stacksTo(1).rarity(Rarity.EPIC).fireResistant()){
+    public static final DeferredHolder<Item, Item> RITUAL=Content.ITEMS.register("mahoraga_ritual",()->new Item(new Item.Properties().stacksTo(1).rarity(Rarity.EPIC).fireResistant()){
         @Override public InteractionResultHolder<ItemStack> use(Level l,Player p,InteractionHand h){
             ItemStack stack=p.getItemInHand(h);
             if(!l.isClientSide&&p instanceof ServerPlayer sp){
@@ -44,7 +44,7 @@ public final class VoidContent {
      *  普通右键：直接戴到头上（原版防具逻辑）；潜行右键（含对着空气）：召唤/叫回友方魔虚罗
      *  （召唤后这件法轮会变成「法轮 · 收回」，所以召唤期间它不能戴在头上）；
      *  右键生物：把法轮戴到它头上。 */
-    public static final RegistryObject<Item> MAHORAGA_WHEEL=Content.ITEMS.register("mahoraga_wheel",() -> new ArmorItem(MahoragaArmor.material(),ArmorItem.Type.HELMET,
+    public static final DeferredHolder<Item, Item> MAHORAGA_WHEEL=Content.ITEMS.register("mahoraga_wheel",() -> new ArmorItem(MahoragaArmor.material(),ArmorItem.Type.HELMET,
         new Item.Properties().stacksTo(1).rarity(Rarity.EPIC).fireResistant()){
         @Override public InteractionResultHolder<ItemStack> use(Level l,Player p,InteractionHand h){
             ItemStack stack=p.getItemInHand(h);
@@ -79,7 +79,7 @@ public final class VoidContent {
         }
     });
     /** 法轮 · 收回：召唤出友方魔虚罗后，手里的法轮会变成它；再右键就把那只召回来并变回法轮。 */
-    public static final RegistryObject<Item> MAHORAGA_WHEEL_RECALL=Content.ITEMS.register("mahoraga_wheel_recall",() -> new Item(new Item.Properties().stacksTo(1).rarity(Rarity.EPIC).fireResistant()){
+    public static final DeferredHolder<Item, Item> MAHORAGA_WHEEL_RECALL=Content.ITEMS.register("mahoraga_wheel_recall",() -> new Item(new Item.Properties().stacksTo(1).rarity(Rarity.EPIC).fireResistant()){
         @Override public InteractionResultHolder<ItemStack> use(Level l,Player p,InteractionHand h){
             ItemStack stack=p.getItemInHand(h);
             if(!l.isClientSide&&p instanceof ServerPlayer sp)MahoragaAdaptStore.recallAlly(sp,h);
@@ -91,7 +91,7 @@ public final class VoidContent {
         }
     });
     /** 武器「飞天」：伤害 20、范围 15 格；手持时斩击速度 −70%；右键把周围 10 格+面前扇形 40 格的敌人吹到斩击上。 */
-    public static final RegistryObject<Item> HITEN=Content.ITEMS.register("hiten",() -> new net.minecraft.world.item.SwordItem(
+    public static final DeferredHolder<Item, Item> HITEN=Content.ITEMS.register("hiten",() -> new net.minecraft.world.item.SwordItem(
         net.minecraft.world.item.Tiers.NETHERITE,(int)Hiten.DAMAGE-1,-2.2f, // 基础 1 + 19 = 20
         new Item.Properties().stacksTo(1).rarity(Rarity.EPIC).fireResistant()){
         @Override public InteractionResultHolder<ItemStack> use(Level l,Player p,InteractionHand h){
@@ -106,7 +106,7 @@ public final class VoidContent {
         }
     });
     /** 咒具「神武解」：左键 15 伤害；右键面前扇形 30 格内所有怪物各吃一道彩色雷击（15×20 原值）。 */
-    public static final RegistryObject<Item> SHINBUKE=Content.ITEMS.register("shinbuke",() -> new net.minecraft.world.item.SwordItem(
+    public static final DeferredHolder<Item, Item> SHINBUKE=Content.ITEMS.register("shinbuke",() -> new net.minecraft.world.item.SwordItem(
         net.minecraft.world.item.Tiers.NETHERITE,(int)Shinbuke.MELEE_DAMAGE-1,-2.4f, // 基础 1 + 14 = 15
         new Item.Properties().stacksTo(1).rarity(Rarity.EPIC).fireResistant()){
         @Override public InteractionResultHolder<ItemStack> use(Level l,Player p,InteractionHand h){
@@ -124,9 +124,9 @@ public final class VoidContent {
                 +BalanceRules.number(Shinbuke.DAMAGE_PER_STEP*100)+"%，且本体近战永久 +"+BalanceRules.number(Shinbuke.MELEE_PERMANENT_PER_STEP*100)+"%").withStyle(ChatFormatting.DARK_PURPLE));
         }
     });
-    public static final RegistryObject<Item> EGG=Content.ITEMS.register("gojo_spawn_egg",()->new net.neoforged.neoforge.common.ForgeSpawnEggItem(GOJO,0x0b0b12,0x8fd0ff,new Item.Properties()));
-    public static final RegistryObject<Item> MAHORAGA_EGG=Content.ITEMS.register("mahoraga_spawn_egg",()->new net.neoforged.neoforge.common.ForgeSpawnEggItem(MAHORAGA,0x2b2118,0xffd24a,new Item.Properties()));
-    public static final RegistryObject<Item> CONTROLLER=Content.ITEMS.register("void_controller",()->new Item(new Item.Properties().stacksTo(1).rarity(Rarity.EPIC).fireResistant()){
+    public static final DeferredHolder<Item, Item> EGG=Content.ITEMS.register("gojo_spawn_egg",()->new net.neoforged.neoforge.common.ForgeSpawnEggItem(GOJO,0x0b0b12,0x8fd0ff,new Item.Properties()));
+    public static final DeferredHolder<Item, Item> MAHORAGA_EGG=Content.ITEMS.register("mahoraga_spawn_egg",()->new net.neoforged.neoforge.common.ForgeSpawnEggItem(MAHORAGA,0x2b2118,0xffd24a,new Item.Properties()));
+    public static final DeferredHolder<Item, Item> CONTROLLER=Content.ITEMS.register("void_controller",()->new Item(new Item.Properties().stacksTo(1).rarity(Rarity.EPIC).fireResistant()){
         @Override public InteractionResultHolder<ItemStack> use(Level l,Player p,InteractionHand h){if(l.isClientSide)net.neoforged.fml.DistExecutor.unsafeRunWhenOn(net.neoforged.api.distmarker.Dist.CLIENT,()->()->net.minecraft.client.Minecraft.getInstance().setScreen(new VoidControllerScreen()));else if(p instanceof ServerPlayer sp)Network.sendController(sp);return InteractionResultHolder.sidedSuccess(p.getItemInHand(h),l.isClientSide);}
     });
     public static void init(IEventBus bus){GENERATORS.register(bus);bus.addListener(VoidContent::attributes);}

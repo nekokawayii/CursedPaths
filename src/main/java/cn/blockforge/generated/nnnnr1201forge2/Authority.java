@@ -15,29 +15,29 @@ import net.minecraft.world.level.Level;
 import net.neoforged.neoforge.event.entity.player.PlayerEvent;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.Mod;
-import net.neoforged.neoforge.registries.RegistryObject;
+import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.event.tick.PlayerTickEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 
 /** 通关奖励与永久权限；不向未通关者泄露路线。 */
 @EventBusSubscriber(modid="jujutsu_kaisen_cursed_paths")
 public final class Authority {
-    public static final RegistryObject<Item> PERMISSION=Content.ITEMS.register("permission",()->new Item(new Item.Properties().stacksTo(1).rarity(Rarity.EPIC).fireResistant().food(new FoodProperties.Builder().nutrition(0).saturationMod(0).alwaysEat().build())){
+    public static final DeferredHolder<Item, Item> PERMISSION=Content.ITEMS.register("permission",()->new Item(new Item.Properties().stacksTo(1).rarity(Rarity.EPIC).fireResistant().food(new FoodProperties.Builder().nutrition(0).saturationMod(0).alwaysEat().build())){
         @Override public InteractionResultHolder<ItemStack> use(Level l,Player p,InteractionHand h){return unlocked(p)?InteractionResultHolder.fail(p.getItemInHand(h)):super.use(l,p,h);}
         @Override public ItemStack finishUsingItem(ItemStack stack,Level l,LivingEntity user){if(user instanceof ServerPlayer p){if(unlocked(p))return stack;unlock(p);}return super.finishUsingItem(stack,l,user);}
     });
-    public static final RegistryObject<Item> CURSE=Content.ITEMS.register("authority_curse",()->new Item(new Item.Properties().stacksTo(1).rarity(Rarity.EPIC)){
+    public static final DeferredHolder<Item, Item> CURSE=Content.ITEMS.register("authority_curse",()->new Item(new Item.Properties().stacksTo(1).rarity(Rarity.EPIC)){
         @Override public InteractionResult interactLivingEntity(ItemStack stack,Player p,LivingEntity target,InteractionHand hand){if(p instanceof ServerPlayer sp)Legion.recruit(sp,target);return InteractionResult.sidedSuccess(p.level().isClientSide);}
         @Override public InteractionResultHolder<ItemStack> use(Level l,Player p,InteractionHand h){if(p instanceof ServerPlayer sp&&unlocked(p)&&p.isShiftKeyDown())Legion.clearTargets(sp);return InteractionResultHolder.sidedSuccess(p.getItemInHand(h),l.isClientSide);}
     });
-    public static final RegistryObject<Item> MARKER=Content.ITEMS.register("authority_marker",AuthorityMarkerItem::new);
-    public static final RegistryObject<Item> BANNER=Content.ITEMS.register("soul_banner",()->new Item(new Item.Properties().stacksTo(1).rarity(Rarity.EPIC).fireResistant()){
+    public static final DeferredHolder<Item, Item> MARKER=Content.ITEMS.register("authority_marker",AuthorityMarkerItem::new);
+    public static final DeferredHolder<Item, Item> BANNER=Content.ITEMS.register("soul_banner",()->new Item(new Item.Properties().stacksTo(1).rarity(Rarity.EPIC).fireResistant()){
         @Override public InteractionResultHolder<ItemStack> use(Level l,Player p,InteractionHand h){if(p instanceof ServerPlayer sp&&unlocked(p)&&!p.getCooldowns().isOnCooldown(this)){Legion.toggleStorage(sp);p.getCooldowns().addCooldown(this,10);}return InteractionResultHolder.sidedSuccess(p.getItemInHand(h),l.isClientSide);}
     });
-    public static final RegistryObject<Item> EDITOR=Content.ITEMS.register("world_authority_editor",()->new Item(new Item.Properties().stacksTo(1).rarity(Rarity.EPIC).fireResistant()){
+    public static final DeferredHolder<Item, Item> EDITOR=Content.ITEMS.register("world_authority_editor",()->new Item(new Item.Properties().stacksTo(1).rarity(Rarity.EPIC).fireResistant()){
         @Override public InteractionResultHolder<ItemStack> use(Level l,Player p,InteractionHand h){if(p instanceof ServerPlayer sp&&unlocked(p))AuthorityPackets.open(sp);return InteractionResultHolder.sidedSuccess(p.getItemInHand(h),l.isClientSide);}
     });
-    public static final RegistryObject<Item> MEDIUM=Content.ITEMS.register("technique_medium",()->new Item(new Item.Properties().stacksTo(1).rarity(Rarity.EPIC)){
+    public static final DeferredHolder<Item, Item> MEDIUM=Content.ITEMS.register("technique_medium",()->new Item(new Item.Properties().stacksTo(1).rarity(Rarity.EPIC)){
         @Override public Component getName(ItemStack stack){int id=medium(stack);return Component.literal("术式媒介 · "+AuthoritySkills.name(id));}
     });
     public static void init(){} // 在 Content.ITEMS 注册前触发字段初始化。

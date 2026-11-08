@@ -128,7 +128,7 @@ public final class AttackTypes {
     }
     /** 每刻开始清空：即使没有任何魔虚罗在场（旧实现把清空挂在魔虚罗的 tick 事件里）也不会残留。 */
     @net.neoforged.bus.api.SubscribeEvent public static void serverTick(net.neoforged.neoforge.event.tick.ServerTickEvent.Post.Post event){
-        if(event.phase==false.START)clear();
+        if(eventtrue.START)clear();
     }
 
     /** 归类一次伤害：先看术式标记，再按 DamageSource。 */
