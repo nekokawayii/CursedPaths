@@ -38,8 +38,8 @@ public final class RitualBlockEntity extends BlockEntity {
         if(!output.isEmpty()){if(owner!=null&&!owner.equals(p.getUUID())){p.sendSystemMessage(Component.literal("这是另一位施术者的仪式产物。"));return;}ItemStack reward=output;output=ItemStack.EMPTY;changed();Journey.give(p,reward);return;}
         if(tier()==0&&p.getMainHandItem().is(ExpeditionContent.item("volcanic_core"))&&!volcanicFurnace){if(!p.isCreative())p.getMainHandItem().shrink(1);volcanicFurnace=true;changed();p.sendSystemMessage(Component.literal("火山核心已嵌入：手持可熔炼物潜行右键，无需燃料熔炼一件。"));return;}
         if(tier()==0&&volcanicFurnace&&p.isShiftKeyDown()&&!p.getMainHandItem().isEmpty()){
-            var container=new net.minecraft.world.SimpleContainer(p.getMainHandItem().copy());var smelting=level.getRecipeManager().getRecipeFor(net.minecraft.world.item.crafting.RecipeType.SMELTING,container,level);
-            if(smelting.isPresent()){ItemStack result=smelting.get().assemble(container,level.registryAccess());p.getMainHandItem().shrink(1);Journey.give(p,result);level.playSound(null,worldPosition,SoundEvents.FIRE_AMBIENT,SoundSource.BLOCKS,1,1);return;}
+            var input=new net.minecraft.world.item.crafting.SingleRecipeInput(p.getMainHandItem().copy());var smelting=level.getRecipeManager().getRecipeFor(net.minecraft.world.item.crafting.RecipeType.SMELTING,input,level);
+            if(smelting.isPresent()){ItemStack result=smelting.get().value().assemble(input,level.registryAccess());p.getMainHandItem().shrink(1);Journey.give(p,result);level.playSound(null,worldPosition,SoundEvents.FIRE_AMBIENT,SoundSource.BLOCKS,1,1);return;}
         }
         var recipes=RitualRecipes.ALL.stream().filter(r->r.tier()==tier()).toList();
         if(p.isShiftKeyDown()){selection=(selection+1)%recipes.size();changed();p.sendSystemMessage(Component.literal("已选择："+recipes.get(selection).description()));return;}
