@@ -97,7 +97,7 @@ public final class HigurumaCombat {
         if (gavel == null) { p.sendSystemMessage(Component.literal("需要先持有法槌").withStyle(ChatFormatting.GRAY)); return; }
         if (!(p.level() instanceof ServerLevel level)) return;
         ItemStack thrown = gavel.copy();
-        thrown.enchant(Enchantments.LOYALTY, 3);
+        thrown.enchant(level.registryAccess().holderOrThrow(net.minecraft.world.item.enchantment.Enchantments.LOYALTY), 3);
         ThrownTrident trident = new ThrownTrident(level, cn.blockforge.generated.nnnnr1201forge2.MaidBridge.body(p), thrown);
         if(p instanceof cn.blockforge.generated.nnnnr1201forge2.NpcBridge.NpcActor){trident.pickup=net.minecraft.world.entity.projectile.AbstractArrow.Pickup.DISALLOWED;RETURNS.add(new Return(p,trident,thrown.copy(),level.getGameTime()+40));}
         trident.setPos(p.getX(), p.getEyeY() - 0.2, p.getZ());
