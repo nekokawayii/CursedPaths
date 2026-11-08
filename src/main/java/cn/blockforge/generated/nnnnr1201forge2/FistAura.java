@@ -7,6 +7,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.renderer.GameRenderer;
 import org.lwjgl.opengl.GL30;
+import com.mojang.blaze3d.vertex.Tesselator;
 
 /** 只处理右下角的画面与咒力，不取消、重画或移动原版手臂。 */
 public final class FistAura {
@@ -36,7 +37,7 @@ public final class FistAura {
             sample(b,g,cx,cy,rx,ry,w,h,age,-1+2.0*x/cells,-1+2.0*(y+1)/cells);
         }
         BufferUploader.drawWithShader(b.buildOrThrow());
-        RenderSystem.setShader(GameRenderer::getPositionColorShader);b.begin(VertexFormat.Mode.QUADS,DefaultVertexFormat.POSITION_COLOR);
+        RenderSystem.setShader(GameRenderer::getPositionColorShader);b = Tesselator.getInstance().begin(VertexFormat.Mode.QUADS,DefaultVertexFormat.POSITION_COLOR);
         for(int flame=0;flame<(heat?0:15);flame++)for(int i=0;i<14;i++){
             double t=i/14.0,u=(i+1)/14.0,phase=age*0.34+flame*2.39996;
             double base=cx+(flame/14.0-0.5)*rx*1.5;

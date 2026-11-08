@@ -19,6 +19,7 @@ import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.neoforge.client.event.ClientTickEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
+import com.mojang.blaze3d.vertex.Tesselator;
 
 /**
  * 十划咒法的表现层：
@@ -147,7 +148,7 @@ public final class RatioVisuals {
         // 7:3 数轴：画在最上层（关深度测试），直接盖过生物与地形，永远不会被身体挡掉
         if (!AXES.isEmpty()) {
             RenderSystem.disableDepthTest();
-            b.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_COLOR);
+            b = Tesselator.getInstance().begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_COLOR);
             for (Axis axis : AXES.values()) drawAxis(b, ps, mc, axis, cam, partial, now);
             BufferUploader.drawWithShader(b.buildOrThrow());
             RenderSystem.enableDepthTest();

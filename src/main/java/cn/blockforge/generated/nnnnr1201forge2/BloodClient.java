@@ -13,6 +13,7 @@ import net.neoforged.neoforge.client.event.*;
 import net.neoforged.bus.api.SubscribeEvent;
 import org.lwjgl.opengl.GL30;
 import net.neoforged.neoforge.client.event.ClientTickEvent;
+import com.mojang.blaze3d.vertex.Tesselator;
 
 /** 动态血液材质负责主体，Photon 负责雾、飞沫与亮点；后者失败不吞掉整招。 */
 public final class BloodClient {
@@ -84,16 +85,16 @@ public final class BloodClient {
             for(Visual v:oceans.values())if(v.e.position().distanceToSqr(camera)<240*240)ocean(b,ps,v,camera,time);
             BufferUploader.drawWithShader(b.buildOrThrow());
             if(shader!=null)shader.safeGetUniform("FluidMode").set(1f);
-            b.begin(VertexFormat.Mode.QUADS,DefaultVertexFormat.POSITION_TEX_COLOR);
+            b = Tesselator.getInstance().begin(VertexFormat.Mode.QUADS,DefaultVertexFormat.POSITION_TEX_COLOR);
             for(Visual v:domains.values())if(v.e.position().distanceToSqr(camera)<240*240)domain(b,ps,v,camera,time);
             BufferUploader.drawWithShader(b.buildOrThrow());
             // 眼白与瞳孔独立使用纯色通道，绝不经过红色血液材质染色。
-            RenderSystem.setShader(GameRenderer::getPositionColorShader);b.begin(VertexFormat.Mode.QUADS,DefaultVertexFormat.POSITION_COLOR);
+            RenderSystem.setShader(GameRenderer::getPositionColorShader);b = Tesselator.getInstance().begin(VertexFormat.Mode.QUADS,DefaultVertexFormat.POSITION_COLOR);
             for(Visual v:domains.values())eyes(b,ps,v,camera,time);
             BufferUploader.drawWithShader(b.buildOrThrow());
             if(shader!=null){shader.safeGetUniform("FluidMode").set(0f);RenderSystem.setShader(()->shader);}else RenderSystem.setShader(GameRenderer::getPositionColorTexShader);
             // 预测轨迹不修改服务端时间，也不会标记友方。
-            RenderSystem.disableDepthTest();b.begin(VertexFormat.Mode.QUADS,DefaultVertexFormat.POSITION_TEX_COLOR);
+            RenderSystem.disableDepthTest();b = Tesselator.getInstance().begin(VertexFormat.Mode.QUADS,DefaultVertexFormat.POSITION_TEX_COLOR);
             for(Visual v:visuals)if(v.e.kind()==BloodArts.FX_HEART){Entity target=mc.level.getEntity(v.e.owner());Vec3 at=target==null?v.e.position():target.position();heart(b,ps,at.add(0,target==null?2:target.getEyeHeight()+.3,0),camera,time);prediction(b,ps,at,v.e.direction(),v.e.size(),camera,time);}
             BufferUploader.drawWithShader(b.buildOrThrow());
         }finally{ps.popPose();RenderSystem.depthMask(mask);if(depth)RenderSystem.enableDepthTest();else RenderSystem.disableDepthTest();if(cull)RenderSystem.enableCull();else RenderSystem.disableCull();RenderSystem.blendFuncSeparate(src,dst,srcA,dstA);if(blend)RenderSystem.enableBlend();else RenderSystem.disableBlend();RenderSystem.setShaderTexture(0,texture);RenderSystem.setShader(()->previous);RenderSystem.setShaderColor(color[0],color[1],color[2],color[3]);}

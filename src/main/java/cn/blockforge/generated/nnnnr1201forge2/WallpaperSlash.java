@@ -12,6 +12,7 @@ import net.neoforged.neoforge.client.event.RegisterShadersEvent;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.common.EventBusSubscriber;
+import com.mojang.blaze3d.vertex.Tesselator;
 
 /** 黑芯负责未授权或读取失败时的回退；壁纸按屏幕坐标覆盖同一尖梭内部。 */
 public final class WallpaperSlash {
@@ -36,7 +37,7 @@ public final class WallpaperSlash {
         // 黑芯和包边也占绘图内存：关闭共享、下载中或低阶段同样按斩击数分批。
         if(++batchCuts>=BATCH_SIZE){
             BufferUploader.drawWithShader(b.buildOrThrow());flush(ps);batchCuts=0;
-            b.begin(VertexFormat.Mode.QUADS,DefaultVertexFormat.POSITION_COLOR);
+            b = Tesselator.getInstance().begin(VertexFormat.Mode.QUADS,DefaultVertexFormat.POSITION_COLOR);
         }
     }
     public static void draw(BufferBuilder b,PoseStack ps,Vec3 a,Vec3 z,Vec3 across,float alpha,Vec3 camera,UUID owner){
