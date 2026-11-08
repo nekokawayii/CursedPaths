@@ -14,7 +14,7 @@ public final class DomainTerrainJournal extends SavedData {
     private final Map<BlockPos, Entry> entries = new HashMap<>();
     private final ArrayDeque<BlockPos> queue = new ArrayDeque<>();
     public static DomainTerrainJournal get(ServerLevel level) {
-        return level.getDataStorage().computeIfAbsent(tag -> load(level,tag), DomainTerrainJournal::new, "sukuna_domain_terrain");
+        return level.getDataStorage().computeIfAbsent(new net.minecraft.world.level.saveddata.SavedData.Factory<>(DomainTerrainJournal::new, (tag, prov)->load(level, tag)), "sukuna_domain_terrain");
     }
     private static DomainTerrainJournal load(ServerLevel level, CompoundTag tag) {
         var journal = new DomainTerrainJournal();

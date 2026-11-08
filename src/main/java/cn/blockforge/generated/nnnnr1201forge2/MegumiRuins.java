@@ -17,7 +17,7 @@ public final class MegumiRuins {
         @Override public CompoundTag save(CompoundTag tag){CompoundTag entries=new CompoundTag();chests.forEach((k,v)->entries.putLong(k.toString(),v));tag.put("Chests",entries);return tag;}
     }
     public static void visit(ServerPlayer p,BlockPos origin,boolean enter){
-        ServerLevel level=p.serverLevel();Found found=level.getDataStorage().computeIfAbsent(Found::load,Found::new,"sukuna_megumi_ruins");long key=origin.asLong();
+        ServerLevel level=p.serverLevel();Found found=level.getDataStorage().computeIfAbsent(new net.minecraft.world.level.saveddata.SavedData.Factory<>(Found::new, (tag, prov)->Found.load(tag)), "sukuna_megumi_ruins");long key=origin.asLong();
         if(found.chests.containsKey(key)){if(enter)hint(p,BlockPos.of(found.chests.get(key)));return;}
         if(p.tickCount%40!=0&&!enter)return;
         List<ChestBlockEntity> chests=new ArrayList<>();

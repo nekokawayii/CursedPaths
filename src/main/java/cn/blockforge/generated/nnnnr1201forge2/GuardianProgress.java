@@ -13,7 +13,7 @@ import net.neoforged.neoforge.event.tick.ServerTickEvent;
 /** 主世界保存通关名单：跨维度、离线、重启均保留；不复制物品、手指、控制器或临时状态。 */
 public final class GuardianProgress extends SavedData {
     private CompoundTag victories=new CompoundTag(),profiles=new CompoundTag(),completed=new CompoundTag(),pendingLegacy=new CompoundTag();
-    private static GuardianProgress get(MinecraftServer server){return server.overworld().getDataStorage().computeIfAbsent(GuardianProgress::load,GuardianProgress::new,"sukuna_guardian_progress");}
+    private static GuardianProgress get(MinecraftServer server){return server.overworld().getDataStorage().computeIfAbsent(new net.minecraft.world.level.saveddata.SavedData.Factory<>(GuardianProgress::new, (tag, prov)->GuardianProgress.load(tag)), "sukuna_guardian_progress");}
     public static GuardianProgress load(CompoundTag tag){GuardianProgress state=new GuardianProgress();state.victories=tag.getCompound("Victories").copy();state.profiles=tag.getCompound("Profiles").copy();state.completed=tag.getCompound("CompletedBattles").copy();state.pendingLegacy=tag.getCompound("PendingLegacy").copy();return state;}
     @Override public CompoundTag save(CompoundTag tag){tag.put("Victories",victories.copy());tag.put("Profiles",profiles.copy());tag.put("CompletedBattles",completed.copy());tag.put("PendingLegacy",pendingLegacy.copy());return tag;}
     private boolean snapshot(ServerPlayer p){

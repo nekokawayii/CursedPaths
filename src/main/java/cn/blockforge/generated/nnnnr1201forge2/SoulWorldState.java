@@ -17,7 +17,7 @@ public final class SoulWorldState extends SavedData {
     public void markMaidCondensed(java.util.UUID owner){if(!maidCondensed(owner)){condensedMaidOwners.putBoolean(owner.toString(),true);setDirty();}}
 
     public static SoulWorldState get(ServerLevel level){
-        return level.getDataStorage().computeIfAbsent(SoulWorldState::load,SoulWorldState::new,"sukuna_soul_corridor");
+        return level.getDataStorage().computeIfAbsent(new net.minecraft.world.level.saveddata.SavedData.Factory<>(SoulWorldState::new, (tag, prov)->SoulWorldState.load(tag)), "sukuna_soul_corridor");
     }
     public static SoulWorldState load(CompoundTag tag){
         SoulWorldState state=new SoulWorldState();

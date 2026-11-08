@@ -14,7 +14,7 @@ import cn.blockforge.generated.nnnnr1201forge2.CompatAttr;
 /** 存档保存控制器原值，生效时按模式换算；重载不会重复缩放。 */
 public final class BossControl extends SavedData {
     private CompoundTag values=new CompoundTag();
-    public static BossControl get(MinecraftServer server){return server.overworld().getDataStorage().computeIfAbsent(BossControl::load,BossControl::new,"sukuna_boss_control");}
+    public static BossControl get(MinecraftServer server){return server.overworld().getDataStorage().computeIfAbsent(new net.minecraft.world.level.saveddata.SavedData.Factory<>(BossControl::new, (tag, prov)->BossControl.load(tag)), "sukuna_boss_control");}
     public static BossControl load(CompoundTag tag){BossControl s=new BossControl();s.values=tag.copy();return s;}
     @Override public CompoundTag save(CompoundTag tag){tag.merge(values);return tag;}
     public double value(String key,double fallback){return values.contains(key)?values.getDouble(key):fallback;}

@@ -26,7 +26,7 @@ public final class RuinAtmosphere {
         static Sites load(CompoundTag tag){Sites s=new Sites();for(long n:tag.getLongArray("Origins"))s.origins.add(BlockPos.of(n));return s;}
         @Override public CompoundTag save(CompoundTag tag){tag.putLongArray("Origins",origins.stream().mapToLong(BlockPos::asLong).toArray());return tag;}
     }
-    private static Sites sites(ServerLevel l){return l.getDataStorage().computeIfAbsent(Sites::load,Sites::new,"sukuna_ruins_r20");}
+    private static Sites sites(ServerLevel l){return l.getDataStorage().computeIfAbsent(new net.minecraft.world.level.saveddata.SavedData.Factory<>(Sites::new, (tag, prov)->Sites.load(tag)), "sukuna_ruins_r20");}
     public static boolean build(ServerPlayer p){
         if(p.level().dimension()!=Level.OVERWORLD){p.sendSystemMessage(Component.literal("请回到主世界生成高专遗迹。"));return false;}
         var level=p.serverLevel();var template=level.getStructureManager().get(ResourceLocation.fromNamespaceAndPath("jujutsu_kaisen_cursed_paths", "jujutsu_ruins"));

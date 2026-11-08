@@ -10,7 +10,7 @@ public final class PrisonStore extends SavedData {
     final Map<UUID,CompoundTag> realms=new LinkedHashMap<>();
     final Map<UUID,CompoundTag> prisoners=new LinkedHashMap<>();
     private int nextCell;
-    public static PrisonStore get(MinecraftServer server){return server.overworld().getDataStorage().computeIfAbsent(PrisonStore::load,PrisonStore::new,"sukuna_prison_realm");}
+    public static PrisonStore get(MinecraftServer server){return server.overworld().getDataStorage().computeIfAbsent(new net.minecraft.world.level.saveddata.SavedData.Factory<>(PrisonStore::new, (tag, prov)->PrisonStore.load(tag)), "sukuna_prison_realm");}
     public CompoundTag realm(UUID id){return realms.get(id);}
     public CompoundTag prisoner(UUID id){return prisoners.get(id);}
     public CompoundTag create(UUID id,UUID owner,String dimension,double x,double y,double z){

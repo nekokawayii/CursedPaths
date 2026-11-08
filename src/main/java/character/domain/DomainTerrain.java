@@ -61,7 +61,7 @@ public final class DomainTerrain extends SavedData {
         var handle=new Handle(level,owner);get(level).handles.put(handle.id,handle);return handle;
     }
     public static DomainTerrain get(ServerLevel level){
-        return level.getDataStorage().computeIfAbsent(tag->load(level,tag),DomainTerrain::new,"sukuna_domain_layers");
+        return level.getDataStorage().computeIfAbsent(new net.minecraft.world.level.saveddata.SavedData.Factory<>(DomainTerrain::new, (tag, prov)->load(level, tag)), "sukuna_domain_layers");
     }
     /** 落点不能依赖仍被领域占用或正在恢复的方块。 */
     public static boolean changing(ServerLevel level,BlockPos pos){return get(level).cells.containsKey(pos);}
