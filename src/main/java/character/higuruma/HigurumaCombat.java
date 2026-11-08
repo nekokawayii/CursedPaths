@@ -52,7 +52,7 @@ public final class HigurumaCombat {
 
     public static void giveGavel(ServerPlayer p) {
         ItemStack gavel = new ItemStack(GAVEL.get());
-        gavel.setHoverName(Component.literal("法槌").withStyle(ChatFormatting.GOLD));
+        cn.blockforge.generated.nnnnr1201forge2.CompatItem.setName(gavel, Component.literal("法槌").withStyle(ChatFormatting.GOLD));
         // NBT 绑定：该法槌属于这名玩家，不可丢弃、不可被清除/复制
         CompatNbt.update(gavel, t -> t.putBoolean("GavelLock", true));
         CompatNbt.update(gavel, t -> t.putString("GavelOwner", p.getUUID().toString()));

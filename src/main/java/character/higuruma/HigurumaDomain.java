@@ -235,7 +235,7 @@ public final class HigurumaDomain {
                 .withStyle(death ? ChatFormatting.DARK_RED : ChatFormatting.GOLD));
             if (death && owner != null) {
                 ItemStack sword = new ItemStack(cn.blockforge.generated.nnnnr1201forge2.Content.EXECUTIONER_SWORD.get());
-                sword.setHoverName(Component.literal("处刑人之剑").withStyle(ChatFormatting.DARK_RED));
+                cn.blockforge.generated.nnnnr1201forge2.CompatItem.setName(sword, Component.literal("处刑人之剑").withStyle(ChatFormatting.DARK_RED));
                 if(owner instanceof cn.blockforge.generated.nnnnr1201forge2.NpcBridge.NpcActor)owner.setItemSlot(net.minecraft.world.entity.EquipmentSlot.MAINHAND,sword);
                 else if (!owner.getInventory().add(sword)) owner.drop(sword, false);
             }

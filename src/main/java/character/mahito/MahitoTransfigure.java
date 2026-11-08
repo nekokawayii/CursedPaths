@@ -261,7 +261,7 @@ public final class MahitoTransfigure {
         p.getPersistentData().remove(PENDING_TARGET);
         CompatNbt.update(body, t -> t.put(BASE_TAG, snap));
         p.getPersistentData().remove(PENDING);
-        body.setHoverName(Component.literal("贮存体·" + snap.getString("name")).withStyle(ChatFormatting.AQUA));
+        cn.blockforge.generated.nnnnr1201forge2.CompatItem.setName(body, Component.literal("贮存体·" + snap.getString("name")).withStyle(ChatFormatting.AQUA));
         body.setDamageValue(0);
         if (!p.getInventory().add(body)) p.drop(body, false);
         p.sendSystemMessage(Component.literal("无为转变·贮存完成：右键可打开轮盘").withStyle(ChatFormatting.AQUA));
@@ -323,7 +323,7 @@ public final class MahitoTransfigure {
         CompoundTag base = CompatNbt.getElement(held, BASE_TAG);
         if (base == null) return;
         CompatNbt.update(out, t -> t.put(BASE_TAG, base.copy()));
-        out.setHoverName(Component.literal(label + "·" + base.getString("name")).withStyle(ChatFormatting.AQUA));
+        cn.blockforge.generated.nnnnr1201forge2.CompatItem.setName(out, Component.literal(label + "·" + base.getString("name")).withStyle(ChatFormatting.AQUA));
         if (cursed) {
             int max = out.getMaxDamage();
             out.setDamageValue(Math.max(0, max - Math.max(1, max / 100)));

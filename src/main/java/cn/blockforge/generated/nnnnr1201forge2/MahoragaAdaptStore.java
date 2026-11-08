@@ -258,7 +258,7 @@ public final class MahoragaAdaptStore {
             var stack=owner.getItemInHand(hand);
             if(stack.is(VoidContent.MAHORAGA_WHEEL_RECALL.get())){
                 var next=new net.minecraft.world.item.ItemStack(VoidContent.MAHORAGA_WHEEL.get(),stack.getCount());
-                if(CompatNbt.read(stack)!=null)next.setTag(CompatNbt.read(stack).copy());
+                if(CompatNbt.read(stack)!=null)cn.blockforge.generated.nnnnr1201forge2.CompatItem.setTag(next, CompatNbt.read(stack).copy());
                 owner.setItemInHand(hand,next);done=true;
             }
         }
@@ -267,7 +267,7 @@ public final class MahoragaAdaptStore {
             var stack=inv.getItem(i);
             if(stack.is(VoidContent.MAHORAGA_WHEEL_RECALL.get())){
                 var next=new net.minecraft.world.item.ItemStack(VoidContent.MAHORAGA_WHEEL.get(),stack.getCount());
-                if(CompatNbt.read(stack)!=null)next.setTag(CompatNbt.read(stack).copy());
+                if(CompatNbt.read(stack)!=null)cn.blockforge.generated.nnnnr1201forge2.CompatItem.setTag(next, CompatNbt.read(stack).copy());
                 inv.setItem(i,next);done=true;
             }
         }
@@ -280,7 +280,7 @@ public final class MahoragaAdaptStore {
             var stack=owner.getItemInHand(hand);
             if(stack.is(VoidContent.MAHORAGA_WHEEL.get())||stack.is(VoidContent.MAHORAGA_WHEEL_RECALL.get())){
                 var next=new net.minecraft.world.item.ItemStack(to,stack.getCount());
-                if(CompatNbt.read(stack)!=null)next.setTag(CompatNbt.read(stack).copy());
+                if(CompatNbt.read(stack)!=null)cn.blockforge.generated.nnnnr1201forge2.CompatItem.setTag(next, CompatNbt.read(stack).copy());
                 owner.setItemInHand(hand,next);
                 done=true;
             }
@@ -290,7 +290,7 @@ public final class MahoragaAdaptStore {
             var stack=inv.getItem(i);
             if(stack.is(VoidContent.MAHORAGA_WHEEL.get())||stack.is(VoidContent.MAHORAGA_WHEEL_RECALL.get())){
                 var next=new net.minecraft.world.item.ItemStack(to,stack.getCount());
-                if(CompatNbt.read(stack)!=null)next.setTag(CompatNbt.read(stack).copy());
+                if(CompatNbt.read(stack)!=null)cn.blockforge.generated.nnnnr1201forge2.CompatItem.setTag(next, CompatNbt.read(stack).copy());
                 inv.setItem(i,next);
                 done=true;
             }
