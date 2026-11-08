@@ -91,7 +91,7 @@ public final class JogoCombat {
                 TRAPS.add(new Trap(p,level,new Vec3(x+0.5,y+0.2,z+0.5),ray,now+i*2));
             }
         }
-        level.playSound(null,p.blockPosition(),SoundEvents.GENERIC_EXPLODE,SoundSource.PLAYERS,1.0f,0.6f);
+        level.playSound(null,p.blockPosition(),SoundEvents.GENERIC_EXPLODE.value(),SoundSource.PLAYERS,1.0f,0.6f);
     }
     /** 岩浆陷阱：到点的火柱从地面窜起 10 格，命中者被击飞并点燃。 */
     private static void tickTraps() {
@@ -271,7 +271,7 @@ public final class JogoCombat {
     }
     private static void impact(ServerLevel level,UUID owner,Vec3 at,float damage) {
         Network.send(level,new Network.Effect(JogoFx.METEOR_IMPACT,0,at,Vec3.ZERO,5f,14,0));
-        level.playSound(null,BlockPos.containing(at),SoundEvents.GENERIC_EXPLODE,SoundSource.PLAYERS,1.4f,0.7f);
+        level.playSound(null,BlockPos.containing(at),SoundEvents.GENERIC_EXPLODE.value(),SoundSource.PLAYERS,1.4f,0.7f);
         ServerPlayer caster=MaidBridge.find(level,owner);if(caster==null)return;
         for(var target:level.getEntitiesOfClass(LivingEntity.class,new net.minecraft.world.phys.AABB(at,at).inflate(4.5),t->CombatSettings.canHit(caster,t))){
             AttackTypes.mark(AttackTypes.MAGIC);
@@ -394,7 +394,7 @@ public final class JogoCombat {
         DomainClash.opened(p,center,DOMAIN_RADIUS);
         if(!inDomain(p))return;
         Network.send(p.serverLevel(),new Network.Effect(JogoFx.DOMAIN,p.getId(),center,Vec3.ZERO,(float)DOMAIN_RADIUS,DOMAIN_LIFE,0));
-        p.serverLevel().playSound(null,p.blockPosition(),SoundEvents.GENERIC_EXPLODE,SoundSource.PLAYERS,1.6f,0.45f);
+        p.serverLevel().playSound(null,p.blockPosition(),SoundEvents.GENERIC_EXPLODE.value(),SoundSource.PLAYERS,1.6f,0.45f);
         p.sendSystemMessage(net.minecraft.network.chat.Component.literal("领域展开 · 盖棺铁围山"));
     }
     /** 施术者是否正站在某个生效中的「无量空处」里（五条悟首领或玩家五条悟都算）。 */

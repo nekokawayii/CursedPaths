@@ -34,7 +34,7 @@ public final class HakariDomain {
         DomainClash.opened(p,Vec3.atCenterOf(job.center),RADIUS);
         if(!active(p))return;
         p.displayClientMessage(Component.literal("领域展开 · 坐杀博徒"),false);
-        job.level.playSound(null,p.blockPosition(),net.minecraft.sounds.SoundEvents.NOTE_BLOCK_PLING.get(),net.minecraft.sounds.SoundSource.PLAYERS,1.4f,.8f);
+        job.level.playSound(null,p.blockPosition(),net.minecraft.sounds.SoundEvents.NOTE_BLOCK_PLING.value().get(),net.minecraft.sounds.SoundSource.PLAYERS,1.4f,.8f);
     }
     public static void toggle(ServerPlayer p){if(active(p))close(p,"已收起");else open(p);}
     public static void extend(ServerPlayer p,int ticks){var job=JOBS.get(p.getUUID());if(job!=null)job.extra+=Math.max(0,ticks);}

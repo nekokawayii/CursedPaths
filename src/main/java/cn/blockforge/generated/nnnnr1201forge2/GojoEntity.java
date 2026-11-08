@@ -359,7 +359,7 @@ public final class GojoEntity extends Monster {
     private void detonateUnlimited(){
         Vec3 at=position();double radius=64;orbs.removeIf(o->o.blue);
         fx(GojoFx.UNLIMITED,at,Vec3.ZERO,(float)radius,60,0);
-        level().playSound(null,blockPosition(),SoundEvents.GENERIC_EXPLODE,SoundSource.HOSTILE,4,0.5f);
+        level().playSound(null,blockPosition(),SoundEvents.GENERIC_EXPLODE.value(),SoundSource.HOSTILE,4,0.5f);
         for(LivingEntity p:BossTargets.nearby(this,radius))if(valid(p)&&p.position().distanceToSqr(at)<=radius*radius)hit(p,999,false); // 无限制茈 999
         selfDamage(60000);
         announce("无限制茈 · 虚式反噬：范围 64 格，对五条悟自身同样生效");

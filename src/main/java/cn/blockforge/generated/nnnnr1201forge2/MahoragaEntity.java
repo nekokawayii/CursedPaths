@@ -858,7 +858,7 @@ public final class MahoragaEntity extends Monster {
                   this.hitTarget(e, 0.85F, 1.0F);
                }
 
-               this.level().playSound((Player)null, this.blockPosition(), SoundEvents.GENERIC_EXPLODE, SoundSource.HOSTILE, 2.4F, 0.6F);
+               this.level().playSound((Player)null, this.blockPosition(), SoundEvents.GENERIC_EXPLODE.value(), SoundSource.HOSTILE, 2.4F, 0.6F);
                break;
             case 6:
                LivingEntity leapTarget = this.pickTarget();

@@ -81,7 +81,7 @@ public class JogoNpcEntity extends Monster {
             domainReady = now + DOMAIN_COOLDOWN;
             domainEnd = now + 600;   // 持续 30 秒
             Network.send(world, new Network.Effect(character.jogo.JogoFx.DOMAIN, getId(), position(), Vec3.ZERO, 27f, 600, 0));
-            world.playSound(null, blockPosition(), net.minecraft.sounds.SoundEvents.GENERIC_EXPLODE,
+            world.playSound(null, blockPosition(), net.minecraft.sounds.SoundEvents.GENERIC_EXPLODE.value(),
                 net.minecraft.sounds.SoundSource.HOSTILE, 1.6f, 0.45f);
             sendSystemMessage(net.minecraft.network.chat.Component.literal("漏壶展开了盖棺铁围山"));
             return;

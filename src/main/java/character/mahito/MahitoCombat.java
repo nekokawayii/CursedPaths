@@ -246,7 +246,7 @@ public final class MahitoCombat {
                 else{soulDamage(cast.caster,target,7);target.setDeltaMovement(target.getDeltaMovement().add(0,1,0));target.addEffect(new MobEffectInstance(MahitoContent.BLEEDING.get(),100));}
                 target.hurtMarked=true;
             }
-            cast.caster.serverLevel().playSound(null,BlockPos.containing(cast.origin),SoundEvents.GENERIC_EXPLODE,SoundSource.HOSTILE,1,.6f);
+            cast.caster.serverLevel().playSound(null,BlockPos.containing(cast.origin),SoundEvents.GENERIC_EXPLODE.value(),SoundSource.HOSTILE,1,.6f);
         }
         for(Realm realm:List.copyOf(REALMS.values())){
             if(!realm.caster.isAlive()||!character.domainking.SelfEmbryoDomain.active(realm.caster))closeRealm(realm.caster.getUUID());

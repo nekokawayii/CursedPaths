@@ -135,7 +135,7 @@ public final class DeathStar {
     }
     private static void explode(Star s,Vec3 at){
         fx(s.p,FX_STOP,at,Vec3.ZERO,0,0,s.id);fx(s.p,FX_BURST,at,s.direction,50,32,s.id);
-        s.level.playSound(null,BlockPos.containing(at),SoundEvents.GENERIC_EXPLODE,SoundSource.PLAYERS,6,.55f);
+        s.level.playSound(null,BlockPos.containing(at),SoundEvents.GENERIC_EXPLODE.value(),SoundSource.PLAYERS,6,.55f);
         for(LivingEntity t:near(s.p,at,DeathStarRules.RADIUS))hit(s.p,t,DeathStarRules.damage(t.getMaxHealth()));
         // 成长增加爆心向外的索敌血线，不重复命中已在爆心内结算的目标。
         int rank=BloodArts.rank(s.p);if(rank>0){var outside=near(s.p,at,DeathStarRules.RADIUS+rank*3);outside.removeIf(t->t.distanceToSqr(at)<=DeathStarRules.RADIUS*DeathStarRules.RADIUS);outside.sort(Comparator.comparingDouble(t->t.distanceToSqr(at)));for(LivingEntity t:outside.stream().limit(rank*4).toList()){Vec3 end=t.getBoundingBox().getCenter();if(s.level.clip(new ClipContext(at,end,ClipContext.Block.COLLIDER,ClipContext.Fluid.NONE,MaidBridge.body(s.p))).getType()!=HitResult.Type.MISS)continue;fx(s.p,BloodExpansion.FX_CELL,at,end,1,20,s.id);hit(s.p,t,DeathStarRules.damage(t.getMaxHealth())*.1f);}}

@@ -206,7 +206,7 @@ public final class BloodArts {
 
     static void nova(ServerPlayer p,Vec3 at,boolean empowered){
         fx(p,FX+8,at,Vec3.ZERO,empowered?2:1,32,BloodRules.novaRays(rank(p)));
-        p.serverLevel().playSound(null,BlockPos.containing(at),SoundEvents.GENERIC_EXPLODE,SoundSource.PLAYERS,1.1f,.7f);
+        p.serverLevel().playSound(null,BlockPos.containing(at),SoundEvents.GENERIC_EXPLODE.value(),SoundSource.PLAYERS,1.1f,.7f);
         // 每条血弹方向独立计算穿透次数，成长增加方向而非只加伤害。
         int count=BloodRules.novaRays(rank(p));int[] rays=new int[count];var targets=near(p,at,16);targets.sort(Comparator.comparingDouble(t->t.position().distanceToSqr(at)));
         for(LivingEntity t:targets){Vec3 d=t.getBoundingBox().getCenter().subtract(at);int lane=Math.floorMod((int)Math.floor((Math.atan2(d.z,d.x)+Math.PI)*count/(Math.PI*2)),count);if(rays[lane]>=BloodRules.penetration(empowered))continue;

@@ -201,7 +201,7 @@ public final class RyuCombat {
             Vec3 offset = side.scale((i - (count - 1) / 2.0) * 0.35);
             MISSILES.add(new Missile(level, p, null, origin(p).add(offset), dir, level.getGameTime(), SCATTER_DAMAGE));
         }
-        level.playSound(null, p.blockPosition(), SoundEvents.TRIDENT_THROW, SoundSource.PLAYERS, 0.9f, 1.5f);
+        level.playSound(null, p.blockPosition(), SoundEvents.TRIDENT_THROW.value(), SoundSource.PLAYERS, 0.9f, 1.5f);
         p.displayClientMessage(Component.literal("追踪弹 ×" + count), true);
     }
 
@@ -211,7 +211,7 @@ public final class RyuCombat {
         for (int i = 0; i < SCATTER_MIN; i++) {
             MISSILES.add(new Missile(level, null, mob, origin(mob), dir, level.getGameTime(), SCATTER_DAMAGE));
         }
-        level.playSound(null, mob.blockPosition(), SoundEvents.TRIDENT_THROW, SoundSource.HOSTILE, 0.9f, 1.4f);
+        level.playSound(null, mob.blockPosition(), SoundEvents.TRIDENT_THROW.value(), SoundSource.HOSTILE, 0.9f, 1.4f);
     }
 
     public static void npcScatter(Mob mob, LivingEntity target) {
@@ -244,7 +244,7 @@ public final class RyuCombat {
             }
             if (hit != null) {
                 hurt(level, ownerEntity, missile.owner(), hit, missile.damage());
-                level.playSound(null, hit.blockPosition(), SoundEvents.GENERIC_EXPLODE, SoundSource.PLAYERS, 0.4f, 1.8f);
+                level.playSound(null, hit.blockPosition(), SoundEvents.GENERIC_EXPLODE.value(), SoundSource.PLAYERS, 0.4f, 1.8f);
                 continue;
             }
             var pos0 = net.minecraft.core.BlockPos.containing(pos);
@@ -271,7 +271,7 @@ public final class RyuCombat {
     public static void burst(ServerPlayer p) {
         if (!(p.level() instanceof ServerLevel level)) return;
         area(level, p, p, BURST_RADIUS, BURST_DAMAGE, BURST_KNOCKBACK);
-        level.playSound(null, p.blockPosition(), SoundEvents.GENERIC_EXPLODE, SoundSource.PLAYERS, 0.7f, 1.6f);
+        level.playSound(null, p.blockPosition(), SoundEvents.GENERIC_EXPLODE.value(), SoundSource.PLAYERS, 0.7f, 1.6f);
         p.displayClientMessage(Component.literal("咒力喷涌"), true);
     }
 

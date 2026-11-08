@@ -146,7 +146,7 @@ public final class RikaEntity extends PathfinderMob {
     private void vanish(ServerLevel server) {
         server.sendParticles(new DustParticleOptions(new Vector3f(0.8f, 0.9f, 1f), 1.2f),
             getX(), getY() + 1, getZ(), 40, 0.5, 0.9, 0.5, 0.05);
-        server.playSound(null, blockPosition(), SoundEvents.SOUL_ESCAPE, SoundSource.NEUTRAL, 1.2f, 0.8f);
+        server.playSound(null, blockPosition(), SoundEvents.SOUL_ESCAPE.value(), SoundSource.NEUTRAL, 1.2f, 0.8f);
         Player owner = owner();
         if (owner != null) RikaRules.clear(owner); // 解除无限咒力
         discard();

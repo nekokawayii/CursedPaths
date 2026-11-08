@@ -84,7 +84,7 @@ public final class YukiCombat {
                 Vec3 at = eye.add(dir.scale(range * i / 16.0));
                 level.sendParticles(ParticleTypes.EXPLOSION_EMITTER, at.x, at.y, at.z, 1, 0, 0, 0, 0);
             }
-            level.playSound(null, p.blockPosition(), SoundEvents.GENERIC_EXPLODE, SoundSource.PLAYERS, 1.6f, 0.45f);
+            level.playSound(null, p.blockPosition(), SoundEvents.GENERIC_EXPLODE.value(), SoundSource.PLAYERS, 1.6f, 0.45f);
         }
         p.displayClientMessage(Component.literal("星崩拳 · 命中 " + hit + " 个目标"), true);
     }
@@ -108,7 +108,7 @@ public final class YukiCombat {
                 Vec3 at = eye.add(dir.scale(range * i / 8.0));
                 level.sendParticles(ParticleTypes.EXPLOSION, at.x, at.y, at.z, 1, 0, 0, 0, 0);
             }
-            level.playSound(null, p.blockPosition(), SoundEvents.GENERIC_EXPLODE, SoundSource.PLAYERS, 1.0f, 0.7f);
+            level.playSound(null, p.blockPosition(), SoundEvents.GENERIC_EXPLODE.value(), SoundSource.PLAYERS, 1.0f, 0.7f);
         }
     }
 
@@ -150,7 +150,7 @@ public final class YukiCombat {
             p.displayClientMessage(Component.literal("加重解除 · 恢复常态"), true);
             if (p.level() instanceof ServerLevel level) {
                 level.sendParticles(ParticleTypes.CLOUD, p.getX(), p.getY() + 1, p.getZ(), 24, 0.5, 0.6, 0.5, 0.05);
-                level.playSound(null, p.blockPosition(), SoundEvents.ARMOR_EQUIP_LEATHER, SoundSource.PLAYERS, 1f, 1.3f);
+                level.playSound(null, p.blockPosition(), SoundEvents.ARMOR_EQUIP_LEATHER.value(), SoundSource.PLAYERS, 1f, 1.3f);
             }
             return;
         }

@@ -226,7 +226,7 @@ public final class KashimoCombat {
         if (p.level() instanceof ServerLevel level) {
             Network.send(level, new Network.Effect(KashimoFx.UPPERCUT, p.getId(), target.position(),
                 Vec3.ZERO, 1f, 14, 0));
-            level.playSound(null, target.blockPosition(), SoundEvents.TRIDENT_RIPTIDE_2,
+            level.playSound(null, target.blockPosition(), SoundEvents.TRIDENT_RIPTIDE_2.value(),
                 SoundSource.PLAYERS, 1f, 1.6f);
         }
         p.displayClientMessage(Component.literal("雷光连打·上挑"), true);
@@ -402,7 +402,7 @@ public final class KashimoCombat {
         p.teleportTo(end.x, end.y, end.z);
         p.setDeltaMovement(Vec3.ZERO);
         p.fallDistance = 0;
-        level.playSound(null, p.blockPosition(), SoundEvents.TRIDENT_RIPTIDE_3, SoundSource.PLAYERS, 1f, 1.35f);
+        level.playSound(null, p.blockPosition(), SoundEvents.TRIDENT_RIPTIDE_3.value(), SoundSource.PLAYERS, 1f, 1.35f);
         Network.send(level, new Network.Effect(KashimoFx.DISCHARGE, p.getId(), end, Vec3.ZERO,
             (float) DASH_LAND_RADIUS, 12, 0));
         int hits = 0;
@@ -438,7 +438,7 @@ public final class KashimoCombat {
         double damage = water ? KashimoSkills.DISCHARGE_DAMAGE * 0.5 : KashimoSkills.DISCHARGE_DAMAGE;
         Network.send(level, new Network.Effect(KashimoFx.DISCHARGE, p.getId(), p.position(), Vec3.ZERO,
             (float) radius, 14, 0));
-        level.playSound(null, p.blockPosition(), SoundEvents.TRIDENT_THUNDER, SoundSource.PLAYERS, 0.7f, 1.7f);
+        level.playSound(null, p.blockPosition(), SoundEvents.TRIDENT_THUNDER.value(), SoundSource.PLAYERS, 0.7f, 1.7f);
         int hits = 0;
         for (var t : level.getEntitiesOfClass(LivingEntity.class, p.getBoundingBox().inflate(radius),
                 t -> t != p && t.isAlive() && !t.isSpectator() && CombatSettings.canHit(p, t))) {
@@ -504,7 +504,7 @@ public final class KashimoCombat {
         data.putLong(ATTACH_UNTIL, now(p) + ATTACH_TICKS);
         Network.send(p.serverLevel(), new Network.Effect(KashimoFx.ATTACH, p.getId(), p.position(), Vec3.ZERO,
             1f, ATTACH_TICKS, 0));
-        p.level().playSound(null, p.blockPosition(), SoundEvents.TRIDENT_RIPTIDE_1, SoundSource.PLAYERS, 0.8f, 1.6f);
+        p.level().playSound(null, p.blockPosition(), SoundEvents.TRIDENT_RIPTIDE_1.value(), SoundSource.PLAYERS, 0.8f, 1.6f);
         p.sendSystemMessage(Component.literal("雷神·附着（10 秒）：普攻范围扩大 · 每次普攻挂 2 层 · 第三下上挑")
             .withStyle(ChatFormatting.AQUA));
         p.displayClientMessage(Component.literal("雷神·附着 10 秒"), true);
@@ -661,7 +661,7 @@ public final class KashimoCombat {
             1f, ULT_TICKS, 0));
         p.serverLevel().playSound(null, p.blockPosition(), SoundEvents.LIGHTNING_BOLT_THUNDER,
             SoundSource.PLAYERS, 0.9f, 0.8f);
-        p.serverLevel().playSound(null, p.blockPosition(), SoundEvents.TRIDENT_THUNDER,
+        p.serverLevel().playSound(null, p.blockPosition(), SoundEvents.TRIDENT_THUNDER.value(),
             SoundSource.PLAYERS, 1f, 0.7f);
         p.sendSystemMessage(Component.literal("幻兽·琥珀（15 秒）：免疫物理伤害 · 移速攻速 ×2 · 普攻自带必中落雷 · 铁棒化为电磁波")
             .withStyle(ChatFormatting.AQUA));

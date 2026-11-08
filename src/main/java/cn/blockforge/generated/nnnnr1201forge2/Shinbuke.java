@@ -102,7 +102,7 @@ public final class Shinbuke {
         if(hit.isEmpty()){
             // 空放也给一道视觉雷（打在地上），让人知道技能确实出手了
             Network.send(level,new Network.Effect(ShinbukeVisuals.STRIKE,p.getId(),eye.add(look.scale(6)),Vec3.ZERO,1,ShinbukeVisuals.LIFE,0));
-            level.playSound(null,p.blockPosition(),SoundEvents.TRIDENT_THUNDER,SoundSource.PLAYERS,1.6f,1.4f);
+            level.playSound(null,p.blockPosition(),SoundEvents.TRIDENT_THUNDER.value(),SoundSource.PLAYERS,1.6f,1.4f);
             Curse.status(p,"ShinbukeCooldown",COOLDOWN);
             p.displayClientMessage(Component.literal("神武解 · 雷击（扇形内没有目标）").setStyle(net.minecraft.network.chat.Style.EMPTY.withColor(0x9BE8FF)),true);
             return true;
@@ -117,7 +117,7 @@ public final class Shinbuke {
             Vec3 push=e.position().subtract(center).multiply(1,0,1);
             if(push.lengthSqr()>1e-4){push=push.normalize();e.push(push.x*1.2,0.35,push.z*1.2);e.hurtMarked=true;}
         }
-        level.playSound(null,p.blockPosition(),SoundEvents.TRIDENT_THUNDER,SoundSource.PLAYERS,2.2f,1.2f);
+        level.playSound(null,p.blockPosition(),SoundEvents.TRIDENT_THUNDER.value(),SoundSource.PLAYERS,2.2f,1.2f);
         Curse.status(p,"ShinbukeCooldown",COOLDOWN);
         p.displayClientMessage(Component.literal("神武解 · 雷霆贯穿 "+hit.size()+" 个目标 · 单发 "+BalanceRules.number(BalanceRules.damage(dmg))
             +" · 范围 "+BalanceRules.number(range)+" 格 · 充能 "+charge)

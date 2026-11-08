@@ -232,7 +232,7 @@ public final class NanamiCombat {
         boolean crit = NanamiRatio.marked(p, target);
         Vec3 to = crit ? new Vec3(target.getX(), NanamiRatio.weakY(target), target.getZ()) : hitAt;
         Network.send(level, new Network.Effect(NanamiFx.GAP, p.getId(), eye, to, 1f, 10, 0));
-        level.playSound(null, p.blockPosition(), SoundEvents.TRIDENT_THROW, SoundSource.PLAYERS, 0.8f, 1.6f);
+        level.playSound(null, p.blockPosition(), SoundEvents.TRIDENT_THROW.value(), SoundSource.PLAYERS, 0.8f, 1.6f);
         if (crit) {
             NanamiRatio.directCrit(p, target, NanamiRatio.GAP_CRIT_BASE);
         } else {

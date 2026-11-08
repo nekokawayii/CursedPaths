@@ -101,7 +101,7 @@ public class SukunaNpcEntity extends PathfinderMob {
         // ② 飞天：10 秒冷却（r279）
         if (getPersistentData().getLong("HitenReadyAt") > now) return;
         getPersistentData().putLong("HitenReadyAt", now + 200);
-        level().playSound(null, blockPosition(), net.minecraft.sounds.SoundEvents.TRIDENT_RIPTIDE_3,
+        level().playSound(null, blockPosition(), net.minecraft.sounds.SoundEvents.TRIDENT_RIPTIDE_3.value(),
             net.minecraft.sounds.SoundSource.HOSTILE, 1.1f, .8f);
         for (LivingEntity t : level().getEntitiesOfClass(LivingEntity.class,
                 getBoundingBox().inflate(40), t -> t != this && t.isAlive()

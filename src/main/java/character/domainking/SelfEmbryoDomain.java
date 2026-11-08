@@ -61,7 +61,7 @@ public final class SelfEmbryoDomain {
         cn.blockforge.generated.nnnnr1201forge2.DomainClash.opened(p, net.minecraft.world.phys.Vec3.atCenterOf(center), RADIUS);
         if(!active(p))return;
         character.mahito.MahitoCombat.openRealm(p,net.minecraft.world.phys.Vec3.atCenterOf(center),RADIUS);
-        level.playSound(null, center, net.minecraft.sounds.SoundEvents.GENERIC_EXPLODE,
+        level.playSound(null, center, net.minecraft.sounds.SoundEvents.GENERIC_EXPLODE.value(),
             net.minecraft.sounds.SoundSource.HOSTILE, 1.8f, 0.4f);
     }
 

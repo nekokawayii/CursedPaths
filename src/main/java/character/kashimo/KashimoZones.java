@@ -75,7 +75,7 @@ public final class KashimoZones {
         boolean water = inWater(level, pos);
         ORBS.add(new Orb(level, owner.getUUID(), pos, dir.normalize(), level.getGameTime(), water));
         Network.send(level, new Network.Effect(KashimoFx.ORB, owner.getId(), pos, dir, 1.1f, ORB_TICKS, 0));
-        level.playSound(null, owner.blockPosition(), net.minecraft.sounds.SoundEvents.TRIDENT_RIPTIDE_2,
+        level.playSound(null, owner.blockPosition(), net.minecraft.sounds.SoundEvents.TRIDENT_RIPTIDE_2.value(),
             net.minecraft.sounds.SoundSource.PLAYERS, 1f, 0.7f);
         owner.displayClientMessage(Component.literal(water ? "球形闪电（水中：范围×3、伤害减半）" : "球形闪电"), true);
     }
@@ -89,7 +89,7 @@ public final class KashimoZones {
         WARNS.add(new Warn(level, at, owner.getUUID(), level.getGameTime() + BOLT_DELAY));
         Network.send(level, new Network.Effect(KashimoFx.BOLT_WARN, owner.getId(), at, Vec3.ZERO,
             (float) BOLT_RADIUS, BOLT_DELAY, 0));
-        level.playSound(null, BlockPos.containing(at), net.minecraft.sounds.SoundEvents.TRIDENT_THUNDER,
+        level.playSound(null, BlockPos.containing(at), net.minecraft.sounds.SoundEvents.TRIDENT_THUNDER.value(),
             net.minecraft.sounds.SoundSource.PLAYERS, 0.5f, 1.8f);
         owner.displayClientMessage(Component.literal("落雷：1 秒后降临"), true);
     }

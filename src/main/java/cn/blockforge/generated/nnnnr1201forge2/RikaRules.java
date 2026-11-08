@@ -66,7 +66,7 @@ public final class RikaRules {
         if(!(p instanceof NpcBridge.NpcActor))Curse.add(p, INFINITE); Curse.sync(p); // 召唤即回满：上限此时为 INFINITE，直接补到顶
         server.sendParticles(new net.minecraft.core.particles.DustParticleOptions(new org.joml.Vector3f(0.8f, 0.9f, 1f), 1.2f),
             p.getX(), p.getY() + 1, p.getZ(), 60, 0.6, 1.0, 0.6, 0.05);
-        server.playSound(null, p.blockPosition(), net.minecraft.sounds.SoundEvents.SOUL_ESCAPE,
+        server.playSound(null, p.blockPosition(), net.minecraft.sounds.SoundEvents.SOUL_ESCAPE.value(),
             net.minecraft.sounds.SoundSource.PLAYERS, 1.4f, 0.7f);
         p.displayClientMessage(Component.literal("里香，来一下。"), true);
         return true;
