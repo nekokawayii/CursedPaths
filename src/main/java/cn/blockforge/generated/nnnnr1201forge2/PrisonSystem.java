@@ -178,7 +178,7 @@ public final class PrisonSystem {
             living.canUpdate(false);living.setInvulnerable(true);if(living instanceof Mob mob){mob.setNoAi(true);mob.setPersistenceRequired();}
         }
     }
-    @SubscribeEvent(priority=EventPriority.HIGHEST) public static void targeting(LivingChangeTargetEvent e){if(locked(e.getEntity())||locked(e.getNewTarget()))e.setNewTarget(null);}
+    @SubscribeEvent(priority=EventPriority.HIGHEST) public static void targeting(LivingChangeTargetEvent e){if(locked(e.getEntity())||locked(e.getNewAboutToBeSetTarget()))e.setNewAboutToBeSetTarget(null);}
     @SubscribeEvent(priority=EventPriority.HIGHEST) public static void explosion(net.neoforged.neoforge.event.level.ExplosionEvent.Detonate e){if(e.getLevel().dimension().equals(DIMENSION)){e.getAffectedBlocks().clear();e.getAffectedEntities().clear();}}
     @SubscribeEvent(priority=EventPriority.HIGHEST) public static void travel(EntityTravelToDimensionEvent e){if(!TRANSFERRING.contains(e.getEntity().getUUID())&&locked(e.getEntity()))e.setCanceled(true);}
     @SubscribeEvent(priority=EventPriority.HIGHEST) public static void teleport(EntityTeleportEvent e){if(!TRANSFERRING.contains(e.getEntity().getUUID())&&locked(e.getEntity()))e.setCanceled(true);}

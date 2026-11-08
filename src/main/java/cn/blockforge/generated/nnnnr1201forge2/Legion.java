@@ -132,7 +132,7 @@ public final class Legion {
         var skills=AuthoritySkills.owned(actor);int start=NEXT.getOrDefault(mob.getUUID(),Math.floorMod(mob.getId(),Math.max(1,skills.size())));
         for(int n=0;n<skills.size();n++){int index=(start+n)%skills.size(),skill=skills.get(index);if(!AuthoritySkills.ready(actor,skill))continue;NEXT.put(mob.getUUID(),index+1);AuthoritySkills.cast(actor,skill);break;}
     }
-    @SubscribeEvent(priority=EventPriority.HIGHEST) public static void targetChange(LivingChangeTargetEvent e){if(!member(e.getEntity()))return;ServerPlayer p=owner(e.getEntity());if(e.getEntity() instanceof Mob mob)e.setNewTarget(p==null?null:target(p,mob));}
+    @SubscribeEvent(priority=EventPriority.HIGHEST) public static void targetChange(LivingChangeTargetEvent e){if(!member(e.getEntity()))return;ServerPlayer p=owner(e.getEntity());if(e.getEntity() instanceof Mob mob)e.setNewAboutToBeSetTarget(p==null?null:target(p,mob));}
     @SubscribeEvent(priority=EventPriority.HIGHEST) public static void hurt(LivingIncomingDamageEvent e){
         Entity source=e.getSource().getEntity();ServerPlayer p=source instanceof ServerPlayer s?s:owner(source);
         UUID commander=source instanceof Player player?player.getUUID():ownerId(source);

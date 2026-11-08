@@ -12,7 +12,7 @@ public final class CurseHostility {
     public static boolean hunter(LivingEntity e){return e instanceof Mob&&!(e instanceof GetoEntity)&&!(e instanceof LowCurseEntity)&&!(e instanceof ParasiteEntity)&&(NpcBridge.supports(e)||BossTargets.managed(e)||e instanceof MegumiEntity);}
     public static boolean truce(LivingEntity a,LivingEntity b){return a!=null&&b!=null&&(a instanceof GetoEntity&&curse(b)||b instanceof GetoEntity&&curse(a));}
     @SubscribeEvent public static void target(net.neoforged.neoforge.event.entity.living.LivingChangeTargetEvent event){
-        if(truce(event.getEntity(),event.getNewTarget()))event.setNewTarget(null);
+        if(truce(event.getEntity(),event.getNewAboutToBeSetTarget()))event.setNewAboutToBeSetTarget(null);
     }
     @SubscribeEvent(priority=net.neoforged.bus.api.EventPriority.HIGHEST)
     public static void preventDamage(net.neoforged.neoforge.event.entity.living.LivingIncomingDamageEvent event){
