@@ -64,7 +64,7 @@ public final class RitualRecipes {
             "seal_white",1,"curse_concentrate",1,"soul_echo",2,"residue_medium",3);
     }
     private static void add(String id,int tier,int ticks,String output,int count,boolean bp,Object... parts){Map<String,Integer> m=new LinkedHashMap<>();for(int i=0;i<parts.length;i+=2)m.put((String)parts[i],(Integer)parts[i+1]);ALL.add(new Recipe(id,tier,ticks,output,count,bp,Collections.unmodifiableMap(m)));}
-    public static Item resolve(String id){return BuiltInRegistries.ITEM.getValue(ResourceLocation.parse(id.contains(":")?id:"jujutsu_kaisen_cursed_paths:"+id));}
+    public static Item resolve(String id){return BuiltInRegistries.ITEM.get(ResourceLocation.parse(id.contains(":")?id:"jujutsu_kaisen_cursed_paths:"+id));}
     public static Recipe get(String id){return ALL.stream().filter(r->r.id.equals(id)).findFirst().orElse(null);}
     public static void take(ServerPlayer p,Item item,int amount){for(int i=0;i<p.getInventory().getContainerSize()&&amount>0;i++){var s=p.getInventory().getItem(i);if(s.is(item)){int n=Math.min(amount,s.getCount());s.shrink(n);amount-=n;}}}
     private RitualRecipes(){}

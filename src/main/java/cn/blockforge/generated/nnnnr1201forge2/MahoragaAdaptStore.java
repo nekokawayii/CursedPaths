@@ -66,7 +66,7 @@ public final class MahoragaAdaptStore {
         return TYPE_NAMES.computeIfAbsent(key,k->{
             try{
                 ResourceLocation id=ResourceLocation.parse(k);
-                EntityType<?> type=BuiltInRegistries.ENTITY_TYPE.getValue(id);
+                EntityType<?> type=BuiltInRegistries.ENTITY_TYPE.get(id);
                 if(type!=null)return type.getDescription().getString();
             }catch(RuntimeException ignored){}
             return k;

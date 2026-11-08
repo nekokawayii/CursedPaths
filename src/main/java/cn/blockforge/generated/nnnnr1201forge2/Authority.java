@@ -23,7 +23,7 @@ import cn.blockforge.generated.nnnnr1201forge2.CompatNbt;
 /** 通关奖励与永久权限；不向未通关者泄露路线。 */
 @EventBusSubscriber(modid="jujutsu_kaisen_cursed_paths")
 public final class Authority {
-    public static final DeferredHolder<Item, Item> PERMISSION=Content.ITEMS.register("permission",()->new Item(new Item.Properties().stacksTo(1).rarity(Rarity.EPIC).fireResistant().food(new FoodProperties.Builder().nutrition(0).saturationMod(0f).alwaysEat().build())){
+    public static final DeferredHolder<Item, Item> PERMISSION=Content.ITEMS.register("permission",()->new Item(new Item.Properties().stacksTo(1).rarity(Rarity.EPIC).fireResistant().food(new FoodProperties.Builder().nutrition(0).saturationModifier(0f).alwaysEat().build())){
         @Override public InteractionResultHolder<ItemStack> use(Level l,Player p,InteractionHand h){return unlocked(p)?InteractionResultHolder.fail(p.getItemInHand(h)):super.use(l,p,h);}
         @Override public ItemStack finishUsingItem(ItemStack stack,Level l,LivingEntity user){if(user instanceof ServerPlayer p){if(unlocked(p))return stack;unlock(p);}return super.finishUsingItem(stack,l,user);}
     });

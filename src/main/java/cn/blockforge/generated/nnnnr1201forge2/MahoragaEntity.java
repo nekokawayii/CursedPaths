@@ -581,7 +581,7 @@ public final class MahoragaEntity extends Monster {
          return "\u5176\u4ed6\u4f24\u5bb3";
       } else {
          try {
-            EntityType<?> type = (EntityType)BuiltInRegistries.ENTITY_TYPE.getValue(ResourceLocation.parse(bare));
+            EntityType<?> type = (EntityType)BuiltInRegistries.ENTITY_TYPE.get(ResourceLocation.parse(bare));
             if (type != null) {
                return "\u300c" + type.getDescription().getString() + "\u300d";
             }

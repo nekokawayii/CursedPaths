@@ -40,7 +40,7 @@ public final class CharacterRewards {
         boolean valid=true;
         for(var item:reward.items()){
             var key=ResourceLocation.parse(item.id());
-            if(!BuiltInRegistries.ITEM.containsKey(key)||BuiltInRegistries.ITEM.getValue(key)==Items.AIR){valid=false;break;}
+            if(!BuiltInRegistries.ITEM.containsKey(key)||BuiltInRegistries.ITEM.get(key)==Items.AIR){valid=false;break;}
         }
         if(!valid){
             if(!data.getBoolean("RewardError_"+id)){
@@ -53,7 +53,7 @@ public final class CharacterRewards {
         data.remove("RewardError_"+id);
         p.giveExperiencePoints(reward.experience());Curse.add(p,reward.energy());
         for(var item:reward.items()){
-            var type=BuiltInRegistries.ITEM.getValue(ResourceLocation.parse(item.id()));int left=item.count();
+            var type=BuiltInRegistries.ITEM.get(ResourceLocation.parse(item.id()));int left=item.count();
             while(left>0){var stack=new ItemStack(type,Math.min(left,type.getMaxStackSize()));left-=stack.getCount();Journey.give(p,stack);}
         }
         if(!reward.equals(CharacterReward.NONE))p.sendSystemMessage(Component.literal("已领取「"+title+"」奖励："+summary));
