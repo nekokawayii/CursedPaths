@@ -302,10 +302,10 @@ public final class FistFlameClient {
     /** 第一人称世界层里的一张柔光面片（面向相机，贴图通道，尺寸单位＝格）。 */
     private static void worldQuad(BufferBuilder b,Vec3 c,Vec3 right,Vec3 up,double w,double h,int color,double scale){
         Vec3 u=up.scale(h*scale),r=right.scale(w*scale);
-        b.addVertex(c.x-r.x-u.x,c.y-r.y-u.y,c.z-r.z-u.z).setUv(0,0).setColor(color);
-        b.addVertex(c.x+r.x-u.x,c.y+r.y-u.y,c.z+r.z-u.z).setUv(1,0).setColor(color);
-        b.addVertex(c.x+r.x+u.x,c.y+r.y+u.y,c.z+r.z+u.z).setUv(1,1).setColor(color);
-        b.addVertex(c.x-r.x+u.x,c.y-r.y+u.y,c.z-r.z+u.z).setUv(0,1).setColor(color);
+        b.addVertex((float)(c.x-r.x-u.x),(float)(c.y-r.y-u.y),(float)(c.z-r.z-u.z)).setUv(0,0).setColor(color);
+        b.addVertex((float)(c.x+r.x-u.x),(float)(c.y+r.y-u.y),(float)(c.z+r.z-u.z)).setUv(1,0).setColor(color);
+        b.addVertex((float)(c.x+r.x+u.x),(float)(c.y+r.y+u.y),(float)(c.z+r.z+u.z)).setUv(1,1).setColor(color);
+        b.addVertex((float)(c.x-r.x+u.x),(float)(c.y-r.y+u.y),(float)(c.z-r.z+u.z)).setUv(0,1).setColor(color);
     }
     private FistFlameClient(){}
 }

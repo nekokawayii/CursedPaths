@@ -530,7 +530,7 @@ public final class CullingRules {
         if(special(p,"acid_rain")&&p.tickCount%40==0&&p.level().canSeeSky(p.blockPosition()))
             for(EquipmentSlot slot:new EquipmentSlot[]{EquipmentSlot.HEAD,EquipmentSlot.CHEST,EquipmentSlot.LEGS,EquipmentSlot.FEET}){
                 ItemStack stack=p.getItemBySlot(slot);
-                if(stack.isDamageableItem())stack.hurtAndBreak(2,p,pl->pl.broadcastBreakEvent(slot));
+                if(stack.isDamageableItem())stack.hurtAndBreak(2,p,slot);
             }
         if((special(p,"no_light")||special(p,"fog"))&&p.tickCount%80==0)
             p.addEffect(new MobEffectInstance(special(p,"fog")?MobEffects.DARKNESS:MobEffects.BLINDNESS,100,0,false,false));
