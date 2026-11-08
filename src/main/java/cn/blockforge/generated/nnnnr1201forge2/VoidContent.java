@@ -91,7 +91,7 @@ public final class VoidContent {
         }
     });
     /** 武器「飞天」：伤害 20、范围 15 格；手持时斩击速度 −70%；右键把周围 10 格+面前扇形 40 格的敌人吹到斩击上。 */
-    public static final DeferredHolder<Item, Item> HITEN=Content.ITEMS.register("hiten",() -> new net.minecraft.world.item.SwordItem(
+    public static final DeferredHolder<Item, Item> HITEN=Content.ITEMS.register("hiten",() -> new cn.blockforge.generated.nnnnr1201forge2.CompatSwordItem(
         net.minecraft.world.item.Tiers.NETHERITE,(int)Hiten.DAMAGE-1,-2.2f, // 基础 1 + 19 = 20
         new Item.Properties().stacksTo(1).rarity(Rarity.EPIC).fireResistant()){
         @Override public InteractionResultHolder<ItemStack> use(Level l,Player p,InteractionHand h){
@@ -106,7 +106,7 @@ public final class VoidContent {
         }
     });
     /** 咒具「神武解」：左键 15 伤害；右键面前扇形 30 格内所有怪物各吃一道彩色雷击（15×20 原值）。 */
-    public static final DeferredHolder<Item, Item> SHINBUKE=Content.ITEMS.register("shinbuke",() -> new net.minecraft.world.item.SwordItem(
+    public static final DeferredHolder<Item, Item> SHINBUKE=Content.ITEMS.register("shinbuke",() -> new cn.blockforge.generated.nnnnr1201forge2.CompatSwordItem(
         net.minecraft.world.item.Tiers.NETHERITE,(int)Shinbuke.MELEE_DAMAGE-1,-2.4f, // 基础 1 + 14 = 15
         new Item.Properties().stacksTo(1).rarity(Rarity.EPIC).fireResistant()){
         @Override public InteractionResultHolder<ItemStack> use(Level l,Player p,InteractionHand h){

@@ -234,7 +234,7 @@ public final class FistFlameClient {
             }
         }
         private static void vertex(PoseStack.Pose pose,com.mojang.blaze3d.vertex.VertexConsumer vb,int light,float x,float y,float z,int color,float u,float v){
-            vb.addVertex(pose.pose(),x,y,z).setColor(color).setUv(u,v).setOverlay(4194304).setLight(light).setNormal(pose.normal(),0,0,1);
+            vb.addVertex(pose.pose(),x,y,z).setColor(color).setUv(u,v).setOverlay(4194304).setLight(light).setNormal(0,0,1);
         }
         /** 沿**整条手臂**均匀取 ARM_POINTS 个点（玩家手臂箱体固定为肩下 -2~10 像素，取 1~9.5 像素＝前臂到拳头）。
          *  注：`ModelPart.cubes` 是 private，那个参考模组是带 Mixin/AT 才读到方块几何的；玩家模型尺寸固定，直接用像素范围更稳。 */
