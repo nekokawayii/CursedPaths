@@ -84,9 +84,10 @@ public final class HigurumaCombat {
             if (entry.attribute() == Attributes.ATTACK_DAMAGE) damage += entry.modifier().amount();
             if (entry.attribute() == Attributes.ATTACK_SPEED) speed += entry.modifier().amount();
         }
+        final double dmg=damage, spd=speed;
         CompatNbt.update(gavel, t -> t.put(GavelItem.SEAL, seal));
-        CompatNbt.update(gavel, t -> t.putFloat(GavelItem.SEAL_DAMAGE, (float) damage));
-        CompatNbt.update(gavel, t -> t.putFloat(GavelItem.SEAL_SPEED, (float) speed));
+        CompatNbt.update(gavel, t -> t.putFloat(GavelItem.SEAL_DAMAGE, (float) dmg));
+        CompatNbt.update(gavel, t -> t.putFloat(GavelItem.SEAL_SPEED, (float) spd));
         p.sendSystemMessage(Component.literal("刻印完成：" + off.getHoverName().getString()
             + "（伤害 " + String.format("%.1f", damage) + "）").withStyle(ChatFormatting.GOLD));
     }

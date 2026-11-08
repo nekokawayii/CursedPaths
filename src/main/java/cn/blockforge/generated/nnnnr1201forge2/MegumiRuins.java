@@ -34,7 +34,7 @@ public final class MegumiRuins {
             if(!level.hasChunkAt(pos)||!level.getBlockState(pos).isAir()||!level.getBlockState(pos.above()).isAir()||!level.getBlockState(pos.below()).isFaceSturdy(level,pos.below(),net.minecraft.core.Direction.UP))continue;
             if(!level.getEntities(null,new net.minecraft.world.phys.AABB(pos)).isEmpty())continue;
             level.setBlockAndUpdate(pos,net.minecraft.world.level.block.Blocks.CHEST.defaultBlockState());
-            if(level.getBlockEntity(pos) instanceof ChestBlockEntity chest){chest.setItem(13,new ItemStack(ShadowContent.SOUL.get()));((net.minecraft.world.Nameable)chest).setCustomName(Component.literal("高专封存 · 伏黑惠灵魂"));chest.setChanged();found.chests.put(key,pos.asLong());found.setDirty();hint(p,pos);return;}
+            if(level.getBlockEntity(pos) instanceof ChestBlockEntity chest){chest.setItem(13,new ItemStack(ShadowContent.SOUL.get()));ItemStack nameTag=new ItemStack(net.minecraft.world.item.Items.NAME_TAG);nameTag.set(net.minecraft.core.component.DataComponents.CUSTOM_NAME,Component.literal("高专封存 · 伏黑惠灵魂"));chest.applyComponentsFromItemStack(nameTag);chest.setChanged();found.chests.put(key,pos.asLong());found.setDirty();hint(p,pos);return;}
         }
     }
     private static void hint(ServerPlayer p,BlockPos pos){p.sendSystemMessage(Component.literal("高专遗迹中曾封存伏黑惠灵魂 · 箱子位置："+pos.getX()+"，"+pos.getY()+"，"+pos.getZ()+"（每座遗迹一份，取走后不补发）"));}
