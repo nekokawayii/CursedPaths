@@ -72,7 +72,7 @@ public final class ExpeditionContent {
         block("culling_exit",()->new Block(BlockBehaviour.Properties.ofFullCopy(Blocks.CRYING_OBSIDIAN).strength(-1,3600000).lightLevel(s->12)){
             @Override public net.minecraft.world.ItemInteractionResult useItemOn(net.minecraft.world.item.ItemStack stack, BlockState s, Level l, BlockPos pos, Player p, InteractionHand h, BlockHitResult hit){if(p instanceof ServerPlayer sp)CullingGame.leave(sp);return net.minecraft.world.ItemInteractionResult.sidedSuccess(l.isClientSide);}
         });
-        block("culling_barrier",()->new GlassBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.BLACK_STAINED_GLASS).strength(-1,3600000).noOcclusion()));
+        block("culling_barrier",()->new net.minecraft.world.level.block.TransparentBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.BLACK_STAINED_GLASS).strength(-1,3600000).noOcclusion()));
     }
     public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<RitualBlockEntity>> RITUAL=BES.register("ritual",()->BlockEntityType.Builder.of(RitualBlockEntity::new,block("refining_altar"),block("gu_vat"),block("tengen_core")).build(null));
     static { block("site_anchor",ExpeditionSiteBlock::new); }

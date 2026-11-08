@@ -65,7 +65,7 @@ public final class SimpleChannel {
         @Override public CustomPacketPayload.Type<? extends CustomPacketPayload> type() { return TYPE; }
     }
 
-    private record Entry<T>(int id, Class<T> type, SimpleChannel.NetworkNetworkDirection dir,
+    private record Entry<T>(int id, Class<T> type, SimpleChannel.NetworkDirection dir,
                             BiConsumer<T, FriendlyByteBuf> encoder,
                             Function<FriendlyByteBuf, T> decoder,
                             BiConsumer<T, java.util.function.Supplier<Context>> handler) { }
