@@ -1,5 +1,6 @@
 package cn.blockforge.generated.nnnnr1201forge2;
 
+import net.minecraft.core.Holder;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.item.ArmorItem;
@@ -10,7 +11,8 @@ import net.minecraft.world.item.ItemStack;
 public final class ExpeditionArmorItem extends ArmorItem {
     private final String texture;
 
-    public ExpeditionArmorItem(String id, ArmorMaterial material, Type type, Properties properties) {
+    /** 1.21：ArmorItem 接收 Holder<ArmorMaterial>。 */
+    public ExpeditionArmorItem(String id, Holder<ArmorMaterial> material, Type type, Properties properties) {
         super(material, type, properties);
         this.texture = "jujutsu_kaisen_cursed_paths:textures/models/armor/" + id + "_layer_1.png";
     }

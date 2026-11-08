@@ -44,7 +44,7 @@ public final class VoidContent {
      *  普通右键：直接戴到头上（原版防具逻辑）；潜行右键（含对着空气）：召唤/叫回友方魔虚罗
      *  （召唤后这件法轮会变成「法轮 · 收回」，所以召唤期间它不能戴在头上）；
      *  右键生物：把法轮戴到它头上。 */
-    public static final DeferredHolder<Item, Item> MAHORAGA_WHEEL=Content.ITEMS.register("mahoraga_wheel",() -> new ArmorItem(MahoragaArmor.material(),ArmorItem.Type.HELMET,
+    public static final DeferredHolder<Item, Item> MAHORAGA_WHEEL=Content.ITEMS.register("mahoraga_wheel",() -> new ArmorItem(MahoragaArmor.materialHolder(),ArmorItem.Type.HELMET,
         new Item.Properties().stacksTo(1).rarity(Rarity.EPIC).fireResistant()){
         @Override public InteractionResultHolder<ItemStack> use(Level l,Player p,InteractionHand h){
             ItemStack stack=p.getItemInHand(h);
