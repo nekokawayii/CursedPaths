@@ -37,7 +37,7 @@ public final class FistAura {
             sample(b,g,cx,cy,rx,ry,w,h,age,-1+2.0*(x+1)/cells,-1+2.0*(y+1)/cells);
             sample(b,g,cx,cy,rx,ry,w,h,age,-1+2.0*x/cells,-1+2.0*(y+1)/cells);
         }
-        BufferUploader.drawWithShader(b.buildOrThrow());
+        RenderCompat.draw(b);
         RenderSystem.setShader(GameRenderer::getPositionColorShader);b = Tesselator.getInstance().begin(VertexFormat.Mode.QUADS,DefaultVertexFormat.POSITION_COLOR);
         for(int flame=0;flame<(heat?0:15);flame++)for(int i=0;i<14;i++){
             double t=i/14.0,u=(i+1)/14.0,phase=age*0.34+flame*2.39996;
@@ -50,7 +50,7 @@ public final class FistAura {
             line(b,g,x1,y1,x2,y2,width,((int)(alpha*0.85)<<24)|0xA90928);
             line(b,g,x1,y1,x2,y2,width*0.3,((int)(alpha*0.7)<<24)|0xF02A38);
         }
-        BufferUploader.drawWithShader(b.buildOrThrow());RenderSystem.enableCull();RenderSystem.disableBlend();RenderSystem.enableDepthTest();
+        RenderCompat.draw(b);RenderSystem.enableCull();RenderSystem.disableBlend();RenderSystem.enableDepthTest();
     }
     private static void sample(BufferBuilder b,GuiGraphics g,double cx,double cy,double rx,double ry,double w,double h,float age,double x,double y){
         double radius=Math.sqrt(x*x+y*y),falloff=Math.max(0,1-radius);falloff*=falloff;

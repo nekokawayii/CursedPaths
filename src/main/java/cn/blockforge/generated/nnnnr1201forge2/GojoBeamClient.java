@@ -63,7 +63,7 @@ public final class GojoBeamClient {
                 ring(b,ps,c,u,v,r*0.92,r*0.99,(a*3/4)<<24|0xCFE4FF,24);
             }
         }
-        BufferUploader.drawWithShader(b.buildOrThrow());
+        RenderCompat.draw(b);
         RenderSystem.depthMask(true);RenderSystem.enableCull();RenderSystem.disableBlend();RenderSystem.enableDepthTest();
         ps.popPose();
     }

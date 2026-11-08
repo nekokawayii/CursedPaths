@@ -93,7 +93,7 @@ public final class BeyondRiftClient {
                 Client.quad(b,ps,new Vec3(x-0.05,BeyondRift.CENTER.y+half,z+0.07),new Vec3(x+0.05,BeyondRift.CENTER.y+half,z+0.07),new Vec3(x+0.05,BeyondRift.CENTER.y-half,z+0.07),new Vec3(x-0.05,BeyondRift.CENTER.y-half,z+0.07),0xA8FF5060);
             }
         }
-        BufferUploader.drawWithShader(b.buildOrThrow());
+        RenderCompat.draw(b);
     }
     private static void edge(BufferBuilder b,PoseStack ps,double x0,double y0,double x1,double y1,double width,int color,double z){
         Client.quad(b,ps,new Vec3(x0,y0+width,z),new Vec3(x1,y1+width,z),new Vec3(x1,y1-width,z),new Vec3(x0,y0-width,z),color);

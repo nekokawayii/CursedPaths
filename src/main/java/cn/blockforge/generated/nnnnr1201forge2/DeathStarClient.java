@@ -89,7 +89,7 @@ public final class DeathStarClient {
                     for(int i=0;i<3;i++)ring(b,ps,at,direction(i*19),radius,.12,(int)(210*fade)<<24|0xFF2249,camera);
                 }
             }
-            BufferUploader.drawWithShader(b.buildOrThrow());
+            RenderCompat.draw(b);
         }finally{ps.popPose();RenderSystem.depthMask(mask);if(depth)RenderSystem.enableDepthTest();else RenderSystem.disableDepthTest();if(cull)RenderSystem.enableCull();else RenderSystem.disableCull();RenderSystem.blendFuncSeparate(src,dst,srcA,dstA);if(blend)RenderSystem.enableBlend();else RenderSystem.disableBlend();RenderSystem.setShader(()->shader);RenderSystem.setShaderColor(color[0],color[1],color[2],color[3]);}
     }
     private static Vec3 direction(int i){double y=Math.sin(i*73.13),a=i*2.399,r=Math.sqrt(1-y*y);return new Vec3(Math.cos(a)*r,y,Math.sin(a)*r);}

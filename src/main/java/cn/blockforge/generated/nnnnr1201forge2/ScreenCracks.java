@@ -43,13 +43,13 @@ public final class ScreenCracks {
             RenderSystem.setShader(WallpaperSlash::shader);
             WallpaperSlash.desktopUniforms();
             RenderSystem.setShaderTexture(0,desktop);
-            BufferUploader.drawWithShader(b.buildOrThrow());
+            RenderCompat.draw(b);
         }
         // ② 裂纹线 + 中心冲击点
         BufferBuilder b=Tesselator.getInstance().begin(VertexFormat.Mode.QUADS,DefaultVertexFormat.POSITION_COLOR);
         for(Hit hit:hits)cracks(b,ps,hit,width,height);
         RenderSystem.setShader(GameRenderer::getPositionColorShader);
-        BufferUploader.drawWithShader(b.buildOrThrow());
+        RenderCompat.draw(b);
         mv.popPose();RenderSystem.restoreProjectionMatrix();
         RenderSystem.enableCull();RenderSystem.depthMask(true);RenderSystem.disableBlend();
     }

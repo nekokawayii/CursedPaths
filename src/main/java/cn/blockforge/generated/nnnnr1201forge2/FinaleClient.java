@@ -196,7 +196,7 @@ public final class FinaleClient {
             int alpha=(int)(42*Math.max(0,1-age/10)),color=switch(shard.shade()){case 0->0xADB9CD;case 1->0xE8F2FF;default->0x748AA4;};
             Client.quad(b,ps,a,c,z,z,(alpha<<24)|color);guiLine(b,ps,a,c,0xFFBFCFDD);guiLine(b,ps,c,z,0xFFA2B5C8);guiLine(b,ps,z,a,0xFFE7F2FF);
         }
-        BufferUploader.drawWithShader(b.buildOrThrow());RenderSystem.enableCull();RenderSystem.disableBlend();
+        RenderCompat.draw(b);RenderSystem.enableCull();RenderSystem.disableBlend();
     }
     private static void guiLine(BufferBuilder b,PoseStack ps,Vec3 a,Vec3 z,int color){Vec3 side=new Vec3(-(z.y-a.y),z.x-a.x,0).normalize().scale(.45);Client.quad(b,ps,a.add(side),z.add(side),z.subtract(side),a.subtract(side),color);}
     private FinaleClient(){}

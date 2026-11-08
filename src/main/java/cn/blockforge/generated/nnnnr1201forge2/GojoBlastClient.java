@@ -67,7 +67,7 @@ public final class GojoBlastClient {
             if(t<0||t>=1)continue;
             bang(b,ps,bg.at(),cam,bg.size(),t);
         }
-        BufferUploader.drawWithShader(b.buildOrThrow());
+        RenderCompat.draw(b);
         RenderSystem.depthMask(true);RenderSystem.enableCull();RenderSystem.disableBlend();
         ps.popPose();
     }

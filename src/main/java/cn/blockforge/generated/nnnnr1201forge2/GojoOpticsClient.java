@@ -180,7 +180,7 @@ public final class GojoOpticsClient {
             RenderSystem.setShaderTexture(0,scene.getColorTextureId());RenderSystem.setShaderTexture(1,scene.getDepthTextureId());RenderSystem.setShaderTexture(2,shadows.getId());
             BufferBuilder b=Tesselator.getInstance().begin(VertexFormat.Mode.QUADS,DefaultVertexFormat.POSITION);
             b.addVertex(-1,-1,0);b.addVertex(1,-1,0);b.addVertex(1,1,0);b.addVertex(-1,1,0);
-            BufferUploader.drawWithShader(b.buildOrThrow());
+            RenderCompat.draw(b);
         }catch(RuntimeException ex){
             if(!warned){com.mojang.logging.LogUtils.getLogger().warn("苍赫茈光学效果暂停，保留原有术式特效",ex);warned=true;}
             // 不清光源：即使后期失败，独立亮核和光环也持续到术式结束。

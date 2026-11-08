@@ -89,7 +89,7 @@ public final class SoulClient {
         // 通道内的风景贴合固定房间，伤害范围仍以实际展开位置为中心。
         Vec3 sceneryCenter=mc.level.dimension()==SoulJourney.CORRIDOR&&d.center.y>=62&&d.center.y<86?new Vec3(0,64,0):d.center;
         RenderSystem.setShaderColor(1,1,1,1);
-        BufferBuilder b=Tesselator.getInstance().begin(VertexFormat.Mode.QUADS,DefaultVertexFormat.POSITION_COLOR);if(d.station)SoulScenery.station(b,ps,sceneryCenter,cam,d.radius);else SoulScenery.draw(b,ps,sceneryCenter,cam,time-d.born+e.getPartialTick().getGameTimeDeltaPartialTick(true));BufferUploader.drawWithShader(b.buildOrThrow());RenderSystem.enableCull();RenderSystem.disableBlend();ps.popPose();
+        BufferBuilder b=Tesselator.getInstance().begin(VertexFormat.Mode.QUADS,DefaultVertexFormat.POSITION_COLOR);if(d.station)SoulScenery.station(b,ps,sceneryCenter,cam,d.radius);else SoulScenery.draw(b,ps,sceneryCenter,cam,time-d.born+e.getPartialTick().getGameTimeDeltaPartialTick(true));RenderCompat.draw(b);RenderSystem.enableCull();RenderSystem.disableBlend();ps.popPose();
     }
     public static void draw(BufferBuilder b,PoseStack ps,Vec3 cam,float partial){
         var mc=Minecraft.getInstance();if(mc.level==null)return;

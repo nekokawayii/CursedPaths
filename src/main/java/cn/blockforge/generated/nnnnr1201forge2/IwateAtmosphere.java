@@ -32,6 +32,6 @@ public final class IwateAtmosphere {
         for(int k=0;k<32;k++){int x=(int)Math.floor(cam.x/16)*16+(k%8-4)*9,z=(int)Math.floor(cam.z/16)*16+(k/8-2)*15;if(!IwateTerrain.forest(x,z))continue;Vec3 point=new Vec3(x,IwateVillage.height(x,z)+2+Math.sin(age*0.025+k)*0.3,z);double d=point.distanceTo(cam);if(d>7&&d<48)ribbon(b,ps,point,point.add(0,0.065,0),0.04,0xB4E1EAC3,cam);}
         // 秋千以附近真实的铜横梁定位，跟随结构放置位置和高度。
         BlockPos base=mc.player.blockPosition();for(BlockPos pos:BlockPos.betweenClosed(base.offset(-12,-2,-12),base.offset(12,8,12))){if(!mc.level.getBlockState(pos).is(net.minecraft.world.level.block.Blocks.EXPOSED_COPPER)||!mc.level.getBlockState(pos.below()).isAir()||!mc.level.getBlockState(pos.east()).is(net.minecraft.world.level.block.Blocks.EXPOSED_COPPER))continue;if(Math.floorMod(pos.getX(),4)!=0)continue;Vec3 pivot=Vec3.atCenterOf(pos),seat=pivot.add(0,-3.2,Math.sin(age*0.024)*0.22);ribbon(b,ps,pivot.add(-1,0,0),seat.add(-1,0,0),0.035,0xFF66594B,cam);ribbon(b,ps,pivot.add(1,0,0),seat.add(1,0,0),0.035,0xFF66594B,cam);ribbon(b,ps,seat.add(-1,0,0),seat.add(1,0,0),0.18,0xFF6D4E35,cam);}
-        BufferUploader.drawWithShader(b.buildOrThrow());RenderSystem.enableCull();RenderSystem.disableBlend();RenderSystem.depthMask(true);ps.popPose();
+        RenderCompat.draw(b);RenderSystem.enableCull();RenderSystem.disableBlend();RenderSystem.depthMask(true);ps.popPose();
     }
 }

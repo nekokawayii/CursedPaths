@@ -548,7 +548,7 @@ public final class Client {
                 for(int j=0;j<20;j++){double a=j*Math.PI/10+v.e.seed()%100;Vec3 dir=new Vec3(Math.cos(a),0.3+(j%4)*0.15,Math.sin(a)).normalize();Vec3 p=v.e.position().add(dir.scale(radius));ribbon(b,ps,p,p.add(dir.scale(1.5+f*3)),0.07,((int)(230*fade)<<24)|0xFFF4BC,cam);}
             }
         }
-        BufferUploader.drawWithShader(b.buildOrThrow());WallpaperSlash.end(ps);
+        RenderCompat.draw(b);WallpaperSlash.end(ps);
         // 桌面是在 end() 里最后 flush 的：红色乱码条必须等它画完再另起一批，才能压在桌面之上。
         BeyondRiftClient.overlay(ps,cam,e.getPartialTick().getGameTimeDeltaPartialTick(true));
         RenderSystem.depthMask(true);RenderSystem.enableCull();RenderSystem.disableBlend();ps.popPose();
@@ -630,7 +630,7 @@ public final class Client {
             Vec3 p=new Vec3(Math.cos(a)*42,94,Math.sin(a)*42),q=new Vec3(Math.cos(a+0.07)*160,94,Math.sin(a+0.07)*160);
             ribbon(b,ps,p,q,0.16,blueSky?0x6530B6FF:voidSky?0x657637A9:0x65FFB7B7,eye);
         }
-        BufferUploader.drawWithShader(b.buildOrThrow());
+        RenderCompat.draw(b);
         // 无量空处的照片覆盖层已移除；保留上面的动态底色、星环和光带。
         RenderSystem.depthMask(true);RenderSystem.enableCull();RenderSystem.disableBlend();ps.popPose();
     }

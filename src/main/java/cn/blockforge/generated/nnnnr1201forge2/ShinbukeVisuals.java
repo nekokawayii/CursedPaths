@@ -130,7 +130,7 @@ public final class ShinbukeVisuals {
                 emit(b,pose,new Vec3(bottom.x+x0-cam.x,bottom.y+y+0.06-cam.y,bottom.z+z0-cam.z),(rgb>>16)&255,(rgb>>8)&255,rgb&255,(int)(alpha*0.25f));
             }
         }
-        BufferUploader.drawWithShader(b.buildOrThrow());
+        RenderCompat.draw(b);
         RenderSystem.enableDepthTest();RenderSystem.depthMask(true);
         RenderSystem.defaultBlendFunc();RenderSystem.enableCull();RenderSystem.disableBlend();
     }

@@ -46,7 +46,7 @@ public final class RuinClient {
             // 丝线靠近实际墙体，地下密度更高。
             for(int i=0;i<48;i++){boolean below=i>=24;Vec3 p=below?local(31+(i%2)*14,2+(i%5),40+(i%13)):local(i%2==0?5.04:42.96,12+i%4,34+i%24);for(int j=0;j<5;j++){Vec3 q=p.add(Math.sin(t*.025+i+j)*.12,.21,.18);Client.ribbon(b,ps,p,q,.012,0x65E3E0F1,cam);p=q;}}
         }
-        BufferUploader.drawWithShader(b.buildOrThrow());RenderSystem.depthMask(true);RenderSystem.enableDepthTest();RenderSystem.enableCull();RenderSystem.disableBlend();
+        RenderCompat.draw(b);RenderSystem.depthMask(true);RenderSystem.enableDepthTest();RenderSystem.enableCull();RenderSystem.disableBlend();
         if(!sky)ghosts(ps,t);
         ps.popPose();
     }

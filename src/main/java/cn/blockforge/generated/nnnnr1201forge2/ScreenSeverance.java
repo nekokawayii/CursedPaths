@@ -30,7 +30,7 @@ public final class ScreenSeverance {
             List<Point> polygon=clip(List.of(new Point(0,0),new Point(w,0),new Point(w,h),new Point(0,h)),w/2,h/2,nx,ny,sign);
             for(int i=1;i+1<polygon.size();i++)for(Point p:List.of(polygon.get(0),polygon.get(i),polygon.get(i+1))){double dx=-sign*nx*offset,dy=-sign*ny*offset;b.addVertex(graphics.pose().last().pose(),(float)(p.x+dx),(float)(p.y+dy),-80).setUv((float)(p.x/w),(float)(1-p.y/h)).setColor(255,255,255,(int)(255*Math.min(1,fade*3)));}
         }
-        BufferUploader.drawWithShader(b.buildOrThrow());RenderSystem.enableCull();RenderSystem.disableBlend();RenderSystem.enableDepthTest();
+        RenderCompat.draw(b);RenderSystem.enableCull();RenderSystem.disableBlend();RenderSystem.enableDepthTest();
     }
     private static List<Point> clip(List<Point> input,double cx,double cy,double nx,double ny,int sign){List<Point> out=new ArrayList<>();Point a=input.get(input.size()-1);double da=((a.x-cx)*nx+(a.y-cy)*ny)*sign;for(Point b:input){double db=((b.x-cx)*nx+(b.y-cy)*ny)*sign;if((da>=0)!=(db>=0)){double t=da/(da-db);out.add(new Point(a.x+(b.x-a.x)*t,a.y+(b.y-a.y)*t));}if(db>=0)out.add(b);a=b;da=db;}return out;}
 }

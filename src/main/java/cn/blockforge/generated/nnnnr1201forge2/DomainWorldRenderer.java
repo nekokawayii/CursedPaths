@@ -91,7 +91,7 @@ public final class DomainWorldRenderer {
                 b.setColor((color>>16)&255,(color>>8)&255,color&255,alpha);
             }
         }
-        BufferUploader.drawWithShader(b.buildOrThrow());
+        RenderCompat.draw(b);
     }
     private static List<Vec3> clip(DomainPresentation.Frame f,List<Vec3> input){
         if(f.phase()==0)return input;
@@ -141,7 +141,7 @@ public final class DomainWorldRenderer {
             Vec3 to=center.add(right.scale(Math.cos(z)*r)).add(up.scale(Math.sin(z)*r));
             Client.ribbon(b,ps,from,to,.2,0xEEFFFFFF,camera);
         }
-        BufferUploader.drawWithShader(b.buildOrThrow());
+        RenderCompat.draw(b);
     }
     private static Vec3 ring(DomainPresentation.Frame f,int ring,double angle,double radius){
         double a=Math.cos(angle)*radius,b=Math.sin(angle)*radius;

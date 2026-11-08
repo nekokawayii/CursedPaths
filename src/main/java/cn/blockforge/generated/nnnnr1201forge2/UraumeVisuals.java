@@ -162,7 +162,7 @@ public final class UraumeVisuals {
                 default -> { }
             }
         }
-        BufferUploader.drawWithShader(b.buildOrThrow());
+        RenderCompat.draw(b);
         RenderSystem.depthMask(true);
         RenderSystem.enableCull();
         RenderSystem.disableBlend();

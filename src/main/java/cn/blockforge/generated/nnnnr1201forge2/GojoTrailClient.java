@@ -68,7 +68,7 @@ public final class GojoTrailClient {
         RenderSystem.setShaderColor(1,1,1,1);
         BufferBuilder b=Tesselator.getInstance().begin(VertexFormat.Mode.QUADS,DefaultVertexFormat.POSITION_COLOR);
         for(Trail t:trails.values())ribbon(b,ps,t,cam,e.getPartialTick().getGameTimeDeltaPartialTick(true));
-        BufferUploader.drawWithShader(b.buildOrThrow());
+        RenderCompat.draw(b);
         RenderSystem.depthMask(true);RenderSystem.enableCull();RenderSystem.disableBlend();
         ps.popPose();
     }

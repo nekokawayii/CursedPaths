@@ -113,7 +113,7 @@ public final class GojoVoidClient {
             RenderSystem.depthMask(false);RenderSystem.enableDepthTest();
             BufferBuilder b=Tesselator.getInstance().begin(VertexFormat.Mode.QUADS,DefaultVertexFormat.POSITION_COLOR);
             sphereSilhouette(b,ps,cam);
-            BufferUploader.drawWithShader(b.buildOrThrow());
+            RenderCompat.draw(b);
             RenderSystem.depthMask(true);RenderSystem.enableCull();RenderSystem.disableBlend();
             ps.popPose();return;
         }
@@ -124,7 +124,7 @@ public final class GojoVoidClient {
         BufferBuilder b=Tesselator.getInstance().begin(VertexFormat.Mode.QUADS,DefaultVertexFormat.POSITION_COLOR);
         backdrop(b,ps,e.getCamera(),cam); // 纯黑底衬：地形、天空、领域雾全部让位
         hole(b,ps,cam);                   // 纯黑盘面 + 白色硬边
-        BufferUploader.drawWithShader(b.buildOrThrow());
+        RenderCompat.draw(b);
         // 地形深度已经被底衬盖住，清掉它，远处粒子（银河/星空/彩线）才不会被看不见的方块挡掉；
         // 实体在后面的阶段重新写入深度，所以怪物与玩家仍然压在画布之上。
         // 地形深度已经被底衬盖住，清掉它，远处粒子（银河/星空/彩线）才不会被看不见的方块挡掉；

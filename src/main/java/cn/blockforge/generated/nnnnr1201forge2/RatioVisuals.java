@@ -145,13 +145,13 @@ public final class RatioVisuals {
         for (Line line : LINES) drawLine(b, ps, line, cam, now);
         for (Clock clock : CLOCKS) drawClock(b, ps, clock, cam, now);
         for (Crit crit : CRITS) drawCrit(b, ps, crit, cam, now);
-        BufferUploader.drawWithShader(b.buildOrThrow());
+        RenderCompat.draw(b);
         // 7:3 数轴：画在最上层（关深度测试），直接盖过生物与地形，永远不会被身体挡掉
         if (!AXES.isEmpty()) {
             RenderSystem.disableDepthTest();
             b = Tesselator.getInstance().begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_COLOR);
             for (Axis axis : AXES.values()) drawAxis(b, ps, mc, axis, cam, partial, now);
-            BufferUploader.drawWithShader(b.buildOrThrow());
+            RenderCompat.draw(b);
             RenderSystem.enableDepthTest();
         }
         RenderSystem.depthMask(true);

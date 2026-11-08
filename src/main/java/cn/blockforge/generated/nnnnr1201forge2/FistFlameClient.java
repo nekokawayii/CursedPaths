@@ -294,7 +294,7 @@ public final class FistFlameClient {
                     worldQuad(b,at,right,up,w,h,AURA_CORE,0.6);   // 内芯
                 }
             }
-            BufferUploader.drawWithShader(b.buildOrThrow());
+            RenderCompat.draw(b);
             RenderSystem.enableCull();RenderSystem.disableBlend();
             note(String.format(Locale.ROOT,"自绘层(第一人称) power=%.2f 宽=%.2f 段数=%d 色=%08X",power,AURA_WIDTH*power,AURA_SEG,AURA_IN));
         }catch(Throwable t){fail("第一人称取手部位置",t);}

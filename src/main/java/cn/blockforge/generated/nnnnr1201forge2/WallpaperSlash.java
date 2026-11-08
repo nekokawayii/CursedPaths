@@ -37,7 +37,7 @@ public final class WallpaperSlash {
         if(owner!=null&&WallpaperClient.hasImage(owner))pending.add(new Cut(owner,p,q,r,s,Math.min(1,alpha)));
         // 黑芯和包边也占绘图内存：关闭共享、下载中或低阶段同样按斩击数分批。
         if(++batchCuts>=BATCH_SIZE){
-            BufferUploader.drawWithShader(b.buildOrThrow());flush(ps);batchCuts=0;
+            RenderCompat.draw(b);flush(ps);batchCuts=0;
             b = Tesselator.getInstance().begin(VertexFormat.Mode.QUADS,DefaultVertexFormat.POSITION_COLOR);
         }
     }
@@ -92,7 +92,7 @@ public final class WallpaperSlash {
                     var polygon=WallpaperProjection.clip(List.of(project(transform,c.a),project(transform,c.b),project(transform,c.c),project(transform,c.d)));
                     for(int i=1;i+1<polygon.size();i++){screenVertex(b,polygon.get(0),c.alpha,ox,oy,sx,sy);screenVertex(b,polygon.get(i),c.alpha,ox,oy,sx,sy);screenVertex(b,polygon.get(i+1),c.alpha,ox,oy,sx,sy);}
                 }
-                BufferUploader.drawWithShader(b.buildOrThrow());
+                RenderCompat.draw(b);
             }
         }finally{pending.clear();modelView.popPose();RenderSystem.setProjectionMatrix(projection,sorting);RenderSystem.setShaderTexture(0,texture);RenderSystem.setShaderColor(color[0],color[1],color[2],color[3]);RenderSystem.setShader(GameRenderer::getPositionColorShader);}
     }

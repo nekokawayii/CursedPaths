@@ -87,7 +87,7 @@ public final class ObserverClient {
         Client.quad(b,ps,new Vec3(r,-r,-r),new Vec3(r,-r,r),new Vec3(r,r,r),new Vec3(r,r,-r),c);
         Client.quad(b,ps,new Vec3(-r,r,-r),new Vec3(r,r,-r),new Vec3(r,r,r),new Vec3(-r,r,r),c);
         Client.quad(b,ps,new Vec3(-r,-r,-r),new Vec3(-r,-r,r),new Vec3(r,-r,r),new Vec3(r,-r,-r),c);
-        BufferUploader.drawWithShader(b.buildOrThrow());RenderSystem.depthMask(true);RenderSystem.enableCull();RenderSystem.disableBlend();ps.popPose();
+        RenderCompat.draw(b);RenderSystem.depthMask(true);RenderSystem.enableCull();RenderSystem.disableBlend();ps.popPose();
     }
     @SubscribeEvent public static void overlays(RenderGuiLayerEvent.Pre e){if(active)e.setCanceled(true);}
     @SubscribeEvent public static void input(MovementInputUpdateEvent e){

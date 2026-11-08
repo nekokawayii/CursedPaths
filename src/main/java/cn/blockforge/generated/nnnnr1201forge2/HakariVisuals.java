@@ -78,7 +78,7 @@ public final class HakariVisuals {
                 Client.ribbon(builder, ps, corner, corner.add(inward), 0.05, core, cam);
             }
         }
-        com.mojang.blaze3d.vertex.BufferUploader.drawWithShader(builder.buildOrThrow());
+        RenderCompat.draw(builder);
         com.mojang.blaze3d.systems.RenderSystem.depthMask(true);
         com.mojang.blaze3d.systems.RenderSystem.enableCull();
         com.mojang.blaze3d.systems.RenderSystem.disableBlend();

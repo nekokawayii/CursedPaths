@@ -334,7 +334,7 @@ public final class KashimoVisuals {
         for (var entry : nets.entrySet()) drawNet(b, ps, mc, entry.getKey(), cam);
         for (Ring3 r : rings) drawRing3(b, ps, r, cam, now);
         for (Bolt v : bolts) drawBolt(b, ps, v, cam, now);
-        BufferUploader.drawWithShader(b.buildOrThrow());
+        RenderCompat.draw(b);
         RenderSystem.depthMask(true);
         RenderSystem.enableCull();
         RenderSystem.disableBlend();

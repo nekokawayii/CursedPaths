@@ -29,7 +29,7 @@ public final class GojoGravityClient {
             RenderSystem.setShader(GameRenderer::getPositionColorShader);RenderSystem.setShaderColor(1,1,1,1);
             BufferBuilder b=Tesselator.getInstance().begin(VertexFormat.Mode.QUADS,DefaultVertexFormat.POSITION_COLOR);
             for(Orb orb:orbs)orb(b,ps,orb,camera,time);
-            BufferUploader.drawWithShader(b.buildOrThrow());
+            RenderCompat.draw(b);
         }finally{
             ps.popPose();RenderSystem.depthMask(mask);if(depth)RenderSystem.enableDepthTest();else RenderSystem.disableDepthTest();
             if(cull)RenderSystem.enableCull();else RenderSystem.disableCull();

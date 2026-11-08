@@ -190,7 +190,7 @@ public final class BlackFlashMarks {
             int a=(int)((0.55+0.45*Math.abs(Math.sin(t*0.6)))*255*Math.min(1,left*3));
             Vec3 position=point(m);if(position!=null)ring(b,ps,position,MARK_RADIUS,a,cam);
         }
-        BufferUploader.drawWithShader(b.buildOrThrow());
+        RenderCompat.draw(b);
         ps.popPose();RenderSystem.enableCull();RenderSystem.enableDepthTest();RenderSystem.disableBlend();
     }
     /** 一个水平红圈（朝向相机的细环，用两圈三角带近似）。 */

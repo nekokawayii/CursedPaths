@@ -192,7 +192,7 @@ public final class NaoyaVisuals {
                 Client.ribbon(builder, ps, from, to, 0.05, (alpha << 24) | 0xCFEFFF, cam);
             }
         }
-        BufferUploader.drawWithShader(builder.buildOrThrow());
+        RenderCompat.draw(builder);
         RenderSystem.depthMask(true);
         RenderSystem.enableCull();
         RenderSystem.disableBlend();

@@ -103,7 +103,7 @@ public final class MahoragaWheelRenderer {
             // 内侧亮环（后随）
             band(b,pose,a0,a1,bright,halfWidth*0.75f,red,green,blue,(int)(alpha*0.55f),alpha);
         }
-        BufferUploader.drawWithShader(b.buildOrThrow());
+        RenderCompat.draw(b);
         RenderSystem.enableDepthTest();RenderSystem.depthMask(true);
         RenderSystem.defaultBlendFunc();RenderSystem.enableCull();RenderSystem.disableBlend();
         ps.popPose();
@@ -126,7 +126,7 @@ public final class MahoragaWheelRenderer {
             double a0=i*Math.PI*2/48,a1=(i+1)*Math.PI*2/48;
             band(b,pose,a0,a1,radius,thickness,red,green,blue,alpha/3,alpha);
         }
-        BufferUploader.drawWithShader(b.buildOrThrow());
+        RenderCompat.draw(b);
         RenderSystem.enableDepthTest();RenderSystem.depthMask(true);
         RenderSystem.defaultBlendFunc();RenderSystem.enableCull();RenderSystem.disableBlend();
         ps.popPose();

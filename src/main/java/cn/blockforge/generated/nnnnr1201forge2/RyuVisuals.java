@@ -191,7 +191,7 @@ public final class RyuVisuals {
         for (Rise rise : RISES) drawRise(b, ps, rise, cam, now);
         for (Burst2 burst : BURSTS2) drawBurst2(b, ps, burst, cam, now);
         for (Spark spark : SPARKS) drawSpark(b, ps, spark, cam, now);
-        BufferUploader.drawWithShader(b.buildOrThrow());
+        RenderCompat.draw(b);
         RenderSystem.depthMask(true);
         RenderSystem.enableCull();
         RenderSystem.disableBlend();
@@ -399,7 +399,7 @@ public final class RyuVisuals {
         RenderSystem.blendFunc(org.lwjgl.opengl.GL11.GL_SRC_ALPHA, org.lwjgl.opengl.GL11.GL_ONE);
         BufferBuilder b=Tesselator.getInstance().begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX_COLOR);
         sphereQuads(b, ps, center, radius * 0.985, ((int) (255 * pulse) << 24) | 0xFFFFFF, time * 0.15f, 1f, true);
-        BufferUploader.drawWithShader(b.buildOrThrow());
+        RenderCompat.draw(b);
         RenderSystem.defaultBlendFunc();
         RenderSystem.depthMask(true);
         RenderSystem.enableCull();

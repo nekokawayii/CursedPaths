@@ -84,7 +84,7 @@ public final class CullingCubeClient {
         Client.quad(b, ps, new Vec3(mx.x, mn.y, mn.z), new Vec3(mx.x, mx.y, mn.z), new Vec3(mx.x, mx.y, mx.z), new Vec3(mx.x, mn.y, mx.z), face);
         Client.quad(b, ps, new Vec3(mn.x, mn.y, mn.z), new Vec3(mn.x, mx.y, mn.z), new Vec3(mx.x, mx.y, mn.z), new Vec3(mx.x, mn.y, mn.z), face);
         Client.quad(b, ps, new Vec3(mn.x, mn.y, mx.z), new Vec3(mx.x, mn.y, mx.z), new Vec3(mx.x, mx.y, mx.z), new Vec3(mn.x, mx.y, mx.z), face);
-        BufferUploader.drawWithShader(b.buildOrThrow());
+        RenderCompat.draw(b);
         // 十二条棱（暗红发光）
         
         b = Tesselator.getInstance().begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_COLOR);
@@ -95,7 +95,7 @@ public final class CullingCubeClient {
         };
         int[][] edges = {{0,1},{1,2},{2,3},{3,0},{4,5},{5,6},{6,7},{7,4},{0,4},{1,5},{2,6},{3,7}};
         for (int[] pair : edges) Client.ribbon(b, ps, v[pair[0]], v[pair[1]], 0.12, edge, cam);
-        BufferUploader.drawWithShader(b.buildOrThrow());
+        RenderCompat.draw(b);
         RenderSystem.depthMask(true);
         RenderSystem.enableCull();
         RenderSystem.disableBlend();

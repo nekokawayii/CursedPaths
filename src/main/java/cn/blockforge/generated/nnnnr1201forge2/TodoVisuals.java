@@ -118,7 +118,7 @@ public final class TodoVisuals {
             mark(b, ps, at, Math.max(0.45, entity.getBbWidth() * 0.75), now, cam);
         }
         for (Flash flash : flashes) drawFlash(b, ps, flash, cam, now);
-        BufferUploader.drawWithShader(b.buildOrThrow());
+        RenderCompat.draw(b);
         RenderSystem.depthMask(true);
         RenderSystem.enableCull();
         RenderSystem.disableBlend();
