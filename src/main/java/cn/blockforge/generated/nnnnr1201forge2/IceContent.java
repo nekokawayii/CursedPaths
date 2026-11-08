@@ -72,7 +72,7 @@ public final class IceContent {
     }
     private static final Map<String,Map<String,String>> chinese=new HashMap<>();
     private static String names(ItemStack stack){
-        ResourceLocation id=BuiltInRegistries.ITEMS.getKey(stack.getItem());if(id==null)return stack.getHoverName().getString();
+        ResourceLocation id=BuiltInRegistries.ITEM.getKey(stack.getItem());if(id==null)return stack.getHoverName().getString();
         Map<String,String> translations=chinese.computeIfAbsent(id.getNamespace(),ns->{
             Map<String,String> map=new HashMap<>();
             try(var stream=IceContent.class.getResourceAsStream("/assets/"+ns+"/lang/zh_cn.json")){

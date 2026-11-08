@@ -338,8 +338,7 @@ public final class MahitoTransfigure {
         if (!isTransfigured(e.getItemStack()) || e.getItemStack().getTagElement(BASE_TAG) == null) return;
         e.setCanceled(true);
         if (e.getLevel().isClientSide) {
-            net.neoforged.fml.DistExecutor.unsafeRunWhenOn(net.neoforged.api.distmarker.Dist.CLIENT,
-                () -> () -> TransfigureScreen.open(1));
+            cn.blockforge.generated.nnnnr1201forge2.CompatClient.runWhenClient(()->TransfigureScreen.open(1));
         }
     }
 

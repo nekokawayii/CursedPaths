@@ -60,7 +60,7 @@ public final class CreativeRestorer extends Item {
         progress.putDouble("Energy",Curse.maximum(p));
         for(String key:List.copyOf(progress.getAllKeys()))if(key.startsWith("CharacterSkillCooldown_")||key.equals("CharacterGlobalCooldown"))progress.remove(key);
         progress.putDouble("TojiStamina",character.toji.TojiCombat.maximum(p));progress.remove("TojiAirUsed");progress.remove("TojiRecoveryDelay");progress.remove("TojiLeapLock");
-        for(Item item:BuiltInRegistries.ITEMS)if(p.getCooldowns().isOnCooldown(item))p.getCooldowns().removeCooldown(item);
+        for(Item item:BuiltInRegistries.ITEM)if(p.getCooldowns().isOnCooldown(item))p.getCooldowns().removeCooldown(item);
         Network.CHANNEL.send(cn.blockforge.generated.nnnnr1201forge2.SimpleChannel.Target.player(p),new Network.TestReset());
         Curse.sync(p);p.displayClientMessage(Component.literal("测试恢复完成：生命、咒力已满；熔断、冷却与负面状态已清除，成长保留"),true);
     }

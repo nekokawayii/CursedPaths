@@ -24,5 +24,7 @@ public final class CompatNbt {
         CompoundTag tag = read(stack);
         return tag != null && tag.contains(key, 10) ? tag.getCompound(key) : null;
     }
+    /** 1.21：ItemStack.hasTag() 已移除。 */
+    public static boolean has(ItemStack stack) { return read(stack) != null; }
     private CompatNbt() { }
 }

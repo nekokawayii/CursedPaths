@@ -177,7 +177,7 @@ public final class ThousandMileChain {
             &&!s.owner.hasDisconnected()&&!s.owner.isSpectator()&&!PrisonSystem.locked(s.owner);
         ItemStack stack=s.owner.getMainHandItem();
         return s.owner.level()==s.level&&s.owner.isAlive()&&!s.owner.isRemoved()&&!s.owner.hasDisconnected()&&!s.owner.isSpectator()
-            &&ThousandMileChainItem.isChain(stack)&&stack.getCount()==1&&stack.hasTag()&&CompatNbt.read(stack).hasUUID("ThousandMileId")
+            &&ThousandMileChainItem.isChain(stack)&&stack.getCount()==1&&cn.blockforge.generated.nnnnr1201forge2.CompatNbt.has(stack)&&CompatNbt.read(stack).hasUUID("ThousandMileId")
             &&s.itemId.equals(CompatNbt.read(stack).getUUID("ThousandMileId"))&&!PrisonSystem.locked(s.owner);
     }
     @SubscribeEvent public static void tick(ServerTickEvent.Post e) {

@@ -16,7 +16,7 @@ public final class GeneratedMod {
         GeneratedMod.MOD_BUS
             .addListener((net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent e) -> SimpleChannel.register(e));
         if(net.neoforged.fml.loading.FMLEnvironment.dist==net.neoforged.api.distmarker.Dist.CLIENT)
-            net.neoforged.fml.DistExecutor.unsafeRunWhenOn(net.neoforged.api.distmarker.Dist.CLIENT,()->ConfigClient::registerScreen);
+            cn.blockforge.generated.nnnnr1201forge2.CompatClient.runWhenClient(()->ConfigClient.registerScreen());
         TechniqueConfig.register();
         NeoForge.EVENT_BUS.register(TechniqueInput.class);
         NeoForge.EVENT_BUS.register(CombatExpansion.class);
@@ -295,6 +295,6 @@ public final class GeneratedMod {
         NeoForge.EVENT_BUS.register(EternalLove.class);
         if(net.neoforged.fml.ModList.get().isLoaded("touhou_little_maid"))NeoForge.EVENT_BUS.register(MaidDuel.class);
         // 专用服务器不加载任何客户端类；客户端关键事件改为从入口显式接入。
-        net.neoforged.fml.DistExecutor.safeRunWhenOn(net.neoforged.api.distmarker.Dist.CLIENT,()->ClientBootstrap::install);
+        cn.blockforge.generated.nnnnr1201forge2.CompatClient.runWhenClient(()->ClientBootstrap.install());
     }
 }

@@ -18,7 +18,7 @@ import net.minecraft.world.phys.Vec3;
 import net.minecraft.core.registries.BuiltInRegistries;
 
 public final class Content {
-    public static final DeferredRegister<Item> ITEMS=DeferredRegister.create(BuiltInRegistries.ITEMS,"jujutsu_kaisen_cursed_paths");
+    public static final DeferredRegister<Item> ITEMS=DeferredRegister.create(BuiltInRegistries.ITEM,"jujutsu_kaisen_cursed_paths");
     public static final DeferredRegister<EntityType<?>> ENTITIES=DeferredRegister.create(BuiltInRegistries.ENTITY_TYPE,"jujutsu_kaisen_cursed_paths");
     public static final DeferredHolder<EntityType<?>, EntityType<BuddhaEntity>> BUDDHA=ENTITIES.register("sokushinbutsu",()->EntityType.Builder.of(BuddhaEntity::new,MobCategory.MONSTER).sized(1.7f,4.0f).clientTrackingRange(16).updateInterval(1).build("jujutsu_kaisen_cursed_paths:sokushinbutsu"));
     public static final DeferredHolder<EntityType<?>, EntityType<ParasiteEntity>> PARASITE=ENTITIES.register("parasitic_buddha",()->EntityType.Builder.of(ParasiteEntity::new,MobCategory.MONSTER).sized(1.5f,3.0f).clientTrackingRange(10).build("jujutsu_kaisen_cursed_paths:parasitic_buddha"));
@@ -210,8 +210,7 @@ public final class Content {
         ()->new character.mahito.TransfiguredItem(new Item.Properties().stacksTo(1).rarity(Rarity.EPIC)){
             @Override public net.minecraft.world.InteractionResultHolder<ItemStack> use(net.minecraft.world.level.Level level,
                     net.minecraft.world.entity.player.Player p, net.minecraft.world.InteractionHand hand){
-                if(level.isClientSide) net.neoforged.fml.DistExecutor.unsafeRunWhenOn(
-                    net.neoforged.api.distmarker.Dist.CLIENT, ()->()->character.mahito.TransfigureScreen.open(1));
+                if(level.isClientSide) cn.blockforge.generated.nnnnr1201forge2.CompatClient.runWhenClient(()->character.mahito.TransfigureScreen.open(1));
                 return net.minecraft.world.InteractionResultHolder.success(p.getItemInHand(hand));
             }
         });
@@ -316,7 +315,7 @@ public final class Content {
 
     /** 领域内的坟头（插着鬼妖村正，右键拔出）。 */
     public static final net.neoforged.neoforge.registries.DeferredRegister<net.minecraft.world.level.block.Block> YUTA_BLOCKS=
-        net.neoforged.neoforge.registries.DeferredRegister.create(net.minecraft.core.registries.BuiltInRegistries.BLOCKS,"jujutsu_kaisen_cursed_paths");
+        net.neoforged.neoforge.registries.DeferredRegister.create(net.minecraft.core.registries.BuiltInRegistries.BLOCK,"jujutsu_kaisen_cursed_paths");
     public static final DeferredHolder<?, net.minecraft.world.level.block.Block> YUTA_GRAVE=YUTA_BLOCKS.register("yuta_grave",
         ()->new character.yuta.YutaGraveBlock(net.minecraft.world.level.block.state.BlockBehaviour.Properties.of()
             .noCollission().strength(0.4f).noOcclusion().lightLevel(st->7)));

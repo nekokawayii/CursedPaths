@@ -19,7 +19,7 @@ import net.neoforged.neoforge.event.BuildCreativeModeTabContentsEvent;
 import net.minecraft.core.registries.BuiltInRegistries;
 
 public final class ProgressionContent {
-    public static final DeferredRegister<Block> BLOCKS=DeferredRegister.create(BuiltInRegistries.BLOCKS,"jujutsu_kaisen_cursed_paths");
+    public static final DeferredRegister<Block> BLOCKS=DeferredRegister.create(BuiltInRegistries.BLOCK,"jujutsu_kaisen_cursed_paths");
     private static final List<DeferredHolder<Item, Item>> ALL=new ArrayList<>();
     private static DeferredHolder<Item, Item> item(String id,java.util.function.Supplier<Item> factory){var r=Content.ITEMS.register(id,factory);ALL.add(r);return r;}
     public static final DeferredHolder<Item, Item> MEMORY=item("sukuna_memory",character.TechniqueBook::new);

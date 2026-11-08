@@ -22,7 +22,7 @@ public final class ThousandMileChainItem extends Item {
     public ThousandMileChainItem() { super(new Properties().stacksTo(1).rarity(Rarity.EPIC).fireResistant()); }
     public static boolean isChain(ItemStack stack) { return stack.getItem() instanceof ThousandMileChainItem; }
     public static ItemStack attachment(ItemStack stack) {
-        return stack.hasTag() ? CompatItem.load(CompatNbt.read(stack).getCompound(ATTACHMENT)) : ItemStack.EMPTY;
+        return cn.blockforge.generated.nnnnr1201forge2.CompatNbt.has(stack) ? CompatItem.load(CompatNbt.read(stack).getCompound(ATTACHMENT)) : ItemStack.EMPTY;
     }
     public static boolean armed(ItemStack stack) { return isSpear(attachment(stack)); }
     public static boolean isSpear(ItemStack stack) { return stack.is(Content.TENKA_SPEAR.get()); }
