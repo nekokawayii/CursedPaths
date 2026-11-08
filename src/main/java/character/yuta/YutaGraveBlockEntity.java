@@ -29,7 +29,7 @@ public class YutaGraveBlockEntity extends BlockEntity {
 
     @Override
     public void load(CompoundTag tag) {
-        super.load(tag);
+        super.loadAdditional(tag, provider);
         taken = tag.getBoolean("Taken");
     }
 }

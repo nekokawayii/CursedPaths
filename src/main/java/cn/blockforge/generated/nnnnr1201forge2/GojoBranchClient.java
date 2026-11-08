@@ -100,7 +100,7 @@ public final class GojoBranchClient {
             }
         }
         ps.popPose();
-        com.mojang.blaze3d.vertex.Tesselator.getInstance().end();
+        
     }
 
     /** 黑蓝微型黑洞：三层黑环 + 向内收的螺旋吸积线 + 中心纯黑盘。 */

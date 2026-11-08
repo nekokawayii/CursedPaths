@@ -116,7 +116,7 @@ public final class RitualBlockEntity extends BlockEntity {
     public void destroy(){if(running())fail("祭坛被摧毁");if(!output.isEmpty()){Block.popResource(level,worldPosition,output);output=ItemStack.EMPTY;}}
     private void changed(){setChanged();if(level!=null)level.sendBlockUpdated(worldPosition,getBlockState(),getBlockState(),3);}
     @Override protected void saveAdditional(CompoundTag n, net.minecraft.core.HolderLookup.Provider provider){super.saveAdditional(n, provider);n.putBoolean("VolcanicFurnace",volcanicFurnace);n.putString("Recipe",recipeId);n.putInt("Elapsed",elapsed);n.putInt("Selection",selection);n.putInt("Strikes",strikes);if(owner!=null)n.putUUID("Owner",owner);n.put("Output",CompatItem.save(output));}
-    @Override public void load(CompoundTag n){super.load(n);volcanicFurnace=n.getBoolean("VolcanicFurnace");recipeId=n.getString("Recipe");elapsed=n.getInt("Elapsed");selection=n.getInt("Selection");strikes=n.getInt("Strikes");owner=n.hasUUID("Owner")?n.getUUID("Owner"):null;output=CompatItem.load(n.getCompound("Output"));}
+    @Override public void load(CompoundTag n){super.loadAdditional(n, provider);volcanicFurnace=n.getBoolean("VolcanicFurnace");recipeId=n.getString("Recipe");elapsed=n.getInt("Elapsed");selection=n.getInt("Selection");strikes=n.getInt("Strikes");owner=n.hasUUID("Owner")?n.getUUID("Owner"):null;output=CompatItem.load(n.getCompound("Output"));}
     @Override public CompoundTag getUpdateTag(net.minecraft.core.HolderLookup.Provider provider){return saveWithoutMetadata(provider);}
     @Override public ClientboundBlockEntityDataPacket getUpdatePacket(){return ClientboundBlockEntityDataPacket.create(this);}
 }
