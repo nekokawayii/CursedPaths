@@ -11,7 +11,7 @@ import net.minecraft.world.phys.BlockHitResult;
 public final class SealPillarBlock extends Block {
     public static final BooleanProperty INLAID=BooleanProperty.create("inlaid");
     private final boolean special;
-    public SealPillarBlock(boolean special){super(BlockBehaviour.Properties.copy(Blocks.DEEPSLATE_BRICKS).strength(6,1200).lightLevel(s->s.getValue(INLAID)?12:0));this.special=special;registerDefaultState(stateDefinition.any().setValue(INLAID,false));}
+    public SealPillarBlock(boolean special){super(BlockBehaviour.Properties.ofFullCopy(Blocks.DEEPSLATE_BRICKS).strength(6,1200).lightLevel(s->s.getValue(INLAID)?12:0));this.special=special;registerDefaultState(stateDefinition.any().setValue(INLAID,false));}
     @Override protected void createBlockStateDefinition(StateDefinition.Builder<Block,BlockState> b){b.add(INLAID);}
     @Override public InteractionResult use(BlockState s,Level l,BlockPos pos,Player p,InteractionHand h,BlockHitResult hit){
         if(!special||!p.getItemInHand(h).is(ExpeditionContent.item("star_iron_fragment"))||s.getValue(INLAID))return InteractionResult.PASS;

@@ -17,8 +17,8 @@ public final class MahitoContent {
         @Override public boolean isDurationEffectTick(int duration,int amplifier){return duration%20==0;}
         @Override public void applyEffectTick(LivingEntity entity,int amplifier){entity.hurt(entity.damageSources().magic(),1+amplifier);}
     });
-    public static final DeferredHolder<Block, Block> FLESH=ProgressionContent.BLOCKS.register("mahito_flesh",()->new Block(BlockBehaviour.Properties.copy(Blocks.SLIME_BLOCK).strength(3).speedFactor(.85f).lightLevel(s->4)));
-    public static final DeferredHolder<Block, Block> FACES=ProgressionContent.BLOCKS.register("mahito_faces",()->new Block(BlockBehaviour.Properties.copy(Blocks.OBSIDIAN).strength(50,3600000).lightLevel(s->7)));
+    public static final DeferredHolder<Block, Block> FLESH=ProgressionContent.BLOCKS.register("mahito_flesh",()->new Block(BlockBehaviour.Properties.ofFullCopy(Blocks.SLIME_BLOCK).strength(3).speedFactor(.85f).lightLevel(s->4)));
+    public static final DeferredHolder<Block, Block> FACES=ProgressionContent.BLOCKS.register("mahito_faces",()->new Block(BlockBehaviour.Properties.ofFullCopy(Blocks.OBSIDIAN).strength(50,3600000).lightLevel(s->7)));
     public static void init(net.neoforged.bus.api.IEventBus bus){bus.addListener((net.neoforged.neoforge.event.entity.EntityAttributeCreationEvent event)->event.put(PUPPET.get(),MahitoPuppetEntity.attributes().build()));}
     private MahitoContent(){}
 }

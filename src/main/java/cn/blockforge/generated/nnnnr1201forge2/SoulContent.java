@@ -23,7 +23,7 @@ public final class SoulContent {
     public static final DeferredHolder<EntityType<?>, EntityType<GuardianEntity>> GUARDIAN=Content.ENTITIES.register("yuji_guardian",()->EntityType.Builder.of(GuardianEntity::new,MobCategory.MONSTER).sized(0.6f,1.8f).clientTrackingRange(16).updateInterval(1).build("jujutsu_kaisen_cursed_paths:yuji_guardian"));
     public static final DeferredHolder<Item, Item> GUARDIAN_EGG=Content.ITEMS.register("yuji_guardian_spawn_egg",()->new net.neoforged.neoforge.common.ForgeSpawnEggItem(GUARDIAN,0x191919,0xc88484,new Item.Properties()));
     /** 黑色、通往地下的灵魂通道传送门；右键在遗迹入口和灵魂通道之间切换。 */
-    public static final DeferredHolder<Block, Block> GATE=ProgressionContent.BLOCKS.register("soul_gate",()->new Block(BlockBehaviour.Properties.copy(Blocks.OBSIDIAN).strength(-1,3600000).noCollission().noOcclusion().lightLevel(s->2)){
+    public static final DeferredHolder<Block, Block> GATE=ProgressionContent.BLOCKS.register("soul_gate",()->new Block(BlockBehaviour.Properties.ofFullCopy(Blocks.OBSIDIAN).strength(-1,3600000).noCollission().noOcclusion().lightLevel(s->2)){
         @Override public void entityInside(net.minecraft.world.level.block.state.BlockState state,net.minecraft.world.level.Level level,net.minecraft.core.BlockPos pos,Entity entity){
             if(entity instanceof ServerPlayer p&&level.getGameTime()>=p.getPersistentData().getLong("SukunaGateCooldown")){p.getPersistentData().putLong("SukunaGateCooldown",level.getGameTime()+80);SoulJourney.enter(p);}
         }
@@ -31,16 +31,16 @@ public final class SoulContent {
             if(player instanceof ServerPlayer p)SoulJourney.enter(p);return InteractionResult.sidedSuccess(level.isClientSide);
         }
     });
-    public static final DeferredHolder<Block, Block> PASSAGE=ProgressionContent.BLOCKS.register("soul_passage",()->new Block(BlockBehaviour.Properties.copy(Blocks.OBSIDIAN).strength(-1,3600000).lightLevel(s->8)){
+    public static final DeferredHolder<Block, Block> PASSAGE=ProgressionContent.BLOCKS.register("soul_passage",()->new Block(BlockBehaviour.Properties.ofFullCopy(Blocks.OBSIDIAN).strength(-1,3600000).lightLevel(s->8)){
         @Override public InteractionResult use(net.minecraft.world.level.block.state.BlockState state,net.minecraft.world.level.Level level,net.minecraft.core.BlockPos pos,net.minecraft.world.entity.player.Player player,InteractionHand hand,net.minecraft.world.phys.BlockHitResult hit){if(player instanceof ServerPlayer p)SoulJourney.passage(p,pos);return InteractionResult.sidedSuccess(level.isClientSide);}
     });
-    public static final DeferredHolder<Block, Block> RICE=ProgressionContent.BLOCKS.register("iwate_rice",()->new Block(BlockBehaviour.Properties.copy(Blocks.GRASS).noCollission().noOcclusion().strength(0)));
-    public static final DeferredHolder<Block, Block> THREAD=ProgressionContent.BLOCKS.register("soul_thread",()->new Block(BlockBehaviour.Properties.copy(Blocks.COBWEB).noCollission().strength(0.2f).lightLevel(s->3)){
+    public static final DeferredHolder<Block, Block> RICE=ProgressionContent.BLOCKS.register("iwate_rice",()->new Block(BlockBehaviour.Properties.ofFullCopy(Blocks.GRASS).noCollission().noOcclusion().strength(0)));
+    public static final DeferredHolder<Block, Block> THREAD=ProgressionContent.BLOCKS.register("soul_thread",()->new Block(BlockBehaviour.Properties.ofFullCopy(Blocks.COBWEB).noCollission().strength(0.2f).lightLevel(s->3)){
         @Override public void entityInside(net.minecraft.world.level.block.state.BlockState state,net.minecraft.world.level.Level level,net.minecraft.core.BlockPos pos,Entity entity){
             if(!level.isClientSide&&entity instanceof LivingEntity living)living.addEffect(new net.minecraft.world.effect.MobEffectInstance(net.minecraft.world.effect.MobEffects.MOVEMENT_SLOWDOWN,30,0,false,false));
         }
     });
-    public static final DeferredHolder<Block, Block> PHOTO_SLOT=ProgressionContent.BLOCKS.register("yuji_photo_slot",()->new Block(BlockBehaviour.Properties.copy(Blocks.POLISHED_DEEPSLATE).strength(-1,3600000).lightLevel(s->5)){
+    public static final DeferredHolder<Block, Block> PHOTO_SLOT=ProgressionContent.BLOCKS.register("yuji_photo_slot",()->new Block(BlockBehaviour.Properties.ofFullCopy(Blocks.POLISHED_DEEPSLATE).strength(-1,3600000).lightLevel(s->5)){
         @Override public InteractionResult use(net.minecraft.world.level.block.state.BlockState state,net.minecraft.world.level.Level level,net.minecraft.core.BlockPos pos,net.minecraft.world.entity.player.Player player,InteractionHand hand,net.minecraft.world.phys.BlockHitResult hit){
             ItemStack stack=player.getItemInHand(hand);if(!(player instanceof ServerPlayer p))return InteractionResult.SUCCESS;
             if(!stack.is(Content.YUJI_FAMILY_PHOTO.get())){p.displayClientMessage(net.minecraft.network.chat.Component.literal("照片槽需要放入“虎杖家双人合照”"),true);return InteractionResult.CONSUME;}

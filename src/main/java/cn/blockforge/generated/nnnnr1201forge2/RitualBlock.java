@@ -12,7 +12,7 @@ import net.minecraft.world.phys.BlockHitResult;
 
 public final class RitualBlock extends BaseEntityBlock {
     public final int tier;
-    public RitualBlock(int tier){super(BlockBehaviour.Properties.copy(Blocks.CRYING_OBSIDIAN).strength(8,1200).lightLevel(s->6));this.tier=tier;}
+    public RitualBlock(int tier){super(BlockBehaviour.Properties.ofFullCopy(Blocks.CRYING_OBSIDIAN).strength(8,1200).lightLevel(s->6));this.tier=tier;}
     @Override public RenderShape getRenderShape(BlockState s){return RenderShape.MODEL;}
     @Override public BlockEntity newBlockEntity(BlockPos p,BlockState s){return new RitualBlockEntity(p,s);}
     @Override public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level l,BlockState s,BlockEntityType<T> type){return l.isClientSide?null:createTickerHelper(type,ExpeditionContent.RITUAL.get(),RitualBlockEntity::tick);}
