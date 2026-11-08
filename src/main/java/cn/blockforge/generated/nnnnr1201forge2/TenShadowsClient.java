@@ -89,7 +89,7 @@ public final class TenShadowsClient {
             addLayer(new net.minecraft.client.renderer.entity.layers.HumanoidArmorLayer<>(this,MotionPlayerGeometry.armor(.5f),MotionPlayerGeometry.armor(1),c.getModelManager()));
         }
         @Override public ResourceLocation getTextureLocation(AbstractClientPlayer p){return SKIN;}
-        @Override protected void setupRotations(AbstractClientPlayer p,PoseStack ps,float age,float yaw,float partial){super.setupRotations(p,ps,age,yaw,partial);if(chanting(p.getUUID()))ps.translate(0,-.55,0);}
+        @Override protected void setupRotations(AbstractClientPlayer p,PoseStack ps,float age,float yaw,float partial,float scale){super.setupRotations(p,ps,age,yaw,partial,scale);if(chanting(p.getUUID()))ps.translate(0,-.55,0);}
     }
     private static final class MegumiModel extends PlayerModel<MegumiEntity>{
         MegumiModel(EntityRendererProvider.Context c){super(c.bakeLayer(ModelLayers.PLAYER),false);}

@@ -200,7 +200,7 @@ public final class DismantleMotionClient {
                 model.leftArmPose=model.rightArmPose=net.minecraft.client.model.HumanoidModel.ArmPose.EMPTY;
                 model.setAllVisible(true);
                 model.prepareMobModel(p,0,0,partial);model.setupAnim(p,0,0,age,headYaw,pitch);
-                setupRotations(p,ps,age,bodyYaw,partial);ps.scale(-.9375f,-.9375f,.9375f);ps.translate(0,-1.501,0);
+                setupRotations(p,ps,age,bodyYaw,partial,1.0f);ps.scale(-.9375f,-.9375f,.9375f);ps.translate(0,-1.501,0);
                 model.renderToBuffer(ps,buffers.getBuffer(net.minecraft.client.renderer.RenderType.entityCutoutNoCull(getTextureLocation(p))),
                     light,getOverlayCoords(p,0),0xFFFFFFFF);
                 // 单个盔甲/手持物兼容层失败不能再连带吞掉基础身体与动作。
@@ -208,10 +208,10 @@ public final class DismantleMotionClient {
                     catch(RuntimeException|LinkageError ex){report(layer.getClass().getSimpleName(),ex);}finally{ps.popPose();}}
             }finally{ps.popPose();}
         }
-        @Override protected void setupRotations(AbstractClientPlayer p,PoseStack ps,float age,float yaw,float partial){
+        @Override protected void setupRotations(AbstractClientPlayer p,PoseStack ps,float age,float yaw,float partial,float scale){
             State s=states.get(p.getId());
             if(s==null){
-                super.setupRotations(p,ps,age,yaw,partial);
+                super.setupRotations(p,ps,age,yaw,partial,scale);
                 if(MeleeComboClient.active(p.getId())){
                     var pose=MeleeComboClient.pose(p.getId(),partial);
                     ps.translate(0,.9-pose.sink(),0);ps.mulPose(Axis.ZP.rotationDegrees((float)pose.lean()));ps.translate(0,-.9,0);
@@ -223,7 +223,7 @@ public final class DismantleMotionClient {
                 return;
             }
             double t=age(s,partial);var pose=DismantlePose.sample(s.packet.kind(),t);
-            super.setupRotations(p,ps,age,s.packet.yaw(),partial);
+            super.setupRotations(p,ps,age,s.packet.yaw(),partial,1.0f);
             ps.translate(0,0.9-pose.sink(),0);
             if(s.packet.kind()==DismantleMotionRules.SPIN)ps.mulPose(Axis.YP.rotationDegrees((float)DismantleMotionRules.spin(t)));
             else ps.mulPose(Axis.XP.rotationDegrees((float)DismantleMotionRules.flip(s.packet.kind(),t)));
