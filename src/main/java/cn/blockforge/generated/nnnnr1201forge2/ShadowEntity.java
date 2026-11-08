@@ -35,7 +35,7 @@ public final class ShadowEntity extends PathfinderMob {
     private final Set<UUID> charged=new HashSet<>();
     private LivingEntity bound;
 
-    public ShadowEntity(EntityType<? extends PathfinderMob> type,Level level){super(type,level);setPersistenceRequired();setMaxUpStep(1.2f);}
+    public ShadowEntity(EntityType<? extends PathfinderMob> type,Level level){super(type,level);setPersistenceRequired();}
     @Override protected void registerGoals(){goalSelector.addGoal(0,new FloatGoal(this));}
     @Override protected void defineSynchedData(net.minecraft.network.syncher.SynchedEntityData.Builder builder){super.defineSynchedData(builder);builder.define(KIND,0);builder.define(ACTION,0);builder.define(ACTION_AT,0L);builder.define(OWNER,Optional.empty());builder.define(RITUAL,false);builder.define(EMERGE,new org.joml.Vector3f());}
     public int kind(){return entityData.get(KIND);}

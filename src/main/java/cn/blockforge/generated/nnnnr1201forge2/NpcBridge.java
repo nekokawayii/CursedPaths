@@ -183,7 +183,6 @@ public final class NpcBridge {
         @Override public void sendSystemMessage(Component message) { }
         @Override public void displayClientMessage(Component message, boolean actionBar) { }
         @Override public float getAttackStrengthScale(float partial) { return 1f; }
-        @Override public float getStandingEyeHeight(Pose pose, EntityDimensions dimensions) { return mob == null ? super.getStandingEyeHeight(pose, dimensions) : mob.getEyeHeight(); }
         @Override public Iterable<ItemStack> getArmorSlots() { return mob == null ? super.getArmorSlots() : mob.getArmorSlots(); }
         @Override public ItemStack getItemBySlot(EquipmentSlot slot) { return mob == null ? super.getItemBySlot(slot) : mob.getItemBySlot(slot); }
         @Override public void setItemSlot(EquipmentSlot slot, ItemStack item) { if (mob == null) super.setItemSlot(slot, item); else mob.setItemSlot(slot, item); }

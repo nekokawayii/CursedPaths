@@ -23,7 +23,7 @@ public final class PrisonCurios {
     }
     private static Map<String,IItemHandlerModifiable> handlers(LivingEntity entity)throws ReflectiveOperationException{
         init();Map<String,IItemHandlerModifiable> result=new LinkedHashMap<>();if(failed)throw new IllegalStateException("Curios接口不可用");if(inventory==null)return result;
-        Object value=((LazyOptional<?>)inventory.invoke(null,entity)).orElse(null);if(value==null)return result;
+        Object raw=inventory.invoke(null,entity);Object value=raw instanceof java.util.Optional<?> opt?opt.orElse(null):raw;if(value==null)return result;
         Map<?,?> entries=(Map<?,?>)curios.invoke(value);
         for(var entry:entries.entrySet()){
             result.put(entry.getKey()+"/equipped",(IItemHandlerModifiable)stacks.invoke(entry.getValue()));
