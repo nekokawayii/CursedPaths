@@ -30,8 +30,8 @@ public final class CompactHealthBar {
         event.setCanceled(true);
 
         var g = event.getGuiGraphics();
-        int width = event.getWindow().getGuiScaledWidth();
-        int height = event.getWindow().getGuiScaledHeight();
+        int width = event.getGuiGraphics().guiWidth();
+        int height = event.getGuiGraphics().guiHeight();
         int x = width / 2 - 91;
         int y = height - 39;
         int barWidth = 81;

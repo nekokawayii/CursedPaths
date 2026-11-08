@@ -161,7 +161,7 @@ public final class Content {
     @net.neoforged.bus.api.SubscribeEvent public static void slaughterDemonUndead(net.neoforged.neoforge.event.entity.living.LivingIncomingDamageEvent e){
         if(!(e.getSource().getEntity() instanceof net.minecraft.server.level.ServerPlayer p))return;
         if(!(p.getMainHandItem().is(SLAUGHTER_DEMON.get())))return;
-        if(e.getEntity().getMobType()!=net.minecraft.world.entity.MobType.UNDEAD)return;
+        if(!e.getEntity().getType().is(net.minecraft.tags.EntityTypeTags.UNDEAD))return;
         e.setAmount(e.getAmount()*2f);
     }
     /** 咒具第一条分支：黑绳。左键甩出，抽打 10 格内正前方的敌人。 */
