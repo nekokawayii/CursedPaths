@@ -383,7 +383,7 @@ public final class CullingRules {
         AttributeInstance a=p.getAttribute(attr);if(a==null)return;
         var old=a.getModifier(CompatAttr.id(id));
         if(Math.abs(amount)<1e-6){if(old!=null)a.removeModifier(CompatAttr.id(id));return;}
-        if(old!=null&&Math.abs(old.getAmount()-amount)<1e-6)return;
+        if(old!=null&&Math.abs(old.amount()-amount)<1e-6)return;
         if(old!=null)a.removeModifier(CompatAttr.id(id));
         a.addTransientModifier(new AttributeModifier(CompatAttr.id(id), amount, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL));
     }

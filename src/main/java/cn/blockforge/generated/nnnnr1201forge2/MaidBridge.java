@@ -88,7 +88,7 @@ public final class MaidBridge {
         if(maid instanceof Mob mob&&(target==mob.getTarget()||target==mob.getLastHurtByMob()))return true;
         return target instanceof net.minecraft.world.entity.monster.Enemy;
     }
-    private static void modifier(LivingEntity maid,Holder<Attribute> attribute,UUID id,double amount){var a=maid.getAttribute(attribute);if(a==null)return;var old=a.getModifier(CompatAttr.id(id));if(old!=null&&Math.abs(old.getAmount()-amount)<0.00001)return;a.removeModifier(CompatAttr.id(id));if(amount!=0)a.addTransientModifier(new AttributeModifier(CompatAttr.id(id), amount, AttributeModifier.Operation.ADD_VALUE));}
+    private static void modifier(LivingEntity maid,Holder<Attribute> attribute,UUID id,double amount){var a=maid.getAttribute(attribute);if(a==null)return;var old=a.getModifier(CompatAttr.id(id));if(old!=null&&Math.abs(old.amount()-amount)<0.00001)return;a.removeModifier(CompatAttr.id(id));if(amount!=0)a.addTransientModifier(new AttributeModifier(CompatAttr.id(id), amount, AttributeModifier.Operation.ADD_VALUE));}
     public static void apply(Actor a){
         if(Legion.member(a.maid)||Authority.echo(a.maid))return;
         modifier(a.maid,Attributes.MAX_HEALTH,HEALTH,Curse.healthBonus(a));modifier(a.maid,Attributes.ATTACK_DAMAGE,ATTACK,Curse.attackBonus(a));

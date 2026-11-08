@@ -44,7 +44,7 @@ public final class SoulCombat {
     public static void iwate(ServerPlayer p,int ticks){Curse.status(p,"Iwate",ticks);}
     private static void direct(ServerPlayer p,int kind,int life,long seed){if(p instanceof net.neoforged.neoforge.common.util.FakePlayer)return;Network.CHANNEL.send(cn.blockforge.generated.nnnnr1201forge2.SimpleChannel.Target.player(p),new Network.Effect(kind,p.getId(),p.position(),net.minecraft.world.phys.Vec3.ZERO,layers(p),life,seed));}
     public static void sync(ServerPlayer p){direct(p,89,stacks(p),layers(p));}
-    private static void applySlow(ServerPlayer p){var a=MaidBridge.body(p).getAttribute(Attributes.MOVEMENT_SPEED);if(a==null)return;int n=stacks(p);var old=a.getModifier(CompatAttr.id(SLOW));if(old!=null&&Math.abs(old.getAmount()+n*0.15)<0.001)return;a.removeModifier(CompatAttr.id(SLOW));if(n>0)a.addTransientModifier(new AttributeModifier(CompatAttr.id(SLOW), -n*0.15, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL));}
+    private static void applySlow(ServerPlayer p){var a=MaidBridge.body(p).getAttribute(Attributes.MOVEMENT_SPEED);if(a==null)return;int n=stacks(p);var old=a.getModifier(CompatAttr.id(SLOW));if(old!=null&&Math.abs(old.amount()+n*0.15)<0.001)return;a.removeModifier(CompatAttr.id(SLOW));if(n>0)a.addTransientModifier(new AttributeModifier(CompatAttr.id(SLOW), -n*0.15, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL));}
     public static void clearOwnedEffects(ServerPlayer owner,net.minecraft.world.entity.LivingEntity target){
         Skills.protectAlly(owner,target.getUUID());protect(owner,target);
         var data=target.getPersistentData();

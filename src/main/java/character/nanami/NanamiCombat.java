@@ -277,7 +277,7 @@ public final class NanamiCombat {
             if (current != null) instance.removeModifier(CompatAttr.id(id));
             return;
         }
-        if (current != null && Math.abs(current.getAmount() - amount) < 1e-6) return;
+        if (current != null && Math.abs(current.amount() - amount) < 1e-6) return;
         if (current != null) instance.removeModifier(CompatAttr.id(id));
         instance.addPermanentModifier(new AttributeModifier(id, name, amount, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL));
     }
