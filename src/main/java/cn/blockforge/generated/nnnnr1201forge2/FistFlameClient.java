@@ -234,7 +234,7 @@ public final class FistFlameClient {
             }
         }
         private static void vertex(PoseStack.Pose pose,com.mojang.blaze3d.vertex.VertexConsumer vb,int light,float x,float y,float z,int color,float u,float v){
-            vb.addVertex(pose.pose(),x,y,z).color(color).uv(u,v).overlayCoords(4194304).uv2(light).normal(pose.normal(),0,0,1).endVertex();
+            vb.addVertex(pose.pose(),x,y,z).setColor(color).setUv(u,v).setOverlay(4194304).setLight(light).setNormal(pose.setNormal(),0,0,1);
         }
         /** 沿**整条手臂**均匀取 ARM_POINTS 个点（玩家手臂箱体固定为肩下 -2~10 像素，取 1~9.5 像素＝前臂到拳头）。
          *  注：`ModelPart.cubes` 是 private，那个参考模组是带 Mixin/AT 才读到方块几何的；玩家模型尺寸固定，直接用像素范围更稳。 */
@@ -282,8 +282,7 @@ public final class FistFlameClient {
             RenderSystem.enableDepthTest();RenderSystem.disableCull();RenderSystem.enableBlend();
             RenderSystem.defaultBlendFunc();RenderSystem.setShader(net.minecraft.client.renderer.GameRenderer::getPositionTexShader);
             RenderSystem.setShaderTexture(0,AURA_FX_TEXTURE);
-            BufferBuilder b=Tesselator.getInstance().getBuilder();
-            b.begin(VertexFormat.Mode.QUADS,DefaultVertexFormat.POSITION_TEX_COLOR);
+            BufferBuilder b=Tesselator.getInstance().begin(VertexFormat.Mode.QUADS,DefaultVertexFormat.POSITION_TEX_COLOR);
             for(int hand1=0;hand1<2;hand1++){
                 Vec3 side=hand1==0?right.scale(0.30):right.scale(-0.30);
                 for(int s=0;s<AURA_SEG;s++){
@@ -295,7 +294,7 @@ public final class FistFlameClient {
                     worldQuad(b,at,right,up,w,h,AURA_CORE,0.6);   // 内芯
                 }
             }
-            BufferUploader.drawWithShader(b.end());
+            BufferUploader.drawWithShader(b.buildOrThrow());
             RenderSystem.enableCull();RenderSystem.disableBlend();
             note(String.format(Locale.ROOT,"自绘层(第一人称) power=%.2f 宽=%.2f 段数=%d 色=%08X",power,AURA_WIDTH*power,AURA_SEG,AURA_IN));
         }catch(Throwable t){fail("第一人称取手部位置",t);}
@@ -303,10 +302,10 @@ public final class FistFlameClient {
     /** 第一人称世界层里的一张柔光面片（面向相机，贴图通道，尺寸单位＝格）。 */
     private static void worldQuad(BufferBuilder b,Vec3 c,Vec3 right,Vec3 up,double w,double h,int color,double scale){
         Vec3 u=up.scale(h*scale),r=right.scale(w*scale);
-        b.addVertex(c.x-r.x-u.x,c.y-r.y-u.y,c.z-r.z-u.z).uv(0,0).color(color).endVertex();
-        b.addVertex(c.x+r.x-u.x,c.y+r.y-u.y,c.z+r.z-u.z).uv(1,0).color(color).endVertex();
-        b.addVertex(c.x+r.x+u.x,c.y+r.y+u.y,c.z+r.z+u.z).uv(1,1).color(color).endVertex();
-        b.addVertex(c.x-r.x+u.x,c.y-r.y+u.y,c.z-r.z+u.z).uv(0,1).color(color).endVertex();
+        b.addVertex(c.x-r.x-u.x,c.y-r.y-u.y,c.z-r.z-u.z).setUv(0,0).setColor(color);
+        b.addVertex(c.x+r.x-u.x,c.y+r.y-u.y,c.z+r.z-u.z).setUv(1,0).setColor(color);
+        b.addVertex(c.x+r.x+u.x,c.y+r.y+u.y,c.z+r.z+u.z).setUv(1,1).setColor(color);
+        b.addVertex(c.x-r.x+u.x,c.y-r.y+u.y,c.z-r.z+u.z).setUv(0,1).setColor(color);
     }
     private FistFlameClient(){}
 }

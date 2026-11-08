@@ -36,20 +36,18 @@ public final class ScreenCracks {
         RenderSystem.disableCull();RenderSystem.enableBlend();RenderSystem.defaultBlendFunc();RenderSystem.depthMask(false);
         // ① 玻璃碎片：相邻两条裂纹之间的一角，露出桌面
         if(desktop!=null&&WallpaperSlash.shader()!=null){
-            BufferBuilder b=Tesselator.getInstance().getBuilder();
-            b.begin(VertexFormat.Mode.QUADS,DefaultVertexFormat.POSITION_COLOR);
+            BufferBuilder b=Tesselator.getInstance().begin(VertexFormat.Mode.QUADS,DefaultVertexFormat.POSITION_COLOR);
             for(Hit hit:hits)shards(b,ps,hit,width,height);
             RenderSystem.setShader(WallpaperSlash::shader);
             WallpaperSlash.desktopUniforms();
             RenderSystem.setShaderTexture(0,desktop);
-            BufferUploader.drawWithShader(b.end());
+            BufferUploader.drawWithShader(b.buildOrThrow());
         }
         // ② 裂纹线 + 中心冲击点
-        BufferBuilder b=Tesselator.getInstance().getBuilder();
-        b.begin(VertexFormat.Mode.QUADS,DefaultVertexFormat.POSITION_COLOR);
+        BufferBuilder b=Tesselator.getInstance().begin(VertexFormat.Mode.QUADS,DefaultVertexFormat.POSITION_COLOR);
         for(Hit hit:hits)cracks(b,ps,hit,width,height);
         RenderSystem.setShader(GameRenderer::getPositionColorShader);
-        BufferUploader.drawWithShader(b.end());
+        BufferUploader.drawWithShader(b.buildOrThrow());
         mv.popPose();RenderSystem.applyModelViewMatrix();RenderSystem.restoreProjectionMatrix();
         RenderSystem.enableCull();RenderSystem.depthMask(true);RenderSystem.disableBlend();
     }
@@ -103,7 +101,7 @@ public final class ScreenCracks {
         quad(b,ps,x0+nx,y0+ny,x1+nx,y1+ny,x1-nx,y1-ny,x0-nx,y0-ny,color);
     }
     private static void vertex(BufferBuilder b,PoseStack ps,double x,double y,int color){
-        b.addVertex(ps.last().pose(),(float)x,(float)y,0f).color((color>>16)&255,(color>>8)&255,color&255,(color>>>24)&255).endVertex();
+        b.addVertex(ps.last().pose(),(float)x,(float)y,0f).setColor((color>>16)&255,(color>>8)&255,color&255,(color>>>24)&255);
     }
     private ScreenCracks(){}
 }

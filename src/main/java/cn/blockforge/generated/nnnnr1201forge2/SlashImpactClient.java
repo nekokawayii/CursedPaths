@@ -117,11 +117,11 @@ public final class SlashImpactClient {
             Vec3 at=p.old.lerp(p.at,e.getPartialTick().getGameTimeDeltaPartialTick(true)).subtract(camera);ps.pushPose();ps.translate(at.x,at.y,at.z);ps.mulPose(com.mojang.math.Axis.ZP.rotation(p.angle));
             for(var entry:p.mesh.entrySet()){
                 VertexConsumer consumer=source.getBuffer(entry.getKey());
-                for(V v:entry.getValue())consumer.addVertex(ps.last().pose(),(float)v.p.x,(float)v.p.y,(float)v.p.z).color(v.r,v.g,v.b,v.a).uv(v.u,v.v).overlayCoords(v.overlay).uv2(v.light).normal(ps.last().normal(),(float)v.normal.x,(float)v.normal.y,(float)v.normal.z).endVertex();
+                for(V v:entry.getValue())consumer.addVertex(ps.last().pose(),(float)v.p.x,(float)v.p.y,(float)v.p.z).setColor(v.r,v.g,v.b,v.a).setUv(v.u,v.v).setOverlay(v.overlay).setLight(v.light).setNormal(ps.last().setNormal(),(float)v.normal.x,(float)v.normal.y,(float)v.normal.z);
             }
             if(p.seam.size()>=3){
                 var cap=source.getBuffer(RenderType.debugQuads());Vec3 center=p.seam.stream().reduce(Vec3.ZERO,Vec3::add).scale(1.0/p.seam.size());
-                for(int i=0;i<p.seam.size();i++){Vec3 a=p.seam.get(i),z=p.seam.get((i+1)%p.seam.size());for(Vec3 v:List.of(center,a,z,z))cap.addVertex(ps.last().pose(),(float)v.x,(float)v.y,(float)v.z).color(105,5,16,255).endVertex();}
+                for(int i=0;i<p.seam.size();i++){Vec3 a=p.seam.get(i),z=p.seam.get((i+1)%p.seam.size());for(Vec3 v:List.of(center,a,z,z))cap.addVertex(ps.last().pose(),(float)v.x,(float)v.y,(float)v.z).setColor(105,5,16,255);}
             }
             ps.popPose();
         }source.endBatch();

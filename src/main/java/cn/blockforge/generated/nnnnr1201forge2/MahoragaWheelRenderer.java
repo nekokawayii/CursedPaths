@@ -93,8 +93,7 @@ public final class MahoragaWheelRenderer {
         RenderSystem.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA,GlStateManager.DestFactor.ONE); // 加色
         RenderSystem.depthMask(false);RenderSystem.disableDepthTest();
         RenderSystem.setShader(GameRenderer::getPositionColorShader);RenderSystem.setShaderColor(1,1,1,1);
-        BufferBuilder b=Tesselator.getInstance().getBuilder();
-        b.begin(VertexFormat.Mode.QUADS,DefaultVertexFormat.POSITION_COLOR);
+        BufferBuilder b=Tesselator.getInstance().begin(VertexFormat.Mode.QUADS,DefaultVertexFormat.POSITION_COLOR);
         var pose=ps.last().pose();
         float bright=RING_INNER+(RING_OUTER-RING_INNER)*t*0.55f; // 内侧那圈走得慢，形成两道
         for(int i=0;i<segments;i++){
@@ -104,7 +103,7 @@ public final class MahoragaWheelRenderer {
             // 内侧亮环（后随）
             band(b,pose,a0,a1,bright,halfWidth*0.75f,red,green,blue,(int)(alpha*0.55f),alpha);
         }
-        BufferUploader.drawWithShader(b.end());
+        BufferUploader.drawWithShader(b.buildOrThrow());
         RenderSystem.enableDepthTest();RenderSystem.depthMask(true);
         RenderSystem.defaultBlendFunc();RenderSystem.enableCull();RenderSystem.disableBlend();
         ps.popPose();
@@ -121,14 +120,13 @@ public final class MahoragaWheelRenderer {
         RenderSystem.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA,GlStateManager.DestFactor.ONE);
         RenderSystem.depthMask(false);RenderSystem.disableDepthTest();
         RenderSystem.setShader(GameRenderer::getPositionColorShader);RenderSystem.setShaderColor(1,1,1,1);
-        BufferBuilder b=Tesselator.getInstance().getBuilder();
-        b.begin(VertexFormat.Mode.QUADS,DefaultVertexFormat.POSITION_COLOR);
+        BufferBuilder b=Tesselator.getInstance().begin(VertexFormat.Mode.QUADS,DefaultVertexFormat.POSITION_COLOR);
         var pose=ps.last().pose();
         for(int i=0;i<48;i++){
             double a0=i*Math.PI*2/48,a1=(i+1)*Math.PI*2/48;
             band(b,pose,a0,a1,radius,thickness,red,green,blue,alpha/3,alpha);
         }
-        BufferUploader.drawWithShader(b.end());
+        BufferUploader.drawWithShader(b.buildOrThrow());
         RenderSystem.enableDepthTest();RenderSystem.depthMask(true);
         RenderSystem.defaultBlendFunc();RenderSystem.enableCull();RenderSystem.disableBlend();
         ps.popPose();
@@ -143,7 +141,7 @@ public final class MahoragaWheelRenderer {
         vertex(b,pose,x0,halfWidth,z0,r,g,bl,outer);
     }
     private static void vertex(BufferBuilder b,org.joml.Matrix4f pose,float x,float y,float z,int r,int g,int bl,int a){
-        b.addVertex(pose,x,y,z).color(r,g,bl,a).endVertex();
+        b.addVertex(pose,x,y,z).setColor(r,g,bl,a);
     }
     /** 转满 4 格时法轮由暗金变为亮金。 */
     private static float[] tint(int cells){

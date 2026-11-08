@@ -65,6 +65,6 @@ public final class ShadowClient {
     }
     private static void ring(VertexConsumer out,PoseStack ps,Vec3 c,double radius,double thickness,int r,int g,int b,int a){for(int i=0;i<40;i++){double p=i*Math.PI/20,q=(i+1)*Math.PI/20;vertex(out,ps,c.add(Math.cos(p)*radius,0,Math.sin(p)*radius),r,g,b,a);vertex(out,ps,c.add(Math.cos(p)*(radius+thickness),0,Math.sin(p)*(radius+thickness)),r,g,b,a);vertex(out,ps,c.add(Math.cos(q)*(radius+thickness),0,Math.sin(q)*(radius+thickness)),r,g,b,a);vertex(out,ps,c.add(Math.cos(q)*radius,0,Math.sin(q)*radius),r,g,b,a);}}
     private static void beam(VertexConsumer out,PoseStack ps,Vec3 from,Vec3 to,double width,int r,int g,int b,int a){Vec3 dir=to.subtract(from).normalize();Vec3 right=dir.cross(new Vec3(0,1,0));if(right.lengthSqr()<.01)right=new Vec3(1,0,0);right=right.normalize().scale(width);Vec3 up=dir.cross(right).normalize().scale(width);for(Vec3 side:new Vec3[]{right,up}){vertex(out,ps,from.subtract(side),r,g,b,a);vertex(out,ps,from.add(side),r,g,b,a);vertex(out,ps,to.add(side),r,g,b,a);vertex(out,ps,to.subtract(side),r,g,b,a);}}
-    private static void vertex(VertexConsumer out,PoseStack ps,Vec3 at,int r,int g,int b,int a){out.addVertex(ps.last().pose(),(float)at.x,(float)at.y,(float)at.z).color(r,g,b,a).endVertex();}
+    private static void vertex(VertexConsumer out,PoseStack ps,Vec3 at,int r,int g,int b,int a){out.addVertex(ps.last().pose(),(float)at.x,(float)at.y,(float)at.z).setColor(r,g,b,a);}
     private ShadowClient(){}
 }

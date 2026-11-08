@@ -64,10 +64,9 @@ public final class GojoTrailClient {
         RenderSystem.enableBlend();RenderSystem.defaultBlendFunc();
         RenderSystem.setShader(GameRenderer::getPositionColorShader);
         RenderSystem.setShaderColor(1,1,1,1);
-        BufferBuilder b=Tesselator.getInstance().getBuilder();
-        b.begin(VertexFormat.Mode.QUADS,DefaultVertexFormat.POSITION_COLOR);
+        BufferBuilder b=Tesselator.getInstance().begin(VertexFormat.Mode.QUADS,DefaultVertexFormat.POSITION_COLOR);
         for(Trail t:trails.values())ribbon(b,ps,t,cam,e.getPartialTick().getGameTimeDeltaPartialTick(true));
-        BufferUploader.drawWithShader(b.end());
+        BufferUploader.drawWithShader(b.buildOrThrow());
         RenderSystem.depthMask(true);RenderSystem.enableCull();RenderSystem.disableBlend();
         ps.popPose();
     }
@@ -103,10 +102,10 @@ public final class GojoTrailClient {
     private static void quad(BufferBuilder b,PoseStack ps,Vec3 a,Vec3 c,Vec3 d,Vec3 e,int color){
         int red=(color>>16)&255,green=(color>>8)&255,blue=color&255,alpha=(color>>>24)&255;
         var pose=ps.last().pose();
-        b.addVertex(pose,(float)a.x,(float)a.y,(float)a.z).color(red,green,blue,alpha).endVertex();
-        b.addVertex(pose,(float)c.x,(float)c.y,(float)c.z).color(red,green,blue,alpha).endVertex();
-        b.addVertex(pose,(float)d.x,(float)d.y,(float)d.z).color(red,green,blue,alpha).endVertex();
-        b.addVertex(pose,(float)e.x,(float)e.y,(float)e.z).color(red,green,blue,alpha).endVertex();
+        b.addVertex(pose,(float)a.x,(float)a.y,(float)a.z).setColor(red,green,blue,alpha);
+        b.addVertex(pose,(float)c.x,(float)c.y,(float)c.z).setColor(red,green,blue,alpha);
+        b.addVertex(pose,(float)d.x,(float)d.y,(float)d.z).setColor(red,green,blue,alpha);
+        b.addVertex(pose,(float)e.x,(float)e.y,(float)e.z).setColor(red,green,blue,alpha);
     }
     private GojoTrailClient(){}
 }

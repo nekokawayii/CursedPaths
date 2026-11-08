@@ -109,10 +109,9 @@ public final class GojoVoidClient {
             RenderSystem.disableCull();RenderSystem.enableBlend();RenderSystem.defaultBlendFunc();
             RenderSystem.setShader(GameRenderer::getPositionColorShader);RenderSystem.setShaderColor(1,1,1,1);
             RenderSystem.depthMask(false);RenderSystem.enableDepthTest();
-            BufferBuilder b=Tesselator.getInstance().getBuilder();
-            b.begin(VertexFormat.Mode.QUADS,DefaultVertexFormat.POSITION_COLOR);
+            BufferBuilder b=Tesselator.getInstance().begin(VertexFormat.Mode.QUADS,DefaultVertexFormat.POSITION_COLOR);
             sphereSilhouette(b,ps,cam);
-            BufferUploader.drawWithShader(b.end());
+            BufferUploader.drawWithShader(b.buildOrThrow());
             RenderSystem.depthMask(true);RenderSystem.enableCull();RenderSystem.disableBlend();
             ps.popPose();return;
         }
@@ -120,11 +119,10 @@ public final class GojoVoidClient {
         RenderSystem.disableCull();RenderSystem.enableBlend();RenderSystem.defaultBlendFunc();
         RenderSystem.setShader(GameRenderer::getPositionColorShader);RenderSystem.setShaderColor(1,1,1,1);
         RenderSystem.depthMask(false);RenderSystem.disableDepthTest();
-        BufferBuilder b=Tesselator.getInstance().getBuilder();
-        b.begin(VertexFormat.Mode.QUADS,DefaultVertexFormat.POSITION_COLOR);
+        BufferBuilder b=Tesselator.getInstance().begin(VertexFormat.Mode.QUADS,DefaultVertexFormat.POSITION_COLOR);
         backdrop(b,ps,e.getCamera(),cam); // 纯黑底衬：地形、天空、领域雾全部让位
         hole(b,ps,cam);                   // 纯黑盘面 + 白色硬边
-        BufferUploader.drawWithShader(b.end());
+        BufferUploader.drawWithShader(b.buildOrThrow());
         // 地形深度已经被底衬盖住，清掉它，远处粒子（银河/星空/彩线）才不会被看不见的方块挡掉；
         // 实体在后面的阶段重新写入深度，所以怪物与玩家仍然压在画布之上。
         // 地形深度已经被底衬盖住，清掉它，远处粒子（银河/星空/彩线）才不会被看不见的方块挡掉；
@@ -204,17 +202,17 @@ public final class GojoVoidClient {
     private static void quad(BufferBuilder b,PoseStack ps,Vec3 a,Vec3 c,Vec3 d,Vec3 e,int color){
         int red=(color>>16)&255,green=(color>>8)&255,blue=color&255,alpha=(color>>>24)&255;
         var pose=ps.last().pose();
-        b.addVertex(pose,(float)a.x,(float)a.y,(float)a.z).color(red,green,blue,alpha).endVertex();
-        b.addVertex(pose,(float)c.x,(float)c.y,(float)c.z).color(red,green,blue,alpha).endVertex();
-        b.addVertex(pose,(float)d.x,(float)d.y,(float)d.z).color(red,green,blue,alpha).endVertex();
-        b.addVertex(pose,(float)e.x,(float)e.y,(float)e.z).color(red,green,blue,alpha).endVertex();
+        b.addVertex(pose,(float)a.x,(float)a.y,(float)a.z).setColor(red,green,blue,alpha);
+        b.addVertex(pose,(float)c.x,(float)c.y,(float)c.z).setColor(red,green,blue,alpha);
+        b.addVertex(pose,(float)d.x,(float)d.y,(float)d.z).setColor(red,green,blue,alpha);
+        b.addVertex(pose,(float)e.x,(float)e.y,(float)e.z).setColor(red,green,blue,alpha);
     }
     private static void quadGrad(BufferBuilder b,PoseStack ps,Vec3 a,Vec3 c,Vec3 d,Vec3 e,int ca,int cc,int cd,int ce){
         var pose=ps.last().pose();
         vertex(b,pose,a,ca);vertex(b,pose,c,cc);vertex(b,pose,d,cd);vertex(b,pose,e,ce);
     }
     private static void vertex(BufferBuilder b,org.joml.Matrix4f pose,Vec3 v,int color){
-        b.addVertex(pose,(float)v.x,(float)v.y,(float)v.z).color((color>>16)&255,(color>>8)&255,color&255,(color>>>24)&255).endVertex();
+        b.addVertex(pose,(float)v.x,(float)v.y,(float)v.z).setColor((color>>16)&255,(color>>8)&255,color&255,(color>>>24)&255);
     }
     private GojoVoidClient(){}
 }

@@ -49,7 +49,7 @@ public final class Client {
     public static int curseLiquidColor(float ratio) {
         if (ratio <= 0.3f) return 0xFFE00000;
         var definition = character.CharacterClient.selected();
-        if (definition != null) return definition.color();
+        if (definition != null) return definition.setColor();
         return progress.awakened() ? 0xFFE23455 : 0xFFAF66EB;
     }
 
@@ -503,7 +503,7 @@ public final class Client {
         }source.endBatch();
         RenderSystem.enableDepthTest();RenderSystem.depthFunc(org.lwjgl.opengl.GL11.GL_LEQUAL);
         RenderSystem.enableBlend();RenderSystem.defaultBlendFunc();RenderSystem.disableCull();RenderSystem.depthMask(false);RenderSystem.setShader(GameRenderer::getPositionColorShader);RenderSystem.setShaderColor(1,1,1,1);
-        BufferBuilder b=Tesselator.getInstance().getBuilder();b.begin(VertexFormat.Mode.QUADS,DefaultVertexFormat.POSITION_COLOR);
+        BufferBuilder b=Tesselator.getInstance().begin(VertexFormat.Mode.QUADS,DefaultVertexFormat.POSITION_COLOR);
         WallpaperSlash.begin();
         SlashFormVisuals.draw(b,ps,cam,e.getPartialTick().getGameTimeDeltaPartialTick(true));SlashTerrainClient.draw(b,ps,cam,e.getPartialTick().getGameTimeDeltaPartialTick(true));
         ExpansionVisuals.draw(b,ps,cam,e.getPartialTick().getGameTimeDeltaPartialTick(true));
@@ -546,7 +546,7 @@ public final class Client {
                 for(int j=0;j<20;j++){double a=j*Math.PI/10+v.e.seed()%100;Vec3 dir=new Vec3(Math.cos(a),0.3+(j%4)*0.15,Math.sin(a)).normalize();Vec3 p=v.e.position().add(dir.scale(radius));ribbon(b,ps,p,p.add(dir.scale(1.5+f*3)),0.07,((int)(230*fade)<<24)|0xFFF4BC,cam);}
             }
         }
-        BufferUploader.drawWithShader(b.end());WallpaperSlash.end(ps);
+        BufferUploader.drawWithShader(b.buildOrThrow());WallpaperSlash.end(ps);
         // 桌面是在 end() 里最后 flush 的：红色乱码条必须等它画完再另起一批，才能压在桌面之上。
         BeyondRiftClient.overlay(ps,cam,e.getPartialTick().getGameTimeDeltaPartialTick(true));
         RenderSystem.depthMask(true);RenderSystem.enableCull();RenderSystem.disableBlend();ps.popPose();
@@ -612,7 +612,7 @@ public final class Client {
     }
     private static void sky(RenderLevelStageEvent e){
         PoseStack ps=e.getPoseStack();ps.pushPose();RenderSystem.enableBlend();RenderSystem.defaultBlendFunc();RenderSystem.disableCull();RenderSystem.depthMask(false);RenderSystem.setShader(GameRenderer::getPositionColorShader);
-        BufferBuilder b=Tesselator.getInstance().getBuilder();b.begin(VertexFormat.Mode.QUADS,DefaultVertexFormat.POSITION_COLOR);
+        BufferBuilder b=Tesselator.getInstance().begin(VertexFormat.Mode.QUADS,DefaultVertexFormat.POSITION_COLOR);
         boolean voidSky=insideVoid(),blueSky=insideBlueVoid();
         double r=180,y=100;quad(b,ps,new Vec3(-r,y,-r),new Vec3(r,y,-r),new Vec3(r,y,r),new Vec3(-r,y,r),blueSky?0xEE03152D:voidSky?0xEE180B29:0xDE850B1A);
         for(int i=0;i<32;i++){double a=i*Math.PI/16,z=(i+1)*Math.PI/16;quad(b,ps,new Vec3(Math.cos(a)*r,-40,Math.sin(a)*r),new Vec3(Math.cos(z)*r,-40,Math.sin(z)*r),new Vec3(Math.cos(z)*r,y,Math.sin(z)*r),new Vec3(Math.cos(a)*r,y,Math.sin(a)*r),blueSky?0xEF072A4B:voidSky?0xEF220D34:0xCF690515);}
@@ -628,7 +628,7 @@ public final class Client {
             Vec3 p=new Vec3(Math.cos(a)*42,94,Math.sin(a)*42),q=new Vec3(Math.cos(a+0.07)*160,94,Math.sin(a+0.07)*160);
             ribbon(b,ps,p,q,0.16,blueSky?0x6530B6FF:voidSky?0x657637A9:0x65FFB7B7,eye);
         }
-        BufferUploader.drawWithShader(b.end());
+        BufferUploader.drawWithShader(b.buildOrThrow());
         // 无量空处的照片覆盖层已移除；保留上面的动态底色、星环和光带。
         RenderSystem.depthMask(true);RenderSystem.enableCull();RenderSystem.disableBlend();ps.popPose();
     }
@@ -729,5 +729,5 @@ public final class Client {
         edge=edge.normalize().scale(width);quad(b,ps,a.add(edge),z.add(edge),z.subtract(edge),a.subtract(edge),color);
     }
     static void quad(BufferBuilder b,PoseStack ps,Vec3 a,Vec3 c,Vec3 d,Vec3 e,int color){vertex(b,ps,a,color);vertex(b,ps,c,color);vertex(b,ps,d,color);vertex(b,ps,e,color);}
-    private static void vertex(BufferBuilder b,PoseStack ps,Vec3 p,int color){color=VoidTechniqueClient.tint(color);b.addVertex(ps.last().pose(),(float)p.x,(float)p.y,(float)p.z).color((color>>16)&255,(color>>8)&255,color&255,(color>>>24)&255).endVertex();}
+    private static void vertex(BufferBuilder b,PoseStack ps,Vec3 p,int color){color=VoidTechniqueClient.tint(color);b.addVertex(ps.last().pose(),(float)p.x,(float)p.y,(float)p.z).setColor((color>>16)&255,(color>>8)&255,color&255,(color>>>24)&255);}
 }

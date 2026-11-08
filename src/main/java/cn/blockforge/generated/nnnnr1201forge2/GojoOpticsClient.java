@@ -176,9 +176,9 @@ public final class GojoOpticsClient {
             RenderSystem.disableDepthTest();RenderSystem.depthMask(false);RenderSystem.disableCull();RenderSystem.disableBlend();
             RenderSystem.setShader(()->shader);
             RenderSystem.setShaderTexture(0,scene.getColorTextureId());RenderSystem.setShaderTexture(1,scene.getDepthTextureId());RenderSystem.setShaderTexture(2,shadows.getId());
-            BufferBuilder b=Tesselator.getInstance().getBuilder();b.begin(VertexFormat.Mode.QUADS,DefaultVertexFormat.POSITION);
-            b.addVertex(-1,-1,0).endVertex();b.addVertex(1,-1,0).endVertex();b.addVertex(1,1,0).endVertex();b.addVertex(-1,1,0).endVertex();
-            BufferUploader.drawWithShader(b.end());
+            BufferBuilder b=Tesselator.getInstance().begin(VertexFormat.Mode.QUADS,DefaultVertexFormat.POSITION);
+            b.addVertex(-1,-1,0);b.addVertex(1,-1,0);b.addVertex(1,1,0);b.addVertex(-1,1,0);
+            BufferUploader.drawWithShader(b.buildOrThrow());
         }catch(RuntimeException ex){
             if(!warned){com.mojang.logging.LogUtils.getLogger().warn("苍赫茈光学效果暂停，保留原有术式特效",ex);warned=true;}
             // 不清光源：即使后期失败，独立亮核和光环也持续到术式结束。

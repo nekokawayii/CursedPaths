@@ -309,7 +309,7 @@ public final class RyuDomain {
             Vec3 pos = shell.pos().add(dir.scale(SHELL_SPEED));
             if ((now & 1) == 0) {
                 Network.send(shell.level(), new Network.Effect(RyuFx.FIREWORK_SHELL, owner.getId(), pos, dir,
-                    shell.color(), 5, 0));
+                    shell.setColor(), 5, 0));
             }
             LivingEntity hit = null;
             for (var candidate : shell.level().getEntitiesOfClass(LivingEntity.class,
@@ -331,7 +331,7 @@ public final class RyuDomain {
                 hit.invulnerableTime = 0;
                 continue;
             }
-            keep.add(new Shell(shell.level(), shell.owner(), pos, dir, shell.color(), shell.born()));
+            keep.add(new Shell(shell.level(), shell.owner(), pos, dir, shell.setColor(), shell.born()));
         }
         SHELLS.clear();
         SHELLS.addAll(keep);

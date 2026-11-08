@@ -212,7 +212,7 @@ public final class CharacterCasting {
         return skill.shape()==CharacterSkill.Shape.BURST||delta.lengthSqr()<.01||look.dot(delta.normalize())>=Math.cos(Math.toRadians(skill.halfAngle()));
     }
     private static void particles(ServerPlayer p,CharacterSkill skill,Vec3 start,Vec3 look,Vec3 end) {
-        int color=skill.color();var dust=new DustParticleOptions(new Vector3f(((color>>16)&255)/255f,((color>>8)&255)/255f,(color&255)/255f),1.2f);
+        int color=skill.setColor();var dust=new DustParticleOptions(new Vector3f(((color>>16)&255)/255f,((color>>8)&255)/255f,(color&255)/255f),1.2f);
         // 每次最多65个采样点，不注册额外贴图；颜色与技能配置一致。
         if(skill.shape()==CharacterSkill.Shape.RAY){
             int n=Math.max(1,(int)Math.ceil(start.distanceTo(end)*2));

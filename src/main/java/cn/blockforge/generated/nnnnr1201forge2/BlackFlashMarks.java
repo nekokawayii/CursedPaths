@@ -180,8 +180,7 @@ public final class BlackFlashMarks {
         float t=mc.level.getGameTime()+e.getPartialTick();
         RenderSystem.disableDepthTest();RenderSystem.enableBlend();RenderSystem.defaultBlendFunc();RenderSystem.disableCull();
         RenderSystem.setShader(net.minecraft.client.renderer.GameRenderer::getPositionColorShader);
-        BufferBuilder b=Tesselator.getInstance().getBuilder();
-        b.begin(VertexFormat.Mode.QUADS,DefaultVertexFormat.POSITION_COLOR);
+        BufferBuilder b=Tesselator.getInstance().begin(VertexFormat.Mode.QUADS,DefaultVertexFormat.POSITION_COLOR);
         var ps=e.getPoseStack();ps.pushPose();ps.translate(-cam.x,-cam.y,-cam.z);
         for(Mark m:CLIENT){
             float left=(m.until()-t)/MARK_TICKS;                        // 0~1 剩余
@@ -189,7 +188,7 @@ public final class BlackFlashMarks {
             int a=(int)((0.55+0.45*Math.abs(Math.sin(t*0.6)))*255*Math.min(1,left*3));
             Vec3 position=point(m);if(position!=null)ring(b,ps,position,MARK_RADIUS,a,cam);
         }
-        BufferUploader.drawWithShader(b.end());
+        BufferUploader.drawWithShader(b.buildOrThrow());
         ps.popPose();RenderSystem.enableCull();RenderSystem.enableDepthTest();RenderSystem.disableBlend();
     }
     /** 一个水平红圈（朝向相机的细环，用两圈三角带近似）。 */
@@ -211,10 +210,10 @@ public final class BlackFlashMarks {
         }
     }
     private static void quad(BufferBuilder b,PoseStack ps,Vec3 p0,Vec3 p1,Vec3 p2,Vec3 p3,int color){
-        b.addVertex(ps.last().pose(),(float)p0.x,(float)p0.y,(float)p0.z).color(color).endVertex();
-        b.addVertex(ps.last().pose(),(float)p1.x,(float)p1.y,(float)p1.z).color(color).endVertex();
-        b.addVertex(ps.last().pose(),(float)p2.x,(float)p2.y,(float)p2.z).color(color).endVertex();
-        b.addVertex(ps.last().pose(),(float)p3.x,(float)p3.y,(float)p3.z).color(color).endVertex();
+        b.addVertex(ps.last().pose(),(float)p0.x,(float)p0.y,(float)p0.z).setColor(color);
+        b.addVertex(ps.last().pose(),(float)p1.x,(float)p1.y,(float)p1.z).setColor(color);
+        b.addVertex(ps.last().pose(),(float)p2.x,(float)p2.y,(float)p2.z).setColor(color);
+        b.addVertex(ps.last().pose(),(float)p3.x,(float)p3.y,(float)p3.z).setColor(color);
     }
     private BlackFlashMarks(){}
 }

@@ -87,7 +87,7 @@ public final class MeleeWindClient {
     }
     private static void point(VertexConsumer out,PoseStack ps,double angle,double radius,double y,int alpha){
         out.addVertex(ps.last().pose(),(float)(Math.cos(angle)*radius),(float)y,(float)(Math.sin(angle)*radius))
-            .color(232,244,255,alpha).endVertex();
+            .setColor(232,244,255,alpha);
     }
     private MeleeWindClient(){}
 }

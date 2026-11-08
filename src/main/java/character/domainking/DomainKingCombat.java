@@ -42,7 +42,7 @@ public final class DomainKingCombat {
         if (active != null) { close(p, active); ACTIVE.remove(p.getUUID()); }
         ACTIVE.put(p.getUUID(), skill.id());
         String name = skill.name();
-        int color = skill.color();
+        int color = skill.setColor();
         double radius = switch (skill.id()) {
             case DomainKingSkills.SIMPLE -> 8;
             default -> 24;
@@ -107,7 +107,7 @@ public final class DomainKingCombat {
             Field f = it.next();
             ServerPlayer owner = f.owner();
             if (owner == null || !owner.isAlive() || !(owner.level() instanceof ServerLevel level)) { it.remove(); continue; }
-            if (level.getGameTime() >= f.end()) {
+            if (level.getGameTime() >= f.buildOrThrow()) {
                 it.remove();
                 if (f.name().equals("盖棺铁围山")) character.jogo.JogoTerrain.restore(owner);
             }

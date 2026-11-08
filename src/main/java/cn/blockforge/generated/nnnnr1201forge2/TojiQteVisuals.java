@@ -178,8 +178,7 @@ public final class TojiQteVisuals {
         com.mojang.blaze3d.systems.RenderSystem.defaultBlendFunc();
         com.mojang.blaze3d.systems.RenderSystem.disableCull();
         com.mojang.blaze3d.systems.RenderSystem.depthMask(false);
-        BufferBuilder builder = Tesselator.getInstance().getBuilder();
-        builder.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_COLOR);
+        BufferBuilder builder=Tesselator.getInstance().begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_COLOR);
         for (Mark mark : MARKS) {
             Entity entity = mc.level.getEntity(mark.entity());
             if (entity == null) continue;
@@ -203,7 +202,7 @@ public final class TojiQteVisuals {
             Client.ring(builder, ps, burst.at(), radius, 0.14, (alpha << 24) | 0xFF3030, cam);
             Client.ring(builder, ps, burst.at().add(0, 0.55, 0), radius * 0.6, 0.08, (alpha << 24) | 0xFFD0D0, cam);
         }
-        com.mojang.blaze3d.vertex.BufferUploader.drawWithShader(builder.end());
+        com.mojang.blaze3d.vertex.BufferUploader.drawWithShader(builder.buildOrThrow());
         com.mojang.blaze3d.systems.RenderSystem.depthMask(true);
         com.mojang.blaze3d.systems.RenderSystem.enableCull();
         com.mojang.blaze3d.systems.RenderSystem.disableBlend();

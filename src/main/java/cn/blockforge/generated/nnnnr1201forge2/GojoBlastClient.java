@@ -47,8 +47,7 @@ public final class GojoBlastClient {
         RenderSystem.enableBlend();RenderSystem.defaultBlendFunc();
         RenderSystem.setShader(GameRenderer::getPositionColorShader);
         RenderSystem.setShaderColor(1,1,1,1);
-        BufferBuilder b=Tesselator.getInstance().getBuilder();
-        b.begin(VertexFormat.Mode.QUADS,DefaultVertexFormat.POSITION_COLOR);
+        BufferBuilder b=Tesselator.getInstance().begin(VertexFormat.Mode.QUADS,DefaultVertexFormat.POSITION_COLOR);
         for(Blast bl:blasts){
             float t=(time-bl.born()+e.getPartialTick().getGameTimeDeltaPartialTick(true))/bl.life();
             if(t<0||t>=1)continue;
@@ -66,7 +65,7 @@ public final class GojoBlastClient {
             if(t<0||t>=1)continue;
             bang(b,ps,bg.at(),cam,bg.size(),t);
         }
-        BufferUploader.drawWithShader(b.end());
+        BufferUploader.drawWithShader(b.buildOrThrow());
         RenderSystem.depthMask(true);RenderSystem.enableCull();RenderSystem.disableBlend();
         ps.popPose();
     }
@@ -88,10 +87,10 @@ public final class GojoBlastClient {
     private static void quad(BufferBuilder b,PoseStack ps,Vec3 a,Vec3 c,Vec3 d,Vec3 e,int color){
         int red=(color>>16)&255,green=(color>>8)&255,blue=color&255,alpha=(color>>>24)&255;
         var pose=ps.last().pose();
-        b.addVertex(pose,(float)a.x,(float)a.y,(float)a.z).color(red,green,blue,alpha).endVertex();
-        b.addVertex(pose,(float)c.x,(float)c.y,(float)c.z).color(red,green,blue,alpha).endVertex();
-        b.addVertex(pose,(float)d.x,(float)d.y,(float)d.z).color(red,green,blue,alpha).endVertex();
-        b.addVertex(pose,(float)e.x,(float)e.y,(float)e.z).color(red,green,blue,alpha).endVertex();
+        b.addVertex(pose,(float)a.x,(float)a.y,(float)a.z).setColor(red,green,blue,alpha);
+        b.addVertex(pose,(float)c.x,(float)c.y,(float)c.z).setColor(red,green,blue,alpha);
+        b.addVertex(pose,(float)d.x,(float)d.y,(float)d.z).setColor(red,green,blue,alpha);
+        b.addVertex(pose,(float)e.x,(float)e.y,(float)e.z).setColor(red,green,blue,alpha);
     }
     // ------------------------------------------------------------ 宇宙大爆炸
     /** 一帧的大爆炸：t ∈ [0,1)。所有层都是镜头朝向的圆盘/圆环 + 极角排布的光针，不依赖任何贴图。 */

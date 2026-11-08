@@ -96,8 +96,7 @@ public final class UraumeVisuals {
         RenderSystem.disableCull();
         RenderSystem.depthMask(false);
         RenderSystem.setShader(GameRenderer::getPositionColorShader);
-        BufferBuilder b = Tesselator.getInstance().getBuilder();
-        b.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_COLOR);
+        BufferBuilder b=Tesselator.getInstance().begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_COLOR);
         for (var it = VISUALS.iterator(); it.hasNext(); ) {
             Visual v = it.next();
             long age = now - v.born;
@@ -163,7 +162,7 @@ public final class UraumeVisuals {
                 default -> { }
             }
         }
-        BufferUploader.drawWithShader(b.end());
+        BufferUploader.drawWithShader(b.buildOrThrow());
         RenderSystem.depthMask(true);
         RenderSystem.enableCull();
         RenderSystem.disableBlend();

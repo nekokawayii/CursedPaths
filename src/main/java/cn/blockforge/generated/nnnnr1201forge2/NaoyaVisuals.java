@@ -136,8 +136,7 @@ public final class NaoyaVisuals {
         RenderSystem.defaultBlendFunc();
         RenderSystem.disableCull();
         RenderSystem.depthMask(false);
-        BufferBuilder builder = Tesselator.getInstance().getBuilder();
-        builder.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_COLOR);
+        BufferBuilder builder=Tesselator.getInstance().begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_COLOR);
         // 帧线
         for (Trail trail : TRAILS) {
             float t = (now - trail.born()) / (float) trail.life();
@@ -193,7 +192,7 @@ public final class NaoyaVisuals {
                 Client.ribbon(builder, ps, from, to, 0.05, (alpha << 24) | 0xCFEFFF, cam);
             }
         }
-        BufferUploader.drawWithShader(builder.end());
+        BufferUploader.drawWithShader(builder.buildOrThrow());
         RenderSystem.depthMask(true);
         RenderSystem.enableCull();
         RenderSystem.disableBlend();

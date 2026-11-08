@@ -77,7 +77,7 @@ public final class ObserverClient {
         if(!white())return;PoseStack ps=e.getPoseStack();ps.pushPose();
         RenderSystem.enableBlend();RenderSystem.defaultBlendFunc();RenderSystem.disableCull();RenderSystem.depthMask(false);
         RenderSystem.setShader(GameRenderer::getPositionColorShader);
-        BufferBuilder b=Tesselator.getInstance().getBuilder();b.begin(VertexFormat.Mode.QUADS,DefaultVertexFormat.POSITION_COLOR);
+        BufferBuilder b=Tesselator.getInstance().begin(VertexFormat.Mode.QUADS,DefaultVertexFormat.POSITION_COLOR);
         double r=180;int c=0xFFFFFFFF;
         Client.quad(b,ps,new Vec3(-r,-r,-r),new Vec3(r,-r,-r),new Vec3(r,r,-r),new Vec3(-r,r,-r),c);
         Client.quad(b,ps,new Vec3(-r,-r,r),new Vec3(-r,r,r),new Vec3(r,r,r),new Vec3(r,-r,r),c);
@@ -85,7 +85,7 @@ public final class ObserverClient {
         Client.quad(b,ps,new Vec3(r,-r,-r),new Vec3(r,-r,r),new Vec3(r,r,r),new Vec3(r,r,-r),c);
         Client.quad(b,ps,new Vec3(-r,r,-r),new Vec3(r,r,-r),new Vec3(r,r,r),new Vec3(-r,r,r),c);
         Client.quad(b,ps,new Vec3(-r,-r,-r),new Vec3(-r,-r,r),new Vec3(r,-r,r),new Vec3(r,-r,-r),c);
-        BufferUploader.drawWithShader(b.end());RenderSystem.depthMask(true);RenderSystem.enableCull();RenderSystem.disableBlend();ps.popPose();
+        BufferUploader.drawWithShader(b.buildOrThrow());RenderSystem.depthMask(true);RenderSystem.enableCull();RenderSystem.disableBlend();ps.popPose();
     }
     @SubscribeEvent public static void overlays(RenderGuiOverlayEvent.Pre e){if(active)e.setCanceled(true);}
     @SubscribeEvent public static void input(MovementInputUpdateEvent e){

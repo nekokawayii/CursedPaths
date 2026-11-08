@@ -138,19 +138,18 @@ public final class RatioVisuals {
         RenderSystem.depthMask(false);
         RenderSystem.setShader(GameRenderer::getPositionColorShader);
         RenderSystem.setShaderColor(1, 1, 1, 1);
-        BufferBuilder b = Tesselator.getInstance().getBuilder();
-        b.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_COLOR);
+        BufferBuilder b=Tesselator.getInstance().begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_COLOR);
         for (Arc arc : ARCS) drawArc(b, ps, arc, cam, now);
         for (Line line : LINES) drawLine(b, ps, line, cam, now);
         for (Clock clock : CLOCKS) drawClock(b, ps, clock, cam, now);
         for (Crit crit : CRITS) drawCrit(b, ps, crit, cam, now);
-        BufferUploader.drawWithShader(b.end());
+        BufferUploader.drawWithShader(b.buildOrThrow());
         // 7:3 数轴：画在最上层（关深度测试），直接盖过生物与地形，永远不会被身体挡掉
         if (!AXES.isEmpty()) {
             RenderSystem.disableDepthTest();
             b.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_COLOR);
             for (Axis axis : AXES.values()) drawAxis(b, ps, mc, axis, cam, partial, now);
-            BufferUploader.drawWithShader(b.end());
+            BufferUploader.drawWithShader(b.buildOrThrow());
             RenderSystem.enableDepthTest();
         }
         RenderSystem.depthMask(true);

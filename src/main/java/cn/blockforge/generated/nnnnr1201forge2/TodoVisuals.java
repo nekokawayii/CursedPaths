@@ -99,8 +99,7 @@ public final class TodoVisuals {
         RenderSystem.depthMask(false);
         RenderSystem.setShader(GameRenderer::getPositionColorShader);
         RenderSystem.setShaderColor(1, 1, 1, 1);
-        BufferBuilder b = Tesselator.getInstance().getBuilder();
-        b.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_COLOR);
+        BufferBuilder b=Tesselator.getInstance().begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_COLOR);
         int drawn = 0;
         for (Map.Entry<Long, Vec3> entry : blockMarks.entrySet()) {
             if (drawn++ >= MAX_MARKS) break;
@@ -117,7 +116,7 @@ public final class TodoVisuals {
             mark(b, ps, at, Math.max(0.45, entity.getBbWidth() * 0.75), now, cam);
         }
         for (Flash flash : flashes) drawFlash(b, ps, flash, cam, now);
-        BufferUploader.drawWithShader(b.end());
+        BufferUploader.drawWithShader(b.buildOrThrow());
         RenderSystem.depthMask(true);
         RenderSystem.enableCull();
         RenderSystem.disableBlend();

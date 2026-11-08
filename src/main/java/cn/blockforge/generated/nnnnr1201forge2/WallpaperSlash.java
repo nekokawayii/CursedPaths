@@ -35,7 +35,7 @@ public final class WallpaperSlash {
         if(owner!=null&&WallpaperClient.hasImage(owner))pending.add(new Cut(owner,p,q,r,s,Math.min(1,alpha)));
         // 黑芯和包边也占绘图内存：关闭共享、下载中或低阶段同样按斩击数分批。
         if(++batchCuts>=BATCH_SIZE){
-            BufferUploader.drawWithShader(b.end());flush(ps);batchCuts=0;
+            BufferUploader.drawWithShader(b.buildOrThrow());flush(ps);batchCuts=0;
             b.begin(VertexFormat.Mode.QUADS,DefaultVertexFormat.POSITION_COLOR);
         }
     }
@@ -85,16 +85,16 @@ public final class WallpaperSlash {
                 RenderSystem.setShaderTexture(0,image);
                 if(dedicated){RenderSystem.setShader(()->shader);shader.setSampler("Sampler0",Minecraft.getInstance().getTextureManager().getTexture(image));desktopUniforms();}
                 else RenderSystem.setShader(GameRenderer::getPositionTexColorShader);
-                BufferBuilder b=Tesselator.getInstance().getBuilder();b.begin(VertexFormat.Mode.TRIANGLES,dedicated?DefaultVertexFormat.POSITION_COLOR:DefaultVertexFormat.POSITION_TEX_COLOR);
+                BufferBuilder b=Tesselator.getInstance().begin(VertexFormat.Mode.TRIANGLES,dedicated?DefaultVertexFormat.POSITION_COLOR:DefaultVertexFormat.POSITION_TEX_COLOR);
                 for(Cut c:entry.getValue()){
                     var polygon=WallpaperProjection.clip(List.of(project(transform,c.a),project(transform,c.b),project(transform,c.c),project(transform,c.d)));
                     for(int i=1;i+1<polygon.size();i++){screenVertex(b,polygon.get(0),c.alpha,ox,oy,sx,sy);screenVertex(b,polygon.get(i),c.alpha,ox,oy,sx,sy);screenVertex(b,polygon.get(i+1),c.alpha,ox,oy,sx,sy);}
                 }
-                BufferUploader.drawWithShader(b.end());
+                BufferUploader.drawWithShader(b.buildOrThrow());
             }
         }finally{pending.clear();modelView.popPose();RenderSystem.applyModelViewMatrix();RenderSystem.setProjectionMatrix(projection,sorting);RenderSystem.setShaderTexture(0,texture);RenderSystem.setShaderColor(color[0],color[1],color[2],color[3]);RenderSystem.setShader(GameRenderer::getPositionColorShader);}
     }
     private static WallpaperProjection.Point project(org.joml.Matrix4f matrix,Vec3 p){var v=new org.joml.Vector4f((float)p.x,(float)p.y,(float)p.z,1).mul(matrix);return new WallpaperProjection.Point(v.x,v.y,v.z,v.w);}
-    private static void screenVertex(BufferBuilder b,WallpaperProjection.Point p,float alpha,double ox,double oy,double sx,double sy){double x=p.x()/p.w(),y=p.y()/p.w(),z=p.z()/p.w();double[] uv=WallpaperProjection.uv(x,y,ox,oy,sx,sy);b.addVertex(x,y,z-.000001);if(shader==null)b.uv((float)uv[0],(float)uv[1]);b.color(1f,1f,1f,alpha).endVertex();}
+    private static void screenVertex(BufferBuilder b,WallpaperProjection.Point p,float alpha,double ox,double oy,double sx,double sy){double x=p.x()/p.w(),y=p.y()/p.w(),z=p.z()/p.w();double[] uv=WallpaperProjection.setUv(x,y,ox,oy,sx,sy);b.addVertex(x,y,z-.000001);if(shader==null)b.setUv((float)uv[0],(float)uv[1]);b.setColor(1f,1f,1f,alpha);}
     private WallpaperSlash(){}
 }

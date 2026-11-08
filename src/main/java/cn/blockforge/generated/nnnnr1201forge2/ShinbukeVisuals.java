@@ -85,8 +85,7 @@ public final class ShinbukeVisuals {
         RenderSystem.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA,GlStateManager.DestFactor.ONE);
         RenderSystem.depthMask(false);RenderSystem.disableDepthTest();
         RenderSystem.setShader(GameRenderer::getPositionColorShader);RenderSystem.setShaderColor(1,1,1,1);
-        BufferBuilder b=Tesselator.getInstance().getBuilder();
-        b.begin(VertexFormat.Mode.QUADS,DefaultVertexFormat.POSITION_COLOR);
+        BufferBuilder b=Tesselator.getInstance().begin(VertexFormat.Mode.QUADS,DefaultVertexFormat.POSITION_COLOR);
         var pose=ps.last().pose();
         for(Bolt bolt:bolts.values()){
             float t=Math.min(1f,(now-bolt.born())/(float)(LIFE*50));
@@ -129,12 +128,12 @@ public final class ShinbukeVisuals {
                 emit(b,pose,new Vec3(bottom.x+x0-cam.x,bottom.y+y+0.06-cam.y,bottom.z+z0-cam.z),(rgb>>16)&255,(rgb>>8)&255,rgb&255,(int)(alpha*0.25f));
             }
         }
-        BufferUploader.drawWithShader(b.end());
+        BufferUploader.drawWithShader(b.buildOrThrow());
         RenderSystem.enableDepthTest();RenderSystem.depthMask(true);
         RenderSystem.defaultBlendFunc();RenderSystem.enableCull();RenderSystem.disableBlend();
     }
     private static void emit(BufferBuilder b,org.joml.Matrix4f pose,Vec3 v,int r,int g,int bl,int a){
-        b.addVertex(pose,(float)v.x,(float)v.y,(float)v.z).color(r,g,bl,a).endVertex();
+        b.addVertex(pose,(float)v.x,(float)v.y,(float)v.z).setColor(r,g,bl,a);
     }
     /** 简化 HSV→RGB（只用于闪电配色）。 */
     private static int hsv(float h,float s,float v){

@@ -28,7 +28,7 @@ public final class RuinClient {
     private static boolean active(){var mc=Minecraft.getInstance();return origin!=null&&mc.level!=null&&mc.player!=null&&mc.level.dimension()==net.minecraft.world.level.Level.OVERWORLD&&mc.level.getGameTime()<until&&mc.player.getX()>=origin.x&&mc.player.getX()<origin.x+(rotation%2==0?49:65)&&mc.player.getZ()>=origin.z&&mc.player.getZ()<origin.z+(rotation%2==0?65:49);}
     @SubscribeEvent public static void fog(ViewportEvent.ComputeFogColor e){if(active()){e.setRed(0.43f);e.setGreen(0.39f);e.setBlue(0.51f);}}
     @SubscribeEvent public static void hud(RenderGuiEvent.Post e){var mc=Minecraft.getInstance();if(!active()||mc.options.hideGui||mc.level.getGameTime()>=caption)return;int h=mc.getWindow().getGuiScaledHeight();e.getGuiGraphics().drawString(mc.font,"……护人之魂，镇咒于此……",12,h/2,0xA5D7CBE3);}
-    private static void vertex(BufferBuilder b,PoseStack ps,Vec3 p,int color){b.addVertex(ps.last().pose(),(float)p.x,(float)p.y,(float)p.z).color(color>>16&255,color>>8&255,color&255,color>>>24).endVertex();}
+    private static void vertex(BufferBuilder b,PoseStack ps,Vec3 p,int color){b.addVertex(ps.last().pose(),(float)p.x,(float)p.y,(float)p.z).setColor(color>>16&255,color>>8&255,color&255,color>>>24);}
     private static void quad(BufferBuilder b,PoseStack ps,Vec3 a,Vec3 c,Vec3 d,Vec3 e,int color){vertex(b,ps,a,color);vertex(b,ps,c,color);vertex(b,ps,d,color);vertex(b,ps,e,color);}
     @SubscribeEvent public static void render(RenderLevelStageEvent e){
         if(!active())return;boolean sky=e.getStage()==RenderLevelStageEvent.Stage.AFTER_SKY;
@@ -36,7 +36,7 @@ public final class RuinClient {
         var mc=Minecraft.getInstance();PoseStack ps=e.getPoseStack();Vec3 cam=e.getCamera().getPosition();float t=mc.level.getGameTime()+e.getPartialTick();
         ps.pushPose();RenderSystem.enableBlend();RenderSystem.defaultBlendFunc();RenderSystem.disableCull();RenderSystem.depthMask(false);RenderSystem.setShader(GameRenderer::getPositionColorShader);
         if(sky)RenderSystem.disableDepthTest();else {RenderSystem.enableDepthTest();ps.translate(-cam.x,-cam.y,-cam.z);}
-        BufferBuilder b=Tesselator.getInstance().getBuilder();b.begin(VertexFormat.Mode.QUADS,DefaultVertexFormat.POSITION_COLOR);
+        BufferBuilder b=Tesselator.getInstance().begin(VertexFormat.Mode.QUADS,DefaultVertexFormat.POSITION_COLOR);
         if(sky){double r=240;quad(b,ps,new Vec3(-r,120,-r),new Vec3(r,120,-r),new Vec3(r,120,r),new Vec3(-r,120,r),0xFF80768E);for(int i=0;i<32;i++){double a=i*Math.PI/16,z=(i+1)*Math.PI/16;quad(b,ps,new Vec3(Math.cos(a)*r,-150,Math.sin(a)*r),new Vec3(Math.cos(z)*r,-150,Math.sin(z)*r),new Vec3(Math.cos(z)*r,121,Math.sin(z)*r),new Vec3(Math.cos(a)*r,121,Math.sin(a)*r),0xFF70657F);}}
         else {
             for(int i=0;i<90;i++){double x=2+Math.floorMod(i*173,450)/10.0,z=2+Math.floorMod(i*97,600)/10.0,y=11+(t*.008+i*.719)%8;Vec3 p=local(x,y,z);Client.ribbon(b,ps,p,p.add(.04,.07,.02),.035,0x906F449E,cam);}
@@ -44,7 +44,7 @@ public final class RuinClient {
             // 丝线靠近实际墙体，地下密度更高。
             for(int i=0;i<48;i++){boolean below=i>=24;Vec3 p=below?local(31+(i%2)*14,2+(i%5),40+(i%13)):local(i%2==0?5.04:42.96,12+i%4,34+i%24);for(int j=0;j<5;j++){Vec3 q=p.add(Math.sin(t*.025+i+j)*.12,.21,.18);Client.ribbon(b,ps,p,q,.012,0x65E3E0F1,cam);p=q;}}
         }
-        BufferUploader.drawWithShader(b.end());RenderSystem.depthMask(true);RenderSystem.enableDepthTest();RenderSystem.enableCull();RenderSystem.disableBlend();
+        BufferUploader.drawWithShader(b.buildOrThrow());RenderSystem.depthMask(true);RenderSystem.enableDepthTest();RenderSystem.enableCull();RenderSystem.disableBlend();
         if(!sky)ghosts(ps,t);
         ps.popPose();
     }

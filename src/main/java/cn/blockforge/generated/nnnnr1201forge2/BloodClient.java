@@ -79,23 +79,23 @@ public final class BloodClient {
         ps.pushPose();try{
             ps.translate(-camera.x,-camera.y,-camera.z);RenderSystem.enableDepthTest();RenderSystem.enableBlend();RenderSystem.defaultBlendFunc();RenderSystem.disableCull();RenderSystem.depthMask(false);RenderSystem.setShaderColor(1,1,1,1);RenderSystem.setShaderTexture(0,TEXTURE);
             if(shader!=null){shader.safeGetUniform("BloodTime").set((float)(time/20));shader.safeGetUniform("FluidMode").set(0f);RenderSystem.setShader(()->shader);}else RenderSystem.setShader(GameRenderer::getPositionColorTexShader);
-            BufferBuilder b=Tesselator.getInstance().getBuilder();b.begin(VertexFormat.Mode.QUADS,DefaultVertexFormat.POSITION_COLOR_TEX);
+            BufferBuilder b=Tesselator.getInstance().begin(VertexFormat.Mode.QUADS,DefaultVertexFormat.POSITION_COLOR_TEX);
             for(Visual v:visuals)if(v.e.position().distanceToSqr(camera)<180*180)draw(b,ps,v,camera,time);
             for(Visual v:oceans.values())if(v.e.position().distanceToSqr(camera)<240*240)ocean(b,ps,v,camera,time);
-            BufferUploader.drawWithShader(b.end());
+            BufferUploader.drawWithShader(b.buildOrThrow());
             if(shader!=null)shader.safeGetUniform("FluidMode").set(1f);
             b.begin(VertexFormat.Mode.QUADS,DefaultVertexFormat.POSITION_COLOR_TEX);
             for(Visual v:domains.values())if(v.e.position().distanceToSqr(camera)<240*240)domain(b,ps,v,camera,time);
-            BufferUploader.drawWithShader(b.end());
+            BufferUploader.drawWithShader(b.buildOrThrow());
             // 眼白与瞳孔独立使用纯色通道，绝不经过红色血液材质染色。
             RenderSystem.setShader(GameRenderer::getPositionColorShader);b.begin(VertexFormat.Mode.QUADS,DefaultVertexFormat.POSITION_COLOR);
             for(Visual v:domains.values())eyes(b,ps,v,camera,time);
-            BufferUploader.drawWithShader(b.end());
+            BufferUploader.drawWithShader(b.buildOrThrow());
             if(shader!=null){shader.safeGetUniform("FluidMode").set(0f);RenderSystem.setShader(()->shader);}else RenderSystem.setShader(GameRenderer::getPositionColorTexShader);
             // 预测轨迹不修改服务端时间，也不会标记友方。
             RenderSystem.disableDepthTest();b.begin(VertexFormat.Mode.QUADS,DefaultVertexFormat.POSITION_COLOR_TEX);
             for(Visual v:visuals)if(v.e.kind()==BloodArts.FX_HEART){Entity target=mc.level.getEntity(v.e.owner());Vec3 at=target==null?v.e.position():target.position();heart(b,ps,at.add(0,target==null?2:target.getEyeHeight()+.3,0),camera,time);prediction(b,ps,at,v.e.direction(),v.e.size(),camera,time);}
-            BufferUploader.drawWithShader(b.end());
+            BufferUploader.drawWithShader(b.buildOrThrow());
         }finally{ps.popPose();RenderSystem.depthMask(mask);if(depth)RenderSystem.enableDepthTest();else RenderSystem.disableDepthTest();if(cull)RenderSystem.enableCull();else RenderSystem.disableCull();RenderSystem.blendFuncSeparate(src,dst,srcA,dstA);if(blend)RenderSystem.enableBlend();else RenderSystem.disableBlend();RenderSystem.setShaderTexture(0,texture);RenderSystem.setShader(()->previous);RenderSystem.setShaderColor(color[0],color[1],color[2],color[3]);}
     }
     private static void draw(BufferBuilder b,PoseStack ps,Visual visual,Vec3 camera,double time){
@@ -186,6 +186,6 @@ public final class BloodClient {
     private static void rope(BufferBuilder b,PoseStack ps,Vec3 start,Vec3 end,double width,Vec3 camera,double time,double alpha){Vec3 axis=end.subtract(start),side=NetBranches.side(axis.normalize());int count=Math.max(4,Math.min(48,(int)(axis.length()*3)));Vec3 previous=start;for(int i=1;i<=count;i++){double t=i/(double)count;Vec3 p=start.lerp(end,t).add(side.scale(Math.sin(t*18-time*.22)*Math.sin(t*Math.PI)*width*1.8));line(b,ps,previous,p,width*(.86+.14*Math.sin(time*.3+i)),camera,alpha);previous=p;}}
     private static void line(BufferBuilder b,PoseStack ps,Vec3 start,Vec3 end,double width,Vec3 camera,double alpha){Vec3 axis=end.subtract(start);if(axis.lengthSqr()<1e-10)return;Vec3 side=axis.cross(camera.subtract(start)).normalize().scale(width);quad(b,ps,start.subtract(side),end.subtract(side),end.add(side),start.add(side),0,0,Math.max(.1,axis.length()),1,alpha,1);}
     private static void quad(BufferBuilder b,PoseStack ps,Vec3 a,Vec3 c,Vec3 d,Vec3 e,double u0,double v0,double u1,double v1,double alpha,float tint){vertex(b,ps,a,u0,v0,alpha,tint);vertex(b,ps,c,u1,v0,alpha,tint);vertex(b,ps,d,u1,v1,alpha,tint);vertex(b,ps,e,u0,v1,alpha,tint);}
-    private static void vertex(BufferBuilder b,PoseStack ps,Vec3 p,double u,double v,double alpha,float tint){b.addVertex(ps.last().pose(),(float)p.x,(float)p.y,(float)p.z).color(tint,tint,tint,(float)Math.max(0,Math.min(1,alpha))).uv((float)u,(float)v).endVertex();}
+    private static void vertex(BufferBuilder b,PoseStack ps,Vec3 p,double u,double v,double alpha,float tint){b.addVertex(ps.last().pose(),(float)p.x,(float)p.y,(float)p.z).setColor(tint,tint,tint,(float)Math.max(0,Math.min(1,alpha))).setUv((float)u,(float)v);}
     private BloodClient(){}
 }

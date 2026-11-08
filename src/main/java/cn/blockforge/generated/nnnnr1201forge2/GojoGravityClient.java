@@ -25,9 +25,9 @@ public final class GojoGravityClient {
             RenderSystem.enableDepthTest();RenderSystem.depthMask(false);RenderSystem.disableCull();RenderSystem.enableBlend();
             RenderSystem.blendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA,GlStateManager.DestFactor.ONE,GlStateManager.SourceFactor.ONE,GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
             RenderSystem.setShader(GameRenderer::getPositionColorShader);RenderSystem.setShaderColor(1,1,1,1);
-            BufferBuilder b=Tesselator.getInstance().getBuilder();b.begin(VertexFormat.Mode.QUADS,DefaultVertexFormat.POSITION_COLOR);
+            BufferBuilder b=Tesselator.getInstance().begin(VertexFormat.Mode.QUADS,DefaultVertexFormat.POSITION_COLOR);
             for(Orb orb:orbs)orb(b,ps,orb,camera,time);
-            BufferUploader.drawWithShader(b.end());
+            BufferUploader.drawWithShader(b.buildOrThrow());
         }finally{
             ps.popPose();RenderSystem.depthMask(mask);if(depth)RenderSystem.enableDepthTest();else RenderSystem.disableDepthTest();
             if(cull)RenderSystem.enableCull();else RenderSystem.disableCull();
@@ -42,7 +42,7 @@ public final class GojoGravityClient {
         // 镜头进入球内时淡出，避免在近脸蓄力时铺满整个屏幕。
         float fade=(float)Math.min(1,Math.max(0,(distance-size*.25)/Math.max(.2,size*.7)));
         if(fade<=0)return;
-        int tint=orb.color(),pale=mix(tint,0xFFFFFF,.72f);
+        int tint=orb.setColor(),pale=mix(tint,0xFFFFFF,.72f);
         for(int i=0;i<12;i++){
             double r0=size*i/7.0,r1=size*(i+1)/7.0;
             float alpha=(float)(Math.exp(-Math.pow((i+.5)/7.0,2)*2.3)*.24*fade);
@@ -79,10 +79,10 @@ public final class GojoGravityClient {
     }
     private static void quad(BufferBuilder b,PoseStack ps,Vec3 a,Vec3 c,Vec3 d,Vec3 e,int color,float alpha){
         var matrix=ps.last().pose();int r=color>>16&255,g=color>>8&255,v=color&255,opacity=Math.max(0,Math.min(255,(int)(alpha*255)));
-        b.addVertex(matrix,(float)a.x,(float)a.y,(float)a.z).color(r,g,v,opacity).endVertex();
-        b.addVertex(matrix,(float)c.x,(float)c.y,(float)c.z).color(r,g,v,opacity).endVertex();
-        b.addVertex(matrix,(float)d.x,(float)d.y,(float)d.z).color(r,g,v,opacity).endVertex();
-        b.addVertex(matrix,(float)e.x,(float)e.y,(float)e.z).color(r,g,v,opacity).endVertex();
+        b.addVertex(matrix,(float)a.x,(float)a.y,(float)a.z).setColor(r,g,v,opacity);
+        b.addVertex(matrix,(float)c.x,(float)c.y,(float)c.z).setColor(r,g,v,opacity);
+        b.addVertex(matrix,(float)d.x,(float)d.y,(float)d.z).setColor(r,g,v,opacity);
+        b.addVertex(matrix,(float)e.x,(float)e.y,(float)e.z).setColor(r,g,v,opacity);
     }
     private GojoGravityClient(){}
 }

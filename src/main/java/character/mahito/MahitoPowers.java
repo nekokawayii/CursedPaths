@@ -128,7 +128,7 @@ public final class MahitoPowers {
         if (eventfalse) return;
         for (var it = WALLS.iterator(); it.hasNext(); ) {
             Wall wall = it.next();
-            if (wall.level().getGameTime() >= wall.end()) { it.remove(); continue; }
+            if (wall.level().getGameTime() >= wall.buildOrThrow()) { it.remove(); continue; }
             if (wall.level().getGameTime() % 10 != 0) continue;
             for (LivingEntity enemy : wall.level().getEntitiesOfClass(LivingEntity.class, new AABB(wall.center(), wall.center()).inflate(10),
                     e -> e.isAlive() && !(e instanceof Player p && p.isCreative()))) {

@@ -30,5 +30,5 @@ public final class VoidVisuals {
         }
     }
     static void needle(BufferBuilder b,PoseStack ps,Vec3 a,Vec3 z,double width,float alpha,Vec3 cam){SlashStyle.draw(b,ps,a,z,width,alpha,cam);}
-    private static void diamond(BufferBuilder b,PoseStack ps,Vec3 a,Vec3 z,Vec3 mid,Vec3 edge,double width,int color){for(Vec3 p:new Vec3[]{a,mid.add(edge.scale(width)),z,mid.subtract(edge.scale(width))})b.addVertex(ps.last().pose(),(float)p.x,(float)p.y,(float)p.z).color((color>>16)&255,(color>>8)&255,color&255,(color>>>24)&255).endVertex();}
+    private static void diamond(BufferBuilder b,PoseStack ps,Vec3 a,Vec3 z,Vec3 mid,Vec3 edge,double width,int color){for(Vec3 p:new Vec3[]{a,mid.add(edge.scale(width)),z,mid.subtract(edge.scale(width))})b.addVertex(ps.last().pose(),(float)p.x,(float)p.y,(float)p.z).setColor((color>>16)&255,(color>>8)&255,color&255,(color>>>24)&255);}
 }

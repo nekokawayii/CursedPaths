@@ -179,8 +179,7 @@ public final class RyuVisuals {
         RenderSystem.depthMask(false);
         RenderSystem.setShader(GameRenderer::getPositionColorShader);
         RenderSystem.setShaderColor(1, 1, 1, 1);
-        BufferBuilder b = Tesselator.getInstance().getBuilder();
-        b.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_COLOR);
+        BufferBuilder b=Tesselator.getInstance().begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_COLOR);
         for (Beam beam : BEAMS.values()) drawBeam(b, ps, beam, cam, now);
         for (Trail trail : TRAILS) drawTrail(b, ps, trail, cam, now);
         for (Burst burst : BURSTS) drawBurst(b, ps, burst, cam, now);
@@ -190,7 +189,7 @@ public final class RyuVisuals {
         for (Rise rise : RISES) drawRise(b, ps, rise, cam, now);
         for (Burst2 burst : BURSTS2) drawBurst2(b, ps, burst, cam, now);
         for (Spark spark : SPARKS) drawSpark(b, ps, spark, cam, now);
-        BufferUploader.drawWithShader(b.end());
+        BufferUploader.drawWithShader(b.buildOrThrow());
         RenderSystem.depthMask(true);
         RenderSystem.enableCull();
         RenderSystem.disableBlend();
@@ -339,12 +338,12 @@ public final class RyuVisuals {
     private static void drawBurst2(BufferBuilder b, PoseStack ps, Burst2 burst, Vec3 cam, long now) {
         float t = (now - burst.born()) / (float) burst.life();
         if (t < 0 || t > 1) return;
-        int color = COLORS[Math.floorMod(burst.color(), COLORS.length)];
+        int color = COLORS[Math.floorMod(burst.setColor(), COLORS.length)];
         int alpha = (int) (235 * (1 - t));
         double radius = 0.6 + 3.4 * Math.min(1, t * 1.25);
         Client.ring(b, ps, burst.pos(), radius, 0.12, argb(color, alpha), cam);
         Client.ring(b, ps, burst.pos(), radius * 0.6, 0.06, argb(0xFFFFFF, (int) (alpha * 0.8)), cam);
-        Random rnd = new Random(burst.born() * 131 + burst.color());
+        Random rnd = new Random(burst.born() * 131 + burst.setColor());
         for (int i = 0; i < 12; i++) {
             double a = rnd.nextDouble() * Math.PI * 2, d = radius * (0.4 + rnd.nextDouble() * 0.8);
             Vec3 at = burst.pos().add(Math.cos(a) * d, (rnd.nextDouble() - 0.5) * d, Math.sin(a) * d);
@@ -357,7 +356,7 @@ public final class RyuVisuals {
     private static void drawSpark(BufferBuilder b, PoseStack ps, Spark spark, Vec3 cam, long now) {
         float t = (now - spark.born()) / (float) spark.life();
         if (t < 0 || t > 1) return;
-        int color = COLORS[Math.floorMod(spark.color(), COLORS.length)];
+        int color = COLORS[Math.floorMod(spark.setColor(), COLORS.length)];
         int alpha = (int) (245 * (1 - t));
         Client.ribbon(b, ps, spark.pos().subtract(0.1, 0, 0), spark.pos().add(0.1, 0, 0), 0.05, argb(color, alpha), cam);
         Client.ribbon(b, ps, spark.pos().subtract(0, 0.1, 0), spark.pos().add(0, 0.1, 0), 0.05, argb(color, alpha), cam);
@@ -396,10 +395,9 @@ public final class RyuVisuals {
         RenderSystem.setShader(GameRenderer::getPositionTexColorShader);
         RenderSystem.setShaderTexture(0, SKY_TEXTURE);
         RenderSystem.blendFunc(org.lwjgl.opengl.GL11.GL_SRC_ALPHA, org.lwjgl.opengl.GL11.GL_ONE);
-        BufferBuilder b = Tesselator.getInstance().getBuilder();
-        b.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX_COLOR);
+        BufferBuilder b=Tesselator.getInstance().begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX_COLOR);
         sphereQuads(b, ps, center, radius * 0.985, ((int) (255 * pulse) << 24) | 0xFFFFFF, time * 0.15f, 1f, true);
-        BufferUploader.drawWithShader(b.end());
+        BufferUploader.drawWithShader(b.buildOrThrow());
         RenderSystem.defaultBlendFunc();
         RenderSystem.depthMask(true);
         RenderSystem.enableCull();
@@ -432,8 +430,8 @@ public final class RyuVisuals {
         float y = (float) (center.y + radius * Math.sin(phi));
         float z = (float) (center.z + radius * cosPhi * Math.sin(theta));
         var vertex = b.addVertex(ps.last().pose(), x, y, z);
-        if (textured) vertex.uv((float) u, (float) (1 - v));   // 贴图 v=0 在上，球的 v=0 在南极 → 翻转
-        vertex.color((color >> 16) & 255, (color >> 8) & 255, color & 255, (color >>> 24) & 255).endVertex();
+        if (textured) vertex.setUv((float) u, (float) (1 - v));   // 贴图 v=0 在上，球的 v=0 在南极 → 翻转
+        vertex.setColor((color >> 16) & 255, (color >> 8) & 255, color & 255, (color >>> 24) & 255);
     }
 
     private static int argb(int rgb, int alpha) {

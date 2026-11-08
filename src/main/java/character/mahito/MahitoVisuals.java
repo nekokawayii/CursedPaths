@@ -84,17 +84,17 @@ public final class MahitoVisuals {
             for(int i=0;i<4;i++){
                 double lat=angles[i][0],az=angles[i][1],h=Math.cos(lat)*radius;
                 float px=(float)(effect.position().x+Math.cos(az)*h),py=(float)(effect.position().y+Math.sin(lat)*radius),pz=(float)(effect.position().z+Math.sin(az)*h);
-                out.addVertex(ps.last().pose(),px,py,pz).color(1f,1f,1f,1f).uv(i==0||i==3?0:1,i<2?1:0).overlayCoords(OverlayTexture.NO_OVERLAY).uv2(15728880).normal(0,1,0).endVertex();
+                out.addVertex(ps.last().pose(),px,py,pz).setColor(1f,1f,1f,1f).setUv(i==0||i==3?0:1,i<2?1:0).setOverlay(OverlayTexture.NO_OVERLAY).setLight(15728880).setNormal(0,1,0);
             }
         }
     }
     private static void ribbon(PoseStack ps,MultiBufferSource buffers,Vec3 a,Vec3 b,float width,float r,float g,float blue){
         var out=buffers.getBuffer(RenderType.entityTranslucent(SKIN));var matrix=ps.last().pose();
-        for(Vec3 p:List.of(a.add(width,0,0),b.add(width,0,0),b.add(-width,0,0),a.add(-width,0,0)))out.addVertex(matrix,(float)p.x,(float)p.y,(float)p.z).color(r,g,blue,.9f).uv(.1f,.1f).overlayCoords(OverlayTexture.NO_OVERLAY).uv2(15728880).normal(0,1,0).endVertex();
+        for(Vec3 p:List.of(a.add(width,0,0),b.add(width,0,0),b.add(-width,0,0),a.add(-width,0,0)))out.addVertex(matrix,(float)p.x,(float)p.y,(float)p.z).setColor(r,g,blue,.9f).setUv(.1f,.1f).setOverlay(OverlayTexture.NO_OVERLAY).setLight(15728880).setNormal(0,1,0);
     }
     private static void box(PoseStack ps,MultiBufferSource buffers,float x,float y,float z,float X,float Y,float Z,float r,float g,float b,float alpha){
         float[][][] faces={{{x,y,z},{X,y,z},{X,Y,z},{x,Y,z}},{{X,y,Z},{x,y,Z},{x,Y,Z},{X,Y,Z}},{{x,y,Z},{x,y,z},{x,Y,z},{x,Y,Z}},{{X,y,z},{X,y,Z},{X,Y,Z},{X,Y,z}},{{x,Y,z},{X,Y,z},{X,Y,Z},{x,Y,Z}}};
-        var out=buffers.getBuffer(RenderType.entityTranslucent(SKIN));for(var face:faces)for(int i=0;i<4;i++)out.addVertex(ps.last().pose(),face[i][0],face[i][1],face[i][2]).color(r,g,b,alpha).uv(i%2*.4f,(i/2)*.4f).overlayCoords(OverlayTexture.NO_OVERLAY).uv2(15728880).normal(0,1,0).endVertex();
+        var out=buffers.getBuffer(RenderType.entityTranslucent(SKIN));for(var face:faces)for(int i=0;i<4;i++)out.addVertex(ps.last().pose(),face[i][0],face[i][1],face[i][2]).setColor(r,g,b,alpha).setUv(i%2*.4f,(i/2)*.4f).setOverlay(OverlayTexture.NO_OVERLAY).setLight(15728880).setNormal(0,1,0);
     }
     public static final class PuppetRenderer extends EntityRenderer<MahitoPuppetEntity>{
         private final BbModel model=new BbModel("mahito_puppet","mahito_soul");

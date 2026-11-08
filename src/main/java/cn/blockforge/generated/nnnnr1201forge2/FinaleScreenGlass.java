@@ -27,13 +27,13 @@ public final class FinaleScreenGlass {
         RenderSystem.disableDepthTest();RenderSystem.enableBlend();RenderSystem.defaultBlendFunc();RenderSystem.disableCull();
         RenderSystem.setShader(GameRenderer::getPositionTexColorShader);RenderSystem.setShaderTexture(0,snapshot.getColorTextureId());RenderSystem.setShaderColor(1,1,1,1);
         var from=GlassGeometryRules.shards(w,h,0);var to=GlassGeometryRules.shards(w,h,age);
-        BufferBuilder b=Tesselator.getInstance().getBuilder();b.begin(VertexFormat.Mode.TRIANGLES,DefaultVertexFormat.POSITION_TEX_COLOR);
+        BufferBuilder b=Tesselator.getInstance().begin(VertexFormat.Mode.TRIANGLES,DefaultVertexFormat.POSITION_TEX_COLOR);
         int alpha=(int)(255*Math.max(0,1-age/10));
         for(int i=0;i<to.size();i++){
             var a=from.get(i);var z=to.get(i);var uv=List.of(a.a(),a.b(),a.c());var points=List.of(z.a(),z.b(),z.c());
-            for(int j=0;j<3;j++){var p=points.get(j);var texture=uv.get(j);b.addVertex(g.pose().last().pose(),(float)p.x(),(float)p.y(),0).uv((float)(texture.x()/w),(float)(1-texture.y()/h)).color(255,255,255,alpha).endVertex();}
+            for(int j=0;j<3;j++){var p=points.get(j);var texture=uv.get(j);b.addVertex(g.pose().last().pose(),(float)p.x(),(float)p.y(),0).setUv((float)(texture.x()/w),(float)(1-texture.y()/h)).setColor(255,255,255,alpha);}
         }
-        BufferUploader.drawWithShader(b.end());RenderSystem.enableCull();RenderSystem.disableBlend();RenderSystem.enableDepthTest();
+        BufferUploader.drawWithShader(b.buildOrThrow());RenderSystem.enableCull();RenderSystem.disableBlend();RenderSystem.enableDepthTest();
     }
     private FinaleScreenGlass(){}
 }

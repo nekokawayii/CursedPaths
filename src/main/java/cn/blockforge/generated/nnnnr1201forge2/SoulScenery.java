@@ -6,7 +6,7 @@ import static cn.blockforge.generated.nnnnr1201forge2.Client.*;
 
 /** 领域心象覆盖：不写入真实世界方块，战斗结束即恢复。 */
 public final class SoulScenery {
-    private static void vertex(BufferBuilder b,PoseStack ps,Vec3 p,int c){b.addVertex(ps.last().pose(),(float)p.x,(float)p.y,(float)p.z).color(c>>16&255,c>>8&255,c&255,c>>>24&255).endVertex();}
+    private static void vertex(BufferBuilder b,PoseStack ps,Vec3 p,int c){b.addVertex(ps.last().pose(),(float)p.x,(float)p.y,(float)p.z).setColor(c>>16&255,c>>8&255,c&255,c>>>24&255);}
     private static void face(BufferBuilder b,PoseStack ps,Vec3 a,Vec3 c,Vec3 d,Vec3 e,int color){vertex(b,ps,a,color);vertex(b,ps,c,color);vertex(b,ps,d,color);vertex(b,ps,e,color);}
     private static void box(BufferBuilder b,PoseStack ps,Vec3 c,double x,double y,double z,int color){
         Vec3 a=c.add(-x,0,-z),d=c.add(x,0,-z),e=c.add(x,0,z),f=c.add(-x,0,z);Vec3 A=a.add(0,y,0),D=d.add(0,y,0),E=e.add(0,y,0),F=f.add(0,y,0);

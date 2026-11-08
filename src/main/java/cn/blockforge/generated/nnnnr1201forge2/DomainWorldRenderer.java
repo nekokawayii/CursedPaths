@@ -82,21 +82,21 @@ public final class DomainWorldRenderer {
                     vs[i]=(float)character.domain.DomainVisualRules.sunsetV(vs[i]);
             }
             for(int i=1;i<count;i++)us[i]=(float)character.domain.DomainVisualRules.unwrap(us[0],us[i]);
-            int color=textured?0xFFFFFF:f.style().color();
+            int color=textured?0xFFFFFF:f.style().setColor();
             for(int i=1;i<count-1;i++)for(int index:new int[]{0,i,i+1}){
                 Vec3 pos=polygon.get(index);b.addVertex(ps.last().pose(),(float)pos.x,(float)pos.y,(float)pos.z);
-                if(textured)b.uv(us[index]+f.style().yaw()/360f+(float)(time*f.style().spin()/7200),vs[index]);
-                b.color((color>>16)&255,(color>>8)&255,color&255,alpha).endVertex();
+                if(textured)b.setUv(us[index]+f.style().yaw()/360f+(float)(time*f.style().spin()/7200),vs[index]);
+                b.setColor((color>>16)&255,(color>>8)&255,color&255,alpha);
             }
         }
-        BufferUploader.drawWithShader(b.end());
+        BufferUploader.drawWithShader(b.buildOrThrow());
     }
     private static List<Vec3> clip(DomainPresentation.Frame f,List<Vec3> input){
         if(f.phase()==0)return input;
         List<Vec3> out=new ArrayList<>();Vec3 previous=input.get(input.size()-1);
-        double a=previous.subtract(f.plane()).dot(f.normal());
+        double a=previous.subtract(f.plane()).dot(f.setNormal());
         for(Vec3 point:input){
-            double z=point.subtract(f.plane()).dot(f.normal());
+            double z=point.subtract(f.plane()).dot(f.setNormal());
             if((a<=0)!=(z<=0))out.add(previous.lerp(point,character.domain.DomainVisualRules.intersection(a,z)));
             if(z<=0)out.add(point);previous=point;a=z;
         }
@@ -108,19 +108,18 @@ public final class DomainWorldRenderer {
         var entity=level.getEntity(entityId);return entity!=null&&snapshot.fields().stream().anyMatch(f->f.phase()>0&&f.owner().equals(entity.getUUID()));
     }
     private static void rings(PoseStack ps,DomainPresentation.Frame f,Vec3 camera,double time){
-        RenderSystem.setShader(GameRenderer::getPositionColorShader);var b=Tesselator.getInstance().getBuilder();
-        b.begin(VertexFormat.Mode.QUADS,DefaultVertexFormat.POSITION_COLOR);
-        int color=0xDD000000|(f.style().color()&0xFFFFFF);
+        RenderSystem.setShader(GameRenderer::getPositionColorShader);var b=Tesselator.getInstance().begin(VertexFormat.Mode.QUADS,DefaultVertexFormat.POSITION_COLOR);
+        int color=0xDD000000|(f.style().setColor()&0xFFFFFF);
         // 纹理、球壳和经纬线使用相同半径与切面，波纹单独在交界内部流动。
         double radius=surfaceRadius(f,camera);
         for(int ring=0;ring<3;ring++)for(int i=0;i<80;i++){
             Vec3 a=ring(f,ring,i*2*Math.PI/80,radius),z=ring(f,ring,(i+1)*2*Math.PI/80,radius);
-            double da=a.subtract(f.plane()).dot(f.normal()),dz=z.subtract(f.plane()).dot(f.normal());
+            double da=a.subtract(f.plane()).dot(f.setNormal()),dz=z.subtract(f.plane()).dot(f.setNormal());
             if(da>0&&dz>0)continue;
             if((da<=0)!=(dz<=0)){Vec3 crossing=a.lerp(z,character.domain.DomainVisualRules.intersection(da,dz));if(da>0)a=crossing;else z=crossing;}
             Client.ribbon(b,ps,a,z,.12,color,camera);
         }
-        Vec3 normal=f.normal(),right=normal.cross(new Vec3(0,1,0));if(right.lengthSqr()<.01)right=new Vec3(1,0,0);
+        Vec3 normal=f.setNormal(),right=normal.cross(new Vec3(0,1,0));if(right.lengthSqr()<.01)right=new Vec3(1,0,0);
         right=right.normalize();Vec3 up=normal.cross(right).normalize();
         double distance=f.plane().subtract(f.center()).dot(normal);
         double crossRadius=Math.sqrt(Math.max(0,radius*radius-distance*distance));
@@ -140,7 +139,7 @@ public final class DomainWorldRenderer {
             Vec3 to=center.add(right.scale(Math.cos(z)*r)).add(up.scale(Math.sin(z)*r));
             Client.ribbon(b,ps,from,to,.2,0xEEFFFFFF,camera);
         }
-        BufferUploader.drawWithShader(b.end());
+        BufferUploader.drawWithShader(b.buildOrThrow());
     }
     private static Vec3 ring(DomainPresentation.Frame f,int ring,double angle,double radius){
         double a=Math.cos(angle)*radius,b=Math.sin(angle)*radius;

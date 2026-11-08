@@ -188,13 +188,13 @@ public final class FinaleClient {
     /** (2,1)二阶振型：中央节点、左右双瓣；碎片沿振型正负方向反向翘起。 */
     private static void glass(GuiGraphics g,int w,int h,double age){
         g.flush();RenderSystem.enableBlend();RenderSystem.defaultBlendFunc();RenderSystem.disableCull();RenderSystem.setShader(GameRenderer::getPositionColorShader);
-        BufferBuilder b=Tesselator.getInstance().getBuilder();b.begin(VertexFormat.Mode.QUADS,DefaultVertexFormat.POSITION_COLOR);PoseStack ps=g.pose();
+        BufferBuilder b=Tesselator.getInstance().begin(VertexFormat.Mode.QUADS,DefaultVertexFormat.POSITION_COLOR);PoseStack ps=g.pose();
         for(var shard:GlassGeometryRules.shards(w,h,age)){
             Vec3 a=new Vec3(shard.a().x(),shard.a().y(),0),c=new Vec3(shard.b().x(),shard.b().y(),0),z=new Vec3(shard.c().x(),shard.c().y(),0);
             int alpha=(int)(42*Math.max(0,1-age/10)),color=switch(shard.shade()){case 0->0xADB9CD;case 1->0xE8F2FF;default->0x748AA4;};
             Client.quad(b,ps,a,c,z,z,(alpha<<24)|color);guiLine(b,ps,a,c,0xFFBFCFDD);guiLine(b,ps,c,z,0xFFA2B5C8);guiLine(b,ps,z,a,0xFFE7F2FF);
         }
-        BufferUploader.drawWithShader(b.end());RenderSystem.enableCull();RenderSystem.disableBlend();
+        BufferUploader.drawWithShader(b.buildOrThrow());RenderSystem.enableCull();RenderSystem.disableBlend();
     }
     private static void guiLine(BufferBuilder b,PoseStack ps,Vec3 a,Vec3 z,int color){Vec3 side=new Vec3(-(z.y-a.y),z.x-a.x,0).normalize().scale(.45);Client.quad(b,ps,a.add(side),z.add(side),z.subtract(side),a.subtract(side),color);}
     private FinaleClient(){}

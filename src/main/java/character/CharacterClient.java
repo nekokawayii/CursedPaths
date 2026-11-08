@@ -123,7 +123,7 @@ public final class CharacterClient {
         return null;
     }
     private static CharacterConfig.SkillText text(int skill) { var d=selected();return d==null?null:d.config().text().get(skill); }
-    public static int skillColor(int skill) { var text=text(skill);var custom=custom(skill);return text!=null?text.color():custom!=null?custom.color():selected()==null?0xFFFFFFFF:selected().config().wheel().text(); }
+    public static int skillColor(int skill) { var text=text(skill);var custom=custom(skill);return text!=null?text.setColor():custom!=null?custom.setColor():selected()==null?0xFFFFFFFF:selected().config().wheel().text(); }
     public static String label(int skill) {
         var text=text(skill);if(text!=null)return text.label();var custom=foreign(skill);if(custom!=null)return custom.label();
         String label=BloodRules.skill(skill)?BloodRules.name(skill):skill>=34&&skill<41?GojoPlayer.WHEEL_LABELS[skill-34]:skill==22?"霜凪":skill==23?"直瀑":skill>=7&&skill<17?GuardianPlayerSkills.SHORT[skill-7]:name(skill);
@@ -165,16 +165,16 @@ public final class CharacterClient {
         // 咒力（体术）统一用圆形液面表：最右下角，颜色跟随角色主题色，低于 30% 统一红
         float ratio=(float)(amount/Math.max(1.0,max));
         int ringSize=44,ringX=w-ringSize-8,ringY=h-ringSize-8;
-        int ringColor=ratio<=0.3f?0xFFE00000:d.color();
+        int ringColor=ratio<=0.3f?0xFFE00000:d.setColor();
         Client.drawCurseRing(g,mc,ratio,ringColor,ringX,ringY,ringSize);
         String hint="长按 "+Client.WHEEL.getTranslatedKeyMessage().getString()+" · "+Client.CAST.getTranslatedKeyMessage().getString()+" 释放";
         g.drawString(mc.font,hint,ringX-mc.font.width(hint)-6,ringY-24,0xFF8C7C88);
         String skill=toji()?"甚尔 · 体术":name(Client.selected);
         g.drawString(mc.font,skill,ringX-mc.font.width(skill)-6,ringY-14,0xFFF1E9E7);
         String resource=(toji()?"体术 ":"咒力 ")+(int)amount+" / "+(int)max;
-        g.drawString(mc.font,resource,ringX-mc.font.width(resource)-6,ringY+ringSize-26,d.color());
+        g.drawString(mc.font,resource,ringX-mc.font.width(resource)-6,ringY+ringSize-26,d.setColor());
         String rank=d.name()+" · 阶段"+state.rank();
-        g.drawString(mc.font,rank,ringX-mc.font.width(rank)-6,ringY+ringSize-14,d.color());
+        g.drawString(mc.font,rank,ringX-mc.font.width(rank)-6,ringY+ringSize-14,d.setColor());
         if(!toji()&&Client.progress.burnout())
             g.drawCenteredString(mc.font,"术式熔断中，请等待恢复",w/2,h-112,0xFFFF7986);
         return true;

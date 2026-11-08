@@ -93,12 +93,12 @@ public final class CharacterWheel extends Screen {
             for(int line=0;line<Math.min(2,lines.size());line++){var text=lines.get(line);g.drawString(font,text,-font.width(text)/2,yy+line*11,textColor);}
             g.pose().popPose();
         }
-        g.drawCenteredString(font,kashimo()?"极之番":star()?"极之番":style.title().isBlank()?definition.name():style.title(),cx,cy-14,definition.color());
+        g.drawCenteredString(font,kashimo()?"极之番":star()?"极之番":style.title().isBlank()?definition.name():style.title(),cx,cy-14,definition.setColor());
         g.drawCenteredString(font,kashimo()?"幻兽·琥珀":star()?"死胎星":style.subtitle().isBlank()?definition.technique():style.subtitle(),cx,cy+1,kashimo()?(ultHover?0xFFFFFFFF:style.text()):starHover?0xFFFFBAC9:style.text());
         if(kashimo())g.drawCenteredString(font,ultHover?"满咒力释放终奥 · 生命低于30%自动触发":"轮盘中心：幻兽·琥珀",cx,cy+14,ultHover?0xFFBFF4FF:0xFF7FA8BC);
         if(star()&&DeathStarClient.anemic())g.drawCenteredString(font,"贫血禁用",cx,cy+14,0xFFFF7480);
         int skill=starHover?BloodRules.DEATH_STAR:current;
-        g.drawCenteredString(font,CharacterClient.name(skill),cx,12,definition.color());
+        g.drawCenteredString(font,CharacterClient.name(skill),cx,12,definition.setColor());
         g.drawCenteredString(font,!CharacterClient.allows(skill)?character.mainline.Mainline.domainSkill(definition.id(),skill)?"完成共同主线的领域展开成就后解锁":"完成对应个人线后解锁":skill==BloodRules.DEATH_STAR?"献祭90%当前生命与全部咒力":"消耗 "+CharacterClient.cost(skill)+" 咒力",cx,25,0xFFDEE2EE);
         int ly=height-43;for(var line:font.split(Component.literal(CharacterClient.description(skill)),Math.max(80,width-28))){if(ly>=height-15)break;g.drawString(font,line,14,ly,0xFFDADBE0);ly+=10;}
         g.drawCenteredString(font,"长按 "+Client.WHEEL.getTranslatedKeyMessage().getString()+" 移动选择，松手确认 · "+Client.CAST.getTranslatedKeyMessage().getString()+" 释放",cx,height-12,0xFFF1DADE);

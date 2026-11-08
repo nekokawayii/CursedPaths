@@ -63,7 +63,7 @@ public final class DeathStarClient {
         int src=GL30.glGetInteger(GL30.GL_BLEND_SRC_RGB),dst=GL30.glGetInteger(GL30.GL_BLEND_DST_RGB),srcA=GL30.glGetInteger(GL30.GL_BLEND_SRC_ALPHA),dstA=GL30.glGetInteger(GL30.GL_BLEND_DST_ALPHA);var shader=RenderSystem.getShader();float[] color=RenderSystem.getShaderColor().clone();
         ps.pushPose();try{
             ps.translate(-camera.x,-camera.y,-camera.z);RenderSystem.enableDepthTest();RenderSystem.depthMask(false);RenderSystem.enableBlend();RenderSystem.defaultBlendFunc();RenderSystem.disableCull();RenderSystem.setShader(GameRenderer::getPositionColorShader);RenderSystem.setShaderColor(1,1,1,1);
-            BufferBuilder b=Tesselator.getInstance().getBuilder();b.begin(VertexFormat.Mode.QUADS,DefaultVertexFormat.POSITION_COLOR);
+            BufferBuilder b=Tesselator.getInstance().begin(VertexFormat.Mode.QUADS,DefaultVertexFormat.POSITION_COLOR);
             for(Visual v:visuals.values()){
                 if(v.e.position().distanceToSqr(camera)>180*180)continue;
                 var e=v.e;double age=now-v.born,fade=Math.max(0,Math.min(1,(v.end-now)/5));Vec3 at=e.position(),dir=e.direction();
@@ -87,7 +87,7 @@ public final class DeathStarClient {
                     for(int i=0;i<3;i++)ring(b,ps,at,direction(i*19),radius,.12,(int)(210*fade)<<24|0xFF2249,camera);
                 }
             }
-            BufferUploader.drawWithShader(b.end());
+            BufferUploader.drawWithShader(b.buildOrThrow());
         }finally{ps.popPose();RenderSystem.depthMask(mask);if(depth)RenderSystem.enableDepthTest();else RenderSystem.disableDepthTest();if(cull)RenderSystem.enableCull();else RenderSystem.disableCull();RenderSystem.blendFuncSeparate(src,dst,srcA,dstA);if(blend)RenderSystem.enableBlend();else RenderSystem.disableBlend();RenderSystem.setShader(()->shader);RenderSystem.setShaderColor(color[0],color[1],color[2],color[3]);}
     }
     private static Vec3 direction(int i){double y=Math.sin(i*73.13),a=i*2.399,r=Math.sqrt(1-y*y);return new Vec3(Math.cos(a)*r,y,Math.sin(a)*r);}

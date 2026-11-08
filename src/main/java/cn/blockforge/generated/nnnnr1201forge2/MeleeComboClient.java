@@ -75,7 +75,7 @@ public final class MeleeComboClient {
         while(!queue.isEmpty()&&queue.peekFirst().end()<=clock)queue.removeFirst();
         Clip last=queue.peekLast();
         // 已有片段时紧接它的末帧；不能把每个网络包的到达抖动累计成段间停顿。
-        long start=last==null?clock+state.delay():Math.max(clock,last.end());
+        long start=last==null?clock+state.delay():Math.max(clock,last.buildOrThrow());
         boolean connected=last!=null&&start==last.buildOrThrow();
         if(queue.size()<MeleeComboRules.STAGES){
             if(connected)last.continues=true;
@@ -84,7 +84,7 @@ public final class MeleeComboClient {
     }
     private static Clip current(int id){
         Deque<Clip> queue=clips.get(id);if(queue==null)return null;
-        while(!queue.isEmpty()&&clock>=queue.peekFirst().end())queue.removeFirst();
+        while(!queue.isEmpty()&&clock>=queue.peekFirst().buildOrThrow())queue.removeFirst();
         if(queue.isEmpty()){clips.remove(id);return null;}
         return queue.peekFirst().start()<=clock?queue.peekFirst():null;
     }

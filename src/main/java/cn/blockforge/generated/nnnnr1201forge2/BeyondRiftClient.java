@@ -67,8 +67,7 @@ public final class BeyondRiftClient {
         if(mc.level.dimension()!=SoulJourney.CORRIDOR)return;
         if(cam.distanceToSqr(BeyondRift.CENTER)>256*256)return;
         double time=mc.level.getGameTime()+partial,z=BeyondRift.CENTER.z;
-        BufferBuilder b=Tesselator.getInstance().getBuilder();
-        b.begin(VertexFormat.Mode.QUADS,DefaultVertexFormat.POSITION_COLOR);
+        BufferBuilder b=Tesselator.getInstance().begin(VertexFormat.Mode.QUADS,DefaultVertexFormat.POSITION_COLOR);
         // 红色乱码条：位置、长度、粗细都随时间跳，模拟"越界数据"（限制在裂口内部）
         for(int i=0;i<10;i++){
             double seed=i*13.7,phase=time*0.9+seed;
@@ -92,7 +91,7 @@ public final class BeyondRiftClient {
                 Client.quad(b,ps,new Vec3(x-0.05,BeyondRift.CENTER.y+half,z+0.07),new Vec3(x+0.05,BeyondRift.CENTER.y+half,z+0.07),new Vec3(x+0.05,BeyondRift.CENTER.y-half,z+0.07),new Vec3(x-0.05,BeyondRift.CENTER.y-half,z+0.07),0xA8FF5060);
             }
         }
-        BufferUploader.drawWithShader(b.end());
+        BufferUploader.drawWithShader(b.buildOrThrow());
     }
     private static void edge(BufferBuilder b,PoseStack ps,double x0,double y0,double x1,double y1,double width,int color,double z){
         Client.quad(b,ps,new Vec3(x0,y0+width,z),new Vec3(x1,y1+width,z),new Vec3(x1,y1-width,z),new Vec3(x0,y0-width,z),color);

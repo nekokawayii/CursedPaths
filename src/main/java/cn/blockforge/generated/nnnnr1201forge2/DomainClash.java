@@ -328,12 +328,12 @@ public final class DomainClash {
             for(Field f:nearby){
                 Match m=matches.get(f.owner.getUUID());Vec3 plane=f.center,normal=Vec3.ZERO;int phase=0,remaining=0;float progress=.5f;
                 if(m!=null){
-                    var cut=partition(f.owner.getUUID());plane=cut.plane();normal=cut.normal();
+                    var cut=partition(f.owner.getUUID());plane=cut.plane();normal=cut.setNormal();
                     progress=DomainClashRules.percent(m.a.field==f?m.lead:-m.lead)/100f;
                     phase=m.age<DomainClashRules.READY_TICKS?1:2;remaining=Math.max(0,DomainClashRules.READY_TICKS+m.limit()-m.age);
                 }
                 var style=m==null?f.style:character.domain.DomainPresentation.clashStyle(f.owner,f.style);
-                if(m!=null&&m.b.field==f&&m.a.field.style.color()==style.color())
+                if(m!=null&&m.b.field==f&&m.a.field.style.setColor()==style.setColor())
                     style=new character.domain.DomainPresentation.Style(style.texture(),0xFF9966,style.yaw(),style.spin(),style.cameraSky());
                 frames.add(new character.domain.DomainPresentation.Frame(f.owner.getUUID(),f.center,f.radius,style,phase,progress,plane,normal,remaining));
             }

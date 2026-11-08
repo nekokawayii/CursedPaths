@@ -321,8 +321,7 @@ public final class KashimoVisuals {
         RenderSystem.depthMask(false);
         RenderSystem.setShader(GameRenderer::getPositionColorShader);
         RenderSystem.setShaderColor(1, 1, 1, 1);
-        BufferBuilder b = Tesselator.getInstance().getBuilder();
-        b.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_COLOR);
+        BufferBuilder b=Tesselator.getInstance().begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_COLOR);
         for (Scorch s : scorches) drawScorch(b, ps, s, cam, now);
         for (Shock s : shocks) drawShock(b, ps, s, cam, now);
         for (Trail t : trails) drawTrail(b, ps, t, cam, now);
@@ -333,7 +332,7 @@ public final class KashimoVisuals {
         for (var entry : nets.entrySet()) drawNet(b, ps, mc, entry.getKey(), cam);
         for (Ring3 r : rings) drawRing3(b, ps, r, cam, now);
         for (Bolt v : bolts) drawBolt(b, ps, v, cam, now);
-        BufferUploader.drawWithShader(b.end());
+        BufferUploader.drawWithShader(b.buildOrThrow());
         RenderSystem.depthMask(true);
         RenderSystem.enableCull();
         RenderSystem.disableBlend();
