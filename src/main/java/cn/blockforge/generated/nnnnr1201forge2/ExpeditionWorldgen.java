@@ -20,9 +20,9 @@ import net.minecraft.core.registries.BuiltInRegistries;
 
 public final class ExpeditionWorldgen {
     public static final List<String> BIOMES=List.of("cursed_wasteland","cursed_sakura_forest","scorched_volcanic_fields","ancient_battlefield");
-    private static final DeferredRegister<Codec<? extends BiomeSource>> SOURCES=DeferredRegister.create(Registries.BIOME_SOURCE,"jujutsu_kaisen_cursed_paths");
-    private static final DeferredRegister<Codec<? extends ChunkGenerator>> GENERATORS=DeferredRegister.create(Registries.CHUNK_GENERATOR,"jujutsu_kaisen_cursed_paths");
-    private static final DeferredRegister<Feature<?>> FEATURES=DeferredRegister.create(BuiltInRegistries.FEATURES,"jujutsu_kaisen_cursed_paths");
+    private static final DeferredRegister<com.mojang.serialization.MapCodec<? extends BiomeSource>> SOURCES=DeferredRegister.create(Registries.BIOME_SOURCE,"jujutsu_kaisen_cursed_paths");
+    private static final DeferredRegister<com.mojang.serialization.MapCodec<? extends ChunkGenerator>> GENERATORS=DeferredRegister.create(Registries.CHUNK_GENERATOR,"jujutsu_kaisen_cursed_paths");
+    private static final DeferredRegister<Feature<?>> FEATURES=DeferredRegister.create(BuiltInRegistries.FEATURE,"jujutsu_kaisen_cursed_paths");
     static {
         SOURCES.register("cursed_overworld",()->CursedSource.CODEC);
         GENERATORS.register("culling_city",()->CullingCityGenerator.CODEC);
@@ -51,11 +51,11 @@ public final class ExpeditionWorldgen {
         }catch(ReflectiveOperationException ex){throw new IllegalStateException("无法接入诅咒主世界群系",ex);}
     }
     public static final class CursedSource extends BiomeSource {
-        public static final Codec<CursedSource> CODEC=RecordCodecBuilder.create(i->i.group(BiomeSource.CODEC.fieldOf("base").forGetter(s->s.base),Biome.CODEC.listOf().fieldOf("cursed_biomes").forGetter(s->s.added)).apply(i,CursedSource::new));
+        public static final com.mojang.serialization.MapCodec<CursedSource> CODEC=RecordCodecBuilder.mapCodec(i->i.group(BiomeSource.CODEC.fieldOf("base").forGetter(s->s.base),Biome.CODEC.listOf().fieldOf("cursed_biomes").forGetter(s->s.added)).apply(i,CursedSource::new));
         private final BiomeSource base;private final List<Holder<Biome>> added;
         public CursedSource(BiomeSource base,List<Holder<Biome>> added){if(added.size()!=4)throw new IllegalArgumentException("诅咒群系必须为四种");this.base=base;this.added=List.copyOf(added);}
         private static long mix(long n){n=(n^(n>>>30))*0xbf58476d1ce4e5b9L;n=(n^(n>>>27))*0x94d049bb133111ebL;return n^(n>>>31);}
-        @Override protected Codec<? extends BiomeSource> codec(){return CODEC;}
+        @Override protected com.mojang.serialization.MapCodec<? extends BiomeSource> codec(){return CODEC;}
         @Override protected Stream<Holder<Biome>> collectPossibleBiomes(){return Stream.concat(base.possibleBiomes().stream(),added.stream());}
         @Override public Holder<Biome> getNoiseBiome(int x,int y,int z,Climate.Sampler sampler){
             Holder<Biome> original=base.getNoiseBiome(x,y,z,sampler);String id=original.unwrapKey().map(k->k.location().getPath()).orElse("");
