@@ -65,7 +65,7 @@ public final class Curse {
     public static void severTechnique(ServerPlayer p,int ticks){
         status(p,"TenkaSeveredUntil",ticks);
         MaidBridge.body(p).addEffect(new net.minecraft.world.effect.MobEffectInstance(
-            TechniqueEffects.TECHNIQUE_SEAL.get(),ticks,0,false,true));
+            TechniqueEffects.TECHNIQUE_SEAL,ticks,0,false,true));
         sync(p);
     }
     public static boolean canUseTechnique(Player p){return !character.CharacterService.toji(p)&&!PrisonSystem.locked(p)&&!SixfoldFinale.active(p)&&!SixfoldFinale.controlled(p)&&!burnout(p)&&!severed(p)&&!DomainClash.active(p)&&!NetBranches.locked(p)&&!Uraume.locked(p)&&!CombatExpansion.controlled(p);}
@@ -77,12 +77,12 @@ public final class Curse {
     public static void cooldownDomain(ServerPlayer p){if(TechniqueSeverance.severing())return;status(p,"DomainCooldown",ShrineRules.DOMAIN_COOLDOWN_TICKS);}
     public static boolean domainCooling(ServerPlayer p){return active(p,"DomainCooldown");}
     public static int domainCooldownLeft(ServerPlayer p){return (int)Math.max(0,data(p).getLong("DomainCooldown")-p.level().getGameTime());}
-    private static void clearBurnout(ServerPlayer p){data(p).putBoolean("TechniqueBurnout",false);data(p).remove("TechniqueBurnoutUntil");data(p).remove("TechniqueBurnoutAt");MaidBridge.body(p).removeEffect(TechniqueEffects.BURNOUT.get());}
+    private static void clearBurnout(ServerPlayer p){data(p).putBoolean("TechniqueBurnout",false);data(p).remove("TechniqueBurnoutUntil");data(p).remove("TechniqueBurnoutAt");MaidBridge.body(p).removeEffect(TechniqueEffects.BURNOUT);}
     public static void enterBurnout(ServerPlayer p,int ticks){
         if(TechniqueSeverance.severing())return; // 天逆蛑切断领域时不追加长熔断，只封 3 秒
         if(SixfoldFinale.active(p))return; // 终式期间不被关闭旧领域的熔断提前削减伤害，最终统一支付。
         ticks=Math.max(ticks,DomainClash.penaltyTicks(p));data(p).putBoolean("TechniqueBurnout",true);status(p,"TechniqueBurnoutUntil",ticks);data(p).remove("TechniqueRepairedUntil");data(p).remove("TechniqueBurnoutAt");data(p).remove("Rotation");
-        MaidBridge.body(p).addEffect(new net.minecraft.world.effect.MobEffectInstance(TechniqueEffects.BURNOUT.get(),ticks,0,false,true));
+        MaidBridge.body(p).addEffect(new net.minecraft.world.effect.MobEffectInstance(TechniqueEffects.BURNOUT,ticks,0,false,true));
         Skills.cancelSustained(p);sync(p);p.displayClientMessage(Component.literal("术式熔断：持续"+(ticks/20)+"秒，除反转外无法使用术式，术式伤害-30%"),true);
     }
     @SubscribeEvent public static void allDamage(net.neoforged.neoforge.event.entity.living.LivingIncomingDamageEvent event){
@@ -170,7 +170,7 @@ public final class Curse {
         if(data(p).getBoolean("TechniqueBurnout")){
             if(data(p).getLong("TechniqueBurnoutUntil")==0)status(p,"TechniqueBurnoutUntil",1200);
             if(!active(p,"TechniqueBurnoutUntil"))clearBurnout(p);
-            else if(!MaidBridge.body(p).hasEffect(TechniqueEffects.BURNOUT.get()))MaidBridge.body(p).addEffect(new net.minecraft.world.effect.MobEffectInstance(TechniqueEffects.BURNOUT.get(),(int)(data(p).getLong("TechniqueBurnoutUntil")-p.level().getGameTime()),0,false,true));
+            else if(!MaidBridge.body(p).hasEffect(TechniqueEffects.BURNOUT))MaidBridge.body(p).addEffect(new net.minecraft.world.effect.MobEffectInstance(TechniqueEffects.BURNOUT,(int)(data(p).getLong("TechniqueBurnoutUntil")-p.level().getGameTime()),0,false,true));
         }
         // 旧存档的持续反转开关作废，改为轮盘单次释放，避免更新后自动扣咒力。
         data(p).remove("ReverseTechnique");

@@ -126,7 +126,7 @@ public final class TechniqueSeverance {
         data.putLong(SEAL_KEY, now + ticks);
         data.putLong("NpcLegacyBurnout", now + ticks);
         data.putLong("NpcLegacyRepairAt", now + ticks);
-        target.addEffect(new MobEffectInstance(TechniqueEffects.TECHNIQUE_SEAL.get(), ticks, 0, false, true));
+        target.addEffect(new MobEffectInstance(TechniqueEffects.TECHNIQUE_SEAL, ticks, 0, false, true));
     }
 
     /** 持续接触天逆蛑：只续上封锁，不重复关闭领域、遍历术式或每刻同步整份角色资料。 */
@@ -137,9 +137,9 @@ public final class TechniqueSeverance {
         ServerPlayer actor = target instanceof ServerPlayer p ? p : NpcBridge.existing(target);
         if (actor == null) actor = MaidBridge.caster(target);
         if (actor != null) Curse.data(actor).putLong(SEAL_KEY, Math.max(until, Curse.data(actor).getLong(SEAL_KEY)));
-        var effect = target.getEffect(TechniqueEffects.TECHNIQUE_SEAL.get());
+        var effect = target.getEffect(TechniqueEffects.TECHNIQUE_SEAL);
         if (effect == null || effect.getDuration() < 40)
-            target.addEffect(new MobEffectInstance(TechniqueEffects.TECHNIQUE_SEAL.get(), SEAL_TICKS, 0, false, true));
+            target.addEffect(new MobEffectInstance(TechniqueEffects.TECHNIQUE_SEAL, SEAL_TICKS, 0, false, true));
     }
 
     /** 一圈向外扩散的切断波纹，纯表现。 */
