@@ -12,9 +12,9 @@ import java.util.concurrent.*;
 
 /** 竞技场位于 Y=-60 的基岩层，直径96格，独立空间避免破坏已有建筑。 */
 public final class VoidArenaGenerator extends FlatLevelSource {
-    public static final Codec<VoidArenaGenerator> CODEC=FlatLevelGeneratorSettings.CODEC.fieldOf("settings").xmap(VoidArenaGenerator::new,VoidArenaGenerator::settings).codec();
+    public static final com.mojang.serialization.MapCodec<VoidArenaGenerator> CODEC=FlatLevelGeneratorSettings.CODEC.fieldOf("settings").xmap(VoidArenaGenerator::new,VoidArenaGenerator::settings);
     public VoidArenaGenerator(FlatLevelGeneratorSettings s){super(s);}
-    @Override protected Codec<? extends ChunkGenerator> codec(){return CODEC;}
+    @Override protected com.mojang.serialization.MapCodec<? extends ChunkGenerator> codec(){return CODEC;}
     @Override public CompletableFuture<ChunkAccess> fillFromNoise(Blender blender, RandomState random, StructureManager structures, ChunkAccess chunk){
         return super.fillFromNoise(blender, random, structures, chunk).thenApply(c->{
             BlockPos.MutableBlockPos pos=new BlockPos.MutableBlockPos();

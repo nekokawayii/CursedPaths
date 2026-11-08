@@ -13,10 +13,10 @@ import net.minecraft.world.level.levelgen.flat.FlatLevelGeneratorSettings;
 
 /** 三层互不覆盖：低层灵魂通道、真人肉墙、露天岩手。 */
 public final class SoulCorridorGenerator extends FlatLevelSource {
-    public static final Codec<SoulCorridorGenerator> CODEC=FlatLevelGeneratorSettings.CODEC.fieldOf("settings").xmap(SoulCorridorGenerator::new,SoulCorridorGenerator::settings).codec();
+    public static final com.mojang.serialization.MapCodec<SoulCorridorGenerator> CODEC=FlatLevelGeneratorSettings.CODEC.fieldOf("settings").xmap(SoulCorridorGenerator::new,SoulCorridorGenerator::settings);
     public static final int MAHITO_Y=1000,IWATE_Y=1300,IWATE_FLOOR=1288,SEPARATOR_FLOOR=1280;
     public SoulCorridorGenerator(FlatLevelGeneratorSettings settings){super(settings);}
-    @Override protected Codec<? extends ChunkGenerator> codec(){return CODEC;}
+    @Override protected com.mojang.serialization.MapCodec<? extends ChunkGenerator> codec(){return CODEC;}
     @Override public int getGenDepth(){return 1536;}
     @Override public int getSpawnHeight(net.minecraft.world.level.LevelHeightAccessor level){return IWATE_Y+2;}
     @Override public int getBaseHeight(int x,int z,Heightmap.Types type,net.minecraft.world.level.LevelHeightAccessor level,RandomState random){return IwateTerrain.surface(x,z)+1;}

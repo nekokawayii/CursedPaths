@@ -13,9 +13,9 @@ import net.minecraft.world.level.levelgen.flat.FlatLevelGeneratorSettings;
 /** 按区块生成的丧钟教堂群：尖顶、双钟楼、玫瑰彩窗、墓园及魂灯，全部使用原版方块。 */
 public final class HyakkiCathedralGenerator extends FlatLevelSource {
     public static final int FLOOR=64,CELL=160;
-    public static final Codec<HyakkiCathedralGenerator> CODEC=FlatLevelGeneratorSettings.CODEC.fieldOf("settings").xmap(HyakkiCathedralGenerator::new,HyakkiCathedralGenerator::settings).codec();
+    public static final com.mojang.serialization.MapCodec<HyakkiCathedralGenerator> CODEC=FlatLevelGeneratorSettings.CODEC.fieldOf("settings").xmap(HyakkiCathedralGenerator::new,HyakkiCathedralGenerator::settings);
     public HyakkiCathedralGenerator(FlatLevelGeneratorSettings settings){super(settings);}
-    @Override protected Codec<? extends ChunkGenerator> codec(){return CODEC;}
+    @Override protected com.mojang.serialization.MapCodec<? extends ChunkGenerator> codec(){return CODEC;}
     @Override public int getSpawnHeight(net.minecraft.world.level.LevelHeightAccessor level){return FLOOR+1;}
     @Override public int getGenDepth(){return 256;}
     @Override public int getMinY(){return -64;}

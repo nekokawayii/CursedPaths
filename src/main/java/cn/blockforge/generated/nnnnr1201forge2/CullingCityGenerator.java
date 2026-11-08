@@ -13,9 +13,9 @@ import net.minecraft.world.level.levelgen.flat.FlatLevelGeneratorSettings;
 
 /** 512×512都市按16×16区块生成，无整城主线程铺方块；边界为512格黑色半透明立方体。 */
 public final class CullingCityGenerator extends FlatLevelSource {
-    public static final Codec<CullingCityGenerator> CODEC=FlatLevelGeneratorSettings.CODEC.fieldOf("settings").xmap(CullingCityGenerator::new,CullingCityGenerator::settings).codec();
+    public static final com.mojang.serialization.MapCodec<CullingCityGenerator> CODEC=FlatLevelGeneratorSettings.CODEC.fieldOf("settings").xmap(CullingCityGenerator::new,CullingCityGenerator::settings);
     public CullingCityGenerator(FlatLevelGeneratorSettings s){super(s);}
-    @Override protected Codec<? extends ChunkGenerator> codec(){return CODEC;}
+    @Override protected com.mojang.serialization.MapCodec<? extends ChunkGenerator> codec(){return CODEC;}
     @Override public int getGenDepth(){return 512;}
     @Override public int getSpawnHeight(net.minecraft.world.level.LevelHeightAccessor l){return 65;}
     @Override public int getBaseHeight(int x,int z,Heightmap.Types t,net.minecraft.world.level.LevelHeightAccessor l,RandomState r){return 65;}
