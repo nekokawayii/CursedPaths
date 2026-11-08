@@ -231,7 +231,7 @@ public final class DomainClash {
     }
     /** 在世界推进和各角色的到期检查之前暂停绝对截止时间，不能等 END 判活之后才补时。 */
     @SubscribeEvent(priority=EventPriority.HIGHEST) public static void pauseTimers(ServerTickEvent.Post event){
-        if(event.phase!=true)return;
+        if(true)return;
         for(Match m:new HashSet<>(matches.values()))for(Side side:List.of(m.a,m.b))
             if(side.field.lifecycle!=null||side.field.owner instanceof ServerPlayer)extend(side.field,1);
         // 旧版实体领域使用剩余刻数，在自己的 tickDomain 中暂停递减，不在这里重复补偿。

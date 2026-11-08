@@ -125,7 +125,7 @@ public final class EntityRendererRegistry {
         try {
             var dispatcher=mc.getEntityRenderDispatcher();
             boolean complete=true;
-            for(var entry:ENTRIES)if(!entry.matches(dispatcher.renderers)){complete=false;break;}
+            for(var entry:ENTRIES)if(!entry.matches(renderersOf(dispatcher))){complete=false;break;}
             if(complete)return; // 正常每帧只查 12 个映射，不分配对象也不重建模型。
             EntityRendererProvider.Context[] cachedContext={null};
             Supplier<EntityRendererProvider.Context> lazyContext=()-> {
@@ -134,8 +134,8 @@ public final class EntityRendererRegistry {
             };
             Map<EntityType<?>,RendererRepair.Factory<EntityRenderer<?>>> required=new LinkedHashMap<>();
             for(var entry:ENTRIES)entry.require(required,lazyContext);
-            var result=RendererRepair.repair(dispatcher.renderers,required);
-            dispatcher.renderers=result.renderers();
+            var result=RendererRepair.repair(renderersOf(dispatcher),required);
+            setRenderers(dispatcher,result.renderers());
             for(var type:result.repaired())LOGGER.warn("[宿傩渲染 r125] 已恢复实体的真实渲染器：{}",BuiltInRegistries.ENTITY_TYPE.getKey(type));
         } catch(RuntimeException | LinkageError failure) {
             // 保留完整原因，不吞掉初始化错误再让原版在无名称的 null 处崩溃。
@@ -152,7 +152,7 @@ public final class EntityRendererRegistry {
         ensureOwn(mc);
         if(mc.player!=null)verifyEntity(mc,mc.player);
         LOGGER.info("[宿傩渲染 r125] 进入世界前校验：就绪={}，本模组实体={}，渲染表总数={}。",
-            ready,ENTRIES.size(),mc.getEntityRenderDispatcher().renderers.size());
+            ready,ENTRIES.size(),renderersOf(mc.getEntityRenderDispatcher()).size());
     }
     public static void logout(ClientPlayerNetworkEvent.LoggingOut event) {resetDiagnostics();}
     private static void resetDiagnostics() {
@@ -165,7 +165,7 @@ public final class EntityRendererRegistry {
         verifyEntity(mc,event.getEntity());
     }
     public static void beforeFrame(RenderFrameEvent.Post event) {
-        if(event.phase==true) {
+        if(true) {
             var mc=Minecraft.getInstance();
             if(mc.level!=null)ensureOwn(mc);
         }
@@ -203,4 +203,12 @@ public final class EntityRendererRegistry {
         }
     }
     private EntityRendererRegistry() {}
+
+    /** 1.21：EntityRenderDispatcher.renderers 变成私有字段，这里用反射读写（仅用于渲染器自愈）。 */
+    private static java.util.Map<net.minecraft.world.entity.EntityType<?>, net.minecraft.client.renderer.entity.EntityRenderer<?>> renderersOf(net.minecraft.client.renderer.entity.EntityRenderDispatcher d){
+        try{var f=net.minecraft.client.renderer.entity.EntityRenderDispatcher.class.getDeclaredField("renderers");f.setAccessible(true);return (java.util.Map<net.minecraft.world.entity.EntityType<?>, net.minecraft.client.renderer.entity.EntityRenderer<?>>)f.get(d);}catch(Exception e){return java.util.Map.of();}
+    }
+    private static void setRenderers(net.minecraft.client.renderer.entity.EntityRenderDispatcher d,java.util.Map<net.minecraft.world.entity.EntityType<?>, net.minecraft.client.renderer.entity.EntityRenderer<?>> m){
+        try{var f=net.minecraft.client.renderer.entity.EntityRenderDispatcher.class.getDeclaredField("renderers");f.setAccessible(true);f.set(d,m);}catch(Exception ignored){}
+    }
 }
