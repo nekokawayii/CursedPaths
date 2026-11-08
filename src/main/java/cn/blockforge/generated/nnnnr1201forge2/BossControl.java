@@ -45,7 +45,7 @@ public final class BossControl extends SavedData {
         if(key==Attributes.ATTACK_DAMAGE){
             // 放在总倍率末端，戴天的力量药水加伤也只缩放一次。
             a.setBaseValue(raw);var previous=a.getModifier(CompatAttr.id(ATTACK_SCALE));double amount=BalanceRules.factor(BalanceRules.modpackMode(),BalanceRules.Category.BOSS_ATTACK)-1;
-            if(previous!=null&&previous.getAmount()==amount)return;
+            if(previous!=null&&previous.amount()==amount)return;
             a.removeModifier(CompatAttr.id(ATTACK_SCALE));if(amount!=0)a.addTransientModifier(new AttributeModifier(CompatAttr.id(ATTACK_SCALE), amount, net.minecraft.world.entity.ai.attributes.AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL));
         }else if(a.getBaseValue()!=BalanceRules.strength(raw,key==Attributes.ARMOR?BalanceRules.Category.BOSS_ARMOR:BalanceRules.Category.BOSS))a.setBaseValue(BalanceRules.strength(raw,key==Attributes.ARMOR?BalanceRules.Category.BOSS_ARMOR:BalanceRules.Category.BOSS));
     }
