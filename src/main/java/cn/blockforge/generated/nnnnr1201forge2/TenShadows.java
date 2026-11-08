@@ -155,7 +155,7 @@ public final class TenShadows {
         p.connection.teleport(38.5,64.0,19.5,-90,0);
         p.sendSystemMessage(Component.literal("旧侧室已开启，但这里不再提供肉身。请在主世界高专遗迹寻找伏黑惠灵魂，合成降灵·伏黑惠后对村民使用。"),false);
     }
-    @SubscribeEvent public static void interact(PlayerInteractEvent e){if(e.isCancelable()&&locked(e.getEntity()))e.setCanceled(true);}
+    @SubscribeEvent public static void interact(PlayerInteractEvent e){if(true&&locked(e.getEntity()))e.setCanceled(true);}
     @SubscribeEvent public static void attack(AttackEntityEvent e){if(locked(e.getEntity()))e.setCanceled(true);}
     @SubscribeEvent public static void breaking(PlayerEvent.BreakSpeed e){if(locked(e.getEntity()))e.setCanceled(true);}
     @SubscribeEvent public static void login(PlayerEvent.PlayerLoggedInEvent e){if(e.getEntity() instanceof ServerPlayer p){for(ServerPlayer other:p.server.getPlayerList().getPlayers())Network.CHANNEL.send(SimpleChannel.Target.player(p),state(other));sync(p);}}

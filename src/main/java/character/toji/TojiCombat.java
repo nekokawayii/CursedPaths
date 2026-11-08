@@ -30,7 +30,7 @@ public final class TojiCombat {
     private static void modifier(Player p,Holder<Attribute> attribute,UUID id,double value) {
         var a=p.getAttribute(attribute);if(a==null)return;var old=a.getModifier(CompatAttr.id(id));
         if(old!=null&&Math.abs(old.getAmount()-value)<0.000001)return;
-        a.removeModifier(CompatAttr.id(id));if(value!=0)a.addTransientModifier(new AttributeModifier(CompatAttr.id(id), value, AttributeModifier.Operation.ADDITION));
+        a.removeModifier(CompatAttr.id(id));if(value!=0)a.addTransientModifier(new AttributeModifier(CompatAttr.id(id), value, AttributeModifier.Operation.ADD_VALUE));
     }
     /** 每刻维护：闪身速度加成到期清理。 */
     public static void tickBuffs(ServerPlayer p) {

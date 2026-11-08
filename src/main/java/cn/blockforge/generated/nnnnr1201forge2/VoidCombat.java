@@ -48,7 +48,7 @@ public final class VoidCombat {
         else{flames.remove(id);damage.remove(id);casters.remove(id);scales.remove(id);}
         if(flames.isEmpty()){root.remove("SukunaVoidFlames");root.remove("SukunaVoidFlameDamage");root.remove("SukunaVoidFlameCastersR63");root.remove("SukunaVoidFlameScaleR64");}else{root.put("SukunaVoidFlames",flames);root.put("SukunaVoidFlameDamage",damage);root.put("SukunaVoidFlameCastersR63",casters);root.put("SukunaVoidFlameScaleR64",scales);}
     }
-    @SubscribeEvent public static void persistentFire(LivingEvent.LivingTickEvent event){
+    @SubscribeEvent public static void persistentFire(net.neoforged.neoforge.event.tick.EntityTickEvent.Post event){
         LivingEntity target=event.getEntity();if(!(target.level() instanceof ServerLevel level)||!target.isAlive()||target.tickCount%20!=0||!target.getPersistentData().contains("SukunaVoidFlames"))return;
         var flames=target.getPersistentData().getCompound("SukunaVoidFlames");
         for(String id:Set.copyOf(flames.getAllKeys())){

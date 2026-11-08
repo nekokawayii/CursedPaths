@@ -49,7 +49,7 @@ public final class Client {
     public static int curseLiquidColor(float ratio) {
         if (ratio <= 0.3f) return 0xFFE00000;
         var definition = character.CharacterClient.selected();
-        if (definition != null) return definition.setColor();
+        if (definition != null) return definition.color();
         return progress.awakened() ? 0xFFE23455 : 0xFFAF66EB;
     }
 

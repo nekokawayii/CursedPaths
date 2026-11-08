@@ -85,7 +85,7 @@ public final class NpcCombatCasting {
         if(!d.contains("NpcRepairAt")){d.putLong("NpcRepairAt",now+NpcBattleRules.REPAIR_DELAY);return;}
         if(now>=d.getLong("NpcRepairAt")){Curse.repairBurnout(actor);d.putLong("NpcRepairAt",now+40);}
     }
-    @SubscribeEvent public static void tick(LivingEvent.LivingTickEvent e) {
+    @SubscribeEvent public static void tick(net.neoforged.neoforge.event.tick.EntityTickEvent.Post e) {
         if (!(e.getEntity() instanceof Mob mob) || mob.level().isClientSide || !NpcBridge.supports(mob)
             || !mob.isAlive() || mob.isNoAi()) return;
         var actor=NpcBridge.actorFor(mob);

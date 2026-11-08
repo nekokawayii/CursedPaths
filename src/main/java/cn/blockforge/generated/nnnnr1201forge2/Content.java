@@ -19,7 +19,7 @@ import net.minecraft.core.registries.BuiltInRegistries;
 
 public final class Content {
     public static final DeferredRegister<Item> ITEMS=DeferredRegister.create(BuiltInRegistries.ITEMS,"jujutsu_kaisen_cursed_paths");
-    public static final DeferredRegister<EntityType<?>> ENTITIES=DeferredRegister.create(BuiltInRegistries.ENTITY_TYPES,"jujutsu_kaisen_cursed_paths");
+    public static final DeferredRegister<EntityType<?>> ENTITIES=DeferredRegister.create(BuiltInRegistries.ENTITY_TYPE,"jujutsu_kaisen_cursed_paths");
     public static final DeferredHolder<EntityType<?>, EntityType<BuddhaEntity>> BUDDHA=ENTITIES.register("sokushinbutsu",()->EntityType.Builder.of(BuddhaEntity::new,MobCategory.MONSTER).sized(1.7f,4.0f).clientTrackingRange(16).updateInterval(1).build("jujutsu_kaisen_cursed_paths:sokushinbutsu"));
     public static final DeferredHolder<EntityType<?>, EntityType<ParasiteEntity>> PARASITE=ENTITIES.register("parasitic_buddha",()->EntityType.Builder.of(ParasiteEntity::new,MobCategory.MONSTER).sized(1.5f,3.0f).clientTrackingRange(10).build("jujutsu_kaisen_cursed_paths:parasitic_buddha"));
     public static final DeferredHolder<EntityType<?>, EntityType<ParasiteEntity>> MOTHER=ENTITIES.register("buddha_mother",()->EntityType.Builder.of(ParasiteEntity::new,MobCategory.MONSTER).sized(1.8f,3).clientTrackingRange(14).build("jujutsu_kaisen_cursed_paths:buddha_mother"));

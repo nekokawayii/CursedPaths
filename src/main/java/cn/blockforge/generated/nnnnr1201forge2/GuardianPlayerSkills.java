@@ -119,7 +119,7 @@ public final class GuardianPlayerSkills {
         attribute(s.p,Attributes.ATTACK_DAMAGE,ATTACK,enabled?BalanceRules.strength(s.v("DamageMultiplier"),BalanceRules.Category.DAMAGE):0);
         attribute(s.p,Attributes.ATTACK_SPEED,ATTACK_SPEED,enabled?s.v("AttackSpeedMultiplier"):0);
     }
-    private static void attribute(ServerPlayer p,Holder<Attribute> key,UUID id,double value){var a=MaidBridge.body(p).getAttribute(key);if(a==null)return;a.removeModifier(CompatAttr.id(id));if(value!=0)a.addTransientModifier(new AttributeModifier(CompatAttr.id(id), value, AttributeModifier.Operation.ADDITION));}
+    private static void attribute(ServerPlayer p,Holder<Attribute> key,UUID id,double value){var a=MaidBridge.body(p).getAttribute(key);if(a==null)return;a.removeModifier(CompatAttr.id(id));if(value!=0)a.addTransientModifier(new AttributeModifier(CompatAttr.id(id), value, AttributeModifier.Operation.ADD_VALUE));}
     private static void closeDomain(State s){closeDomain(s,false);}
     private static void closeDomain(State s,boolean voluntary){if(s.domainUntil!=0){boolean early=voluntary&&s.level.getGameTime()<s.domainUntil;fx(s,91,s.center,Vec3.ZERO,1,1,0);s.domainUntil=0;Curse.endDomain(s.p,early);}}
     private static void cleanup(State s){boost(s,false);closeDomain(s);s.casting=-1;s.guardUntil=s.boostUntil=0;}

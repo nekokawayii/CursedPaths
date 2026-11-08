@@ -42,7 +42,7 @@ public final class NpcControl {
         data.remove(PREVIOUS); data.remove(KEY);
         if (mob.getTarget() == null && NpcBridge.canHit(mob, mob.getLastHurtByMob())) mob.setTarget(mob.getLastHurtByMob());
     }
-    @SubscribeEvent public static void tick(LivingEvent.LivingTickEvent event) {
+    @SubscribeEvent public static void tick(net.neoforged.neoforge.event.tick.EntityTickEvent.Post event) {
         if (event.getEntity() instanceof Mob mob && !mob.level().isClientSide) recover(mob);
     }
     private NpcControl() { }

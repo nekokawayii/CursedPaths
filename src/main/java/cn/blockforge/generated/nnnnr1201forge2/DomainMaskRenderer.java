@@ -50,7 +50,7 @@ public final class DomainMaskRenderer implements BlockEntityRenderer<DomainMaskB
             for(int i=1;i<4;i++){while(us[i]-us[0]>.5f)us[i]-=1;while(us[i]-us[0]<-.5f)us[i]+=1;}
             for(int i=0;i<4;i++){
                 var c=corners[i];out.addVertex(ps.last().pose(),c[0],c[1],c[2]).setColor(255,255,255,255).setUv(us[i],vs[i])
-                    .setOverlay(overlay).setLight(LightTexture.FULL_BRIGHT).setNormal(ps.last().setNormal(),normal.getX(),normal.getY(),normal.getZ());
+                    .setOverlay(overlay).setLight(LightTexture.FULL_BRIGHT).setNormal(ps.last().normal(),normal.getX(),normal.getY(),normal.getZ());
             }
         }
     }

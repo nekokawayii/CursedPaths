@@ -56,7 +56,7 @@ public final class MahoragaAdaptStore {
     private static final Map<String,String> TYPE_NAMES=new HashMap<>();
 
     private static String typeKey(Entity entity){
-        ResourceLocation id=BuiltInRegistries.ENTITY_TYPES.getKey(entity.getType());
+        ResourceLocation id=BuiltInRegistries.ENTITY_TYPE.getKey(entity.getType());
         return id==null?"unknown":id.toString();
     }
     private static String display(String key){
@@ -66,7 +66,7 @@ public final class MahoragaAdaptStore {
         return TYPE_NAMES.computeIfAbsent(key,k->{
             try{
                 ResourceLocation id=ResourceLocation.parse(k);
-                EntityType<?> type=BuiltInRegistries.ENTITY_TYPES.getValue(id);
+                EntityType<?> type=BuiltInRegistries.ENTITY_TYPE.getValue(id);
                 if(type!=null)return type.getDescription().getString();
             }catch(RuntimeException ignored){}
             return k;

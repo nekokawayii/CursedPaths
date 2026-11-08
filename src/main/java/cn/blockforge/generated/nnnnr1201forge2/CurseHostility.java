@@ -21,7 +21,7 @@ public final class CurseHostility {
         if(source instanceof net.minecraft.world.entity.projectile.Projectile projectile)source=projectile.getOwner();
         if(source instanceof LivingEntity attacker&&truce(attacker,event.getEntity()))event.setCanceled(true);
     }
-    @SubscribeEvent public static void clearOldTarget(LivingEvent.LivingTickEvent event){
+    @SubscribeEvent public static void clearOldTarget(net.neoforged.neoforge.event.tick.EntityTickEvent.Post event){
         if(event.getEntity() instanceof Mob mob&&!mob.level().isClientSide&&truce(mob,mob.getTarget())){mob.setTarget(null);mob.setLastHurtByMob(null);mob.getNavigation().stop();}
     }
     public static boolean enemy(Mob hunter,LivingEntity target){

@@ -205,7 +205,7 @@ public final class NanamiRatio {
         double cut = armor.getValue() * ARMOR_IGNORE;
         if (cut <= 0) return;
         armor.removeModifier(CompatAttr.id(STRIP_ID));
-        armor.addTransientModifier(new AttributeModifier(CompatAttr.id(STRIP_ID), -cut, AttributeModifier.Operation.ADDITION));
+        armor.addTransientModifier(new AttributeModifier(CompatAttr.id(STRIP_ID), -cut, AttributeModifier.Operation.ADD_VALUE));
         STRIPPED.put(target.getUUID(), new Strip(target, now(target) + 2));
     }
 

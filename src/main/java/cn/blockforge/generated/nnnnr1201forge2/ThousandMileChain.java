@@ -386,7 +386,7 @@ public final class ThousandMileChain {
     @SubscribeEvent(priority=EventPriority.HIGHEST) public static void mine(PlayerInteractEvent.LeftClickBlock e){if(bound(e.getEntity())||ThousandMileChainItem.isChain(e.getEntity().getMainHandItem()))e.setCanceled(true);}
     @SubscribeEvent(priority=EventPriority.HIGHEST) public static void melee(LivingIncomingDamageEvent e){if(e.getSource().getDirectEntity() instanceof LivingEntity attacker&&bound(attacker)&&(e.getSource().is(DamageTypes.MOB_ATTACK)||e.getSource().is(DamageTypes.MOB_ATTACK_NO_AGGRO)||e.getSource().is(DamageTypes.PLAYER_ATTACK)))e.setCanceled(true);}
     @SubscribeEvent public static void joined(EntityJoinLevelEvent e){if(!e.getLevel().isClientSide&&e.getEntity() instanceof LivingEntity living&&!bound(living))restore(living);}
-    @SubscribeEvent(priority=EventPriority.LOWEST) public static void living(LivingEvent.LivingTickEvent e){
+    @SubscribeEvent(priority=EventPriority.LOWEST) public static void living(net.neoforged.neoforge.event.tick.EntityTickEvent.Post e){
         if(e.getEntity().level().isClientSide)return;
         Session s=CAPTIVES.get(e.getEntity().getUUID());
         if(s!=null&&s.phase==BOUND)hold(s);

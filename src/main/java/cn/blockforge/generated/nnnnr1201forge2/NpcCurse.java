@@ -38,7 +38,7 @@ public final class NpcCurse {
         return true;
     }
     /** 原版与自定义怪物都缓慢回蓝：每 20 刻回复上限的 2%。 */
-    @SubscribeEvent public static void tick(LivingEvent.LivingTickEvent event){
+    @SubscribeEvent public static void tick(net.neoforged.neoforge.event.tick.EntityTickEvent.Post event){
         LivingEntity e=event.getEntity();
         if(e.level().isClientSide||!(e instanceof Mob)||e.tickCount%20!=0)return;
         var progress=e.getPersistentData().getCompound("SukunaProgress");

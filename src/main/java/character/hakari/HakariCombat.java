@@ -142,7 +142,7 @@ public final class HakariCombat {
         if (attribute == null) return;
         var id = java.util.UUID.fromString("7a1c5f10-1111-4a2b-9c00-0000aaaabbbb");
         attribute.removeModifier(CompatAttr.id(id));
-        attribute.addTransientModifier(new AttributeModifier(CompatAttr.id(id), attribute.getBaseValue() * 0.2, AttributeModifier.Operation.ADDITION));
+        attribute.addTransientModifier(new AttributeModifier(CompatAttr.id(id), attribute.getBaseValue() * 0.2, AttributeModifier.Operation.ADD_VALUE));
     }
 
     private static void clearSpeed(ServerPlayer p) {

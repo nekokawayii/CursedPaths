@@ -25,7 +25,7 @@ public final class LowCurseEntity extends Monster {
     private boolean modelReady;
     public LowCurseEntity(EntityType<? extends Monster> type,Level level){
         super(type,level);modelReady=true;
-        var key=BuiltInRegistries.ENTITY_TYPES.getKey(type);String id=key==null?"":key.getPath();
+        var key=BuiltInRegistries.ENTITY_TYPE.getKey(type);String id=key==null?"":key.getPath();
         configure(id.startsWith("curse_")?CurseCatalog.index(id.substring(6)):CurseCatalog.choose(random,true));
     }
     public static AttributeSupplier.Builder createAttributes(){return Monster.createMonsterAttributes().add(Attributes.MAX_HEALTH,60).add(Attributes.ATTACK_DAMAGE,6).add(Attributes.MOVEMENT_SPEED,.27).add(Attributes.FOLLOW_RANGE,40).add(Attributes.ARMOR,2);}

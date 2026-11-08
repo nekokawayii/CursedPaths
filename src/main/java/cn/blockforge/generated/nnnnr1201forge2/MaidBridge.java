@@ -25,7 +25,7 @@ import net.minecraft.core.registries.BuiltInRegistries;
 public final class MaidBridge {
     private static final Map<UUID,Actor> ACTORS=new HashMap<>();
     private static final UUID HEALTH=UUID.fromString("dc148a77-3c9b-4775-8b36-e02d40832101"),ATTACK=UUID.fromString("dc148a77-3c9b-4775-8b36-e02d40832102");
-    public static boolean isMaid(Entity entity){var id=entity==null?null:BuiltInRegistries.ENTITY_TYPES.getKey(entity.getType());return id!=null&&id.getNamespace().equals("touhou_little_maid")&&id.getPath().equals("maid");}
+    public static boolean isMaid(Entity entity){var id=entity==null?null:BuiltInRegistries.ENTITY_TYPE.getKey(entity.getType());return id!=null&&id.getNamespace().equals("touhou_little_maid")&&id.getPath().equals("maid");}
     public static boolean isCaster(Player p){return p instanceof Actor;}
     public static LivingEntity body(ServerPlayer p){if(p instanceof NpcBridge.NpcActor n)return n.mob;return p instanceof Actor a?a.maid:p;}
     public static Actor caster(Entity entity){if(entity instanceof Actor a)return a;return entity==null?null:ACTORS.get(entity.getUUID());}
@@ -35,7 +35,7 @@ public final class MaidBridge {
         if(old!=null)old.retire();
         Actor actor=new Actor((ServerLevel)maid.level(),maid);ACTORS.put(maid.getUUID(),actor);return actor;
     }
-    public static boolean modCreature(LivingEntity target){var id=BuiltInRegistries.ENTITY_TYPES.getKey(target.getType());return id!=null&&id.getNamespace().equals("jujutsu_kaisen_cursed_paths");}
+    public static boolean modCreature(LivingEntity target){var id=BuiltInRegistries.ENTITY_TYPE.getKey(target.getType());return id!=null&&id.getNamespace().equals("jujutsu_kaisen_cursed_paths");}
     public static boolean recovering(Player p){return isCaster(p)&&Curse.data(p).getBoolean("MaidRecovering");}
     public static boolean domainReady(ServerPlayer p){return !isCaster(p)||!Curse.active(p,"MaidDomainCooldown");}
     public static void domainOpened(ServerPlayer p){if(isCaster(p))Curse.status(p,"MaidDomainCooldown",ShrineRules.MAID_DOMAIN_COOLDOWN_TICKS);}
@@ -88,7 +88,7 @@ public final class MaidBridge {
         if(maid instanceof Mob mob&&(target==mob.getTarget()||target==mob.getLastHurtByMob()))return true;
         return target instanceof net.minecraft.world.entity.monster.Enemy;
     }
-    private static void modifier(LivingEntity maid,Holder<Attribute> attribute,UUID id,double amount){var a=maid.getAttribute(attribute);if(a==null)return;var old=a.getModifier(CompatAttr.id(id));if(old!=null&&Math.abs(old.getAmount()-amount)<0.00001)return;a.removeModifier(CompatAttr.id(id));if(amount!=0)a.addTransientModifier(new AttributeModifier(CompatAttr.id(id), amount, AttributeModifier.Operation.ADDITION));}
+    private static void modifier(LivingEntity maid,Holder<Attribute> attribute,UUID id,double amount){var a=maid.getAttribute(attribute);if(a==null)return;var old=a.getModifier(CompatAttr.id(id));if(old!=null&&Math.abs(old.getAmount()-amount)<0.00001)return;a.removeModifier(CompatAttr.id(id));if(amount!=0)a.addTransientModifier(new AttributeModifier(CompatAttr.id(id), amount, AttributeModifier.Operation.ADD_VALUE));}
     public static void apply(Actor a){
         if(Legion.member(a.maid)||Authority.echo(a.maid))return;
         modifier(a.maid,Attributes.MAX_HEALTH,HEALTH,Curse.healthBonus(a));modifier(a.maid,Attributes.ATTACK_DAMAGE,ATTACK,Curse.attackBonus(a));

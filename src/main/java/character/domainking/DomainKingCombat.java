@@ -42,7 +42,7 @@ public final class DomainKingCombat {
         if (active != null) { close(p, active); ACTIVE.remove(p.getUUID()); }
         ACTIVE.put(p.getUUID(), skill.id());
         String name = skill.name();
-        int color = skill.setColor();
+        int color = skill.color();
         double radius = switch (skill.id()) {
             case DomainKingSkills.SIMPLE -> 8;
             default -> 24;

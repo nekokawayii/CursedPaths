@@ -42,7 +42,7 @@ public final class GojoGravityClient {
         // 镜头进入球内时淡出，避免在近脸蓄力时铺满整个屏幕。
         float fade=(float)Math.min(1,Math.max(0,(distance-size*.25)/Math.max(.2,size*.7)));
         if(fade<=0)return;
-        int tint=orb.setColor(),pale=mix(tint,0xFFFFFF,.72f);
+        int tint=orb.color(),pale=mix(tint,0xFFFFFF,.72f);
         for(int i=0;i<12;i++){
             double r0=size*i/7.0,r1=size*(i+1)/7.0;
             float alpha=(float)(Math.exp(-Math.pow((i+.5)/7.0,2)*2.3)*.24*fade);

@@ -55,7 +55,7 @@ public final class MaidDuel {
         if(duel(maid)){event.setCanceled(true);finishDuel(maid,maid.getOwner() instanceof ServerPlayer p?p:null,true);}
         else if(EternalLove.settling(maid)){event.setCanceled(true);maid.setHealth(maid.getMaxHealth());}
     }
-    @SubscribeEvent(priority=EventPriority.HIGHEST) public static void duelTick(LivingEvent.LivingTickEvent event){
+    @SubscribeEvent(priority=EventPriority.HIGHEST) public static void duelTick(net.neoforged.neoforge.event.tick.EntityTickEvent.Post event){
         if(event.getEntity().level().isClientSide||!(event.getEntity() instanceof EntityMaid maid))return;
         boolean active=duel(maid);
         var data=maid.getPersistentData();

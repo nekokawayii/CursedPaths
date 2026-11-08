@@ -146,7 +146,7 @@ public final class CharacterSelectionScreen extends Screen {
             boolean selected = choice != null && choice.id().equals(d.id());
             int bg = selected ? 0xFF232E42 : hover ? 0xFF1B2333 : 0xFF151B26;
             g.fill(x, yy, x + w, yy + h, bg);
-            g.fill(x, yy, x + 3, yy + h, d.setColor());
+            g.fill(x, yy, x + 3, yy + h, d.color());
             if (selected) {
                 g.fill(x, yy, x + w, yy + 1, 0xFFF3D9A0);
                 g.fill(x, yy + h - 1, x + w, yy + h, 0xFFF3D9A0);
@@ -164,7 +164,7 @@ public final class CharacterSelectionScreen extends Screen {
         g.fill(0, dy - 6, width, height - 32, 0xE8131925);
         if (choice != null) {
             g.drawString(font, "已选：" + choice.name() + " · " + choice.technique() + " · " + choice.resourceName(),
-                left, dy, choice.setColor(), false);
+                left, dy, choice.color(), false);
             String desc = choice.description();
             int maxW = width - 24;
             List<net.minecraft.util.FormattedCharSequence> lines = font.split(Component.literal(desc), maxW);

@@ -378,7 +378,7 @@ public final class NaoyaCombat {
             var id = java.util.UUID.nameUUIDFromBytes(("NaoyaMud" + target.getUUID()).getBytes());
             attackSpeed.removeModifier(CompatAttr.id(id));
             attackSpeed.addTransientModifier(new AttributeModifier(id, "帧数泥沼",
-                -Math.max(0.01, attackSpeed.getValue()) * 0.5, AttributeModifier.Operation.ADDITION));
+                -Math.max(0.01, attackSpeed.getValue()) * 0.5, AttributeModifier.Operation.ADD_VALUE));
         }
         target.getPersistentData().putLong(K_MUD, now(target) + MUD_TICKS);
     }

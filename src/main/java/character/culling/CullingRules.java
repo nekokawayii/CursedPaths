@@ -432,7 +432,7 @@ public final class CullingRules {
                 var a=living.getAttribute(Attributes.ATTACK_DAMAGE);
                 if(a!=null&&a.getValue()>1){
                     a.removeModifier(CompatAttr.id(STOLEN));
-                    a.addTransientModifier(new AttributeModifier(CompatAttr.id(STOLEN), -1, AttributeModifier.Operation.ADDITION));
+                    a.addTransientModifier(new AttributeModifier(CompatAttr.id(STOLEN), -1, AttributeModifier.Operation.ADD_VALUE));
                 }
             }
             if(special(vp,"assimilation")||special(vp,"assimilation2")){

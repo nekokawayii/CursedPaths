@@ -93,7 +93,7 @@ public final class PrisonSystem {
             transferPlayer(player,prison,x,64,z);player.setGameMode(GameType.ADVENTURE);player.setDeltaMovement(Vec3.ZERO);
             tell(player,"你已被狱门僵封印 · 物品暂存，等待外部的邪去悔天梯解封");
         }else{
-            CompoundTag snapshot=new CompoundTag();entity.saveWithoutId(snapshot);snapshot.putString("id",net.minecraft.core.registries.BuiltInRegistries.ENTITY_TYPES.getKey(entity.getType()).toString());snapshot.remove("Passengers");
+            CompoundTag snapshot=new CompoundTag();entity.saveWithoutId(snapshot);snapshot.putString("id",net.minecraft.core.registries.BuiltInRegistries.ENTITY_TYPE.getKey(entity.getType()).toString());snapshot.remove("Passengers");
             record.put("Entity",snapshot);record.putBoolean("CanUpdate",entity.canUpdate());
             Entity copy=EntityType.loadEntityRecursive(snapshot.copy(),prison,e->e);if(!(copy instanceof LivingEntity captive))return false;
             captive.moveTo(x,64,z,entity.getYRot(),0);if(captive instanceof Mob mob){mob.setNoAi(true);mob.setPersistenceRequired();mob.setTarget(null);}captive.setInvulnerable(true);captive.canUpdate(false);
@@ -190,7 +190,7 @@ public final class PrisonSystem {
     @SubscribeEvent(priority=EventPriority.HIGHEST) public static void pickup(EntityItemPickupEvent e){if(locked(e.getEntity()))e.setCanceled(true);}
     @SubscribeEvent(priority=EventPriority.HIGHEST) public static void breakBlock(BlockEvent.BreakEvent e){if(locked(e.getPlayer())||e.getLevel() instanceof ServerLevel l&&l.dimension().equals(DIMENSION))e.setCanceled(true);}
     @SubscribeEvent(priority=EventPriority.HIGHEST) public static void place(BlockEvent.EntityPlaceEvent e){if(locked(e.getEntity())||e.getLevel() instanceof ServerLevel l&&l.dimension().equals(DIMENSION))e.setCanceled(true);}
-    @SubscribeEvent(priority=EventPriority.HIGHEST) public static void livingTick(LivingEvent.LivingTickEvent e){if(!(e.getEntity() instanceof net.minecraft.world.entity.player.Player)&&locked(e.getEntity()))e.setCanceled(true);}
+    @SubscribeEvent(priority=EventPriority.HIGHEST) public static void livingTick(net.neoforged.neoforge.event.tick.EntityTickEvent.Post e){if(!(e.getEntity() instanceof net.minecraft.world.entity.player.Player)&&locked(e.getEntity()))e.setCanceled(true);}
     private static void tell(ServerPlayer p,String text){p.sendSystemMessage(Component.literal(text));}
     private PrisonSystem(){}
 }

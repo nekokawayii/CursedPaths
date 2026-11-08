@@ -131,7 +131,7 @@ public final class MaidExtension implements ILittleMaid {
         MaidBridge.apply(actor);MaidBridge.rememberCondensed(actor);if(!owner.isCreative())stack.shrink(1);
         owner.sendSystemMessage(Component.literal("女仆成长："+Journey.guide(actor)));
     }
-    @SubscribeEvent public void tick(LivingEvent.LivingTickEvent event){
+    @SubscribeEvent public void tick(net.neoforged.neoforge.event.tick.EntityTickEvent.Post event){
         if(!(event.getEntity() instanceof EntityMaid maid)||maid.level().isClientSide||!maid.isAlive())return;
         syncMemory(maid);
         if(Legion.member(maid))return;

@@ -162,12 +162,12 @@ public final class NetBranches {
             if(merged||q.fragments.isEmpty())projectiles.remove(q);
         }
     }
-    @SubscribeEvent(priority=EventPriority.HIGHEST) public static void freeze(LivingEvent.LivingTickEvent event){LivingEntity t=event.getEntity();if(t.level().isClientSide||!locked(t))return;hold(crosses.get(t.getUUID()));if(!(t instanceof net.minecraft.world.entity.player.Player))event.setCanceled(true);}
+    @SubscribeEvent(priority=EventPriority.HIGHEST) public static void freeze(net.neoforged.neoforge.event.tick.EntityTickEvent.Post event){LivingEntity t=event.getEntity();if(t.level().isClientSide||!locked(t))return;hold(crosses.get(t.getUUID()));if(!(t instanceof net.minecraft.world.entity.player.Player))event.setCanceled(true);}
     @SubscribeEvent(priority=EventPriority.HIGHEST) public static void attack(AttackEntityEvent event){if(locked(event.getEntity()))event.setCanceled(true);}
-    @SubscribeEvent(priority=EventPriority.HIGHEST) public static void interact(PlayerInteractEvent event){if(event.isCancelable()&&locked(event.getEntity()))event.setCanceled(true);}
+    @SubscribeEvent(priority=EventPriority.HIGHEST) public static void interact(PlayerInteractEvent event){if(true&&locked(event.getEntity()))event.setCanceled(true);}
     @SubscribeEvent(priority=EventPriority.HIGHEST) public static void outgoing(LivingIncomingDamageEvent event){if(event.getSource().getEntity() instanceof LivingEntity living&&locked(living))event.setCanceled(true);}
     @SubscribeEvent(priority=EventPriority.HIGHEST) public static void breakSpeed(PlayerEvent.BreakSpeed event){if(locked(event.getEntity()))event.setCanceled(true);}
-    @SubscribeEvent(priority=EventPriority.HIGHEST) public static void teleport(net.neoforged.neoforge.event.entity.EntityTeleportEvent event){if(event.isCancelable()&&event.getEntity() instanceof LivingEntity living&&locked(living))event.setCanceled(true);}
+    @SubscribeEvent(priority=EventPriority.HIGHEST) public static void teleport(net.neoforged.neoforge.event.entity.EntityTeleportEvent event){if(true&&event.getEntity() instanceof LivingEntity living&&locked(living))event.setCanceled(true);}
     @SubscribeEvent public static void logout(PlayerEvent.PlayerLoggedOutEvent event){if(event.getEntity() instanceof ServerPlayer p)cancel(p);}
     @SubscribeEvent public static void dimension(PlayerEvent.PlayerChangedDimensionEvent event){if(event.getEntity() instanceof ServerPlayer p)cancel(p);}
     @SubscribeEvent public static void stop(ServerStoppedEvent event){crosses.clear();airCrosses.clear();projectiles.clear();crossFlights.clear();nextId=0;}

@@ -564,7 +564,7 @@ public final class MahoragaEntity extends Monster {
 
    private void turnOwnByAttack(LivingEntity victim) {
       if (victim != null) {
-         ResourceLocation id = BuiltInRegistries.ENTITY_TYPES.getKey(victim.getType());
+         ResourceLocation id = BuiltInRegistries.ENTITY_TYPE.getKey(victim.getType());
          if (id != null) {
             this.turnOwn(MahoragaAdaptStore.DEALT + id);
          }
@@ -581,7 +581,7 @@ public final class MahoragaEntity extends Monster {
          return "\u5176\u4ed6\u4f24\u5bb3";
       } else {
          try {
-            EntityType<?> type = (EntityType)BuiltInRegistries.ENTITY_TYPES.getValue(ResourceLocation.parse(bare));
+            EntityType<?> type = (EntityType)BuiltInRegistries.ENTITY_TYPE.getValue(ResourceLocation.parse(bare));
             if (type != null) {
                return "\u300c" + type.getDescription().getString() + "\u300d";
             }

@@ -338,12 +338,12 @@ public final class RyuVisuals {
     private static void drawBurst2(BufferBuilder b, PoseStack ps, Burst2 burst, Vec3 cam, long now) {
         float t = (now - burst.born()) / (float) burst.life();
         if (t < 0 || t > 1) return;
-        int color = COLORS[Math.floorMod(burst.setColor(), COLORS.length)];
+        int color = COLORS[Math.floorMod(burst.color(), COLORS.length)];
         int alpha = (int) (235 * (1 - t));
         double radius = 0.6 + 3.4 * Math.min(1, t * 1.25);
         Client.ring(b, ps, burst.pos(), radius, 0.12, argb(color, alpha), cam);
         Client.ring(b, ps, burst.pos(), radius * 0.6, 0.06, argb(0xFFFFFF, (int) (alpha * 0.8)), cam);
-        Random rnd = new Random(burst.born() * 131 + burst.setColor());
+        Random rnd = new Random(burst.born() * 131 + burst.color());
         for (int i = 0; i < 12; i++) {
             double a = rnd.nextDouble() * Math.PI * 2, d = radius * (0.4 + rnd.nextDouble() * 0.8);
             Vec3 at = burst.pos().add(Math.cos(a) * d, (rnd.nextDouble() - 0.5) * d, Math.sin(a) * d);
@@ -356,7 +356,7 @@ public final class RyuVisuals {
     private static void drawSpark(BufferBuilder b, PoseStack ps, Spark spark, Vec3 cam, long now) {
         float t = (now - spark.born()) / (float) spark.life();
         if (t < 0 || t > 1) return;
-        int color = COLORS[Math.floorMod(spark.setColor(), COLORS.length)];
+        int color = COLORS[Math.floorMod(spark.color(), COLORS.length)];
         int alpha = (int) (245 * (1 - t));
         Client.ribbon(b, ps, spark.pos().subtract(0.1, 0, 0), spark.pos().add(0.1, 0, 0), 0.05, argb(color, alpha), cam);
         Client.ribbon(b, ps, spark.pos().subtract(0, 0.1, 0), spark.pos().add(0, 0.1, 0), 0.05, argb(color, alpha), cam);

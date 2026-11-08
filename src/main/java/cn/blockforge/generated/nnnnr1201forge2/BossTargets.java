@@ -51,7 +51,7 @@ public final class BossTargets {
         if(event.getAmount()<=0||event.getEntity().level().isClientSide||!(event.getEntity() instanceof Mob boss)||!managed(boss)||boss instanceof GuardianEntity g&&g.friendly()||boss instanceof YujiEntity y&&y.familyMember())return;
         if(event.getSource().getEntity() instanceof LivingEntity source){LivingEntity attacker=source instanceof ServerPlayer p?MaidBridge.body(p):source;if(valid(boss,attacker)){boss.setLastHurtByMob(attacker);boss.setTarget(attacker);}}
     }
-    @SubscribeEvent public static void warTick(LivingEvent.LivingTickEvent event){
+    @SubscribeEvent public static void warTick(net.neoforged.neoforge.event.tick.EntityTickEvent.Post event){
         if(!(event.getEntity() instanceof Mob mob)||mob.level().isClientSide||mob.tickCount%20!=0)return;
         var tag=mob.getPersistentData();
         if(!BossControl.war(mob)){if(tag.getBoolean("SukunaWarTarget")){mob.setTarget(null);mob.setLastHurtByMob(null);tag.remove("SukunaWarTarget");}return;}

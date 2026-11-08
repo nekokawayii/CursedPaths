@@ -29,7 +29,7 @@ public final class ExpeditionEvents {
         var mob=e.getEntity();if(!(mob.level() instanceof ServerLevel l))return;
         ServerPlayer p=CombatSettings.caster(e.getSource());if(p==null&&mob.getKillCredit() instanceof ServerPlayer credited)p=credited;
         if(p==null||p instanceof net.neoforged.neoforge.common.util.FakePlayer)return;
-        String id=BuiltInRegistries.ENTITY_TYPES.getKey(mob.getType()).getPath(),role=mob.getPersistentData().getString("ExpeditionRole");
+        String id=BuiltInRegistries.ENTITY_TYPE.getKey(mob.getType()).getPath(),role=mob.getPersistentData().getString("ExpeditionRole");
         if(mob instanceof LowCurseEntity||mob instanceof DaitianEntity||id.equals("broken_mahito")||id.equals("mahito_npc")){
             drop(e,"residue_"+(mob instanceof LowCurseEntity curse?(curse.form().grade()<=1?"high":curse.form().grade()==2?"medium":"low"):(mob.getMaxHealth()>=400?"high":mob.getMaxHealth()>=100?"medium":"low")),1+l.random.nextInt(3));
             if(l.random.nextInt(3)==0)drop(e,"deformed_bone",1);if(l.random.nextInt(4)==0)drop(e,"curse_flesh",1);
@@ -64,7 +64,7 @@ public final class ExpeditionEvents {
     }
     private static void drop(LivingDropsEvent e,String id,int count){drop(e,ExpeditionContent.item(id),count);}
     private static void drop(LivingDropsEvent e,Item item,int count){var m=e.getEntity();e.getDrops().add(new net.minecraft.world.entity.item.ItemEntity(m.level(),m.getX(),m.getY()+.5,m.getZ(),new ItemStack(item,count)));}
-    @SubscribeEvent public static void mobTick(LivingEvent.LivingTickEvent e){
+    @SubscribeEvent public static void mobTick(net.neoforged.neoforge.event.tick.EntityTickEvent.Post e){
         if(!(e.getEntity() instanceof Mob m)||m.level().isClientSide||m.tickCount%20!=0)return;var d=m.getPersistentData();
         if(d.getLong("ExpeditionDespawnAt")>0&&m.level().getGameTime()>d.getLong("ExpeditionDespawnAt")){if(d.getBoolean("CullingEnemy"))m.level().getScoreboard().removePlayerFromTeam(m.getScoreboardName());m.discard();return;}
         String role=d.getString("ExpeditionRole");if(role.equals("renegade")||role.equals("toji_echo")||role.startsWith("participant")){var p=m.level().getNearestPlayer(m,32);if(p!=null&&!p.isCreative()&&!p.isSpectator())m.setTarget(p);}

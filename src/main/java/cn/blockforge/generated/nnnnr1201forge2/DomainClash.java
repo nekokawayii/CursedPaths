@@ -328,12 +328,12 @@ public final class DomainClash {
             for(Field f:nearby){
                 Match m=matches.get(f.owner.getUUID());Vec3 plane=f.center,normal=Vec3.ZERO;int phase=0,remaining=0;float progress=.5f;
                 if(m!=null){
-                    var cut=partition(f.owner.getUUID());plane=cut.plane();normal=cut.setNormal();
+                    var cut=partition(f.owner.getUUID());plane=cut.plane();normal=cut.normal();
                     progress=DomainClashRules.percent(m.a.field==f?m.lead:-m.lead)/100f;
                     phase=m.age<DomainClashRules.READY_TICKS?1:2;remaining=Math.max(0,DomainClashRules.READY_TICKS+m.limit()-m.age);
                 }
                 var style=m==null?f.style:character.domain.DomainPresentation.clashStyle(f.owner,f.style);
-                if(m!=null&&m.b.field==f&&m.a.field.style.setColor()==style.setColor())
+                if(m!=null&&m.b.field==f&&m.a.field.style.color()==style.color())
                     style=new character.domain.DomainPresentation.Style(style.texture(),0xFF9966,style.yaw(),style.spin(),style.cameraSky());
                 frames.add(new character.domain.DomainPresentation.Frame(f.owner.getUUID(),f.center,f.radius,style,phase,progress,plane,normal,remaining));
             }
@@ -361,7 +361,7 @@ public final class DomainClash {
     @SubscribeEvent public static void logout(PlayerEvent.PlayerLoggedOutEvent event){if(event.getEntity() instanceof ServerPlayer p){Match m=matches.get(p.getUUID());if(m!=null)finish(m,m.a.field.owner==p?-1:1);}}
     static void testReset(ServerPlayer p){Match m=matches.get(p.getUUID());if(m!=null)finish(m,0);fields.remove(p.getUUID());restoreGravity(p);}
     private static void restoreGravity(LivingEntity e){e=body(e);var saved=e.getPersistentData();if(saved.contains("ClashPreviousGravity")){e.setNoGravity(saved.getBoolean("ClashPreviousGravity"));saved.remove("ClashPreviousGravity");}}
-    @SubscribeEvent public static void recoverGravity(LivingEvent.LivingTickEvent event){LivingEntity e=event.getEntity();if(!e.level().isClientSide&&!active(e))restoreGravity(e);}
+    @SubscribeEvent public static void recoverGravity(net.neoforged.neoforge.event.tick.EntityTickEvent.Post event){LivingEntity e=event.getEntity();if(!e.level().isClientSide&&!active(e))restoreGravity(e);}
     @SubscribeEvent public static void stopping(net.neoforged.neoforge.event.server.ServerStoppingEvent event){for(Match m:new HashSet<>(matches.values()))finish(m,0);}
     @SubscribeEvent public static void stop(ServerStoppedEvent event){for(Match m:new HashSet<>(matches.values())){restoreGravity(m.a.field.owner);restoreGravity(m.b.field.owner);}matches.clear();fields.clear();}
     private DomainClash(){}

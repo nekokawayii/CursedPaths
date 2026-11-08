@@ -32,7 +32,7 @@ public final class DomainPresentation {
             ?character.CharacterService.selected(p).id():owner instanceof GojoEntity?"gojo":NpcBridge.character(owner);
         var configured=DATA_STYLES.getOrDefault(role,STYLES.get(role));if(configured!=null)return configured;
         var definition=character.CharacterRegistry.get(role);
-        int color=definition==null?owner instanceof GuardianEntity?0xE6C56B:owner instanceof YujiEntity?0xEE8899:0x77BBFF:definition.setColor();
+        int color=definition==null?owner instanceof GuardianEntity?0xE6C56B:owner instanceof YujiEntity?0xEE8899:0x77BBFF:definition.color();
         // r238：石流龙暂时不用晚霞天空图（它由 DomainWorldRenderer 画成包住玩家的球面，
         // 用户实测"球壳还在"就是这层）。改回纯色后不再生成任何球面；要恢复把下面这行换回来即可。
         // if("ryu".equals(role))return Style.image("jujutsu_kaisen_cursed_paths:textures/effect/domain_sunset.png",color);
@@ -44,7 +44,7 @@ public final class DomainPresentation {
         String role=owner instanceof ServerPlayer p&&character.CharacterService.selected(p)!=null
             ?character.CharacterService.selected(p).id():owner instanceof GojoEntity?"gojo":NpcBridge.character(owner);
         if(!fallback.texture().isEmpty()||DATA_STYLES.containsKey(role)||STYLES.containsKey(role))return fallback;
-        int color=fallback.setColor();
+        int color=fallback.color();
         return switch(role){
             case "jogo" -> Style.image("jujutsu_kaisen_cursed_paths:textures/effect/domain_jogo/wall_base.png",color);
             case "ryu" -> Style.image("jujutsu_kaisen_cursed_paths:textures/effect/domain_sunset.png",color);

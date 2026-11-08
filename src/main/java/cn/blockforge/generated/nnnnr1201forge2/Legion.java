@@ -36,7 +36,7 @@ public final class Legion {
             if(exists||stored.size()>=AuthorityRules.MAX_MEMBERS)continue;
             var actor=MaidBridge.caster(mob);if(actor!=null)AuthoritySkills.cancel(actor);
             var versions=army.getCompound("Versions");int rev=Math.max(versions.getInt(mob.getStringUUID()),mob.getPersistentData().getInt("AuthorityRevision"))+1;mob.getPersistentData().putInt("AuthorityRevision",rev);versions.putInt(mob.getStringUUID(),rev);army.put("Versions",versions);
-            CompoundTag saved=mob.saveWithoutId(new CompoundTag());saved.putString("id",net.minecraft.core.registries.BuiltInRegistries.ENTITY_TYPES.getKey(mob.getType()).toString());saved.remove("Passengers");stored.add(saved);army.put("Stored",stored);state.setDirty();
+            CompoundTag saved=mob.saveWithoutId(new CompoundTag());saved.putString("id",net.minecraft.core.registries.BuiltInRegistries.ENTITY_TYPE.getKey(mob.getType()).toString());saved.remove("Passengers");stored.add(saved);army.put("Stored",stored);state.setDirty();
             ServerPlayer p=owner(mob);if(p!=null&&p.isAlive()&&!p.hasDisconnected()&&!army.getBoolean("RecallPending"))releaseAll(p);
         }
     }
@@ -115,7 +115,7 @@ public final class Legion {
         army.put("Stored",remaining);state.setDirty();AuthorityPackets.sync(p);
     }
     @SubscribeEvent(priority=EventPriority.HIGHEST) public static void interact(PlayerInteractEvent.EntityInteract e){if(e.getItemStack().is(Authority.CURSE.get())){e.setCanceled(true);e.setCancellationResult(InteractionResult.SUCCESS);if(e.getEntity() instanceof ServerPlayer p&&e.getTarget() instanceof LivingEntity living)recruit(p,living);}}
-    @SubscribeEvent(priority=EventPriority.LOWEST) public static void tick(LivingEvent.LivingTickEvent e){
+    @SubscribeEvent(priority=EventPriority.LOWEST) public static void tick(net.neoforged.neoforge.event.tick.EntityTickEvent.Post e){
         if(!(e.getEntity() instanceof Mob mob)||mob.level().isClientSide||!member(mob)||!mob.isAlive())return;
         ServerPlayer p=owner(mob);if(p==null||!Authority.unlocked(p)||!p.isAlive())return;
         if(LegionStore.get(p.server).army(p.getUUID()).getBoolean("RecallPending")){storeAll(p);return;}

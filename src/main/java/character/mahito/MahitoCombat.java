@@ -197,10 +197,10 @@ public final class MahitoCombat {
         double before=attribute.getValue();attribute.removeModifier(CompatAttr.id(SOUL_LOSS));
         // ADDITION 还会受其它生命倍率修饰：测出倍率，保证最终上限每次恰好少2点。
         double original=attribute.getValue();
-        attribute.addTransientModifier(new AttributeModifier(CompatAttr.id(SOUL_LOSS), -1, AttributeModifier.Operation.ADDITION));
+        attribute.addTransientModifier(new AttributeModifier(CompatAttr.id(SOUL_LOSS), -1, AttributeModifier.Operation.ADD_VALUE));
         double scale=Math.max(.0001,original-attribute.getValue());attribute.removeModifier(CompatAttr.id(SOUL_LOSS));
         double lost=Math.max(0,(original-Math.max(2,before-2))/scale);
-        attribute.addTransientModifier(new AttributeModifier(CompatAttr.id(SOUL_LOSS), -lost, AttributeModifier.Operation.ADDITION));
+        attribute.addTransientModifier(new AttributeModifier(CompatAttr.id(SOUL_LOSS), -lost, AttributeModifier.Operation.ADD_VALUE));
         victim.setHealth(Math.min(victim.getHealth(),victim.getMaxHealth()));data.putUUID("MahitoSoulOwner",p.getUUID());
         MARKED.computeIfAbsent(p.getUUID(),k->new HashSet<>()).add(victim.getUUID());
         if(victim instanceof ServerPlayer player)player.displayClientMessage(Component.literal("灵魂被改造：最大生命减少一颗心，离开领域或击败真人后恢复"),true);
@@ -214,7 +214,7 @@ public final class MahitoCombat {
     @SubscribeEvent(priority=EventPriority.HIGHEST) public static void invincible(LivingIncomingDamageEvent event){
         if(event.getEntity().getPersistentData().getLong("MahitoDodgeUntil")>now(event.getEntity())&&!event.getSource().is(net.minecraft.tags.DamageTypeTags.BYPASSES_INVULNERABILITY))event.setCanceled(true);
     }
-    @SubscribeEvent public static void status(LivingEvent.LivingTickEvent event){
+    @SubscribeEvent public static void status(net.neoforged.neoforge.event.tick.EntityTickEvent.Post event){
         LivingEntity e=event.getEntity();if(e.level().isClientSide)return;var data=e.getPersistentData();long now=now(e);
         if(data.contains("MahitoRootUntil")){
             var speed=e.getAttribute(Attributes.MOVEMENT_SPEED);
