@@ -27,7 +27,7 @@ public final class ObserverPortrait {
             RenderSystem.setProjectionMatrix(new Matrix4f().setOrtho(0,160,200,0,1000,21000),VertexSorting.ORTHOGRAPHIC_Z);
             model.last().pose().identity();model.translate(0,0,-11000);
             GuiGraphics portrait=new GuiGraphics(mc,mc.renderBuffers().bufferSource());
-            InventoryScreen.renderEntityInInventoryFollowsMouse(portrait,80,184,76,12,0,entity);portrait.flush();
+            InventoryScreen.renderEntityInInventoryFollowsMouse(portrait,22,140,138,184,76,0f,0f,0f,entity);portrait.flush();
             // Screenshot.takeScreenshot 使用 RGB，会丢失透明通道，不能用于桌面角色。
             RenderSystem.bindTexture(target.getColorTextureId());
             try(var image=new NativeImage(160,200,false)){

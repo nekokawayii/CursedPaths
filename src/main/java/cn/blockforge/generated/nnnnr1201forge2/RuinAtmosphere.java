@@ -55,11 +55,11 @@ public final class RuinAtmosphere {
     public static BlockPos origin(ServerPlayer p){
         if(p.level().dimension()!=Level.OVERWORLD)return null;
         for(BlockPos b:sites(p.serverLevel()).origins)if(p.getX()>=b.getX()&&p.getX()<b.getX()+49&&p.getZ()>=b.getZ()&&p.getZ()<b.getZ()+65&&p.getY()>=b.getY()&&p.getY()<b.getY()+36)return b;
-        StructureStart start=p.serverLevel().structureManager().getStructureWithPieceAt(p.blockPosition(),KEY);
+        StructureStart start=p.serverLevel().structureManager().getStructureWithPieceAt(p.blockPosition(),net.minecraft.core.HolderSet.direct(p.serverLevel().registryAccess().holderOrThrow(KEY)));
         if(start.isValid()){BoundingBox b=start.getBoundingBox();return new BlockPos(b.minX(),b.minY(),b.minZ());}return null;
     }
     private static int rotation(ServerPlayer p){
-        StructureStart start=p.serverLevel().structureManager().getStructureWithPieceAt(p.blockPosition(),KEY);
+        StructureStart start=p.serverLevel().structureManager().getStructureWithPieceAt(p.blockPosition(),net.minecraft.core.HolderSet.direct(p.serverLevel().registryAccess().holderOrThrow(KEY)));
         if(start.isValid()&&!start.getPieces().isEmpty()&&start.getPieces().get(0) instanceof PoolElementStructurePiece piece)return switch(piece.getRotation()){case CLOCKWISE_90->1;case CLOCKWISE_180->2;case COUNTERCLOCKWISE_90->3;default->0;};return 0;
     }
     public static void echo(ServerPlayer p){if(origin(p)!=null&&p.level().getGameTime()>p.getPersistentData().getLong("RuinEchoAfter")){p.getPersistentData().putLong("RuinEchoAfter",p.level().getGameTime()+30);p.playNotifySound(SoundEvents.AMETHYST_BLOCK_RESONATE,SoundSource.AMBIENT,0.65f,0.55f);p.displayClientMessage(Component.literal("墙壁里的灵魂，记住了这一斩。"),true);}}
