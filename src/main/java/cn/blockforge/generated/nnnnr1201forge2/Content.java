@@ -232,13 +232,13 @@ public final class Content {
         for(int i=0;i<6;i++){
             final int k=i;
             TRANSFIGURED_AXES[i]=ITEMS.register("transfigured_axe_"+TRANSFIGURE_TIERS[i],
-                ()->new net.minecraft.world.item.AxeItem(TRANSFIGURE_TIER_OBJ[k],6.0f,-3.0f,new Item.Properties().rarity(Rarity.EPIC)));
+                ()->cn.blockforge.generated.nnnnr1201forge2.CompatTools.axe(TRANSFIGURE_TIER_OBJ[k],6.0f,-3.0f,new Item.Properties().rarity(Rarity.EPIC)));
             TRANSFIGURED_PICKAXES[i]=ITEMS.register("transfigured_pickaxe_"+TRANSFIGURE_TIERS[i],
-                ()->new net.minecraft.world.item.PickaxeItem(TRANSFIGURE_TIER_OBJ[k],1,-2.8f,new Item.Properties().rarity(Rarity.EPIC)));
+                ()->cn.blockforge.generated.nnnnr1201forge2.CompatTools.pickaxe(TRANSFIGURE_TIER_OBJ[k],1,-2.8f,new Item.Properties().rarity(Rarity.EPIC)));
             TRANSFIGURED_HOES[i]=ITEMS.register("transfigured_hoe_"+TRANSFIGURE_TIERS[i],
-                ()->new net.minecraft.world.item.HoeItem(TRANSFIGURE_TIER_OBJ[k],-2,-3.0f,new Item.Properties().rarity(Rarity.EPIC)));
+                ()->cn.blockforge.generated.nnnnr1201forge2.CompatTools.hoe(TRANSFIGURE_TIER_OBJ[k],-2,-3.0f,new Item.Properties().rarity(Rarity.EPIC)));
             TRANSFIGURED_SHOVELS[i]=ITEMS.register("transfigured_shovel_"+TRANSFIGURE_TIERS[i],
-                ()->new net.minecraft.world.item.ShovelItem(TRANSFIGURE_TIER_OBJ[k],1.5f,-3.0f,new Item.Properties().rarity(Rarity.EPIC)));
+                ()->cn.blockforge.generated.nnnnr1201forge2.CompatTools.shovel(TRANSFIGURE_TIER_OBJ[k],1.5f,-3.0f,new Item.Properties().rarity(Rarity.EPIC)));
         }
     }
     /** 日车宽见的法槌：不可丢弃、无限耐久。 */
@@ -316,11 +316,11 @@ public final class Content {
     /** 领域内的坟头（插着鬼妖村正，右键拔出）。 */
     public static final net.neoforged.neoforge.registries.DeferredRegister<net.minecraft.world.level.block.Block> YUTA_BLOCKS=
         net.neoforged.neoforge.registries.DeferredRegister.create(net.minecraft.core.registries.BuiltInRegistries.BLOCK,"jujutsu_kaisen_cursed_paths");
-    public static final DeferredHolder<?, net.minecraft.world.level.block.Block> YUTA_GRAVE=YUTA_BLOCKS.register("yuta_grave",
+    public static final DeferredHolder<net.minecraft.world.level.block.Block, net.minecraft.world.level.block.Block> YUTA_GRAVE=YUTA_BLOCKS.register("yuta_grave",
         ()->new character.yuta.YutaGraveBlock(net.minecraft.world.level.block.state.BlockBehaviour.Properties.of()
             .noCollission().strength(0.4f).noOcclusion().lightLevel(st->7)));
     /** 星轨坠亡的外壳方块：贴一张星空图。 */
-    public static final DeferredHolder<?, net.minecraft.world.level.block.Block> YUKI_STAR_SHELL=YUTA_BLOCKS.register("yuki_star_shell",
+    public static final DeferredHolder<net.minecraft.world.level.block.Block, net.minecraft.world.level.block.Block> YUKI_STAR_SHELL=YUTA_BLOCKS.register("yuki_star_shell",
         ()->new DomainMaskBlock(net.minecraft.world.level.block.state.BlockBehaviour.Properties.of()
             .strength(-1f,3600000f).lightLevel(st->15)));
 
@@ -357,12 +357,12 @@ public final class Content {
 
     /** 领域方块（石流龙打上花火的内壳材料）：六个面显示同一张图，image 0~7 切不同外观。 */
     /** 立方体结界的红色缝隙：走进去就被拉进死灭洄游（r256）。 */
-    public static final DeferredHolder<?, net.minecraft.world.level.block.Block> CULLING_SEAM =
+    public static final DeferredHolder<net.minecraft.world.level.block.Block, net.minecraft.world.level.block.Block> CULLING_SEAM =
         YUTA_BLOCKS.register("culling_seam", () -> new CullingSeamBlock(
             net.minecraft.world.level.block.state.BlockBehaviour.Properties.of()
                 .noCollission().noOcclusion().strength(-1, 3600000f).lightLevel(s -> 15)));
 
-    public static final DeferredHolder<?, net.minecraft.world.level.block.Block> DOMAIN_SCREEN =
+    public static final DeferredHolder<net.minecraft.world.level.block.Block, net.minecraft.world.level.block.Block> DOMAIN_SCREEN =
         YUTA_BLOCKS.register("domain_screen", () -> new DomainScreenBlock(
             net.minecraft.world.level.block.state.BlockBehaviour.Properties.of()
                 .strength(-1.0f, 3600000.0f).noOcclusion().lightLevel(st -> 0)));
