@@ -69,7 +69,7 @@ public final class BossControl extends SavedData {
         stats(boss,changed!=null&&changed.equals(healthKey(boss)));
     }
     @SubscribeEvent(priority=net.neoforged.bus.api.EventPriority.LOWEST) public static void enforce(net.neoforged.neoforge.event.tick.EntityTickEvent.Post event){
-        var boss=event.getEntity();if(boss.level().isClientSide||!managed(boss)||excluded(boss))return;
+        if(!(event.getEntity() instanceof net.minecraft.world.entity.LivingEntity boss))return;if(boss.level().isClientSide||!managed(boss)||excluded(boss))return;
         if(boss instanceof GuardianEntity g)g.enforceSettings();else stats(boss,false);
     }
     @SubscribeEvent public static void join(EntityJoinLevelEvent e){if(e.getLevel() instanceof ServerLevel level&&e.getEntity() instanceof LivingEntity living&&managed(living)&&!excluded(living)){get(level.getServer()).apply(living,null);if(!e.loadedFromDisk()){if(living instanceof GuardianEntity g)g.refreshSettings(guardian(level.getServer()),"Health");else living.setHealth(living.getMaxHealth());}}}

@@ -28,7 +28,7 @@ public class YutaGraveBlockEntity extends BlockEntity {
     }
 
     @Override
-    public void load(CompoundTag tag) {
+    protected void loadAdditional(CompoundTag tag, net.minecraft.core.HolderLookup.Provider provider) {
         super.loadAdditional(tag, provider);
         taken = tag.getBoolean("Taken");
     }

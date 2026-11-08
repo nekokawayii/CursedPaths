@@ -26,7 +26,6 @@ public class TodoAnchorEntity extends Entity {
         if (!level().isClientSide() && tickCount > 20 * 60 * 10) discard();
     }
 
-    @Override protected void defineSynchedData() {}
 
     @Override protected void readAdditionalSaveData(CompoundTag tag) {}
 
