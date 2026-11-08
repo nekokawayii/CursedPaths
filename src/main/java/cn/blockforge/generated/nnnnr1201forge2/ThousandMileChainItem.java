@@ -111,7 +111,7 @@ public final class ThousandMileChainItem extends Item {
     @Override public boolean canAttackBlock(BlockState state, Level level, BlockPos pos, Player player) { return false; }
     @Override public boolean onLeftClickEntity(ItemStack stack, Player player, net.minecraft.world.entity.Entity entity) { return true; }
     @Override public boolean isFoil(ItemStack stack) { return armed(stack) || super.isFoil(stack); }
-    @Override public void appendHoverText(ItemStack stack, Level level, List<Component> lines, TooltipFlag flag) {
+    @Override public void appendHoverText(ItemStack stack, net.minecraft.world.item.Item.TooltipContext context, List<Component> lines, TooltipFlag flag) {
         lines.add(Component.literal("左键① 抛下有重力、会碰撞的锁链一端").withStyle(ChatFormatting.GRAY));
         lines.add(Component.literal("左键② 只有自己看不见首端时，沿准星直线无限延伸").withStyle(ChatFormatting.AQUA));
         lines.add(Component.literal("命中缠绕定身；左键③ 收回，并将目标拉到面前安全处").withStyle(ChatFormatting.GRAY));

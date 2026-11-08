@@ -80,8 +80,7 @@ public class TenkaSpearItem extends SwordItem {
         return super.hurtEnemy(stack, target, attacker);
     }
 
-    @Override public void appendHoverText(ItemStack stack, Level level, java.util.List<Component> lines,
-                                          TooltipFlag flag) {
+    @Override public void appendHoverText(ItemStack stack, net.minecraft.world.item.Item.TooltipContext context, java.util.List<Component> lines, TooltipFlag flag) {
         lines.add(Component.literal("能斩断术式的咒具：右键切断附近一切术式与领域，封印 3 秒").withStyle(ChatFormatting.AQUA));
         lines.add(Component.literal("左键命中同样斩断该目标的术式（含无下限），冷却 30 秒").withStyle(ChatFormatting.DARK_AQUA));
         lines.add(Component.literal("放在背包里会作为腰间挂件显示（按 F5 看自己）").withStyle(ChatFormatting.GRAY));

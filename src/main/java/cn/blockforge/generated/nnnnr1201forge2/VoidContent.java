@@ -85,7 +85,7 @@ public final class VoidContent {
             if(!l.isClientSide&&p instanceof ServerPlayer sp)MahoragaAdaptStore.recallAlly(sp,h);
             return InteractionResultHolder.sidedSuccess(stack,l.isClientSide);
         }
-        @Override public void appendHoverText(ItemStack stack,Level l,List<Component> lines,TooltipFlag flags){
+        @Override public void appendHoverText(ItemStack stack, net.minecraft.world.item.Item.TooltipContext context, List<Component> lines, TooltipFlag flags){
             lines.add(Component.literal("右键：召回场上的友方魔虚罗，并变回「法轮」").withStyle(ChatFormatting.GRAY));
             lines.add(Component.literal("召唤期间法轮不存在，所以这段时间戴不到头上；收回后即变回法轮可继续佩戴").withStyle(ChatFormatting.GRAY));
         }
@@ -98,7 +98,7 @@ public final class VoidContent {
             if(!l.isClientSide&&p instanceof ServerPlayer sp)Hiten.pull(sp);
             return InteractionResultHolder.sidedSuccess(p.getItemInHand(h),l.isClientSide);
         }
-        @Override public void appendHoverText(ItemStack stack,Level l,List<Component> lines,TooltipFlag flags){
+        @Override public void appendHoverText(ItemStack stack, net.minecraft.world.item.Item.TooltipContext context, List<Component> lines, TooltipFlag flags){
             lines.add(Component.literal("近战 "+BalanceRules.number(Hiten.DAMAGE)+" 伤害 · 攻击范围 "+BalanceRules.number(Hiten.RANGE)+" 格").withStyle(ChatFormatting.GRAY));
             lines.add(Component.literal("手持时所有斩击速度 −70%").withStyle(ChatFormatting.GRAY));
             lines.add(Component.literal("右键：周围 "+BalanceRules.number(Hiten.AURA_RADIUS)+" 格 + 面前扇形 "+BalanceRules.number(Hiten.CONE_RANGE)
@@ -113,7 +113,7 @@ public final class VoidContent {
             if(!l.isClientSide&&p instanceof ServerPlayer sp)Shinbuke.strike(sp);
             return InteractionResultHolder.sidedSuccess(p.getItemInHand(h),l.isClientSide);
         }
-        @Override public void appendHoverText(ItemStack stack,Level l,List<Component> lines,TooltipFlag flags){
+        @Override public void appendHoverText(ItemStack stack, net.minecraft.world.item.Item.TooltipContext context, List<Component> lines, TooltipFlag flags){
             lines.add(Component.literal("左键：近战 "+BalanceRules.number(Shinbuke.MELEE_DAMAGE)+" 伤害").withStyle(ChatFormatting.GRAY));
             lines.add(Component.literal("右键：面前扇形 "+BalanceRules.number(Shinbuke.RANGE)+" 格内所有怪物各吃一道彩色雷击（"
                 +BalanceRules.number(Shinbuke.MELEE_DAMAGE)+" × "+BalanceRules.number(Shinbuke.STRIKE_MULTIPLIER)+" = "

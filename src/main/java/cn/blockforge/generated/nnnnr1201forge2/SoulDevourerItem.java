@@ -12,7 +12,7 @@ public final class SoulDevourerItem extends SwordItem {
     public static long hits(ItemStack stack){return cn.blockforge.generated.nnnnr1201forge2.CompatNbt.has(stack)?Math.max(0,CompatNbt.read(stack).getLong("SoulDevourerHits")):0;}
     public static float multiplier(ItemStack stack){return (float)(1d+hits(stack)*.05d);}
     public static void recordHit(ItemStack stack){long n=hits(stack);if(n<Long.MAX_VALUE)CompatNbt.update(stack, t -> t.putLong("SoulDevourerHits",n+1));}
-    @Override public void appendHoverText(ItemStack stack,Level level,List<Component> lines,TooltipFlag flag){
+    @Override public void appendHoverText(ItemStack stack, net.minecraft.world.item.Item.TooltipContext context, List<Component> lines, TooltipFlag flag){
         lines.add(Component.literal("无视护甲、盾牌、防御附魔和抗性提升"));
         lines.add(Component.literal("每次有效命中后永久累加基础伤害的5%，不按复利计算"));
         lines.add(Component.literal("已噬魂 "+hits(stack)+" 次 · 当前伤害 ×"+String.format(java.util.Locale.ROOT,"%.2f",multiplier(stack))));

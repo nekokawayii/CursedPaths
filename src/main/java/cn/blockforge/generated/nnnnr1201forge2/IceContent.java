@@ -28,7 +28,7 @@ public final class IceContent {
         IceFood(boolean memory){super(new Properties().stacksTo(memory?1:64).rarity(memory?Rarity.EPIC:Rarity.UNCOMMON).food(new FoodProperties.Builder().nutrition(memory?0:2).saturationMod(0.1f).alwaysEat().build()));this.memory=memory;}
         private boolean allowed(Player p){return memory?character.CharacterService.permits(p,character.CharacterDefinition.Family.ICE)&&BranchRules.acceptMemory(Journey.unlocked(p),Uraume.unlocked(p),MaidBridge.isCaster(p),true):Uraume.unlocked(p);}
         @Override public InteractionResultHolder<ItemStack> use(Level l,Player p,InteractionHand h){if(!l.isClientSide&&!allowed(p)){p.displayClientMessage(Component.literal(memory?"已经吃过里梅记忆":"先吃里梅记忆，冰鱼才能强化冰凝咒法"),true);return InteractionResultHolder.fail(p.getItemInHand(h));}return super.use(l,p,h);}
-        @Override public void appendHoverText(ItemStack stack,Level l,List<Component> lines,TooltipFlag flags){
+        @Override public void appendHoverText(ItemStack stack, net.minecraft.world.item.Item.TooltipContext context, List<Component> lines, TooltipFlag flags){
             lines.add(Component.literal(memory?"长按右键：解锁霜凪与直瀑":"右键**使用**：每条永久增加"+BalanceRules.number(EnergyRules.ICE_FISH_BONUS)+"咒力上限，并恢复等量咒力；冰伤 +1%"));
             if(!memory)lines.add(Component.literal("按住右键可以不松手连续使用：每 2 刻用掉一条，直到背包里的冰鱼用完"));
             if(!memory)lines.add(Component.literal("每10条强化技能；以前吃过的冰鱼自动计入上限"));

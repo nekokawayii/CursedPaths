@@ -34,7 +34,7 @@ public final class PrisonContent {
             return InteractionResultHolder.sidedSuccess(stack,level.isClientSide);
         }
         @Override public void initializeClient(java.util.function.Consumer<net.neoforged.neoforge.client.extensions.common.IClientItemExtensions> consumer){PrisonClient.item(consumer);}
-        @Override public void appendHoverText(ItemStack s,Level l,java.util.List<Component> lines,TooltipFlag f){lines.add(Component.literal("右键向准星释放6秒圣光；半径5格，持续光伤害"));lines.add(Component.literal("结束时破坏范围内的狱门僵，释放被封印者并归还物品"));}
+        @Override public void appendHoverText(ItemStack s, net.minecraft.world.item.Item.TooltipContext context, java.util.List<Component> lines, TooltipFlag f){lines.add(Component.literal("右键向准星释放6秒圣光；半径5格，持续光伤害"));lines.add(Component.literal("结束时破坏范围内的狱门僵，释放被封印者并归还物品"));}
     });
     public static void init(){NeoForge.EVENT_BUS.register(PrisonSystem.class);}
     private PrisonContent(){}

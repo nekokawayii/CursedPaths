@@ -14,7 +14,7 @@ import cn.blockforge.generated.nnnnr1201forge2.CompatNbt;
 public final class ExpeditionItem extends Item {
     public final String id;
     public ExpeditionItem(String id){super(new Item.Properties().stacksTo(id.endsWith("blueprint")||id.endsWith("map")||id.equals("culling_key")?1:64));this.id=id;}
-    @Override public void appendHoverText(ItemStack s,Level l,List<Component> lines,TooltipFlag f){lines.add(Component.translatable("hint.jujutsu_kaisen_cursed_paths."+id));}
+    @Override public void appendHoverText(ItemStack s, net.minecraft.world.item.Item.TooltipContext context, List<Component> lines, TooltipFlag f){lines.add(Component.translatable("hint.jujutsu_kaisen_cursed_paths."+id));}
     @Override public InteractionResult useOn(UseOnContext c){
         if(id.equals("simple_domain_disc")&&c.getPlayer() instanceof ServerPlayer p){
             if(p.getCooldowns().isOnCooldown(this)||!p.mayUseItemAt(c.getClickedPos(),c.getClickedFace(),c.getItemInHand()))return InteractionResult.FAIL;

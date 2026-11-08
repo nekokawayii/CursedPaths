@@ -67,7 +67,7 @@ public final class PrisonRealmItem extends Item {
         if(!entity.level().isClientSide){entity.setUnlimitedLifetime();entity.setInvulnerable(true);if(entity.getY()<entity.level().getMinBuildHeight()){entity.setPos(entity.getX(),entity.level().getMinBuildHeight()+4,entity.getZ());entity.setNoGravity(true);entity.setDeltaMovement(net.minecraft.world.phys.Vec3.ZERO);}}return false;
     }
     @Override public void initializeClient(java.util.function.Consumer<net.neoforged.neoforge.client.extensions.common.IClientItemExtensions> consumer){PrisonClient.item(consumer);}
-    @Override public void appendHoverText(ItemStack s,Level l,java.util.List<Component> lines,TooltipFlag f){
+    @Override public void appendHoverText(ItemStack s, net.minecraft.world.item.Item.TooltipContext context, java.util.List<Component> lines, TooltipFlag f){
         lines.add(Component.literal("空载时右键低于15%血量的敌方生物，可直接封印；不适用于玩家"));
         lines.add(Component.literal("右键地面放置；聊天：狱门僵，开门／狱门僵，闭门"));
         lines.add(Component.literal("闭门后，放置者空手右键收起；封印与内部数据随物品保存"));

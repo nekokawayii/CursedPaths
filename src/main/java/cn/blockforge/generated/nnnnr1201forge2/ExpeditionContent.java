@@ -75,7 +75,7 @@ public final class ExpeditionContent {
         if(id.equals("blood_armor")||id.equals("alloy_chestplate")||id.equals("forbidden_armor"))return new ExpeditionArmorItem(id,ArmorMaterials.NETHERITE,ArmorItem.Type.CHESTPLATE,new Item.Properties().fireResistant());
         return new ExpeditionItem(id);
     }
-    private static void block(String id,java.util.function.Supplier<Block> factory){var b=ProgressionContent.BLOCKS.register(id,factory);BLOCKS.put(id,b);ITEMS.put(id,Content.ITEMS.register(id,()->new BlockItem(b.get(),new Item.Properties()){ @Override public void appendHoverText(ItemStack s,Level l,List<Component> lines,TooltipFlag f){if(id.equals("refining_altar")||id.equals("gu_vat")||id.equals("tengen_core"))lines.add(Component.literal("潜行右键切换配方，普通右键检查阵型并投入背包材料；成品留在台上右键领取。"));} }));}
+    private static void block(String id,java.util.function.Supplier<Block> factory){var b=ProgressionContent.BLOCKS.register(id,factory);BLOCKS.put(id,b);ITEMS.put(id,Content.ITEMS.register(id,()->new BlockItem(b.get(),new Item.Properties()){ @Override public void appendHoverText(ItemStack s, net.minecraft.world.item.Item.TooltipContext context, List<Component> lines, TooltipFlag f){if(id.equals("refining_altar")||id.equals("gu_vat")||id.equals("tengen_core"))lines.add(Component.literal("潜行右键切换配方，普通右键检查阵型并投入背包材料；成品留在台上右键领取。"));} }));}
     public static Item item(String id){return ITEMS.get(id).get();}
     public static Block block(String id){return BLOCKS.get(id).get();}
     public static void init(IEventBus bus){BES.register(bus);EFFECTS.register(bus);ENCHANTMENTS.register(bus);ExpeditionWorldgen.init(bus);}

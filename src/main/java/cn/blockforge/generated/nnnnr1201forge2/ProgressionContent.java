@@ -26,12 +26,12 @@ public final class ProgressionContent {
     public static final DeferredHolder<Item, Item> NINE=item("nine_death_paintings",()->new UnlockFood(true));
     public static final List<DeferredHolder<Item, Item>> PAGES=new ArrayList<>();
     static {for(int i=0;i<9;i++){final int index=i;PAGES.add(item("page_"+Journey.IDS[i],()->new Item(new Item.Properties().rarity(Rarity.RARE)){
-        @Override public void appendHoverText(ItemStack s,Level l,List<Component> lines,TooltipFlag f){lines.add(Component.literal(Journey.CONDITIONS[index]));lines.add(Component.literal("九种咒胎各一份，在工作台合成咒胎九相图"));}
+        @Override public void appendHoverText(ItemStack s, net.minecraft.world.item.Item.TooltipContext context, List<Component> lines, TooltipFlag f){lines.add(Component.literal(Journey.CONDITIONS[index]));lines.add(Component.literal("九种咒胎各一份，在工作台合成咒胎九相图"));}
     }));}}
     public static final DeferredHolder<Item, Item> CORE=item("nether_core",()->new Item(new Item.Properties().rarity(Rarity.RARE).fireResistant()));
     public static final DeferredHolder<Item, Item> FETUS=item("forbidden_fetus",()->new Item(new Item.Properties().rarity(Rarity.EPIC).fireResistant()){
         @Override public InteractionResultHolder<ItemStack> use(Level l,Player p,InteractionHand h){ItemStack stack=p.getItemInHand(h);if(p instanceof ServerPlayer sp){if(!Curse.awakened(p)){sp.sendSystemMessage(Component.literal("先吞噬即身佛肉体，才能凝聚咒胎祭坛"));return InteractionResultHolder.fail(stack);}if(p.getInventory().countItem(Items.NETHERITE_INGOT)<6||p.getInventory().countItem(CORE.get())<3){sp.sendSystemMessage(Component.literal("祭坛合成需要：禁忌之胎×1、下界合金锭×6、下界核心×3；材料放在背包后右键禁忌之胎"));return InteractionResultHolder.fail(stack);}take(p,Items.NETHERITE_INGOT,6);take(p,CORE.get(),3);stack.shrink(1);Journey.give(sp,new ItemStack(ALTAR_ITEM.get()));sp.sendSystemMessage(Component.literal("咒胎祭坛已凝聚。放置后右键查看任务，持咒胎右键可合成九相图。"));}return InteractionResultHolder.sidedSuccess(stack,l.isClientSide);}
-        @Override public void appendHoverText(ItemStack s,Level l,List<Component> lines,TooltipFlag f){lines.add(Component.literal("觉醒后右键：消耗本物品、6下界合金锭、3下界核心合成祭坛"));}
+        @Override public void appendHoverText(ItemStack s, net.minecraft.world.item.Item.TooltipContext context, List<Component> lines, TooltipFlag f){lines.add(Component.literal("觉醒后右键：消耗本物品、6下界合金锭、3下界核心合成祭坛"));}
     });
     public static final DeferredHolder<Block, Block> TRANSFIGURED_FLESH=BLOCKS.register("idle_transfigured_flesh",()->new Block(BlockBehaviour.Properties.ofFullCopy(Blocks.NETHER_WART_BLOCK).strength(4,12).sound(SoundType.SLIME_BLOCK)));
     public static final DeferredHolder<Item, Item> TRANSFIGURED_FLESH_ITEM=item("idle_transfigured_flesh",()->new BlockItem(TRANSFIGURED_FLESH.get(),new Item.Properties().rarity(Rarity.RARE)));

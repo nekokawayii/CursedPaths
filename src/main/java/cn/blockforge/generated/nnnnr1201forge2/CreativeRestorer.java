@@ -25,7 +25,7 @@ public final class CreativeRestorer extends Item {
         if(player instanceof ServerPlayer p)restore(p);
         return InteractionResultHolder.sidedSuccess(stack,level.isClientSide);
     }
-    @Override public void appendHoverText(ItemStack stack,Level level,List<Component> lines,TooltipFlag flag){
+    @Override public void appendHoverText(ItemStack stack, net.minecraft.world.item.Item.TooltipContext context, List<Component> lines, TooltipFlag flag){
         lines.add(Component.literal("创造专用：右键回满生命、咒力、饥饿和灵魂层数"));
         lines.add(Component.literal("清除熔断、冷却、禁疗、负面效果、肉体崩溃，停止当前技能"));
         lines.add(Component.literal("保留成长、物品、敌友设置；不消耗道具"));

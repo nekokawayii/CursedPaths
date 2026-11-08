@@ -31,5 +31,5 @@ public final class MegumiSeanceItem extends Item {
         villager.discard();if(!p.isCreative())event.getItemStack().shrink(1);
         p.sendSystemMessage(Component.literal("降灵完成 · 伏黑惠暂时保持中立，空手右键或攻击他开始首领战"));
     }
-    @Override public void appendHoverText(ItemStack stack,Level level,List<Component> lines,TooltipFlag flags){lines.add(Component.literal("右键成年村民：转化为中立伏黑惠"));lines.add(Component.literal("再空手右键或攻击伏黑惠开始挑战"));lines.add(Component.literal("击败后右键倒地肉身，觉醒十种影法术"));}
+    @Override public void appendHoverText(ItemStack stack, net.minecraft.world.item.Item.TooltipContext context, List<Component> lines, TooltipFlag flags){lines.add(Component.literal("右键成年村民：转化为中立伏黑惠"));lines.add(Component.literal("再空手右键或攻击伏黑惠开始挑战"));lines.add(Component.literal("击败后右键倒地肉身，觉醒十种影法术"));}
 }
