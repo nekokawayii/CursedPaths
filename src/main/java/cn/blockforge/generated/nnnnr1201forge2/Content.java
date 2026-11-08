@@ -325,8 +325,8 @@ public final class Content {
             .strength(-1f,3600000f).lightLevel(st->15)));
 
     public static final net.neoforged.neoforge.registries.DeferredRegister<net.minecraft.world.level.block.entity.BlockEntityType<?>> YUTA_BES=
-        net.neoforged.neoforge.registries.DeferredRegister.create(net.minecraft.core.registries.BuiltInRegistries.BLOCK_ENTITY_TYPES,"jujutsu_kaisen_cursed_paths");
-    public static final DeferredHolder<?, net.minecraft.world.level.block.entity.BlockEntityType<character.yuta.YutaGraveBlockEntity>> YUTA_GRAVE_BE=
+        net.neoforged.neoforge.registries.DeferredRegister.create(net.minecraft.core.registries.BuiltInRegistries.BLOCK_ENTITY_TYPE,"jujutsu_kaisen_cursed_paths");
+    public static final DeferredHolder<net.minecraft.world.level.block.entity.BlockEntityType<?>, net.minecraft.world.level.block.entity.BlockEntityType<character.yuta.YutaGraveBlockEntity>> YUTA_GRAVE_BE=
         YUTA_BES.register("yuta_grave",()->net.minecraft.world.level.block.entity.BlockEntityType.Builder
             .of(character.yuta.YutaGraveBlockEntity::new,YUTA_GRAVE.get()).build(null));
     public static final DeferredHolder<Item, Item> YUTA_GRAVE_ITEM=ITEMS.register("yuta_grave",
@@ -369,7 +369,7 @@ public final class Content {
     public static final DeferredHolder<Item, Item> DOMAIN_SCREEN_ITEM = ITEMS.register("domain_screen",
         () -> new DomainScreenItem(DOMAIN_SCREEN.get(), new Item.Properties()));
 
-    public static final DeferredHolder<?, net.minecraft.world.level.block.entity.BlockEntityType<DomainMaskBlockEntity>> DOMAIN_MASK_BE =
+    public static final DeferredHolder<net.minecraft.world.level.block.entity.BlockEntityType<?>, net.minecraft.world.level.block.entity.BlockEntityType<DomainMaskBlockEntity>> DOMAIN_MASK_BE =
         YUTA_BES.register("domain_mask",()->net.minecraft.world.level.block.entity.BlockEntityType.Builder.of(DomainMaskBlockEntity::new,YUKI_STAR_SHELL.get(),DOMAIN_SCREEN.get()).build(null));
 
     /** 鬼妖村正：领域内从坟头拔出的刀（左键 20 无视护甲，右键放复制术式×3 后报废）。 */

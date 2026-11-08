@@ -35,7 +35,7 @@ public final class ExpeditionContent {
             net.minecraft.core.component.DataComponentMap.EMPTY));
     public static final Map<String,DeferredHolder<Item, Item>> ITEMS=new LinkedHashMap<>();
     public static final Map<String,DeferredHolder<Block, Block>> BLOCKS=new LinkedHashMap<>();
-    public static final DeferredRegister<BlockEntityType<?>> BES=DeferredRegister.create(BuiltInRegistries.BLOCK_ENTITY_TYPES,"jujutsu_kaisen_cursed_paths");
+    public static final DeferredRegister<BlockEntityType<?>> BES=DeferredRegister.create(BuiltInRegistries.BLOCK_ENTITY_TYPE,"jujutsu_kaisen_cursed_paths");
     public static final DeferredRegister<net.minecraft.world.effect.MobEffect> EFFECTS=DeferredRegister.create(BuiltInRegistries.MOB_EFFECT,"jujutsu_kaisen_cursed_paths");
     public static final DeferredHolder<net.minecraft.world.effect.MobEffect, net.minecraft.world.effect.MobEffect> OVERHEAT=EFFECTS.register("overheat",()->new ExpeditionEffect(0xE65A22));
     public static final DeferredHolder<net.minecraft.world.effect.MobEffect, net.minecraft.world.effect.MobEffect> RUNAWAY=EFFECTS.register("curse_runaway",()->new ExpeditionEffect(0xAD35DB));

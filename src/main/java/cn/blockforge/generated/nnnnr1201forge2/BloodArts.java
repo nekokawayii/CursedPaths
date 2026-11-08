@@ -167,7 +167,7 @@ public final class BloodArts {
     private static boolean hit(ServerPlayer p,LivingEntity t,float base,float armorRemaining,boolean trueDamage,float multiplier){
         if(!valid(p,p.serverLevel())||!Curse.canUseTechnique(p)||SoulCombat.suppressed(p)||PrisonSystem.locked(MaidBridge.body(p))||DeathStar.anemic(p)||!CombatSafety.canAffect(p,t)||DomainClash.active(p)||DomainClash.active(t))return false;
         float amount=CombatSettings.spellDamage(p,base)*multiplier*BloodRules.damageScale(rank(p));
-        if(!trueDamage)amount=CombatRules.getDamageAfterAbsorb(amount,t.getArmorValue()*armorRemaining,(float)t.getAttributeValue(Attributes.ARMOR_TOUGHNESS)*armorRemaining);
+        if(!trueDamage)amount=CombatRules.getDamageAfterAbsorb(t, amount, t.damageSources().generic(), t.getArmorValue()*armorRemaining, (float)t.getAttributeValue(Attributes.ARMOR_TOUGHNESS)*armorRemaining);
         var holder=p.level().registryAccess().registryOrThrow(Registries.DAMAGE_TYPE).getHolderOrThrow(trueDamage?TRUE:BLOOD);
         float before=t.getHealth()+t.getAbsorptionAmount();t.invulnerableTime=0;
         boolean previous=bloodDamage;bloodDamage=true;boolean accepted;
