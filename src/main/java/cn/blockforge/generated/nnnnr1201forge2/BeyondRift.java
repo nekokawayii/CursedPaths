@@ -15,10 +15,11 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
-import net.neoforged.neoforge.event.TickEvent;
+
 import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
 import net.neoforged.bus.api.*;
 import net.neoforged.fml.common.Mod;
+import net.neoforged.neoforge.event.tick.PlayerTickEvent;
 
 /**
  * 隐藏剧情「观测者」的服务端部分。
@@ -38,8 +39,8 @@ public final class BeyondRift {
     private static final String SEEN="BeyondVoidSeen",STAGE="BeyondStage",DROP_OWNER="BeyondDropOwner";
     private static final Map<UUID,Long> nextDrop=new HashMap<>();
 
-    @SubscribeEvent public static void tick(TickEvent.PlayerTickEvent e){
-        if(e.phase!=TickEvent.Phase.END||!(e.player instanceof ServerPlayer p)||p instanceof net.neoforged.neoforge.common.util.FakePlayer||!p.isAlive()||p.isSpectator())return;
+    @SubscribeEvent public static void tick(PlayerTickEvent.Post e){
+        if(false||!(e.getEntity() instanceof ServerPlayer p)||p instanceof net.neoforged.neoforge.common.util.FakePlayer||!p.isAlive()||p.isSpectator())return;
         // 讲台读信也算亲自阅读，不要求把唯一一本书从讲台拿走。
         if(p.containerMenu instanceof net.minecraft.world.inventory.LecternMenu menu&&isNote(menu.getBook()))recordRead(p);
         if(p.level().dimension()!=SoulJourney.CORRIDOR)return;

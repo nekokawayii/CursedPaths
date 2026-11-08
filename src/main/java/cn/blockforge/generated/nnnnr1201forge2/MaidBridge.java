@@ -11,11 +11,12 @@ import net.minecraft.world.entity.ai.attributes.*;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.common.util.FakePlayer;
-import net.neoforged.neoforge.event.TickEvent;
+
 import net.neoforged.neoforge.event.entity.living.*;
 import net.neoforged.neoforge.event.server.ServerStoppedEvent;
 import net.neoforged.bus.api.*;
 import net.neoforged.neoforge.registries.ForgeRegistries;
+import net.neoforged.neoforge.event.tick.ServerTickEvent;
 
 /** 不引用女仆类；可选联动为每个实体提供独立施术上下文，共用玩家技能队列。 */
 public final class MaidBridge {
@@ -115,7 +116,7 @@ public final class MaidBridge {
         void retire(){AuthoritySkills.cancel(this);Skills.releaseCaster(this);GuardianPlayerSkills.cancel(this);setRemoved(RemovalReason.UNLOADED_TO_CHUNK);}
     }
     public static CompoundTag progress(LivingEntity maid){var root=maid.getPersistentData();if(!root.contains("SukunaProgress")){var tag=new CompoundTag();tag.putDouble("Energy",1000);root.put("SukunaProgress",tag);}return root.getCompound("SukunaProgress");}
-    @SubscribeEvent(priority=EventPriority.HIGHEST) public static void tick(TickEvent.ServerTickEvent event){
+    @SubscribeEvent(priority=EventPriority.HIGHEST) public static void tick(ServerTickEvent.Post event){
         if(event.phase!=TickEvent.Phase.END)return;
         for(Actor a:List.copyOf(ACTORS.values())){if(!a.isAlive()||a.maid.level()!=a.level()){a.retire();ACTORS.remove(a.getUUID(),a);continue;}a.syncPosition();DeathStar.tickAnemia(a);AuthoritySkills.tickAutomatic(a);syncOwnerFlags(a);if(Curse.data(a).getBoolean("Memory")&&!Legion.member(a.maid)&&!Authority.echo(a.maid))Journey.tickCaster(a);if(a.maid.tickCount%20==0){Curse.tickCaster(a);apply(a);if(!Legion.member(a.maid)&&!Authority.echo(a.maid)){VoidJourney.repairOldVictory(a);GuardianProgress.deliverMaid(a);}}}
     }

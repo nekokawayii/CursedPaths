@@ -14,11 +14,13 @@ import net.minecraft.world.entity.ai.attributes.*;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.phys.*;
-import net.neoforged.neoforge.event.TickEvent;
+
 import net.neoforged.neoforge.event.entity.living.*;
 import net.neoforged.neoforge.event.entity.player.PlayerEvent;
 import net.neoforged.neoforge.event.server.ServerStoppedEvent;
 import net.neoforged.bus.api.*;
+import net.neoforged.neoforge.event.tick.ServerTickEvent;
+import net.neoforged.neoforge.event.tick.PlayerTickEvent;
 
 /** 极之番服务端：单次扣费、40刻蓄力、扫掠碰撞、每次命中重新核验敌友。 */
 public final class DeathStar {
@@ -71,7 +73,7 @@ public final class DeathStar {
             ||BossTargets.managed(t)&&(!(t instanceof ParasiteEntity parasite)||parasite.mother())||t instanceof MegumiEntity||t.getType().is(BOSSES)||t.getType().is(FORGE_BOSSES);
     }
     private static List<LivingEntity> near(ServerPlayer p,Vec3 at,double radius){return p.serverLevel().getEntitiesOfClass(LivingEntity.class,new AABB(at,at).inflate(radius),t->CombatSafety.canTarget(p,t)&&t.getBoundingBox().getCenter().distanceToSqr(at)<=radius*radius);}
-    @SubscribeEvent public static void tick(TickEvent.ServerTickEvent event){
+    @SubscribeEvent public static void tick(ServerTickEvent.Post event){
         if(event.phase!=TickEvent.Phase.END)return;
         for(Cast c:List.copyOf(casts.values())){
             ServerPlayer p=c.p;
@@ -142,8 +144,8 @@ public final class DeathStar {
     @SubscribeEvent(priority=EventPriority.HIGHEST) public static void trueDamage(LivingHurtEvent event){Float amount=trueHits.get(event.getEntity());if(source(event.getSource())&&amount!=null)event.setAmount(amount);}
     @SubscribeEvent(priority=EventPriority.LOWEST) public static void outgoing(LivingDamageEvent event){ServerPlayer p=CombatSettings.caster(event.getSource());if(p!=null&&anemic(p)&&!source(event.getSource()))event.setAmount(event.getAmount()*.5f);}
     @SubscribeEvent(priority=EventPriority.HIGHEST) public static void heal(LivingHealEvent event){ServerPlayer p=MaidBridge.progression(event.getEntity());if(p!=null&&anemic(p))event.setCanceled(true);}
-    @SubscribeEvent(priority=EventPriority.LOWEST) public static void playerTick(TickEvent.PlayerTickEvent event){
-        if(event.phase!=TickEvent.Phase.END||!(event.player instanceof ServerPlayer p))return;
+    @SubscribeEvent(priority=EventPriority.LOWEST) public static void playerTick(PlayerTickEvent.Post event){
+        if(event.phase!=TickEvent.Phase.END||!(event.getEntity() instanceof ServerPlayer p))return;
         tickAnemia(p);
     }
     public static void tickAnemia(ServerPlayer p){

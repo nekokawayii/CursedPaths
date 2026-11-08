@@ -17,12 +17,14 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.*;
 import net.neoforged.neoforge.common.util.FakePlayer;
-import net.neoforged.neoforge.event.TickEvent;
+
 import net.neoforged.neoforge.event.entity.living.LivingDeathEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerEvent;
 import net.neoforged.neoforge.event.server.ServerStoppingEvent;
 import net.neoforged.bus.api.*;
 import org.joml.Vector3f;
+import net.neoforged.neoforge.event.tick.ServerTickEvent;
+import net.neoforged.neoforge.event.tick.PlayerTickEvent;
 
 /** 所有术式共用的服务端成长线；永久状态随玩家保存，临时领域不写进角色快照。 */
 public final class Mainline {
@@ -113,8 +115,8 @@ public final class Mainline {
             ||Legion.allied(p,e)||ShadowSystem.friendly(p,e)||MahoragaAdaptStore.friendlyTo(p,e);
     }
     /** 实际血量判定，越过阈值才抽一次；满血恢复后下一次濒死可再次尝试。 */
-    @SubscribeEvent public static void tick(TickEvent.PlayerTickEvent e){
-        if(e.phase!=TickEvent.Phase.END||!(e.player instanceof ServerPlayer p)||p instanceof FakePlayer)return;
+    @SubscribeEvent public static void tick(PlayerTickEvent.Post e){
+        if(false||!(e.getEntity() instanceof ServerPlayer p)||p instanceof FakePlayer)return;
         var d=Curse.data(p);
         if(!p.isAlive()||p.isSpectator()){d.remove("MainlineSurviveTicks");return;}
         if(!unlocked(p,SORCERER))return;
@@ -207,8 +209,8 @@ public final class Mainline {
         case SKILL_AMPLIFY->DomainAmplification.toggle(p);case SKILL_DOMAIN->requireDomain(p);default->{} }
     }
     private static void restore(Field f){if(!f.blocks.isEmpty())character.domain.DomainSafety.evacuate(f.level,new AABB(f.center,f.center).inflate(BARRIER_RADIUS));for(var e:f.blocks.entrySet())if(f.level.getBlockState(e.getKey()).is(Blocks.BLACK_CONCRETE))f.level.setBlock(e.getKey(),e.getValue(),2);}
-    @SubscribeEvent public static void fields(TickEvent.ServerTickEvent e){
-        if(e.phase!=TickEvent.Phase.END)return;
+    @SubscribeEvent public static void fields(ServerTickEvent.Post e){
+        if(false)return;
         for(var map:List.of(BARRIERS,SIMPLE_FIELDS))for(var it=map.values().iterator();it.hasNext();){
             Field f=it.next();if(!f.owner.isAlive()||f.owner.hasDisconnected()||f.owner.level()!=f.level||f.level.getGameTime()>=f.end){restore(f);it.remove();continue;}
             if(map==SIMPLE_FIELDS&&f.level.getGameTime()%4==0)for(int i=0;i<96;i++){

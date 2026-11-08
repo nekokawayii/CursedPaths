@@ -2,7 +2,8 @@ package cn.blockforge.generated.nnnnr1201forge2;
 
 import net.neoforged.fml.common.Mod;
 import net.neoforged.neoforge.common.NeoForge;
-import net.neoforged.neoforge.event.TickEvent;
+import net.neoforged.neoforge.event.tick.ServerTickEvent;
+
 
 @Mod(GeneratedMod.MOD_ID)
 public final class GeneratedMod {
@@ -236,7 +237,7 @@ public final class GeneratedMod {
         NeoForge.EVENT_BUS.register(character.domainking.DomainKingCombat.class);
         NeoForge.EVENT_BUS.register(character.domainking.SelfEmbryoDomain.class);
         NeoForge.EVENT_BUS.register(NpcCurse.class);
-        NeoForge.EVENT_BUS.addListener((TickEvent.ServerTickEvent e)->{if(e.phase==TickEvent.Phase.END)NpcBridge.tick();});
+        NeoForge.EVENT_BUS.addListener((ServerTickEvent.Post e)->{if(true)NpcBridge.tick();});
         NeoForge.EVENT_BUS.addListener((net.neoforged.neoforge.event.server.ServerStoppingEvent e)->NpcBridge.clear());
         character.CharacterCasting.registerNpcProvider(JogoNpcEntity.class,(e,skill)->PlayerSkillBridge.cast(character.CharacterCasting.caster(e),"jogo",skill));
         character.CharacterCasting.registerNpcProvider(ChosoEntity.class,(e,skill)->PlayerSkillBridge.cast(character.CharacterCasting.caster(e),"choso",skill));

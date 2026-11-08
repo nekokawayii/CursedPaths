@@ -11,11 +11,12 @@ import net.minecraft.sounds.*;
 import net.minecraft.world.effect.*;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
-import net.neoforged.neoforge.event.TickEvent;
+
 import net.neoforged.neoforge.event.entity.player.PlayerEvent;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.neoforge.network.PacketDistributor;
+import net.neoforged.neoforge.event.tick.PlayerTickEvent;
 
 /** 高位战服务端：入口、权威战斗状态、断线恢复与胜负结算。 */
 @Mod.EventBusSubscriber(modid="jujutsu_kaisen_cursed_paths")
@@ -54,8 +55,8 @@ public final class ObserverRitual {
         return true;
     }
     private static boolean occupied(int slot){double x=SPACE.x+slot*128;return sessions.values().stream().anyMatch(s->s.at.x==x);}
-    @SubscribeEvent public static void tick(TickEvent.PlayerTickEvent e){
-        if(e.phase!=TickEvent.Phase.END||!(e.player instanceof ServerPlayer p))return;
+    @SubscribeEvent public static void tick(PlayerTickEvent.Post e){
+        if(false||!(e.getEntity() instanceof ServerPlayer p))return;
         Session s=sessions.get(p.getUUID());if(s==null)return;
         if(!p.isAlive()||p.isRemoved()||s.player!=p){finish(s,false,false);return;}
         var b=s.battle;int event=b.tick();

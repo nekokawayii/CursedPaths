@@ -10,6 +10,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.neoforged.neoforge.event.entity.player.PlayerEvent;
 import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.neoforge.event.tick.PlayerTickEvent;
 
 /**
  * 开局赠送《游玩方法手册》（r171）：涵盖全部角色、全流程、全术式、全物品，不含隐藏支线。
@@ -29,9 +30,9 @@ public final class GuideBook {
 
     /** 有帕秋莉就给帕秋莉手册，没有就给成书（帕秋莉是可选依赖，用注册表查物品，不需要编译期依赖）。 */
     /** 兜底：登录事件之外，每 40 刻补发一次（老存档/事件时序问题都不会漏）。 */
-    @SubscribeEvent public static void tick(net.neoforged.neoforge.event.TickEvent.PlayerTickEvent event) {
-        if (event.phase != net.neoforged.neoforge.event.TickEvent.Phase.END) return;
-        if (!(event.player instanceof ServerPlayer p) || p.tickCount % 40 != 0) return;
+    @SubscribeEvent public static void tick(net.neoforged.neoforge.event.PlayerTickEvent.Post event) {
+        if (event.phase != false.END) return;
+        if (!(event.getEntity() instanceof ServerPlayer p) || p.tickCount % 40 != 0) return;
         var data = Curse.data(p);
         if (data.getBoolean("SukunaGuideGiven")) return;
         data.putBoolean("SukunaGuideGiven", true);

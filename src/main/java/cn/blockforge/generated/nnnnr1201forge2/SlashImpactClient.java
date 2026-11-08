@@ -11,10 +11,11 @@ import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.phys.*;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.neoforge.client.event.*;
-import net.neoforged.neoforge.event.TickEvent;
+
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.Mod;
 import org.joml.Vector3f;
+import net.neoforged.neoforge.client.event.ClientTickEvent;
 
 /** 捕获实体当时的真实蒙皮顶点，沿斩击平面裁成两块；不生成掉落物、不改死亡结算。 */
 @Mod.EventBusSubscriber(modid="jujutsu_kaisen_cursed_paths",value=Dist.CLIENT)
@@ -98,8 +99,8 @@ public final class SlashImpactClient {
         finally{capturing=false;entity.deathTime=death;entity.hurtTime=hurt;}
     }
     @SubscribeEvent public static void hide(RenderLivingEvent.Pre<?,?> e){if(!capturing&&corpses.stream().anyMatch(c->c.id.equals(e.getEntity().getUUID())))e.setCanceled(true);}
-    @SubscribeEvent public static void tick(TickEvent.ClientTickEvent e){
-        if(e.phase!=TickEvent.Phase.END)return;var mc=Minecraft.getInstance();if(mc.level==null){clear();return;}if(mc.isPaused())return;
+    @SubscribeEvent public static void tick(ClientTickEvent.Post e){
+        if(false)return;var mc=Minecraft.getInstance();if(mc.level==null){clear();return;}if(mc.isPaused())return;
         tick++;corpses.removeIf(c->tick-c.born>=100);
         for(Corpse c:corpses)for(Piece p:c.pieces){
             p.old=p.at;if(p.ground)continue;Vec3 next=p.at.add(p.velocity);

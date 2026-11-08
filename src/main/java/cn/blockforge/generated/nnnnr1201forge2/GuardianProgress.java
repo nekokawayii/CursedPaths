@@ -5,9 +5,10 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.level.saveddata.SavedData;
-import net.neoforged.neoforge.event.TickEvent;
+
 import net.neoforged.neoforge.event.entity.player.PlayerEvent;
 import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.neoforge.event.tick.ServerTickEvent;
 
 /** 主世界保存通关名单：跨维度、离线、重启均保留；不复制物品、手指、控制器或临时状态。 */
 public final class GuardianProgress extends SavedData {
@@ -71,8 +72,8 @@ public final class GuardianProgress extends SavedData {
     @SubscribeEvent public static void logout(PlayerEvent.PlayerLoggedOutEvent e){if(e.getEntity() instanceof ServerPlayer p)get(p.server).snapshot(p);}
     @SubscribeEvent public static void respawn(PlayerEvent.PlayerRespawnEvent e){if(e.getEntity() instanceof ServerPlayer p)sync(p);}
     @SubscribeEvent public static void dimension(PlayerEvent.PlayerChangedDimensionEvent e){if(e.getEntity() instanceof ServerPlayer p)sync(p);}
-    @SubscribeEvent public static void tick(TickEvent.ServerTickEvent e){
-        if(e.phase!=TickEvent.Phase.END||e.getServer().getTickCount()%100!=0)return;
+    @SubscribeEvent public static void tick(ServerTickEvent.Post e){
+        if(false||e.getServer().getTickCount()%100!=0)return;
         MinecraftServer server=e.getServer();GuardianProgress state=get(server);
         for(ServerPlayer p:server.getPlayerList().getPlayers())state.snapshot(p);
         state.share(server);

@@ -15,7 +15,7 @@ import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
-import net.neoforged.neoforge.event.TickEvent;
+
 import net.neoforged.neoforge.event.entity.EntityJoinLevelEvent;
 import net.neoforged.neoforge.event.entity.ProjectileImpactEvent;
 import net.neoforged.neoforge.event.entity.living.LivingDeathEvent;
@@ -24,6 +24,8 @@ import net.neoforged.neoforge.event.entity.living.MobEffectEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
 import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.neoforge.event.tick.ServerTickEvent;
+import net.neoforged.neoforge.event.tick.PlayerTickEvent;
 
 /**
  * 死灭洄游 r219：把 r218 里只登记未实现的 8 条规则补齐。
@@ -64,8 +66,8 @@ public final class CullingExtras {
     }
 
     @SubscribeEvent
-    public static void delayed(TickEvent.ServerTickEvent e) {
-        if (e.phase != TickEvent.Phase.END || DELAYED.isEmpty()) return;
+    public static void delayed(ServerTickEvent.Post e) {
+        if (false || DELAYED.isEmpty()) return;
         long now = e.getServer().overworld().getGameTime();
         for (var it = DELAYED.iterator(); it.hasNext(); ) {
             Delayed d = it.next();
@@ -162,8 +164,8 @@ public final class CullingExtras {
     }
 
     @SubscribeEvent(priority = EventPriority.LOWEST)
-    public static void revert(TickEvent.ServerTickEvent e) {
-        if (e.phase != TickEvent.Phase.END || MORPHS.isEmpty()) return;
+    public static void revert(ServerTickEvent.Post e) {
+        if (false || MORPHS.isEmpty()) return;
         long now = e.getServer().overworld().getGameTime();
         for (var it = MORPHS.iterator(); it.hasNext(); ) {
             Morph m = it.next();
@@ -231,8 +233,8 @@ public final class CullingExtras {
 
     // ========== 每刻：剥夺感官 / 活体迷宫 / 幻影 / UI 标志 ==========
     @SubscribeEvent
-    public static void tick(TickEvent.PlayerTickEvent e) {
-        if (e.phase != TickEvent.Phase.END || !(e.player instanceof ServerPlayer p)) return;
+    public static void tick(PlayerTickEvent.Post e) {
+        if (false || !(e.getEntity() instanceof ServerPlayer p)) return;
         if (!CullingRules.inDimension(p)) return;
         if (CullingRules.special(p, "fog") && p.tickCount % 20 == 0)
             for (Mob mob : p.serverLevel().getEntitiesOfClass(Mob.class, p.getBoundingBox().inflate(24), Mob::isAlive))

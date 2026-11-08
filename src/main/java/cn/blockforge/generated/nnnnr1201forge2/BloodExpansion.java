@@ -7,9 +7,10 @@ import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.*;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.phys.*;
-import net.neoforged.neoforge.event.TickEvent;
+
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.neoforge.event.server.ServerStoppedEvent;
+import net.neoforged.neoforge.event.tick.ServerTickEvent;
 
 /** 有界弹幕队列与逻辑血海：不放置方块、不强载区块，每格最多一次自动索敌。 */
 @net.neoforged.fml.common.Mod.EventBusSubscriber(modid="jujutsu_kaisen_cursed_paths")
@@ -55,7 +56,7 @@ public final class BloodExpansion {
     private static void clearSlow(Slow s){var a=s.target.getAttribute(Attributes.MOVEMENT_SPEED);if(a!=null)a.removeModifier(SLOW);}
     public static void protect(ServerPlayer p,UUID id){Slow s=slows.get(id);if(s!=null&&s.p==p){clearSlow(s);slows.remove(id);}for(Trap t:traps)if(t.p==p)t.dwell.remove(id);}
     public static void exit(ServerPlayer p){shots.removeIf(s->s.p==p);traps.removeIf(t->t.p==p);bursts.removeIf(b->b.p==p);for(Ocean o:List.copyOf(oceans))if(o.p==p){BloodArts.fx(p,FX_OCEAN_CLOSE,o.center,Vec3.ZERO,0,1,o.id);oceans.remove(o);}for(Slow s:List.copyOf(slows.values()))if(s.p==p){clearSlow(s);slows.remove(s.target.getUUID());}}
-    @SubscribeEvent public static void tick(TickEvent.ServerTickEvent event){if(event.phase!=TickEvent.Phase.END)return;tickShots();tickTraps();tickOceans();for(Burst b:List.copyOf(bursts)){if(!valid(b.p,b.level)){bursts.remove(b);continue;}if(b.level.getGameTime()>=b.due){bursts.remove(b);BloodArts.nova(b.p,b.at,b.empowered);}}for(Slow s:List.copyOf(slows.values()))if(!s.target.isAlive()||!valid(s.p,s.p.serverLevel())||s.target.level().getGameTime()>=s.until||!CombatSafety.canAffect(s.p,s.target)){clearSlow(s);slows.remove(s.target.getUUID());}}
+    @SubscribeEvent public static void tick(ServerTickEvent.Post event){if(event.phase!=TickEvent.Phase.END)return;tickShots();tickTraps();tickOceans();for(Burst b:List.copyOf(bursts)){if(!valid(b.p,b.level)){bursts.remove(b);continue;}if(b.level.getGameTime()>=b.due){bursts.remove(b);BloodArts.nova(b.p,b.at,b.empowered);}}for(Slow s:List.copyOf(slows.values()))if(!s.target.isAlive()||!valid(s.p,s.p.serverLevel())||s.target.level().getGameTime()>=s.until||!CombatSafety.canAffect(s.p,s.target)){clearSlow(s);slows.remove(s.target.getUUID());}}
     private static void tickShots(){for(Shot s:List.copyOf(shots)){
         if(!valid(s.p,s.level)||s.age>(s.meteor?24:6+BloodArts.rank(s.p))){shots.remove(s);continue;}if(s.delay-->0)continue;s.age++;
         Vec3 next=s.at.add(s.direction.scale(s.meteor?1.3:2.6));if(!s.level.hasChunkAt(BlockPos.containing(next))){shots.remove(s);continue;}var wall=s.level.clip(new ClipContext(s.at,next,ClipContext.Block.COLLIDER,ClipContext.Fluid.NONE,MaidBridge.body(s.p)));boolean blocked=wall.getType()!=HitResult.Type.MISS;if(blocked)next=wall.getLocation();Vec3 end=next;

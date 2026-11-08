@@ -14,9 +14,10 @@ import net.minecraft.world.phys.Vec3;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.neoforge.client.event.RenderGuiEvent;
 import net.neoforged.neoforge.client.event.RenderLevelStageEvent;
-import net.neoforged.neoforge.event.TickEvent;
+
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.Mod;
+import net.neoforged.neoforge.client.event.ClientTickEvent;
 
 /**
  * 十划咒法的表现层：
@@ -84,8 +85,8 @@ public final class RatioVisuals {
 
     private static long now(Minecraft mc) { return mc.level == null ? 0 : mc.level.getGameTime(); }
 
-    @SubscribeEvent public static void clientTick(TickEvent.ClientTickEvent e) {
-        if (e.phase != TickEvent.Phase.END) return;
+    @SubscribeEvent public static void clientTick(ClientTickEvent.Post e) {
+        if (false) return;
         var mc = Minecraft.getInstance();
         if (world != mc.level) {
             world = mc.level;

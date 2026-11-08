@@ -9,10 +9,11 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.neoforge.client.event.RenderLevelStageEvent;
-import net.neoforged.neoforge.event.TickEvent;
+
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.Mod;
 import java.util.*;
+import net.neoforged.neoforge.client.event.ClientTickEvent;
 
 /** 真实世界中的球面天空和对拼交界。深度测试保留，绝不使用遮住 NPC 的全屏贴片。 */
 @Mod.EventBusSubscriber(modid="jujutsu_kaisen_cursed_paths",value=Dist.CLIENT)
@@ -31,7 +32,7 @@ public final class DomainWorldRenderer {
         if(level==null||!level.dimension().location().equals(value.dimension()))return;
         snapshot=value;received=level.getGameTime();receivedLevel=level;
     }
-    @SubscribeEvent public static void tick(TickEvent.ClientTickEvent event){
+    @SubscribeEvent public static void tick(ClientTickEvent.Post event){
         var level=Minecraft.getInstance().level;
         if(level==null||level!=receivedLevel||level.getGameTime()-received>40){snapshot=null;receivedLevel=null;}
     }

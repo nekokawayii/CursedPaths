@@ -5,13 +5,14 @@ import net.minecraft.server.level.*;
 import net.minecraft.world.Difficulty;
 import net.minecraft.world.level.*;
 import net.minecraft.world.level.levelgen.Heightmap;
-import net.neoforged.neoforge.event.TickEvent;
+
 import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.neoforge.event.tick.PlayerTickEvent;
 
 /** 主世界地表低概率生成：每位生存玩家每30秒一次20%尝试，最多生成一只。 */
 public final class CurseSpawning {
-    @SubscribeEvent public static void tick(TickEvent.PlayerTickEvent event){
-        if(event.phase!=TickEvent.Phase.END||!(event.player instanceof ServerPlayer player)||player.tickCount%600!=0||player.isCreative()||player.isSpectator())return;
+    @SubscribeEvent public static void tick(PlayerTickEvent.Post event){
+        if(event.phase!=TickEvent.Phase.END||!(event.getEntity() instanceof ServerPlayer player)||player.tickCount%600!=0||player.isCreative()||player.isSpectator())return;
         ServerLevel level=player.serverLevel();
         if(!level.dimension().equals(Level.OVERWORLD)||level.getDifficulty()==Difficulty.PEACEFUL||!level.getGameRules().getBoolean(GameRules.RULE_DOMOBSPAWNING)||level.random.nextInt(5)!=0)return;
         if(level.getEntitiesOfClass(LowCurseEntity.class,player.getBoundingBox().inflate(96),e->e.isAlive()&&e.summoner()==null).size()>=4)return;

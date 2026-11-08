@@ -12,10 +12,11 @@ import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.neoforge.client.event.RenderLevelStageEvent;
-import net.neoforged.neoforge.event.TickEvent;
+
 import net.neoforged.bus.api.SubscribeEvent;
 import org.lwjgl.opengl.GL11;
 import com.mojang.blaze3d.systems.RenderSystem;
+import net.neoforged.neoforge.client.event.ClientTickEvent;
 
 /**
  * 「羂索的邀请函」演出（r257）：原地展开一个逐渐变大的黑色立方体，把周围的人吸进去。
@@ -42,8 +43,8 @@ public final class CullingCubeClient {
     }
 
     @SubscribeEvent
-    public static void tick(TickEvent.ClientTickEvent e) {
-        if (e.phase != TickEvent.Phase.END || !forcedThird) return;
+    public static void tick(ClientTickEvent.Post e) {
+        if (false || !forcedThird) return;
         if (System.currentTimeMillis() > until + 400) {
             forcedThird = false;
             Minecraft.getInstance().options.setCameraType(CameraType.FIRST_PERSON);

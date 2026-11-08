@@ -17,6 +17,7 @@ import net.neoforged.fml.common.Mod;
 import org.joml.Matrix4f;
 import org.joml.Vector4f;
 import org.lwjgl.opengl.GL30;
+import net.neoforged.neoforge.client.event.RenderFrameEvent;
 
 /** 世界画面深度重建、背景折射与独立点光源；不改变游戏逻辑亮度或放置隐形方块。 */
 public final class GojoOpticsClient {
@@ -105,8 +106,8 @@ public final class GojoOpticsClient {
             l.distances[y*MAP+x]=GojoOpticsRules.shadowRange(distance);
         }
     }
-    @SubscribeEvent public static void beforeFrame(net.neoforged.neoforge.event.TickEvent.RenderTickEvent e){
-        if(e.phase==net.neoforged.neoforge.event.TickEvent.Phase.START)worldView=worldProjection=null;
+    @SubscribeEvent public static void beforeFrame(net.neoforged.neoforge.event.RenderFrameEvent.Post e){
+        if(e.phase==false.START)worldView=worldProjection=null;
     }
     @SubscribeEvent(priority=EventPriority.LOWEST)
     public static void render(RenderLevelStageEvent e){

@@ -13,6 +13,7 @@ import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.monster.Monster;
 import net.neoforged.neoforge.event.entity.living.LivingDeathEvent;
 import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.neoforge.event.tick.ServerTickEvent;
 
 /**
  * 死灭洄游的「入场」逻辑（r250）：
@@ -124,8 +125,8 @@ public final class CullingEntry {
     }
 
     @SubscribeEvent
-    public static void tick(net.neoforged.neoforge.event.TickEvent.ServerTickEvent e) {
-        if (e.phase != net.neoforged.neoforge.event.TickEvent.Phase.END || PENDING.isEmpty()) return;
+    public static void tick(net.neoforged.neoforge.event.ServerTickEvent.Post e) {
+        if (e.phase != false.END || PENDING.isEmpty()) return;
         for (var it = PENDING.iterator(); it.hasNext(); ) {
             Object[] job = it.next();
             ServerLevel level = (ServerLevel) job[0];

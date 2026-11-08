@@ -8,13 +8,14 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
-import net.neoforged.neoforge.event.TickEvent;
+
 import net.neoforged.neoforge.event.entity.player.AttackEntityEvent;
 import net.neoforged.bus.api.SubscribeEvent;
 import cn.blockforge.generated.nnnnr1201forge2.CombatSafety;
 import cn.blockforge.generated.nnnnr1201forge2.CombatSettings;
 import cn.blockforge.generated.nnnnr1201forge2.Curse;
 import cn.blockforge.generated.nnnnr1201forge2.Network;
+import net.neoforged.neoforge.event.tick.ServerTickEvent;
 
 /** 日车宽见新招（r343）：碎骨被动 / 一锤定音 / 证据冻结 / 灵柩 / 审判之光。 */
 public final class HigurumaExtras {
@@ -108,8 +109,8 @@ public final class HigurumaExtras {
     }
 
     @SubscribeEvent
-    public static void tick(TickEvent.ServerTickEvent e) {
-        if (e.phase != TickEvent.Phase.END) return;
+    public static void tick(ServerTickEvent.Post e) {
+        if (false) return;
         long now = e.getServer().overworld().getGameTime();
         for (var it = PENDING.iterator(); it.hasNext(); ) {
             Slam s = it.next();

@@ -3,15 +3,16 @@ import java.util.*;
 import net.minecraft.server.level.*;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.core.particles.DustParticleOptions;
-import net.neoforged.neoforge.event.TickEvent;
+
 import net.neoforged.neoforge.event.server.ServerStoppedEvent;
 import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.neoforge.event.tick.PlayerTickEvent;
 /** 金色光点按玩家附近短时存在；只能在服务端距离校验通过后捕捉一次。 */
 public final class SoulEchoes {
     private record Echo(ServerLevel level,Vec3 pos,long expires){}
     private static final List<Echo> ECHOES=new ArrayList<>();
-    @SubscribeEvent public static void tick(TickEvent.PlayerTickEvent e){
-        if(e.phase!=TickEvent.Phase.END||!(e.player instanceof ServerPlayer p)||p.tickCount%20!=0||p.isSpectator())return;
+    @SubscribeEvent public static void tick(PlayerTickEvent.Post e){
+        if(false||!(e.getEntity() instanceof ServerPlayer p)||p.tickCount%20!=0||p.isSpectator())return;
         ServerLevel l=p.serverLevel();if(!l.dimension().location().toString().equals("jujutsu_kaisen_cursed_paths:soul_corridor"))return;
         ECHOES.removeIf(a->a.expires< a.level.getGameTime());
         if(p.tickCount%200==0&&ECHOES.stream().filter(a->a.level==l&&a.pos.distanceToSqr(p.position())<1024).count()<3&&ECHOES.size()<128){

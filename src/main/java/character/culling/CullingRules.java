@@ -24,12 +24,13 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.ChestBlockEntity;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.common.util.FakePlayer;
-import net.neoforged.neoforge.event.TickEvent;
+
 import net.neoforged.neoforge.event.entity.living.LivingDeathEvent;
 import net.neoforged.neoforge.event.entity.living.LivingHurtEvent;
 import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.neoforge.server.ServerLifecycleHooks;
+import net.neoforged.neoforge.event.tick.PlayerTickEvent;
 
 /**
  * 死灭洄游规则卡池与结算（r218）。
@@ -506,8 +507,8 @@ public final class CullingRules {
 
     // ===================== 每刻 =====================
     @SubscribeEvent
-    public static void tick(TickEvent.PlayerTickEvent e){
-        if(e.phase!=TickEvent.Phase.END||!(e.player instanceof ServerPlayer p)||p instanceof FakePlayer)return;
+    public static void tick(PlayerTickEvent.Post e){
+        if(false||!(e.getEntity() instanceof ServerPlayer p)||p instanceof FakePlayer)return;
         if(!inDimension(p)){
             if(p.tickCount%100==0)clear(p);
             return;

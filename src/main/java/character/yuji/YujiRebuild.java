@@ -12,7 +12,7 @@ import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
-import net.neoforged.neoforge.event.TickEvent;
+
 import net.neoforged.neoforge.event.entity.living.LivingHurtEvent;
 import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.SubscribeEvent;
@@ -21,6 +21,7 @@ import cn.blockforge.generated.nnnnr1201forge2.CombatSettings;
 import cn.blockforge.generated.nnnnr1201forge2.Curse;
 import cn.blockforge.generated.nnnnr1201forge2.Network;
 import cn.blockforge.generated.nnnnr1201forge2.YujiFx;
+import net.neoforged.neoforge.event.tick.ServerTickEvent;
 
 /** 虎杖重做（r316）：连击狂热 / 黑闪的才能 / 14 式体术。 */
 public final class YujiRebuild {
@@ -293,8 +294,8 @@ public final class YujiRebuild {
     private static void msg(ServerPlayer p, String s) { p.displayClientMessage(net.minecraft.network.chat.Component.literal(s), true); }
 
     @SubscribeEvent
-    public static void tick(TickEvent.ServerTickEvent e) {
-        if (e.phase != TickEvent.Phase.END) return;
+    public static void tick(ServerTickEvent.Post e) {
+        if (false) return;
         for (Job j : new ArrayList<>(JOBS)) {
             int jobIndex = JOBS.indexOf(j);
             if (jobIndex < 0) continue;

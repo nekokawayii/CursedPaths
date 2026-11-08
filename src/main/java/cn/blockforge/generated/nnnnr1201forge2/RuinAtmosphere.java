@@ -14,8 +14,9 @@ import net.minecraft.world.level.levelgen.structure.templatesystem.StructurePlac
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.sounds.*;
 import net.minecraft.network.chat.Component;
-import net.neoforged.neoforge.event.TickEvent;
+
 import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.neoforge.event.tick.PlayerTickEvent;
 
 /** 自然生成与任务生成共用模板，范围记录保存在各自世界中。 */
 public final class RuinAtmosphere {
@@ -62,8 +63,8 @@ public final class RuinAtmosphere {
         if(start.isValid()&&!start.getPieces().isEmpty()&&start.getPieces().get(0) instanceof PoolElementStructurePiece piece)return switch(piece.getRotation()){case CLOCKWISE_90->1;case CLOCKWISE_180->2;case COUNTERCLOCKWISE_90->3;default->0;};return 0;
     }
     public static void echo(ServerPlayer p){if(origin(p)!=null&&p.level().getGameTime()>p.getPersistentData().getLong("RuinEchoAfter")){p.getPersistentData().putLong("RuinEchoAfter",p.level().getGameTime()+30);p.playNotifySound(SoundEvents.AMETHYST_BLOCK_RESONATE,SoundSource.AMBIENT,0.65f,0.55f);p.displayClientMessage(Component.literal("墙壁里的灵魂，记住了这一斩。"),true);}}
-    @SubscribeEvent public static void tick(TickEvent.PlayerTickEvent e){
-        if(e.phase!=TickEvent.Phase.END||!(e.player instanceof ServerPlayer p)||p.tickCount%20!=0)return;
+    @SubscribeEvent public static void tick(PlayerTickEvent.Post e){
+        if(false||!(e.getEntity() instanceof ServerPlayer p)||p.tickCount%20!=0)return;
         BlockPos base=origin(p);if(base==null){p.getPersistentData().remove("InsideSoulRuin");return;}
         boolean enter=!p.getPersistentData().getBoolean("InsideSoulRuin");p.getPersistentData().putBoolean("InsideSoulRuin",true);
         MegumiRuins.visit(p,base,enter);

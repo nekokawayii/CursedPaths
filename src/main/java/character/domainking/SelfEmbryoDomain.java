@@ -10,11 +10,12 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.LightBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.server.level.ServerPlayer;
-import net.neoforged.neoforge.event.TickEvent;
+
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.neoforge.event.server.ServerStoppedEvent;
 
 import java.util.*;
+import net.neoforged.neoforge.event.tick.ServerTickEvent;
 
 /**
  * 真人领域「自闭圆顿裹」：
@@ -153,7 +154,7 @@ public final class SelfEmbryoDomain {
         build.blocks.clear();
     }
 
-    @SubscribeEvent public static void tick(TickEvent.ServerTickEvent event) {
+    @SubscribeEvent public static void tick(ServerTickEvent.Post event) {
         if (event.phase != TickEvent.Phase.END) return;
         for (UUID id : new ArrayList<>(ACTIVE.keySet())) {
             ServerPlayer p = cn.blockforge.generated.nnnnr1201forge2.NpcBridge.find(event.getServer(),id);

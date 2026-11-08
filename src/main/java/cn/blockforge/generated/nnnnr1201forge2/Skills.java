@@ -6,10 +6,11 @@ import net.minecraft.world.phys.*;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.sounds.*;
-import net.neoforged.neoforge.event.TickEvent;
+
 import net.neoforged.neoforge.event.server.ServerStoppedEvent;
 import net.neoforged.bus.api.SubscribeEvent;
 import java.util.*;
+import net.neoforged.neoforge.event.tick.ServerTickEvent;
 
 public final class Skills {
     public static final String[] NAMES={"解 · 远程斩击","解 · 八方罗网","捌 · 必断斩击","开 · 炎弓","灶 · 粉尘爆炸","领域展开 · 伏魔御厨子","灵魂剥离"};
@@ -691,7 +692,7 @@ public final class Skills {
     private static boolean damage(ServerLevel l,ServerPlayer p,LivingEntity e,float n,boolean world,boolean slash,boolean soulSlash){return scaledDamage(l,p,e,n,world,slash,soulSlash,1);}
     private static boolean scaledDamage(ServerLevel l,ServerPlayer p,LivingEntity e,float n,boolean world,boolean slash,boolean soulSlash,double fraction){if(DomainClash.active(p)||DomainClash.active(e)||!canHit(p,e))return false;soulSlash=soulSlash||SoulJourney.evolved(p)&&slash;AttackTypes.markPendingDefault(soulSlash?AttackTypes.SOUL:(world||slash?AttackTypes.SLASH:AttackTypes.MAGIC));if(soulSlash){n+=Curse.soulSlashBonus(p);e.getPersistentData().putUUID("SukunaSoulSlashOwner",p.getUUID());e.getPersistentData().putBoolean("SukunaNoHeal",true);}n=(float)(CombatSettings.spellDamage(p,n)*fraction);float before=e.getHealth()+e.getAbsorptionAmount();e.invulnerableTime=0;boolean accepted=CombatSettings.hurt(p,e,world?l.damageSources().sonicBoom(p):l.damageSources().indirectMagic(p,p),n);if(accepted&&e instanceof BuddhaEntity boss&&world)boss.interruptSiphon();boolean hurt=accepted&&e.getHealth()+e.getAbsorptionAmount()<before;if(hurt&&slash&&Journey.nine(p)&&e.isAlive())joint(p,e);if(hurt&&soulSlash)SoulCombat.soulHit(p,e);return hurt;}
     private static boolean hitDamage(ServerLevel l,ServerPlayer p,LivingEntity e,float n,boolean world){return damage(l,p,e,n*(float)Curse.power(p),world);}
-    @SubscribeEvent public static void tick(TickEvent.ServerTickEvent event){
+    @SubscribeEvent public static void tick(ServerTickEvent.Post event){
         if(event.phase!=TickEvent.Phase.END)return;
         tickFistAura();
         VoidCombat.tick();

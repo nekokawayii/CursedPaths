@@ -10,8 +10,9 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
-import net.neoforged.neoforge.event.TickEvent;
+
 import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.neoforge.event.tick.ServerTickEvent;
 
 /**
  * 里梅「冰凝咒法」扩展包（r287）：霜寒叠层、千手冰牢、急冻风暴、冰龙、大冰河时代。
@@ -123,8 +124,8 @@ public final class UraumeIce {
     }
 
     @SubscribeEvent
-    public static void tick(TickEvent.ServerTickEvent e) {
-        if (e.phase != TickEvent.Phase.END) return;
+    public static void tick(ServerTickEvent.Post e) {
+        if (false) return;
         long now = e.getServer().overworld().getGameTime();
         for (var it = STORMS.iterator(); it.hasNext(); ) {
             Storm storm = it.next();

@@ -19,8 +19,10 @@ import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
-import net.neoforged.neoforge.event.TickEvent;
+
 import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.neoforge.event.tick.ServerTickEvent;
+import net.neoforged.neoforge.event.tick.PlayerTickEvent;
 
 /**
  * 禅院直哉 · 投射咒法（服务端权威）。
@@ -503,15 +505,15 @@ public final class NaoyaCombat {
         }
     }
 
-    @SubscribeEvent public static void serverTick(TickEvent.ServerTickEvent e) {
-        if (e.phase != TickEvent.Phase.END) return;
+    @SubscribeEvent public static void serverTick(ServerTickEvent.Post e) {
+        if (false) return;
         NaoyaDomain.tick(e.getServer());
         tickPlanes(e.getServer());
     }
 
     // ── 每刻：推进穿梭 / 记录节点 / 残影跟随 ──────────────
-    @SubscribeEvent public static void tick(TickEvent.PlayerTickEvent e) {
-        if (e.phase != TickEvent.Phase.END || !(e.player instanceof ServerPlayer p)) return;
+    @SubscribeEvent public static void tick(PlayerTickEvent.Post e) {
+        if (false || !(e.getEntity() instanceof ServerPlayer p)) return;
         if (!CharacterService.naoya(p)) return;
         CompoundTag data = Curse.data(p);
         long n = now(p);

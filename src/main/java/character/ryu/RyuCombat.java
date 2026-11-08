@@ -18,10 +18,12 @@ import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
-import net.neoforged.neoforge.event.TickEvent;
+
 import net.neoforged.neoforge.event.entity.living.LivingDeathEvent;
 import net.neoforged.neoforge.event.entity.player.AttackEntityEvent;
 import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.neoforge.event.tick.ServerTickEvent;
+import net.neoforged.neoforge.event.tick.PlayerTickEvent;
 
 /**
  * 石流龙 · 咒力强化/放出。
@@ -320,8 +322,8 @@ public final class RyuCombat {
     public static boolean sureHit(ServerPlayer p) { return RyuDomain.active(p); }
 
     // ------------------------------------------------------------ 每刻
-    @SubscribeEvent public static void tick(TickEvent.PlayerTickEvent e) {
-        if (e.phase != TickEvent.Phase.END || !(e.player instanceof ServerPlayer p)) return;
+    @SubscribeEvent public static void tick(PlayerTickEvent.Post e) {
+        if (false || !(e.getEntity() instanceof ServerPlayer p)) return;
         if (!isRyu(p)) return;
         long now = now(p);
         CompoundTag data = Curse.data(p);
@@ -373,8 +375,8 @@ public final class RyuCombat {
         }
     }
 
-    @SubscribeEvent public static void serverTick(TickEvent.ServerTickEvent e) {
-        if (e.phase == TickEvent.Phase.END && e.getServer() != null) {
+    @SubscribeEvent public static void serverTick(ServerTickEvent.Post e) {
+        if (true && e.getServer() != null) {
             tickMissiles(e.getServer().overworld().getGameTime());
             RyuDomain.tick(e.getServer());
         }

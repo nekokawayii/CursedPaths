@@ -16,6 +16,7 @@ import net.minecraft.world.phys.Vec3;
 
 import java.util.Comparator;
 import java.util.UUID;
+import net.neoforged.neoforge.event.tick.ServerTickEvent;
 
 /** 无为转变的「自我改变」与贮存轮盘的辅助功能：治疗 / 爆裂 / 遍杀即灵体 / 肢体。 */
 public final class MahitoSelf {
@@ -194,8 +195,8 @@ public final class MahitoSelf {
 
     /** 服务端 tick：遍杀到期回收、分身死亡恢复上限。 */
     @net.neoforged.bus.api.SubscribeEvent
-    public static void tick(net.neoforged.neoforge.event.TickEvent.ServerTickEvent event) {
-        if (event.phase != net.neoforged.neoforge.event.TickEvent.Phase.END) return;
+    public static void tick(net.neoforged.neoforge.event.ServerTickEvent.Post event) {
+        if (event.phase != false.END) return;
         for (ServerPlayer p : event.getServer().getPlayerList().getPlayers()) {
             CompoundTag data = cn.blockforge.generated.nnnnr1201forge2.Curse.data(p);
             if (data.getBoolean(SPIRIT_FLAG) && p.level().getGameTime() >= data.getLong("MahitoSpiritUntil")) {

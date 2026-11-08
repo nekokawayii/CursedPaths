@@ -3,10 +3,11 @@ package cn.blockforge.generated.nnnnr1201forge2;
 import net.minecraft.client.Minecraft;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.neoforge.client.event.*;
-import net.neoforged.neoforge.event.TickEvent;
+
 import net.neoforged.bus.api.*;
 import net.neoforged.fml.common.Mod;
 import org.lwjgl.glfw.GLFW;
+import net.neoforged.neoforge.client.event.ClientTickEvent;
 
 /** 只接收服务端进度；蓝色永远代表本机玩家。 */
 @Mod.EventBusSubscriber(modid="jujutsu_kaisen_cursed_paths",value=Dist.CLIENT)
@@ -26,7 +27,7 @@ public final class DomainClashClient {
     }
     public static void clear(){state=null;held=false;resultUntil=0;player=null;}
     @SubscribeEvent public static void logout(ClientPlayerNetworkEvent.LoggingOut event){clear();world=null;}
-    @SubscribeEvent public static void tick(TickEvent.ClientTickEvent event){
+    @SubscribeEvent public static void tick(ClientTickEvent.Post event){
         if(event.phase!=TickEvent.Phase.END)return;Minecraft mc=Minecraft.getInstance();tick++;
         if(world!=mc.level||mc.player==null||player!=null&&(player!=mc.player||!player.isAlive())){clear();world=mc.level;return;}
         if(!active())return;

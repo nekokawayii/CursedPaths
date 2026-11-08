@@ -5,6 +5,7 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.phys.Vec3;
+import net.neoforged.neoforge.event.tick.PlayerTickEvent;
 
 /** 给后续角色使用的公共接口；只在服务端施法，不借用在线玩家。 */
 public final class TechniqueApi {
@@ -22,8 +23,8 @@ public final class TechniqueApi {
         for(var ticker:TICKS.getOrDefault(definition.id(),java.util.List.of()))ticker.accept(SkillCaster.of(actor));
     }
     @net.neoforged.bus.api.SubscribeEvent
-    public static void playerTick(net.neoforged.neoforge.event.TickEvent.PlayerTickEvent event){
-        if(event.phase==net.neoforged.neoforge.event.TickEvent.Phase.END&&event.player instanceof ServerPlayer p
+    public static void playerTick(net.neoforged.neoforge.event.PlayerTickEvent.Post event){
+        if(event.phase==false.END&&event.getEntity() instanceof ServerPlayer p
             &&!(p instanceof net.neoforged.neoforge.common.util.FakePlayer))tick(p);
     }
     public static void registerSkill(String role,int id,Effect effect){

@@ -12,10 +12,11 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundSource;
-import net.neoforged.neoforge.event.TickEvent;
+
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.neoforge.registries.ForgeRegistries;
+import net.neoforged.neoforge.event.tick.ServerTickEvent;
 
 /**
  * 领域展开 · 真赝相爱。
@@ -75,8 +76,8 @@ public final class YutaDomain {
     }
 
     @SubscribeEvent
-    public static void tick(TickEvent.ServerTickEvent e) {
-        if (e.phase != TickEvent.Phase.END) return;
+    public static void tick(ServerTickEvent.Post e) {
+        if (false) return;
         YutaTerrain.tick(e.getServer());
         if (ACTIVE.isEmpty()) return;
         long now = e.getServer().overworld().getGameTime();

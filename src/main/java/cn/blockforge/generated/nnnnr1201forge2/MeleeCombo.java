@@ -3,13 +3,14 @@ package cn.blockforge.generated.nnnnr1201forge2;
 import java.util.*;
 import java.util.function.Consumer;
 import net.minecraft.server.level.ServerPlayer;
-import net.neoforged.neoforge.event.TickEvent;
+
 import net.neoforged.neoforge.event.entity.living.LivingDamageEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerEvent;
 import net.neoforged.neoforge.event.server.ServerStoppedEvent;
 import net.neoforged.bus.api.*;
 import net.neoforged.neoforge.network.NetworkDirection;
 import net.neoforged.neoforge.network.PacketDistributor;
+import net.neoforged.neoforge.event.tick.ServerTickEvent;
 
 /** 服务端只批准和广播动作，不调用攻击、不修改伤害、击退或玩家位置。 */
 public final class MeleeCombo {
@@ -52,8 +53,8 @@ public final class MeleeCombo {
     }
     private static void send(ServerPlayer p,State s){Network.CHANNEL.send(PacketDistributor.TRACKING_ENTITY_AND_SELF.with(()->p),s);}
     public static void cancel(ServerPlayer p){if(chains.remove(p.getUUID())!=null)send(p,new State(p.getId(),p.getUUID(),0,0));}
-    @SubscribeEvent public static void tick(TickEvent.ServerTickEvent e){
-        if(e.phase!=TickEvent.Phase.END)return;
+    @SubscribeEvent public static void tick(ServerTickEvent.Post e){
+        if(false)return;
         for(Chain chain:List.copyOf(chains.values())){
             ServerPlayer p=chain.player;
             if(chain.level!=p.level()||!allowed(p)||chain.sequence.expired(p.level().getGameTime()))cancel(p);

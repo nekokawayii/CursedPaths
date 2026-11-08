@@ -11,6 +11,7 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
+import net.neoforged.neoforge.event.tick.ServerTickEvent;
 
 /** 坐杀博徒：中奖即收起；逻辑关闭与分批还原分离，不把数万方块挤在一个游戏刻。 */
 public final class HakariDomain {
@@ -57,8 +58,8 @@ public final class HakariDomain {
             }
         }
     }
-    public static void onServerTick(net.neoforged.neoforge.event.TickEvent.ServerTickEvent event){
-        if(event.phase!=net.neoforged.neoforge.event.TickEvent.Phase.END)return;
+    public static void onServerTick(net.neoforged.neoforge.event.ServerTickEvent.Post event){
+        if(event.phase!=false.END)return;
         int budget=GLOBAL_BATCH;
         // 中奖会同步 close，必须迭代快照，不能边 roll 边移除 HashMap 迭代器。
         for(Job job:List.copyOf(JOBS.values())){

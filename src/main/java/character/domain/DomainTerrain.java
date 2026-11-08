@@ -9,10 +9,11 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.saveddata.SavedData;
 import net.minecraft.world.phys.Vec3;
-import net.neoforged.neoforge.event.TickEvent;
+
 import net.neoforged.neoforge.event.server.ServerStoppingEvent;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.Mod;
+import net.neoforged.neoforge.event.tick.ServerTickEvent;
 
 /** 共用地形事务。每次领域使用独立 Handle；方块按同一对拼平面选层，原地形不混入其它领域。 */
 @Mod.EventBusSubscriber(modid="jujutsu_kaisen_cursed_paths")
@@ -119,7 +120,7 @@ public final class DomainTerrain extends SavedData {
             if(cell.layers.empty()){cells.remove(pos);setDirty();}
         }
     }
-    @SubscribeEvent public static void tick(TickEvent.ServerTickEvent event){
+    @SubscribeEvent public static void tick(ServerTickEvent.Post event){
         if(event.phase==TickEvent.Phase.END)for(var level:event.getServer().getAllLevels())get(level).flush(level,BUDGET);
     }
     @SubscribeEvent public static void stop(ServerStoppingEvent event){

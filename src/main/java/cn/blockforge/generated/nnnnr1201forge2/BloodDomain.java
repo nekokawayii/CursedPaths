@@ -5,9 +5,10 @@ import net.minecraft.server.level.*;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.phys.*;
-import net.neoforged.neoforge.event.TickEvent;
+
 import net.neoforged.neoforge.event.entity.*;
 import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.neoforge.event.tick.ServerTickEvent;
 
 /** 胎海封闭结界：不修改地形，范围与所有命中由服务器负责。 */
 public final class BloodDomain {
@@ -38,7 +39,7 @@ public final class BloodDomain {
     public static void extend(ServerPlayer p,int ticks){for(Domain d:domains)if(d.owner==p)d.end+=ticks;}
     public static void clear(){for(Domain d:List.copyOf(domains))close(d.owner);domains.clear();}
     public static void onHit(ServerPlayer p,LivingEntity target){if(DeathStar.anemic(p)||!free(p)||DomainClash.active(p)||character.mainline.Mainline.simpleProtected(target))return;for(Domain d:domains)if(d.owner==p&&BloodRules.inside(target.position().distanceToSqr(d.center))&&d.lastHeal+4<=d.level.getGameTime()){d.lastHeal=d.level.getGameTime();MaidBridge.body(p).heal(Math.max(.2f,MaidBridge.body(p).getMaxHealth()*.005f));BloodArts.fx(p,BloodArts.FX_DRAIN,target.getBoundingBox().getCenter(),p.getEyePosition(),1,12,0);break;}}
-    @SubscribeEvent public static void tick(TickEvent.ServerTickEvent event){
+    @SubscribeEvent public static void tick(ServerTickEvent.Post event){
         if(event.phase!=TickEvent.Phase.END)return;
         for(Domain d:List.copyOf(domains)){
             long now=d.level.getGameTime();ServerPlayer p=d.owner;

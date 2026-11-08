@@ -7,9 +7,11 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.ai.attributes.*;
 import net.minecraft.network.chat.Component;
 import net.neoforged.neoforge.event.entity.living.*;
-import net.neoforged.neoforge.event.TickEvent;
+
 import net.neoforged.neoforge.event.entity.player.PlayerEvent;
 import net.neoforged.bus.api.*;
+import net.neoforged.neoforge.event.tick.ServerTickEvent;
+import net.neoforged.neoforge.event.tick.PlayerTickEvent;
 
 /** 所有控制、层数和治疗限制均在服务端执行。 */
 public final class SoulCombat {
@@ -61,8 +63,8 @@ public final class SoulCombat {
     }
     @SubscribeEvent public static void healing(LivingHealEvent e){if(e.getEntity().getPersistentData().getBoolean("SukunaNoHeal")||e.getEntity().getPersistentData().getLong("SoulGapUntil")>e.getEntity().level().getGameTime()){e.setCanceled(true);return;}ServerPlayer caster=MaidBridge.progression(e.getEntity());if(caster!=null){if(Curse.active(caster,"SoulGap"))e.setCanceled(true);else if(Curse.active(caster,"SoulHealHalf"))e.setAmount(e.getAmount()*0.5f);}}
     @SubscribeEvent(priority=EventPriority.HIGHEST) public static void death(LivingDeathEvent e){ServerPlayer p=MaidBridge.progression(e.getEntity());if(p==null||!Journey.nine(p)||Curse.active(p,"SoulExecution")||e.getSource().is(net.minecraft.tags.DamageTypeTags.BYPASSES_INVULNERABILITY))return;if(layers(p)>=3){e.setCanceled(true);Curse.data(p).putInt("SoulLayers",layers(p)-1);e.getEntity().setHealth(e.getEntity().getMaxHealth()*0.3f);e.getEntity().invulnerableTime=30;sync(p);p.sendSystemMessage(Component.literal("咒胎受肉挡下致命伤，剩余 "+layers(p)+" 层"));}}
-    @SubscribeEvent public static void tick(TickEvent.PlayerTickEvent e){if(e.phase!=TickEvent.Phase.END||!(e.player instanceof ServerPlayer p)||p.tickCount%5!=0)return;applySlow(p);clearPeel(p);if(p.tickCount%20==0)sync(p);}
-    @SubscribeEvent public static void entities(TickEvent.ServerTickEvent e){if(e.phase!=TickEvent.Phase.END||e.getServer().getTickCount()%5!=0)return;for(ServerLevel level:e.getServer().getAllLevels())for(var entity:level.getAllEntities())if(entity instanceof net.minecraft.world.entity.LivingEntity living)clearPeel(living);}
+    @SubscribeEvent public static void tick(PlayerTickEvent.Post e){if(false||!(e.getEntity() instanceof ServerPlayer p)||p.tickCount%5!=0)return;applySlow(p);clearPeel(p);if(p.tickCount%20==0)sync(p);}
+    @SubscribeEvent public static void entities(ServerTickEvent.Post e){if(false||e.getServer().getTickCount()%5!=0)return;for(ServerLevel level:e.getServer().getAllLevels())for(var entity:level.getAllEntities())if(entity instanceof net.minecraft.world.entity.LivingEntity living)clearPeel(living);}
     static void testReset(ServerPlayer p){clearTransient(p);Curse.data(p).putInt("SoulLayers",Journey.nine(p)?9:0);applySlow(p);clearPeel(p);sync(p);}
     public static void clearTransient(Player p){for(String key:new String[]{"SoulGap","SoulSuppressed","SoulStiffUntil","SoulStiffStacks","Iwate","SoulHealHalf","SoulExecution","SoulPeelUntil","PureLandNoHeal","GuardianPoisonUntil","PlayerGuardianPoisonUntil"})Curse.data(p).remove(key);p.getPersistentData().remove("SukunaSoulPeelUntil");}
     @SubscribeEvent public static void clone(PlayerEvent.PlayerRespawnEvent e){clearTransient(e.getEntity());if(e.getEntity() instanceof ServerPlayer p){applySlow(p);sync(p);}}

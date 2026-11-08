@@ -6,11 +6,12 @@ import java.util.UUID;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
-import net.neoforged.neoforge.event.TickEvent;
+
 import net.neoforged.neoforge.event.entity.player.PlayerEvent;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.neoforge.network.PacketDistributor;
 import net.neoforged.neoforge.common.util.FakePlayer;
+import net.neoforged.neoforge.event.tick.PlayerTickEvent;
 
 /**
  * 天逆蛑腰间挂件的服务端同步。
@@ -22,9 +23,9 @@ import net.neoforged.neoforge.common.util.FakePlayer;
 public final class TenkaPendantSync {
     private static final Map<UUID, Boolean> LAST = new HashMap<>();
 
-    @SubscribeEvent public static void tick(TickEvent.PlayerTickEvent event) {
+    @SubscribeEvent public static void tick(PlayerTickEvent.Post event) {
         if (event.phase != TickEvent.Phase.END) return;
-        if (!(event.player instanceof ServerPlayer p) || p instanceof FakePlayer) return;
+        if (!(event.getEntity() instanceof ServerPlayer p) || p instanceof FakePlayer) return;
         if (p.tickCount % 10 != 0) return;
         boolean has = has(p);
         Boolean old = LAST.put(p.getUUID(), has);

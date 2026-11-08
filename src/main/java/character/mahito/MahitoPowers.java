@@ -18,13 +18,14 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
-import net.neoforged.neoforge.event.TickEvent;
+
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.neoforge.event.server.ServerStoppedEvent;
 
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import net.neoforged.neoforge.event.tick.ServerTickEvent;
 
 /** 无为转变的「攻击 / 具象化 / 潜能激发」实体效果与临时地形。 */
 public final class MahitoPowers {
@@ -123,7 +124,7 @@ public final class MahitoPowers {
         return keys;
     }
 
-    @SubscribeEvent public static void tick(TickEvent.ServerTickEvent event) {
+    @SubscribeEvent public static void tick(ServerTickEvent.Post event) {
         if (event.phase != TickEvent.Phase.END) return;
         for (var it = WALLS.iterator(); it.hasNext(); ) {
             Wall wall = it.next();

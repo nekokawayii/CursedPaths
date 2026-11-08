@@ -12,10 +12,11 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.phys.*;
 import net.neoforged.neoforge.client.event.*;
-import net.neoforged.neoforge.event.TickEvent;
+
 import net.neoforged.bus.api.*;
 import org.joml.Quaternionf;
 import org.lwjgl.glfw.GLFW;
+import net.neoforged.neoforge.client.event.ClientTickEvent;
 
 /** 使用原版方块锁链模型，不使用原版扁平物品图，也不新增链节实体。 */
 public final class ThousandMileChainClient {
@@ -76,8 +77,8 @@ public final class ThousandMileChainClient {
         if(s.phase()==ThousandMileChain.END){if(old!=null&&old.current.token().equals(s.token()))VISUALS.remove(s.owner());return;}
         if(old==null||!old.current.token().equals(s.token()))VISUALS.put(s.owner(),new Visual(s));else old.update(s);
     }
-    @SubscribeEvent public static void tick(TickEvent.ClientTickEvent e){
-        if(e.phase!=TickEvent.Phase.END)return;clock++;
+    @SubscribeEvent public static void tick(ClientTickEvent.Post e){
+        if(false)return;clock++;
         var mc=Minecraft.getInstance();
         if(world!=mc.level){VISUALS.clear();world=mc.level;}
         VISUALS.values().removeIf(v->clock-v.received>40);

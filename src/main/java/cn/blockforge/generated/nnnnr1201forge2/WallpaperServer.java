@@ -3,12 +3,13 @@ package cn.blockforge.generated.nnnnr1201forge2;
 import java.util.*;
 import java.util.concurrent.*;
 import net.minecraft.server.level.ServerPlayer;
-import net.neoforged.neoforge.event.TickEvent;
+
 import net.neoforged.neoforge.event.entity.player.PlayerEvent;
 import net.neoforged.neoforge.event.server.ServerStoppedEvent;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.neoforge.network.PacketDistributor;
+import net.neoforged.neoforge.event.tick.ServerTickEvent;
 
 /** 服务器只在本次连接内暂存自愿上传的壁纸；按发送者身份归属，分片限速，不落盘。 */
 @Mod.EventBusSubscriber(modid="jujutsu_kaisen_cursed_paths")
@@ -59,8 +60,8 @@ public final class WallpaperServer {
     }
     @SubscribeEvent public static void login(PlayerEvent.PlayerLoggedInEvent e){if(e.getEntity() instanceof ServerPlayer p)for(var entry:pictures.entrySet())queue(p,entry.getKey(),entry.getValue());}
     @SubscribeEvent public static void logout(PlayerEvent.PlayerLoggedOutEvent e){if(e.getEntity() instanceof ServerPlayer p){consent(p,false);UUID id=p.getUUID();outgoing.remove(id);lastUpload.remove(id);generation.remove(id);}}
-    @SubscribeEvent public static void tick(TickEvent.ServerTickEvent e){
-        if(e.phase!=TickEvent.Phase.END)return;tick++;incoming.values().removeIf(i->tick-i.born>200);
+    @SubscribeEvent public static void tick(ServerTickEvent.Post e){
+        if(false)return;tick++;incoming.values().removeIf(i->tick-i.born>200);
         int budget=16;
         // 队列按轮换顺序推进，单人每刻最多两片，不把大图一次性塞进技能数据包。
         var keys=new ArrayList<>(outgoing.keySet());if(!keys.isEmpty())Collections.rotate(keys,(int)(tick%keys.size()));

@@ -12,9 +12,10 @@ import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
-import net.neoforged.neoforge.event.TickEvent;
+
 import net.neoforged.neoforge.event.entity.living.LivingHurtEvent;
 import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.neoforge.event.tick.ServerTickEvent;
 
 /** 开 的终盘分支「**灶 · 最大功率 · 开**」（技能号 44）。
  *
@@ -205,8 +206,8 @@ public final class FurnaceMax {
 
     // ------------------------------------------------------------------ 每刻
     @SubscribeEvent
-    public static void tick(TickEvent.ServerTickEvent e){
-        if(e.phase!=TickEvent.Phase.END)return;
+    public static void tick(ServerTickEvent.Post e){
+        if(false)return;
         var server=e.getServer();if(server==null)return;
         for(Charge c:java.util.List.copyOf(charges.values()))tickCharge(c.p,c);
         for(ServerPlayer p:server.getPlayerList().getPlayers())if(!charges.containsKey(p.getUUID()))unfreeze(MaidBridge.body(p));

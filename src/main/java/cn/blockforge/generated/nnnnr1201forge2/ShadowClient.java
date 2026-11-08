@@ -7,9 +7,10 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.*;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.client.event.*;
-import net.neoforged.neoforge.event.TickEvent;
+
 import net.neoforged.bus.api.SubscribeEvent;
 import org.lwjgl.glfw.GLFW;
+import net.neoforged.neoforge.client.event.ClientTickEvent;
 
 /** 显式注册的客户端表现；按键只提交操作，不能自行更改服务端调服/扣费。 */
 public final class ShadowClient {
@@ -26,8 +27,8 @@ public final class ShadowClient {
     public static int seconds(int kind){return state.seconds()[kind];}
     public static void send(int operation,int kind,int count){Network.CHANNEL.sendToServer(new ShadowSystem.Request(operation,kind,count));}
     public static void effect(ShadowSystem.Fx fx){var level=Minecraft.getInstance().level;if(level==null)return;if(effects.size()>=512)effects.remove(0);effects.add(new Effect(fx,level.getGameTime()));}
-    @SubscribeEvent public static void tick(TickEvent.ClientTickEvent e){
-        if(e.phase!=TickEvent.Phase.END)return;var mc=Minecraft.getInstance();
+    @SubscribeEvent public static void tick(ClientTickEvent.Post e){
+        if(false)return;var mc=Minecraft.getInstance();
         while(RECALL.consumeClick())if(mc.screen==null&&mc.player!=null&&TenShadowsClient.has())send(4,0,0);
         while(OPEN.consumeClick())if(mc.screen==null&&mc.player!=null&&TenShadowsClient.has())mc.setScreen(new TenShadowsScreen());
         if(mc.level!=null)effects.removeIf(f->mc.level.getGameTime()-f.start>f.fx.ticks());

@@ -18,6 +18,7 @@ import net.neoforged.neoforge.event.entity.living.*;
 import net.neoforged.neoforge.event.entity.player.*;
 import net.neoforged.neoforge.event.level.BlockEvent;
 import net.neoforged.bus.api.*;
+import net.neoforged.neoforge.event.tick.ServerTickEvent;
 
 /** 所有封印、解封、库存和传送约束只由服务端裁决。 */
 public final class PrisonSystem {
@@ -144,7 +145,7 @@ public final class PrisonSystem {
             if(destination.addFreshEntity(restored)){if(captive!=null)captive.discard();store.prisoners.remove(id);store.setDirty();}
         }
     }
-    @SubscribeEvent public static void tick(TickEvent.ServerTickEvent event){
+    @SubscribeEvent public static void tick(ServerTickEvent.Post event){
         if(event.phase!=TickEvent.Phase.END)return;MinecraftServer server=event.getServer();PrisonStore store=PrisonStore.get(server);if(store.prisoners.isEmpty())return;
         ServerLevel prison=server.getLevel(DIMENSION);if(prison==null)return;
         Set<UUID> tickets=new HashSet<>();

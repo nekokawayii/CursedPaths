@@ -5,11 +5,12 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.*;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.phys.*;
-import net.neoforged.neoforge.event.TickEvent;
+
 import net.neoforged.neoforge.event.entity.player.PlayerEvent;
 import net.neoforged.neoforge.event.server.ServerStoppedEvent;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.neoforge.network.PacketDistributor;
+import net.neoforged.neoforge.event.tick.ServerTickEvent;
 
 /** 服务端决定动作、碰撞、扣费和逐道发射；玩家和女仆共用时间轴。 */
 public final class DismantleMotion {
@@ -119,8 +120,8 @@ public final class DismantleMotion {
         // 必须追踪真实实体，不能向女仆的 FakePlayer 连接发包。
         Network.CHANNEL.send(PacketDistributor.TRACKING_ENTITY_AND_SELF.with(()->m.actor),packet(m,end));
     }
-    @SubscribeEvent public static void tick(TickEvent.ServerTickEvent e){
-        if(e.phase!=TickEvent.Phase.END)return;
+    @SubscribeEvent public static void tick(ServerTickEvent.Post e){
+        if(false)return;
         for(Motion m:List.copyOf(motions.values())){
             ServerPlayer p=m.player;LivingEntity actor=m.actor;
             if(!allowed(p)||actor.level()!=m.level||actor.isPassenger()||actor.isSleeping()||actor.position().distanceToSqr(m.position)>16){cancel(p);continue;}

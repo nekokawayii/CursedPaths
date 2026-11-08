@@ -16,10 +16,11 @@ import net.minecraft.world.entity.EntityType;
 import net.neoforged.neoforge.client.event.ClientPlayerNetworkEvent;
 import net.neoforged.neoforge.client.event.EntityRenderersEvent;
 import net.neoforged.neoforge.client.event.RenderLevelStageEvent;
-import net.neoforged.neoforge.event.TickEvent;
+
 import net.neoforged.neoforge.event.entity.EntityJoinLevelEvent;
 import net.neoforged.neoforge.registries.ForgeRegistries;
 import org.slf4j.Logger;
+import net.neoforged.neoforge.client.event.RenderFrameEvent;
 
 /** 单一的完整实体目录：正常注册与运行时校验共用，不从已经触发过的事件收集目录。 */
 public final class EntityRendererRegistry {
@@ -162,7 +163,7 @@ public final class EntityRendererRegistry {
         ensureOwn(mc);
         verifyEntity(mc,event.getEntity());
     }
-    public static void beforeFrame(TickEvent.RenderTickEvent event) {
+    public static void beforeFrame(RenderFrameEvent.Post event) {
         if(event.phase==TickEvent.Phase.START) {
             var mc=Minecraft.getInstance();
             if(mc.level!=null)ensureOwn(mc);

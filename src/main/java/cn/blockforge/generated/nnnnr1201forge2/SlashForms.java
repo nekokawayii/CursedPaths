@@ -4,10 +4,11 @@ import java.util.*;
 import net.minecraft.server.level.*;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.phys.*;
-import net.neoforged.neoforge.event.TickEvent;
+
 import net.neoforged.neoforge.event.entity.player.PlayerEvent;
 import net.neoforged.neoforge.event.server.ServerStoppedEvent;
 import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.neoforge.event.tick.ServerTickEvent;
 
 /** 所有飞行线段共用扫掠命中，不追踪已发射的方向。 */
 public final class SlashForms {
@@ -139,7 +140,7 @@ public final class SlashForms {
         // 每0.4格扫描移动面，65格/秒也不会漏掉细小目标。
         int n=Math.max(1,(int)Math.ceil(step.length()/0.4));for(int i=0;i<=n;i++){Vec3 move=step.scale(i/(double)n),from=a.add(move),to=b.add(move);if(box.contains(from)||box.contains(to)||box.clip(from,to).isPresent()){SlashImpact.plane(t,line.b.subtract(line.a),step.lengthSqr()>1e-8?step:new Vec3(0,0,1));return true;}}return false;
     }
-    @SubscribeEvent public static void tick(TickEvent.ServerTickEvent event){
+    @SubscribeEvent public static void tick(ServerTickEvent.Post event){
         if(event.phase!=TickEvent.Phase.END)return;
         tickRings();
         for(Pending s:List.copyOf(pending)){if(!valid(s.owner,s.level)){pending.remove(s);continue;}if(s.level.getGameTime()<s.due)continue;pending.remove(s);

@@ -10,11 +10,13 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.LivingEntity;
-import net.neoforged.neoforge.event.TickEvent;
+
 import net.neoforged.bus.api.SubscribeEvent;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import net.neoforged.neoforge.event.tick.ServerTickEvent;
+import net.neoforged.neoforge.event.tick.PlayerTickEvent;
 
 /** 领域王的技能效果：每种领域各自展开 30 秒，界内敌人持续受伤。 */
 public final class DomainKingCombat {
@@ -88,8 +90,8 @@ public final class DomainKingCombat {
     }
 
     /** 咒力无限：领域王每刻把咒力补满（上限 1,000,000，HUD 显示 ∞）。 */
-    @SubscribeEvent public static void refill(TickEvent.PlayerTickEvent e) {
-        if (e.phase != TickEvent.Phase.END || !(e.player instanceof ServerPlayer p)) return;
+    @SubscribeEvent public static void refill(PlayerTickEvent.Post e) {
+        if (false || !(e.getEntity() instanceof ServerPlayer p)) return;
         var d = character.CharacterService.selected(p);
         if (d == null || !d.id().equals("domainking")) return;
         if (p.tickCount % 10 != 0) return;
@@ -98,8 +100,8 @@ public final class DomainKingCombat {
     }
 
     /** 只负责盖棺铁围山的地形按时还原；其它领域的伤害/特效全由各条线自己的系统处理。 */
-    @SubscribeEvent public static void tick(TickEvent.ServerTickEvent e) {
-        if (e.phase != TickEvent.Phase.END) return;
+    @SubscribeEvent public static void tick(ServerTickEvent.Post e) {
+        if (false) return;
         ACTIVE.entrySet().removeIf(entry->{var owner=cn.blockforge.generated.nnnnr1201forge2.NpcBridge.find(e.getServer(),entry.getKey());return owner==null||!live(owner,entry.getValue());});
         for (var it = FIELDS.iterator(); it.hasNext(); ) {
             Field f = it.next();

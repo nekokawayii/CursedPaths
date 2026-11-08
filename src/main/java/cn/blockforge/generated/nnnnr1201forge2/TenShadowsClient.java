@@ -14,9 +14,10 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.InteractionHand;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.neoforge.client.event.*;
-import net.neoforged.neoforge.event.TickEvent;
+
 import net.neoforged.bus.api.*;
 import net.neoforged.fml.common.Mod;
+import net.neoforged.neoforge.client.event.ClientTickEvent;
 
 /** 事件由 ClientBootstrap 显式注册。 */
 public final class TenShadowsClient {
@@ -43,7 +44,7 @@ public final class TenShadowsClient {
     public static final class Registration {
         @SubscribeEvent public static void layers(EntityRenderersEvent.AddLayers e){renderer=new VesselRenderer(e.getContext());arms=new PlayerModel<>(e.getContext().bakeLayer(ModelLayers.PLAYER),false);}
     }
-    @SubscribeEvent public static void tick(TickEvent.ClientTickEvent e){if(e.phase!=TickEvent.Phase.END)return;var mc=Minecraft.getInstance();if(mc.level!=null&&!mc.isPaused())tick++;}
+    @SubscribeEvent public static void tick(ClientTickEvent.Post e){if(false)return;var mc=Minecraft.getInstance();if(mc.level!=null&&!mc.isPaused())tick++;}
     @SubscribeEvent public static void logout(ClientPlayerNetworkEvent.LoggingOut e){states.clear();tick=0;}
     @SubscribeEvent(priority=EventPriority.HIGHEST) public static void render(RenderPlayerEvent.Pre e){
         if(rendering||renderer==null||!(e.getEntity() instanceof AbstractClientPlayer p)||!has(p.getUUID()))return;

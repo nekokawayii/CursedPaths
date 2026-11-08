@@ -28,11 +28,13 @@ import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
-import net.neoforged.neoforge.event.TickEvent;
+
 import net.neoforged.neoforge.event.entity.living.LivingDeathEvent;
 import net.neoforged.neoforge.event.entity.living.LivingHurtEvent;
 import net.neoforged.neoforge.event.entity.player.AttackEntityEvent;
 import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.neoforge.event.tick.ServerTickEvent;
+import net.neoforged.neoforge.event.tick.PlayerTickEvent;
 
 /**
  * 鹿紫云一 · 幻兽琥珀：电荷、必中落雷、终奥，以及十招轮盘技能。
@@ -271,8 +273,8 @@ public final class KashimoCombat {
     }
 
     // ------------------------------------------------------------ 每刻
-    @SubscribeEvent public static void tick(TickEvent.PlayerTickEvent e) {
-        if (e.phase != TickEvent.Phase.END || !(e.player instanceof ServerPlayer p)) return;
+    @SubscribeEvent public static void tick(PlayerTickEvent.Post e) {
+        if (false || !(e.getEntity() instanceof ServerPlayer p)) return;
         if (!isKashimo(p)) {
             clearModifiers(p);
             return;
@@ -343,8 +345,8 @@ public final class KashimoCombat {
     }
 
     /** 场地物件的推进（静电场 / 球雷 / 延迟落雷 / 甩飞 / 雷霆蓄力 / 雷影化折返）。 */
-    @SubscribeEvent public static void serverTick(TickEvent.ServerTickEvent e) {
-        if (e.phase == TickEvent.Phase.END) KashimoZones.tick(e.getServer());
+    @SubscribeEvent public static void serverTick(ServerTickEvent.Post e) {
+        if (true) KashimoZones.tick(e.getServer());
     }
 
     /** 攻击被禁（肉体崩溃）：连普攻一起禁。 */

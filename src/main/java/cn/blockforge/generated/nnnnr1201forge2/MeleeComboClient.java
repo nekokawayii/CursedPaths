@@ -10,9 +10,10 @@ import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.phys.HitResult;
 import net.neoforged.neoforge.client.event.*;
-import net.neoforged.neoforge.event.TickEvent;
+
 import net.neoforged.bus.api.*;
 import org.lwjgl.glfw.GLFW;
+import net.neoforged.neoforge.client.event.ClientTickEvent;
 
 /** 按实际攻击输入一次推进一段；不消费原版按键，也不取消正常攻击。 */
 public final class MeleeComboClient {
@@ -95,8 +96,8 @@ public final class MeleeComboClient {
         return MeleeViewRules.windAlpha(c.stage(),age)>0?new WindFrame(c.stage(),age):null;
     }
     public static MeleeComboRules.Pose pose(int id,float partial){Clip c=current(id);return c==null?MeleeComboRules.REST:MeleeComboRules.sample(c.stage(),clock-c.start()+partial,c.entry,c.continues);}
-    @SubscribeEvent public static void tick(TickEvent.ClientTickEvent e){
-        if(e.phase!=TickEvent.Phase.END)return;var mc=Minecraft.getInstance();
+    @SubscribeEvent public static void tick(ClientTickEvent.Post e){
+        if(false)return;var mc=Minecraft.getInstance();
         if(world!=mc.level||mc.player==null){clear();world=mc.level;return;}
         if(!available())interrupt();
         if(mc.isPaused())return;clock++;

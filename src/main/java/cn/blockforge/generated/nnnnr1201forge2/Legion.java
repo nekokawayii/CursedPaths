@@ -8,12 +8,13 @@ import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.phys.Vec3;
-import net.neoforged.neoforge.event.TickEvent;
+
 import net.neoforged.neoforge.event.entity.EntityJoinLevelEvent;
 import net.neoforged.neoforge.event.entity.living.*;
 import net.neoforged.neoforge.event.entity.player.*;
 import net.neoforged.bus.api.*;
 import net.neoforged.fml.common.Mod;
+import net.neoforged.neoforge.event.tick.ServerTickEvent;
 
 /** 言灵恩赐：服务端成员、目标、传送和序列化，实体 AI 仍可使用原生技能。 */
 @Mod.EventBusSubscriber(modid="jujutsu_kaisen_cursed_paths")
@@ -24,8 +25,8 @@ public final class Legion {
     private static final Set<UUID> RELEASING=new HashSet<>();
     private static final Map<UUID,Mob> UNLOADED=new HashMap<>();
     @SubscribeEvent public static void unloaded(net.neoforged.neoforge.event.entity.EntityLeaveLevelEvent e){if(e.getLevel() instanceof ServerLevel&&e.getEntity() instanceof Mob mob&&member(mob)&&mob.getHealth()>0&&mob.getRemovalReason()==Entity.RemovalReason.UNLOADED_TO_CHUNK)UNLOADED.put(mob.getUUID(),mob);}
-    @SubscribeEvent public static void recoverUnloaded(TickEvent.ServerTickEvent e){
-        if(e.phase!=TickEvent.Phase.END)return;
+    @SubscribeEvent public static void recoverUnloaded(ServerTickEvent.Post e){
+        if(false)return;
         for(Mob mob:List.copyOf(UNLOADED.values())){
             UNLOADED.remove(mob.getUUID());if(!(mob.level() instanceof ServerLevel level))continue;
             var state=LegionStore.get(level.getServer());var army=state.army(ownerId(mob));ListTag stored=army.getList("Stored",Tag.TAG_COMPOUND);

@@ -5,11 +5,12 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.*;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.phys.*;
-import net.neoforged.neoforge.event.TickEvent;
+
 import net.neoforged.neoforge.event.entity.living.*;
 import net.neoforged.neoforge.event.entity.player.*;
 import net.neoforged.neoforge.event.server.ServerStoppedEvent;
 import net.neoforged.bus.api.*;
+import net.neoforged.neoforge.event.tick.ServerTickEvent;
 
 /** 玩家和女仆共用：服务端锁定、结算、敌友检查；不永久修改AI或重力。 */
 public final class NetBranches {
@@ -115,7 +116,7 @@ public final class NetBranches {
         AttackTypes.mark(AttackTypes.NET_BRANCH);CombatSettings.hurt(p,target,p.serverLevel().damageSources().sonicBoom(p),amount);
     }
     private static void qiEffect(Qi q){Network.send(q.level,new Network.Effect(NetBranchRules.FX_QI,q.owner.getId(),q.position,q.direction,(float)NetBranchRules.QI_RADIUS,Math.min(10,NetBranchRules.QI_LIFE-q.age),q.id));}
-    @SubscribeEvent public static void tick(TickEvent.ServerTickEvent event){
+    @SubscribeEvent public static void tick(ServerTickEvent.Post event){
         if(event.phase!=TickEvent.Phase.END)return;
         for(AirCross c:List.copyOf(airCrosses)){
             int age=(int)(c.level.getGameTime()-c.born);if(!valid(c.p,c.level)||DomainClash.active(c.p)||age>NetBranchRules.CROSS_TICKS){airCrosses.remove(c);continue;}

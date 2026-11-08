@@ -10,9 +10,10 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.neoforge.client.event.RenderLevelStageEvent;
-import net.neoforged.neoforge.event.TickEvent;
+
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.Mod;
+import net.neoforged.neoforge.client.event.ClientTickEvent;
 
 /**
  * 不义游戏的表现层：被注入咒力的方块/实体上方挂一圈紫色咒力环（永久显示，直到被换位消耗），
@@ -66,8 +67,8 @@ public final class TodoVisuals {
 
     private static long now(Minecraft mc) { return mc.level == null ? 0 : mc.level.getGameTime(); }
 
-    @SubscribeEvent public static void clientTick(TickEvent.ClientTickEvent e) {
-        if (e.phase != TickEvent.Phase.END) return;
+    @SubscribeEvent public static void clientTick(ClientTickEvent.Post e) {
+        if (false) return;
         var mc = Minecraft.getInstance();
         if (world != mc.level) {
             world = mc.level;

@@ -6,8 +6,9 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
-import net.neoforged.neoforge.event.TickEvent;
+
 import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.neoforge.event.tick.PlayerTickEvent;
 
 /** 领域展延：持续消耗咒力，把简易领域覆在身体表面，使术式可以穿透五条悟的无下限。 */
 public final class DomainAmplification {
@@ -29,8 +30,8 @@ public final class DomainAmplification {
         p.level().playSound(null,p.blockPosition(),on?SoundEvents.BEACON_ACTIVATE:SoundEvents.BEACON_DEACTIVATE,SoundSource.PLAYERS,0.8f,on?1.4f:0.8f);
     }
     public static void stop(ServerPlayer p){if(active(p)){Curse.data(p).putBoolean("DomainAmplification",false);Curse.sync(p);}}
-    @SubscribeEvent public static void tick(TickEvent.PlayerTickEvent event){
-        if(event.phase!=TickEvent.Phase.END||!(event.player instanceof ServerPlayer p))return;
+    @SubscribeEvent public static void tick(PlayerTickEvent.Post event){
+        if(event.phase!=TickEvent.Phase.END||!(event.getEntity() instanceof ServerPlayer p))return;
         if(!active(p))return;
         if(!p.isAlive()||p.isSpectator()||Curse.severed(p)||SoulCombat.suppressed(p)||DomainClash.active(p)){stop(p);return;}
         if(!Curse.spend(p,COST_PER_TICK)){stop(p);p.displayClientMessage(Component.literal("咒力耗尽，领域展延已解除"),true);return;}

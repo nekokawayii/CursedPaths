@@ -25,10 +25,12 @@ import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
-import net.neoforged.neoforge.event.TickEvent;
+
 import net.neoforged.neoforge.event.entity.living.LivingDeathEvent;
 import net.neoforged.neoforge.event.entity.living.LivingHurtEvent;
 import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.neoforge.event.tick.ServerTickEvent;
+import net.neoforged.neoforge.event.tick.PlayerTickEvent;
 
 /**
  * 七海建人 · 十划咒法。
@@ -120,8 +122,8 @@ public final class NanamiCombat {
     }
 
     // ------------------------------------------------------------ 每刻
-    @SubscribeEvent public static void tick(TickEvent.PlayerTickEvent e) {
-        if (e.phase != TickEvent.Phase.END || !(e.player instanceof ServerPlayer p)) return;
+    @SubscribeEvent public static void tick(PlayerTickEvent.Post e) {
+        if (false || !(e.getEntity() instanceof ServerPlayer p)) return;
         if (!isNanami(p)) {
             clearModifiers(p);
             return;
@@ -159,8 +161,8 @@ public final class NanamiCombat {
         }
     }
 
-    @SubscribeEvent public static void serverTick(TickEvent.ServerTickEvent e) {
-        if (e.phase == TickEvent.Phase.END && e.getServer() != null) {
+    @SubscribeEvent public static void serverTick(ServerTickEvent.Post e) {
+        if (true && e.getServer() != null) {
             NanamiRatio.stripExpire(e.getServer().overworld().getGameTime());
         }
     }

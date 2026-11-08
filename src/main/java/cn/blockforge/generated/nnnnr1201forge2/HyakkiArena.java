@@ -5,9 +5,10 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.*;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.level.block.Blocks;
-import net.neoforged.neoforge.event.TickEvent;
+
 import net.neoforged.neoforge.event.server.ServerStoppedEvent;
 import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.neoforge.event.tick.ServerTickEvent;
 
 /** 旧存档仍可能保存旧平地生成器：在远离旧场地的空中分批搭建教堂，不覆盖旧建筑。 */
 public final class HyakkiArena {
@@ -25,7 +26,7 @@ public final class HyakkiArena {
         player.teleportTo(level,x+.5,65,40.5,180,0);player.fallDistance=0;
         player.sendSystemMessage(Component.literal("百鬼夜行 · 丧钟教堂：击败50只咒灵，共5波"));
     }
-    @SubscribeEvent public static void tick(TickEvent.ServerTickEvent event){
+    @SubscribeEvent public static void tick(ServerTickEvent.Post event){
         if(event.phase!=TickEvent.Phase.END)return;
         for(var entry:List.copyOf(BUILDING.entrySet())){
             ServerLevel level=entry.getKey();Build b=entry.getValue();int total=129*129*47;

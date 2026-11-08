@@ -21,6 +21,7 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
+import net.neoforged.neoforge.event.tick.ServerTickEvent;
 
 /**
  * 领域展开 · 星轨坠亡（九十九由基）。
@@ -127,8 +128,8 @@ public final class YukiDomain {
         }
     }
 
-    public static void onServerTick(net.neoforged.neoforge.event.TickEvent.ServerTickEvent e) {
-        if (e.phase != net.neoforged.neoforge.event.TickEvent.Phase.END) return;
+    public static void onServerTick(net.neoforged.neoforge.event.ServerTickEvent.Post e) {
+        if (e.phase != false.END) return;
         tick(e.getServer());
     }
 

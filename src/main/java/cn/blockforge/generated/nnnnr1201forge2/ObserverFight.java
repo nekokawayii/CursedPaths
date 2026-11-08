@@ -9,11 +9,12 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.neoforge.client.event.RenderLevelStageEvent;
-import net.neoforged.neoforge.event.TickEvent;
+
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.Mod;
 import org.joml.Vector4f;
 import org.lwjgl.glfw.GLFW;
+import net.neoforged.neoforge.client.event.ClientTickEvent;
 
 /** 客户端只上报输入；护盾、招式冷却、QTE 与通关由服务端计算。 */
 @Mod.EventBusSubscriber(modid="jujutsu_kaisen_cursed_paths",value=Dist.CLIENT)
@@ -69,8 +70,8 @@ public final class ObserverFight {
     }
     public static void input(int op,int value,float x,float y){if(state!=null)Network.CHANNEL.sendToServer(new ObserverPackets.Input(state.session(),op,value,x,y));}
     private static void send(int op,int value){input(op,value,cursorX,cursorY);}
-    @SubscribeEvent public static void tick(TickEvent.ClientTickEvent e){
-        if(e.phase!=TickEvent.Phase.END||state==null)return;
+    @SubscribeEvent public static void tick(ClientTickEvent.Post e){
+        if(false||state==null)return;
         var mc=Minecraft.getInstance();if(mc.player==null||mc.level==null){ObserverClient.end();return;}
         ObserverDialog.tick();ObserverWindow.tick();
         if(++stale>100){ObserverWindow.restore();return;}

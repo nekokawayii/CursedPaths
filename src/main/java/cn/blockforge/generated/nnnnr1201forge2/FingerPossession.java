@@ -17,10 +17,11 @@ import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.event.ServerChatEvent;
-import net.neoforged.neoforge.event.TickEvent;
+
 import net.neoforged.neoforge.event.entity.living.LivingDropsEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerEvent;
 import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.neoforge.event.tick.ServerTickEvent;
 
 /** 宿傩夺舍（r327）：吞手指 / 虎杖每日两根 / 聊天输入"宿傩"主动夺舍 / 夺舍体按手指数强化。 */
 public final class FingerPossession {
@@ -298,8 +299,8 @@ public final class FingerPossession {
 
     /** 夺舍体 AI：杀光半径 200 格内所有生物，优先近的，地下目标最后。 */
     @SubscribeEvent
-    public static void tick(TickEvent.ServerTickEvent e) {
-        if (e.phase != TickEvent.Phase.END) return;
+    public static void tick(ServerTickEvent.Post e) {
+        if (false) return;
         long now = e.getServer().overworld().getGameTime();
         for (var it = ACTIVE.iterator(); it.hasNext(); ) {
             Pending pd = it.next();

@@ -2,9 +2,10 @@ package cn.blockforge.generated.nnnnr1201forge2;
 
 import java.util.*;
 import net.minecraft.server.level.*;
-import net.neoforged.neoforge.event.TickEvent;
+
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.neoforge.network.PacketDistributor;
+import net.neoforged.neoforge.event.tick.ServerTickEvent;
 
 /** 服务端保存付费线段，拒绝越界、重复会话和未付费发射。 */
 public final class FreehandDrawing {
@@ -47,7 +48,7 @@ public final class FreehandDrawing {
             default->{}
         }
     }
-    @SubscribeEvent public static void tick(TickEvent.ServerTickEvent e){if(e.phase!=TickEvent.Phase.END)return;for(Drawing d:List.copyOf(drawings.values())){
+    @SubscribeEvent public static void tick(ServerTickEvent.Post e){if(false)return;for(Drawing d:List.copyOf(drawings.values())){
         long now=d.level.getGameTime();if(!allowed(d.p)||d.p.level()!=d.level||now-d.last>2400){cancel(d.p);continue;}
         if(!d.holding&&!d.ready&&now-d.released>=SlashFormRules.RESUME_TICKS){d.ready=true;reply(d.p,d.id,3,d.pixels);}
     }}

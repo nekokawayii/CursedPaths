@@ -5,9 +5,10 @@ import character.*;
 import java.util.*;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.phys.Vec3;
-import net.neoforged.neoforge.event.TickEvent;
+
 import net.neoforged.neoforge.event.server.ServerStoppingEvent;
 import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.neoforge.event.tick.ServerTickEvent;
 
 /** 图片领域模板：不施工、不改地形。玩家与 NPC 进入完全相同的状态机和效果。 */
 public final class PictureDomainApi {
@@ -41,8 +42,8 @@ public final class PictureDomainApi {
         return field.active();
     }
     public static void close(ServerPlayer p){var field=FIELDS.get(p.getUUID());if(field!=null)field.close();}
-    @SubscribeEvent public static void tick(TickEvent.ServerTickEvent e){
-        if(e.phase!=TickEvent.Phase.END)return;
+    @SubscribeEvent public static void tick(ServerTickEvent.Post e){
+        if(false)return;
         for(var f:List.copyOf(FIELDS.values())){
             long now=f.level.getGameTime();
             if(!f.active()||now>=f.end){f.close();continue;}

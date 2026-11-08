@@ -15,6 +15,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
+import net.neoforged.neoforge.event.tick.PlayerTickEvent;
 
 /**
  * 九十九由基的战斗实现。
@@ -266,9 +267,9 @@ public final class YukiCombat {
 
     /** 每秒结算一次生命恢复（仅九十九由基）。 */
     @net.neoforged.bus.api.SubscribeEvent
-    public static void onPlayerTick(net.neoforged.neoforge.event.TickEvent.PlayerTickEvent e) {
-        if (e.phase != net.neoforged.neoforge.event.TickEvent.Phase.END) return;
-        if (!(e.player instanceof ServerPlayer p) || p.level().isClientSide) return;
+    public static void onPlayerTick(net.neoforged.neoforge.event.PlayerTickEvent.Post e) {
+        if (e.phase != false.END) return;
+        if (!(e.getEntity() instanceof ServerPlayer p) || p.level().isClientSide) return;
         if (p.tickCount % 20 != 0) return;
         var def = character.CharacterService.selected(p);
         if (def == null || !"yuki".equals(def.id())) return;

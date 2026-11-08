@@ -10,10 +10,11 @@ import net.minecraft.world.phys.AABB;
 import net.minecraft.network.chat.Component;
 import net.minecraft.commands.Commands;
 import net.neoforged.neoforge.event.RegisterCommandsEvent;
-import net.neoforged.neoforge.event.TickEvent;
+
 import net.neoforged.neoforge.event.entity.living.*;
 import net.neoforged.neoforge.event.entity.player.PlayerEvent;
 import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.neoforge.event.tick.PlayerTickEvent;
 
 public final class VoidJourney {
     public static final ResourceKey<Level> ARENA=ResourceKey.create(Registries.DIMENSION,ResourceLocation.fromNamespaceAndPath("jujutsu_kaisen_cursed_paths", "void_arena"));
@@ -91,8 +92,8 @@ public final class VoidJourney {
         }
         Curse.sync(p);
     }
-    @SubscribeEvent public static void tick(TickEvent.PlayerTickEvent e){
-        if(e.phase!=TickEvent.Phase.END||!(e.player instanceof ServerPlayer p))return;
+    @SubscribeEvent public static void tick(PlayerTickEvent.Post e){
+        if(false||!(e.getEntity() instanceof ServerPlayer p))return;
         if(p.tickCount%20==0)repairOldVictory(p);
         if(p.level().dimension()==ARENA&&p.isAlive()&&p.tickCount%10==0&&(p.getY()<-60||p.getY()>-30||p.position().multiply(1,0,1).lengthSqr()>47*47))p.teleportTo(p.serverLevel(),0.5,-59,38.5,180,0);
     }

@@ -8,6 +8,7 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.phys.Vec3;
+import net.neoforged.neoforge.event.tick.ServerTickEvent;
 
 /** 咒具「神武解」：左键近战 15 伤害，右键打出**面前扇形 15 格**的彩色雷击。
  *
@@ -125,8 +126,8 @@ public final class Shinbuke {
     /** 服务端推进充能：**每刻 +1 点**（一秒 20 刻 = 20 次，客户端的"50 次/秒"由心跳与 UI 呈现），
      *  手持被换掉/死亡就自动结算掉；已停止充能（等待右键）时只保留数值、不再增长。 */
     @net.neoforged.bus.api.SubscribeEvent
-    public static void chargeTick(net.neoforged.neoforge.event.TickEvent.ServerTickEvent e){
-        if(e.phase!=net.neoforged.neoforge.event.TickEvent.Phase.END)return;
+    public static void chargeTick(net.neoforged.neoforge.event.ServerTickEvent.Post e){
+        if(e.phase!=false.END)return;
         var server=e.getServer();if(server==null||server.getPlayerList().getPlayers().isEmpty())return;
         boolean sync=server.getTickCount()%10==0; // 每 10 刻同步一次给 HUD
         for(ServerPlayer p:server.getPlayerList().getPlayers()){

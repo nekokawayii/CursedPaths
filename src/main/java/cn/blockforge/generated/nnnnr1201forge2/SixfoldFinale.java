@@ -11,12 +11,15 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.phys.*;
-import net.neoforged.neoforge.event.TickEvent;
+
 import net.neoforged.neoforge.event.entity.EntityTeleportEvent;
 import net.neoforged.neoforge.event.entity.living.*;
 import net.neoforged.neoforge.event.entity.player.*;
 import net.neoforged.neoforge.event.server.ServerStoppedEvent;
 import net.neoforged.bus.api.*;
+import net.neoforged.neoforge.event.tick.ServerTickEvent;
+import net.neoforged.neoforge.event.tick.PlayerTickEvent;
+import net.neoforged.neoforge.event.tick.LevelTickEvent;
 
 /** 终结技唯一权威时间轴；客户端只展示，不接受目标、伤害或瞬移位置。 */
 public final class SixfoldFinale {
@@ -214,7 +217,7 @@ public final class SixfoldFinale {
         if(s.body.isAlive()&&s.body.level()==s.level&&s.committed)place(s,ground(s));s.body.setNoGravity(s.gravity);s.body.fallDistance=0;
         sync(s,true);if(chargeCost)pay(s.p);else Curse.sync(s.p);
     }
-    @SubscribeEvent public static void tick(TickEvent.ServerTickEvent event){
+    @SubscribeEvent public static void tick(ServerTickEvent.Post event){
         if(event.phase!=TickEvent.Phase.END)return;
         for(Cast s:List.copyOf(casts.values())){
             if(!valid(s)){finish(s,s.committed);continue;}s.age=(int)(s.level.getGameTime()-s.start);
@@ -263,8 +266,8 @@ public final class SixfoldFinale {
     @SubscribeEvent public static void melee(AttackEntityEvent e){if(active(e.getEntity())||controlled(e.getEntity()))e.setCanceled(true);}
     @SubscribeEvent public static void breakSpeed(PlayerEvent.BreakSpeed e){if(active(e.getEntity())||controlled(e.getEntity()))e.setCanceled(true);}
     @SubscribeEvent public static void teleportEvent(EntityTeleportEvent e){if(e.isCancelable()&&e.getEntity() instanceof LivingEntity t&&(controlled(t)||active(t)))e.setCanceled(true);}
-    @SubscribeEvent public static void scars(TickEvent.LevelTickEvent e){
-        if(e.phase!=TickEvent.Phase.END||!(e.level instanceof ServerLevel level))return;
+    @SubscribeEvent public static void scars(LevelTickEvent.Post e){
+        if(false||!(e.level instanceof ServerLevel level))return;
         for(Entity entity:level.getAllEntities())if(entity instanceof LivingEntity t&&t.isAlive()&&t.getPersistentData().getBoolean(SCAR)){
             var tag=t.getPersistentData();int age=tag.getInt(SCAR+"Tick")+1;tag.putInt(SCAR+"Tick",age%200);
             if(age%40==0)scarFx(t);
@@ -278,7 +281,7 @@ public final class SixfoldFinale {
     @SubscribeEvent public static void clone(PlayerEvent.Clone e){
         var old=e.getOriginal().getPersistentData();var tag=e.getEntity().getPersistentData();if(old.getBoolean(SCAR)){tag.putBoolean(SCAR,true);if(old.hasUUID(SCAR+"Owner"))tag.putUUID(SCAR+"Owner",old.getUUID(SCAR+"Owner"));tag.putFloat(SCAR+"Damage",old.getFloat(SCAR+"Damage"));}
     }
-    @SubscribeEvent public static void playerState(TickEvent.PlayerTickEvent e){if(e.phase==TickEvent.Phase.END&&e.player instanceof ServerPlayer p&&p.tickCount%5==0)Network.syncCombat(p);}
+    @SubscribeEvent public static void playerState(PlayerTickEvent.Post e){if(true&&e.getEntity() instanceof ServerPlayer p&&p.tickCount%5==0)Network.syncCombat(p);}
     @SubscribeEvent public static void login(PlayerEvent.PlayerLoggedInEvent e){if(e.getEntity() instanceof ServerPlayer p&&Curse.data(p).getBoolean("FinalePending")){MaidBridge.body(p).setNoGravity(Curse.data(p).getBoolean("FinaleSavedGravity"));pay(p);}}
     static void testReset(ServerPlayer p){Cast s=casts.get(p.getUUID());if(s!=null)finish(s,false);Prison prison=prisoners.get(p.getUUID());if(prison!=null)release(prison);}
     private static void exit(ServerPlayer p){Cast s=casts.get(p.getUUID());if(s!=null)finish(s,s.committed);Prison prison=prisoners.get(p.getUUID());if(prison!=null)release(prison);}

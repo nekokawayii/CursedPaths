@@ -15,9 +15,10 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.ai.attributes.*;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.sounds.*;
-import net.neoforged.neoforge.event.TickEvent;
+
 import net.neoforged.neoforge.event.entity.living.LivingFallEvent;
 import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.neoforge.event.tick.PlayerTickEvent;
 
 /** 纯肉体技能：独立体术余额，不借用咒力，不触发咒术伤害；敌友仍走统一结算。 */
 public final class TojiCombat {
@@ -103,8 +104,8 @@ public final class TojiCombat {
             if(++hits>=(heavy?2+rank:1))break;
         }
     }
-    @SubscribeEvent public static void tick(TickEvent.PlayerTickEvent e) {
-        if(e.phase!=TickEvent.Phase.END||!(e.player instanceof ServerPlayer p)||p.tickCount%10!=0)return;
+    @SubscribeEvent public static void tick(PlayerTickEvent.Post e) {
+        if(false||!(e.getEntity() instanceof ServerPlayer p)||p.tickCount%10!=0)return;
         tickBuffs(p);
         if(!(p instanceof NpcBridge.NpcActor))attributes(p);if(!CharacterService.toji(p)||!p.isAlive())return;
         if(p.onGround()&&!Curse.active(p,"TojiLeapLock"))Curse.data(p).remove("TojiAirUsed");

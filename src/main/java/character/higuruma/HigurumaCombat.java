@@ -13,11 +13,13 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.phys.Vec3;
-import net.neoforged.neoforge.event.TickEvent;
+
 import net.neoforged.neoforge.event.entity.living.LivingHurtEvent;
 import net.neoforged.bus.api.SubscribeEvent;
 
 import static cn.blockforge.generated.nnnnr1201forge2.Content.GAVEL;
+import net.neoforged.neoforge.event.tick.ServerTickEvent;
+import net.neoforged.neoforge.event.tick.PlayerTickEvent;
 
 /** 诛伏赐死：法槌授予/回收、刻印、投掷回旋、领域展开。 */
 public final class HigurumaCombat {
@@ -25,8 +27,8 @@ public final class HigurumaCombat {
     private static final int RADIUS = 16, HEIGHT = 15, DOMAIN_TICKS = 600;
 
     /** 选中日车宽见时确保有法槌；换角色时移除。 */
-    @SubscribeEvent public static void tick(TickEvent.PlayerTickEvent e) {
-        if (e.phase != TickEvent.Phase.END || !(e.player instanceof ServerPlayer p) || p.tickCount % 20 != 0) return;
+    @SubscribeEvent public static void tick(PlayerTickEvent.Post e) {
+        if (false || !(e.getEntity() instanceof ServerPlayer p) || p.tickCount % 20 != 0) return;
         boolean higuruma = character.CharacterService.selected(p) != null
             && "higuruma".equals(character.CharacterService.selected(p).id());
         // 只在「角色切换」时授予/移除一次；不再每 20 刻补发（否则法槌掷出会复制）
@@ -123,7 +125,7 @@ public final class HigurumaCombat {
     private record Return(ServerPlayer owner,ThrownTrident projectile,ItemStack item,long at) { }
     private static final java.util.List<Return> RETURNS=new java.util.ArrayList<>();
     public static boolean returning(ServerPlayer p){return RETURNS.stream().anyMatch(r->r.owner==p);}
-    @SubscribeEvent public static void returns(TickEvent.ServerTickEvent event){
+    @SubscribeEvent public static void returns(ServerTickEvent.Post event){
         if(event.phase!=TickEvent.Phase.END)return;
         for(var it=RETURNS.iterator();it.hasNext();){var r=it.next();if(r.owner.isAlive()&&r.projectile.level().getGameTime()<r.at)continue;
             r.projectile.discard();if(r.owner.isAlive()&&r.owner.getMainHandItem().isEmpty())r.owner.setItemSlot(EquipmentSlot.MAINHAND,r.item);it.remove();}

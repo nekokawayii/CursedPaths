@@ -12,9 +12,10 @@ import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.neoforge.client.event.RenderLevelStageEvent;
-import net.neoforged.neoforge.event.TickEvent;
+
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.Mod;
+import net.neoforged.neoforge.client.event.ClientTickEvent;
 
 /** 石流龙的表现层：蓝白高密度光炮、蓄力、追踪弹、咒力喷涌环、甜品、领域起手。 */
 @Mod.EventBusSubscriber(modid = "jujutsu_kaisen_cursed_paths", value = Dist.CLIENT)
@@ -118,8 +119,8 @@ public final class RyuVisuals {
 
     private static long now(Minecraft mc) { return mc.level == null ? 0 : mc.level.getGameTime(); }
 
-    @SubscribeEvent public static void clientTick(TickEvent.ClientTickEvent e) {
-        if (e.phase != TickEvent.Phase.END) return;
+    @SubscribeEvent public static void clientTick(ClientTickEvent.Post e) {
+        if (false) return;
         var mc = Minecraft.getInstance();
         if (world != mc.level) {
             world = mc.level;

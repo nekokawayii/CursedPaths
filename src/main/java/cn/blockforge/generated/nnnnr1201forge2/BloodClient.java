@@ -9,9 +9,10 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.client.event.*;
-import net.neoforged.neoforge.event.TickEvent;
+
 import net.neoforged.bus.api.SubscribeEvent;
 import org.lwjgl.opengl.GL30;
+import net.neoforged.neoforge.client.event.ClientTickEvent;
 
 /** 动态血液材质负责主体，Photon 负责雾、飞沫与亮点；后者失败不吞掉整招。 */
 public final class BloodClient {
@@ -52,7 +53,7 @@ public final class BloodClient {
         return true;
     }
     public static void clear(){BloodRealmRenderer.clear();for(Particle p:particles)PhotonFx.stop(p.h);particles.clear();visuals.clear();domains.clear();oceans.clear();BloodVisionClient.clear();world=null;}
-    @SubscribeEvent public static void tick(TickEvent.ClientTickEvent event){if(event.phase!=TickEvent.Phase.END)return;var mc=Minecraft.getInstance();if(world!=mc.level){clear();world=mc.level;}if(mc.level==null)return;tick=mc.level.getGameTime();visuals.removeIf(v->v.end<=tick);domains.values().removeIf(v->v.end<=tick);oceans.values().removeIf(v->v.end<=tick);for(Iterator<Particle> it=particles.iterator();it.hasNext();){Particle p=it.next();if(p.end<=tick){PhotonFx.stop(p.h);it.remove();}}}
+    @SubscribeEvent public static void tick(ClientTickEvent.Post event){if(event.phase!=TickEvent.Phase.END)return;var mc=Minecraft.getInstance();if(world!=mc.level){clear();world=mc.level;}if(mc.level==null)return;tick=mc.level.getGameTime();visuals.removeIf(v->v.end<=tick);domains.values().removeIf(v->v.end<=tick);oceans.values().removeIf(v->v.end<=tick);for(Iterator<Particle> it=particles.iterator();it.hasNext();){Particle p=it.next();if(p.end<=tick){PhotonFx.stop(p.h);it.remove();}}}
     public static boolean ownDomain(){var p=Minecraft.getInstance().player;return p!=null&&domains.values().stream().anyMatch(v->v.e.owner()==p.getId()&&v.end>timeNow()&&BloodRules.inside(p.position().distanceToSqr(v.e.position())));}
     public static boolean vision(){var p=Minecraft.getInstance().player;return p!=null&&visuals.stream().anyMatch(v->v.end>timeNow()&&v.e.kind()==BloodArts.FX+4&&v.e.owner()==p.getId()&&v.e.seed()==1);}
     public static boolean predicted(int id){return vision()&&visuals.stream().anyMatch(v->v.end>timeNow()&&v.e.kind()==BloodArts.FX_HEART&&v.e.owner()==id);}

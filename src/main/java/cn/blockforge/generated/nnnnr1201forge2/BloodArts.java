@@ -14,11 +14,12 @@ import net.minecraft.world.entity.ai.attributes.*;
 import net.minecraft.world.entity.projectile.*;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.phys.*;
-import net.neoforged.neoforge.event.TickEvent;
+
 import net.neoforged.neoforge.event.entity.living.*;
 import net.neoforged.neoforge.event.entity.player.PlayerEvent;
 import net.neoforged.neoforge.event.server.ServerStoppedEvent;
 import net.neoforged.bus.api.*;
+import net.neoforged.neoforge.event.tick.ServerTickEvent;
 
 /** 赤血操术服务端。客户端只能提交按键，耗能、冷却、命中和状态均在这里核验。 */
 public final class BloodArts {
@@ -222,7 +223,7 @@ public final class BloodArts {
         dots.removeIf(d->d.p==p);bindings.removeIf(d->d.p==p);areas.removeIf(d->d.p==p);rings.removeIf(d->d.p==p);thorns.removeIf(d->d.p==p);follows.removeIf(d->d.p==p);canals.removeIf(d->d.p==p);
     }
     private static void clear(State s){cancelCharge(s);s.flow=0;attributes(s);s.shield=0;s.wings=0;}
-    @SubscribeEvent public static void tick(TickEvent.ServerTickEvent event){
+    @SubscribeEvent public static void tick(ServerTickEvent.Post event){
         if(event.phase!=TickEvent.Phase.END)return;
         for(State s:List.copyOf(states.values())){
             ServerPlayer p=s.p;long now=s.level.getGameTime();

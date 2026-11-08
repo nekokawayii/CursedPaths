@@ -6,10 +6,12 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.ai.attributes.*;
 import net.minecraft.network.chat.Component;
-import net.neoforged.neoforge.event.TickEvent;
+
 import net.neoforged.neoforge.event.entity.player.PlayerEvent;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.neoforge.network.PacketDistributor;
+import net.neoforged.neoforge.event.tick.PlayerTickEvent;
+import net.neoforged.neoforge.event.tick.LevelTickEvent;
 
 /** 所有成长和消耗由服务端决定；持久数据随存档及死亡重生保留。 */
 public final class Curse {
@@ -158,7 +160,7 @@ public final class Curse {
         double cost=ShrineRules.repairCost(maximum(p));if(!spendEffective(p,cost))return;
         clearBurnout(p);status(p,"TechniqueRepairedUntil",ShrineRules.REPAIR_BUFF_TICKS);sync(p);p.displayClientMessage(Component.literal("术式熔断已修复：全部伤害提升10%，持续5秒"),true);
     }
-    @SubscribeEvent public static void tick(TickEvent.PlayerTickEvent e){if(e.phase==TickEvent.Phase.END&&e.player instanceof ServerPlayer p&&p.tickCount%20==0)tickCaster(p);}
+    @SubscribeEvent public static void tick(PlayerTickEvent.Post e){if(true&&e.getEntity() instanceof ServerPlayer p&&p.tickCount%20==0)tickCaster(p);}
     public static void tickCaster(ServerPlayer p){
         if(character.CharacterService.toji(p)){data(p).putDouble("Energy",0);data(p).putBoolean("Fist",false);apply(p);sync(p);return;}
         if(Authority.pool(p)!=null){if(data(p).getBoolean("TechniqueBurnout")&&!active(p,"TechniqueBurnoutUntil"))clearBurnout(p);return;} // 军团不凭空为共享池叠加回咒。
@@ -183,7 +185,7 @@ public final class Curse {
         }
         if(!(p instanceof NpcBridge.NpcActor)&&p.isAlive()&&!fist&&!SixfoldFinale.active(p)&&!active(p,"FinaleNoRecovery")&&!active(p,"RecoveryDelay")&&!Skills.sustaining(p)&&!GuardianPlayerSkills.sustaining(p))addRaw(p,(character.CharacterService.active(p)&&!Journey.unlocked(p)?character.CharacterService.stats(p).recovery():15)+fingers(p)*3+(awakened(p)?10:0)+(nine(p)?10:0)+(soul(p)?20:0)+(VoidController.boosted(p)?15:0)+(GuardianCombat.awakened(p)?30:0));sync(p);
     }
-    @SubscribeEvent public static void soulFire(TickEvent.LevelTickEvent e){if(e.phase!=TickEvent.Phase.END||!(e.level instanceof net.minecraft.server.level.ServerLevel l)||l.getGameTime()%20!=0)return;for(var entity:l.getAllEntities())if(entity instanceof net.minecraft.world.entity.LivingEntity target&&target.getPersistentData().getBoolean("SukunaSoulFire")){var tag=target.getPersistentData();ServerPlayer owner=tag.hasUUID("SukunaSoulFireOwner")?MaidBridge.find(l,tag.getUUID("SukunaSoulFireOwner")):null;if(owner==null){target.clearFire();continue;}if(!CombatSafety.canAffect(owner,target)){target.clearFire();tag.remove("SukunaSoulFire");tag.remove("SukunaSoulFireOwner");tag.remove("SukunaNoHeal");continue;}target.setSecondsOnFire(3);tag.putBoolean("SukunaNoHeal",true);}}
+    @SubscribeEvent public static void soulFire(LevelTickEvent.Post e){if(false||!(e.level instanceof net.minecraft.server.level.ServerLevel l)||l.getGameTime()%20!=0)return;for(var entity:l.getAllEntities())if(entity instanceof net.minecraft.world.entity.LivingEntity target&&target.getPersistentData().getBoolean("SukunaSoulFire")){var tag=target.getPersistentData();ServerPlayer owner=tag.hasUUID("SukunaSoulFireOwner")?MaidBridge.find(l,tag.getUUID("SukunaSoulFireOwner")):null;if(owner==null){target.clearFire();continue;}if(!CombatSafety.canAffect(owner,target)){target.clearFire();tag.remove("SukunaSoulFire");tag.remove("SukunaSoulFireOwner");tag.remove("SukunaNoHeal");continue;}target.setSecondsOnFire(3);tag.putBoolean("SukunaNoHeal",true);}}
     @SubscribeEvent public static void noSoulHeal(net.neoforged.neoforge.event.entity.living.LivingHealEvent e){if(e.getEntity().getPersistentData().getBoolean("SukunaNoHeal"))e.setCanceled(true);}
     @SubscribeEvent public static void clone(PlayerEvent.Clone e){e.getEntity().getPersistentData().put(KEY,data(e.getOriginal()).copy());apply(e.getEntity());if(e.isWasDeath()){data(e.getEntity()).putDouble("Energy",active(e.getEntity(),"FinaleNoRecovery")?0:rawMaximum(e.getEntity()));data(e.getEntity()).remove("Siphon");data(e.getEntity()).remove("Disorder");data(e.getEntity()).remove("RecoveryDelay");data(e.getEntity()).remove("MultiArmed");for(String k:new java.util.ArrayList<>(data(e.getEntity()).getAllKeys()))if(k.startsWith("CharacterSkillCooldown_")||k.equals("DomainCooldown"))data(e.getEntity()).remove(k);if(character.CharacterService.toji(e.getEntity())){data(e.getEntity()).putDouble("TojiStamina",character.toji.TojiCombat.maximum(e.getEntity()));data(e.getEntity()).remove("TojiAirUsed");data(e.getEntity()).remove("TojiRecoveryDelay");data(e.getEntity()).remove("TojiLeapLock");}}}
     @SubscribeEvent public static void pickup(PlayerEvent.ItemPickupEvent e){if(e.getEntity() instanceof ServerPlayer p&&e.getStack().is(Content.BODY.get())){Network.send(p.serverLevel(),new Network.Effect(44,p.getId(),p.position(),net.minecraft.world.phys.Vec3.ZERO,1,30,0));p.serverLevel().playSound(null,p.blockPosition(),net.minecraft.sounds.SoundEvents.EVOKER_CELEBRATE,net.minecraft.sounds.SoundSource.PLAYERS,1,0.55f);}}

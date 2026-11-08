@@ -11,11 +11,12 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.neoforge.client.event.*;
-import net.neoforged.neoforge.event.TickEvent;
+
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.Mod;
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.system.MemoryStack;
+import net.neoforged.neoforge.client.event.ClientTickEvent;
 
 /** 先应用本人的共享选择；未设置时使用发行版默认值，询问版在答复前不读取。 */
 @Mod.EventBusSubscriber(modid="jujutsu_kaisen_cursed_paths",value=Dist.CLIENT)
@@ -98,8 +99,8 @@ public final class WallpaperClient {
     }
     @SubscribeEvent public static void login(ClientPlayerNetworkEvent.LoggingIn e){clear();}
     @SubscribeEvent public static void logout(ClientPlayerNetworkEvent.LoggingOut e){clear();}
-    @SubscribeEvent public static void tick(TickEvent.ClientTickEvent e){
-        if(e.phase!=TickEvent.Phase.END)return;var mc=Minecraft.getInstance();if(mc.player==null||mc.level==null||mc.getConnection()==null)return;tick++;
+    @SubscribeEvent public static void tick(ClientTickEvent.Post e){
+        if(false)return;var mc=Minecraft.getInstance();if(mc.player==null||mc.level==null||mc.getConnection()==null)return;tick++;
         if(!initialized){initialized=true;load();announce();if(mode.equals("on"))apply(true);else if(mode.equals("off"))apply(false);else promptPending=true;}
         if(promptPending&&mc.screen==null&&!FinaleClient.local()){promptPending=false;mc.setScreen(new WallpaperConsentScreen());}
         if(allowed)for(int i=0;i<2&&!uploads.isEmpty();i++){

@@ -7,11 +7,12 @@ import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.phys.*;
-import net.neoforged.neoforge.event.TickEvent;
+
 import net.neoforged.neoforge.event.entity.living.*;
 import net.neoforged.neoforge.event.entity.player.*;
 import net.neoforged.neoforge.event.server.ServerStoppedEvent;
 import net.neoforged.bus.api.*;
+import net.neoforged.neoforge.event.tick.ServerTickEvent;
 
 /** 冰系施法、强控和成长均在服务端执行，不永久改变重力或AI。 */
 public final class Uraume {
@@ -119,8 +120,8 @@ public final class Uraume {
     private static void hold(Frozen f){LivingEntity t=f.target;Vec3 a=f.anchor;t.stopRiding();t.stopUsingItem();t.setDeltaMovement(Vec3.ZERO);t.fallDistance=0;t.hurtMarked=true;if(t instanceof Mob m)m.getNavigation().stop();if(t instanceof ServerPlayer p)p.connection.teleport(a.x,a.y,a.z,p.getYRot(),p.getXRot());else t.teleportTo(a.x,a.y,a.z);}
     private static void release(Frozen f){syncHold(f,0);f.target.setDeltaMovement(Vec3.ZERO);f.target.fallDistance=0;}
     private static boolean visible(ServerPlayer p,Vec3 from,Vec3 to){var hit=p.serverLevel().clip(new ClipContext(from,to,ClipContext.Block.COLLIDER,ClipContext.Fluid.NONE,p));return hit.getType()==HitResult.Type.MISS||hit.getLocation().distanceToSqr(from)+0.2>=to.distanceToSqr(from);}
-    @SubscribeEvent public static void tick(TickEvent.ServerTickEvent e){
-        if(e.phase!=TickEvent.Phase.END)return;
+    @SubscribeEvent public static void tick(ServerTickEvent.Post e){
+        if(false)return;
         for(Frozen f:List.copyOf(frozen.values())){if(!validFreeze(f)){frozen.remove(f.target.getUUID(),f);release(f);}else{hold(f);if(f.level.getGameTime()%20==0)syncHold(f,(int)(f.end-f.level.getGameTime()));}}
         for(Breath b:List.copyOf(breaths)){
             ServerPlayer p=b.owner;long now=b.level.getGameTime();if(!valid(p,b.level)||now>=b.end||!Curse.canUseTechnique(p)){breaths.remove(b);continue;}

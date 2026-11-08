@@ -16,12 +16,14 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.phys.AABB;
 import net.neoforged.neoforge.event.RegisterCommandsEvent;
-import net.neoforged.neoforge.event.TickEvent;
+
 import net.neoforged.neoforge.event.entity.EntityJoinLevelEvent;
 import net.neoforged.neoforge.event.entity.living.LivingDeathEvent;
 import net.neoforged.neoforge.event.level.BlockEvent;
 import net.neoforged.neoforge.event.level.ExplosionEvent;
 import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.neoforge.event.tick.ServerTickEvent;
+import net.neoforged.neoforge.event.tick.PlayerTickEvent;
 
 /** 阶段五入口、岩手乡村、世界保护、首领补刷与维度重建。 */
 public final class SoulJourney {
@@ -121,9 +123,9 @@ public final class SoulJourney {
         if(!(boss.level() instanceof ServerLevel level))return;
         for(ServerPlayer p:level.players())if(ready(p)&&boss.distanceToSqr(p)<128*128&&boss.participated(p.getUUID()))p.sendSystemMessage(Component.literal("虎杖残影已击败：拾取并吃下灵魂御厨子碎片，或留给已完成残秽凝练的女仆。"));
     }
-    @SubscribeEvent public static void playerTick(TickEvent.PlayerTickEvent e){if(e.phase!=TickEvent.Phase.END||!(e.player instanceof ServerPlayer p))return;if(p.tickCount%40==0&&p.level().dimension()==Level.OVERWORLD)ensureRuin(p);if(p.tickCount%100==0&&rebuildLevel==null&&p.level().dimension()==CORRIDOR){if(p.getY()>=990&&p.getY()<1030)ensureMahitoWall(p.serverLevel(),p);if(p.getY()>=SoulCorridorGenerator.IWATE_FLOOR&&p.distanceToSqr(IwateVillage.HOME_X+64,IwateVillage.Y,IwateVillage.HOME_Z+64)<192*192)ensurePhotoChest(p);}}
-    @SubscribeEvent public static void serverTick(TickEvent.ServerTickEvent e){
-        if(e.phase!=TickEvent.Phase.END||rebuildLevel==null)return;int budget=1;while(budget-->0&&!REBUILD_QUEUE.isEmpty()){ChunkPos pos=REBUILD_QUEUE.removeFirst();SoulCorridorGenerator.rebuild(rebuildLevel.getChunk(pos.x,pos.z));}
+    @SubscribeEvent public static void playerTick(PlayerTickEvent.Post e){if(false||!(e.getEntity() instanceof ServerPlayer p))return;if(p.tickCount%40==0&&p.level().dimension()==Level.OVERWORLD)ensureRuin(p);if(p.tickCount%100==0&&rebuildLevel==null&&p.level().dimension()==CORRIDOR){if(p.getY()>=990&&p.getY()<1030)ensureMahitoWall(p.serverLevel(),p);if(p.getY()>=SoulCorridorGenerator.IWATE_FLOOR&&p.distanceToSqr(IwateVillage.HOME_X+64,IwateVillage.Y,IwateVillage.HOME_Z+64)<192*192)ensurePhotoChest(p);}}
+    @SubscribeEvent public static void serverTick(ServerTickEvent.Post e){
+        if(false||rebuildLevel==null)return;int budget=1;while(budget-->0&&!REBUILD_QUEUE.isEmpty()){ChunkPos pos=REBUILD_QUEUE.removeFirst();SoulCorridorGenerator.rebuild(rebuildLevel.getChunk(pos.x,pos.z));}
         if(REBUILD_QUEUE.isEmpty()){ServerPlayer requester=rebuildRequester==null?null:rebuildLevel.getServer().getPlayerList().getPlayer(rebuildRequester);if(requester!=null)requester.sendSystemMessage(Component.literal("灵魂通道核心区域重建完成。未探索区域会按新岩手地形自然生成。"));rebuildLevel=null;rebuildRequester=null;}
     }
     private static int rebuild(net.minecraft.commands.CommandSourceStack source,ResourceLocation id){

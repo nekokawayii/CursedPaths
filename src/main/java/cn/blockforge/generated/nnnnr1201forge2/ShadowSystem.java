@@ -9,12 +9,13 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.monster.Enemy;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.phys.*;
-import net.neoforged.neoforge.event.TickEvent;
+
 import net.neoforged.neoforge.event.entity.living.LivingDeathEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerEvent;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.neoforge.network.*;
+import net.neoforged.neoforge.event.tick.PlayerTickEvent;
 
 /** 服务端保存调服和存续令牌；区块卸载不允许绕过唯一式神/五只虾蟇限制。 */
 @Mod.EventBusSubscriber(modid="jujutsu_kaisen_cursed_paths")
@@ -144,7 +145,7 @@ public final class ShadowSystem {
         ServerPlayer p=CombatSettings.caster(event.getSource());
         if(event.getAmount()>0&&p!=null&&TenShadows.canUse(p)&&!friendly(p,event.getEntity()))p.setLastHurtMob(event.getEntity());
     }
-    @SubscribeEvent public static void tick(TickEvent.PlayerTickEvent event){if(event.phase==TickEvent.Phase.END&&event.player instanceof ServerPlayer p&&TenShadows.canUse(p)&&p.tickCount%20==0)sync(p);}
+    @SubscribeEvent public static void tick(PlayerTickEvent.Post event){if(event.phase==TickEvent.Phase.END&&event.getEntity() instanceof ServerPlayer p&&TenShadows.canUse(p)&&p.tickCount%20==0)sync(p);}
     @SubscribeEvent public static void login(PlayerEvent.PlayerLoggedInEvent event){if(event.getEntity() instanceof ServerPlayer p)sync(p);}
     @SubscribeEvent public static void logout(PlayerEvent.PlayerLoggedOutEvent event){if(event.getEntity() instanceof ServerPlayer p)recall(p,-1);}
     @SubscribeEvent public static void dimension(PlayerEvent.PlayerChangedDimensionEvent event){if(event.getEntity() instanceof ServerPlayer p){recall(p,-1);sync(p);}}

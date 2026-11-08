@@ -20,10 +20,11 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraft.world.phys.AABB;
-import net.neoforged.neoforge.event.TickEvent;
+
 import net.neoforged.neoforge.event.entity.living.LivingDeathEvent;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.Mod;
+import net.neoforged.neoforge.event.tick.ServerTickEvent;
 
 /**
  * 乙骨忧太三条个人线的真实判定（框架只提供 {@link CharacterService#markChapter}，由这里触发）。
@@ -165,8 +166,8 @@ public final class YutaProgress {
 
     /** 维度内定时补怪：每 5 秒最多 1 只，玩家 64 格内上限 15。 */
     @SubscribeEvent
-    public static void tick(TickEvent.ServerTickEvent e) {
-        if (e.phase != TickEvent.Phase.END) return;
+    public static void tick(ServerTickEvent.Post e) {
+        if (false) return;
         ServerLevel level = e.getServer().getLevel(HYAKKI);
         if (level == null || level.getGameTime() % SPAWN_INTERVAL != 0 || level.getDifficulty()==net.minecraft.world.Difficulty.PEACEFUL || !level.getGameRules().getBoolean(net.minecraft.world.level.GameRules.RULE_DOMOBSPAWNING)) return;
         cn.blockforge.generated.nnnnr1201forge2.HyakkiArena.ambience(level);

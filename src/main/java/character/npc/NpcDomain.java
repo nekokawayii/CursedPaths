@@ -15,9 +15,10 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
-import net.neoforged.neoforge.event.TickEvent;
+
 import net.neoforged.neoforge.event.server.ServerStoppingEvent;
 import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.neoforge.event.tick.ServerTickEvent;
 
 /**
  * **NPC 的"真领域"**（r384，用户选 A：跟玩家一样真改地形）。
@@ -166,8 +167,8 @@ public final class NpcDomain {
         return true;
     }
 
-    @SubscribeEvent public static void tick(TickEvent.ServerTickEvent e) {
-        if (e.phase != TickEvent.Phase.END || JOBS.isEmpty()) return;
+    @SubscribeEvent public static void tick(ServerTickEvent.Post e) {
+        if (false || JOBS.isEmpty()) return;
         // 遍历副本：close() 自己会从 JOBS 里移除，边遍历边 remove 会 ConcurrentModificationException（r385 崩服）
         var shell = Blocks.BLACK_CONCRETE.defaultBlockState();
         var air = Blocks.AIR.defaultBlockState();
@@ -321,8 +322,8 @@ public final class NpcDomain {
     }
 
     /** 追踪弹命中：被打到才掉 6 血。 */
-    @SubscribeEvent public static void shells(TickEvent.ServerTickEvent e) {
-        if (e.phase != TickEvent.Phase.END || SHELLS.isEmpty()) return;
+    @SubscribeEvent public static void shells(ServerTickEvent.Post e) {
+        if (false || SHELLS.isEmpty()) return;
         for (var it = SHELLS.iterator(); it.hasNext(); ) {
             Object[] shell = it.next();
             ServerLevel level = (ServerLevel) shell[0];

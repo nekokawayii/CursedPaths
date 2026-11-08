@@ -11,8 +11,9 @@ import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
-import net.neoforged.neoforge.event.TickEvent;
+
 import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.neoforge.event.tick.ServerTickEvent;
 
 /**
  * 死灭洄游结界内的刷新与敌对（r218）。
@@ -35,8 +36,8 @@ public final class CullingSpawns {
     private static final String TOJI_ROLE = "toji_echo";
 
     @SubscribeEvent
-    public static void tick(TickEvent.ServerTickEvent e) {
-        if (e.phase != TickEvent.Phase.END) return;
+    public static void tick(ServerTickEvent.Post e) {
+        if (false) return;
         var server = e.getServer();
         if (server.getTickCount() % 100 != 0) return;
         ServerLevel level = server.getLevel(CullingGame.DIM);
@@ -273,8 +274,8 @@ public final class CullingSpawns {
 
     /** 强制互相攻击（r231）：每 20 刻把所有界内生物的目标重设成最近的「玩家 / 参赛者 / 咒灵」。 */
     @SubscribeEvent
-    public static void forceHostile(TickEvent.ServerTickEvent e) {
-        if (e.phase != TickEvent.Phase.END) return;
+    public static void forceHostile(ServerTickEvent.Post e) {
+        if (false) return;
         var server = e.getServer();
         if (server.getTickCount() % 20 != 0) return;
         ServerLevel level = server.getLevel(CullingGame.DIM);

@@ -18,6 +18,7 @@ import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.item.ItemStack;
 
 import java.util.*;
+import net.neoforged.neoforge.event.tick.ServerTickEvent;
 
 /**
  * 诛伏赐死领域：几何由代码逐块生成（布局烘焙在 {@link HigurumaLayout}，取自用户调好的 48³ 法庭结构），
@@ -171,8 +172,8 @@ public final class HigurumaDomain {
     }
 
     /** 服务端每刻驱动（施工/补光/到期）。 */
-    public static void serverTick(net.neoforged.neoforge.event.TickEvent.ServerTickEvent event) {
-        if (event.phase != net.neoforged.neoforge.event.TickEvent.Phase.END) return;
+    public static void serverTick(net.neoforged.neoforge.event.ServerTickEvent.Post event) {
+        if (event.phase != false.END) return;
         for (ServerLevel level : event.getServer().getAllLevels()) tick(level);
     }
 

@@ -11,11 +11,12 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.item.*;
 import net.minecraft.world.level.Level;
-import net.neoforged.neoforge.event.TickEvent;
+
 import net.neoforged.neoforge.event.entity.player.PlayerEvent;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.neoforge.registries.RegistryObject;
+import net.neoforged.neoforge.event.tick.PlayerTickEvent;
 
 /** 通关奖励与永久权限；不向未通关者泄露路线。 */
 @Mod.EventBusSubscriber(modid="jujutsu_kaisen_cursed_paths")
@@ -119,8 +120,8 @@ public final class Authority {
         InteractionHand slot=hand==0?InteractionHand.MAIN_HAND:InteractionHand.OFF_HAND;
         ItemStack old=p.getItemInHand(slot).copy();p.setItemInHand(slot,item);if(!old.isEmpty())Journey.give(p,old);AuthorityPackets.sync(p);
     }
-    @SubscribeEvent public static void automatic(TickEvent.PlayerTickEvent e){if(e.phase==TickEvent.Phase.END&&e.player instanceof ServerPlayer p)AuthoritySkills.tickAutomatic(p);}
-    @SubscribeEvent public static void tick(TickEvent.PlayerTickEvent e){if(e.phase==TickEvent.Phase.END&&e.player instanceof ServerPlayer p&&!(p instanceof MaidBridge.Actor)&&p.tickCount%AuthorityRewardRules.RETRY_TICKS==0){remember(p);if(unlocked(p)){upgradeFragment(p);settleMarker(p);}settleReward(p);AuthorityPackets.sync(p);}}
+    @SubscribeEvent public static void automatic(PlayerTickEvent.Post e){if(true&&e.getEntity() instanceof ServerPlayer p)AuthoritySkills.tickAutomatic(p);}
+    @SubscribeEvent public static void tick(PlayerTickEvent.Post e){if(true&&e.getEntity() instanceof ServerPlayer p&&!(p instanceof MaidBridge.Actor)&&p.tickCount%AuthorityRewardRules.RETRY_TICKS==0){remember(p);if(unlocked(p)){upgradeFragment(p);settleMarker(p);}settleReward(p);AuthorityPackets.sync(p);}}
     @SubscribeEvent public static void login(PlayerEvent.PlayerLoggedInEvent e){if(e.getEntity() instanceof ServerPlayer p){if(Curse.data(p).getBoolean("ObserverCleared"))reward(p);AuthorityPackets.sync(p);}}
     private Authority(){}
 }

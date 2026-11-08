@@ -11,6 +11,7 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.neoforged.neoforge.registries.ForgeRegistries;
+import net.neoforged.neoforge.event.tick.ServerTickEvent;
 
 /** 戴上「法轮」之后的**自身适应**：与魔虚罗同款的法轮机制，但直接以"整只生物"为单位。
  *
@@ -300,8 +301,8 @@ public final class MahoragaAdaptStore {
     }
     // ------------------------------------------------------------ 事件
     /** 戴法轮的玩家每秒把进度同步到头顶法轮（客户端只用它画模型）。 */
-    @net.neoforged.bus.api.SubscribeEvent public static void tick(net.neoforged.neoforge.event.TickEvent.ServerTickEvent event){
-        if(event.phase!=net.neoforged.neoforge.event.TickEvent.Phase.END)return;
+    @net.neoforged.bus.api.SubscribeEvent public static void tick(net.neoforged.neoforge.event.ServerTickEvent.Post event){
+        if(event.phase!=false.END)return;
         var server=event.getServer();if(server==null)return;
         if(server.getTickCount()%20!=0)return;
         for(ServerPlayer p:server.getPlayerList().getPlayers()){

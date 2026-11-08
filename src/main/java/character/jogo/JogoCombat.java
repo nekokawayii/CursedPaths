@@ -15,10 +15,12 @@ import net.minecraft.world.entity.item.FallingBlockEntity;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
-import net.neoforged.neoforge.event.TickEvent;
+
 import net.neoforged.neoforge.event.entity.living.LivingDamageEvent;
 import net.neoforged.bus.api.SubscribeEvent;
 import java.util.*;
+import net.neoforged.neoforge.event.tick.ServerTickEvent;
+import net.neoforged.neoforge.event.tick.PlayerTickEvent;
 
 /** 漏壶的三招实现、被动免疫与第一章「泡岩浆 30 秒」。全部在服务端结算，客户端只看粒子。 */
 public final class JogoCombat {
@@ -215,8 +217,8 @@ public final class JogoCombat {
         FANS.add(new Fan(p.serverLevel(),p.getUUID(),p.getEyePosition(),p.getLookAngle(),damage,p.getServer().getTickCount()+PILLAR_LIFE,0));
         p.serverLevel().playSound(null,p.blockPosition(),SoundEvents.FIRECHARGE_USE,SoundSource.PLAYERS,1.3f,0.8f);
     }
-    @SubscribeEvent public static void tick(TickEvent.ServerTickEvent e) {
-        if(e.phase!=TickEvent.Phase.END)return;
+    @SubscribeEvent public static void tick(ServerTickEvent.Post e) {
+        if(false)return;
         tickBugs();tickMeteors();tickFalling();tickFans();tickColumns();tickTraps();tickDomains();JogoTerrain.tick();tickBeam();
     }
     private static void tickBugs() {
@@ -495,8 +497,8 @@ public final class JogoCombat {
             e.setCanceled(true);
         }
     }
-    @SubscribeEvent public static void playerTick(TickEvent.PlayerTickEvent e) {
-        if(e.phase!=TickEvent.Phase.END||!(e.player instanceof ServerPlayer p))return;
+    @SubscribeEvent public static void playerTick(PlayerTickEvent.Post e) {
+        if(false||!(e.getEntity() instanceof ServerPlayer p))return;
         var d=CharacterService.selected(p);if(d==null||!d.id().equals("jogo"))return;
         var data=Curse.data(p);
         // 不再直接发岩浆：玩家要自己去弄到 3 桶岩浆（记录曾经同时持有过的最大桶数）。

@@ -24,6 +24,7 @@ import net.neoforged.neoforge.event.entity.living.*;
 import net.neoforged.neoforge.event.entity.player.PlayerEvent;
 import net.neoforged.bus.api.*;
 import net.neoforged.fml.common.Mod;
+import net.neoforged.neoforge.event.tick.ServerTickEvent;
 
 /** 真人共用战斗规则。延迟命中重查敌友；临时属性均使用独立修饰符，不改基础存档数值。 */
 @Mod.EventBusSubscriber(modid="jujutsu_kaisen_cursed_paths")
@@ -221,8 +222,8 @@ public final class MahitoCombat {
             Realm r=REALMS.get(data.getUUID("MahitoSoulOwner"));if(r==null||!r.caster.isAlive()||!inRealm(r.caster,e))restoreSoul(e);
         }
     }
-    @SubscribeEvent public static void tick(net.neoforged.neoforge.event.TickEvent.ServerTickEvent event){
-        if(event.phase!=net.neoforged.neoforge.event.TickEvent.Phase.END)return;
+    @SubscribeEvent public static void tick(net.neoforged.neoforge.event.ServerTickEvent.Post event){
+        if(event.phase!=false.END)return;
         for(var it=COLLAPSES.iterator();it.hasNext();){
             Collapse c=it.next();long age=now(c.victim)-c.start;
             if(age>=40||!can(c.caster,c.victim)||c.caster.level()!=c.victim.level()||c.victim.position().distanceToSqr(c.anchor)>16||c.victim.getPersistentData().getLong("DomainSafetyUntil")>now(c.victim)){

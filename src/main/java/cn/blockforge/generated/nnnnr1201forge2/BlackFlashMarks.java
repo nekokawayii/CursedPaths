@@ -11,9 +11,10 @@ import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.neoforge.client.event.RenderLevelStageEvent;
-import net.neoforged.neoforge.event.TickEvent;
+
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.Mod;
+import net.neoforged.neoforge.event.tick.ServerTickEvent;
 
 /** 咒力附拳期间的黑闪标记（用户要求）：
  *  <ul>
@@ -55,8 +56,8 @@ public final class BlackFlashMarks {
     // ------------------------------------------------------------------ 服务端
     /** 独立的服务端每刻钩子：**每刻都跑**，内部再按 10 刻（0.5 秒）掷骰。
      *  （之前挂在附拳每 15 刻的广播循环里，和 10 刻取最小公倍数 → 实际 30 刻才掷一次，看起来像只出现一次。） */
-    @SubscribeEvent public static void serverTick(TickEvent.ServerTickEvent e){
-        if(e.phase!=TickEvent.Phase.END)return;
+    @SubscribeEvent public static void serverTick(ServerTickEvent.Post e){
+        if(false)return;
         var server=net.neoforged.neoforge.server.ServerLifecycleHooks.getCurrentServer();
         if(server==null)return;
         for(ServerPlayer p:server.getPlayerList().getPlayers())tick(p);

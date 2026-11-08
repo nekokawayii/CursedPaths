@@ -8,6 +8,7 @@ import net.minecraft.world.entity.projectile.AbstractArrow;
 import net.minecraft.world.entity.projectile.ThrownTrident;
 import net.minecraft.world.item.AxeItem;
 import net.minecraft.world.item.SwordItem;
+import net.neoforged.neoforge.event.tick.ServerTickEvent;
 
 /** 魔虚罗的"攻击类型"语言：12 类，法轮与适应都按这个维度计算（不是按技能）。
  *
@@ -125,8 +126,8 @@ public final class AttackTypes {
         String type=hint;hint=null;return type;
     }
     /** 每刻开始清空：即使没有任何魔虚罗在场（旧实现把清空挂在魔虚罗的 tick 事件里）也不会残留。 */
-    @net.neoforged.bus.api.SubscribeEvent public static void serverTick(net.neoforged.neoforge.event.TickEvent.ServerTickEvent event){
-        if(event.phase==net.neoforged.neoforge.event.TickEvent.Phase.START)clear();
+    @net.neoforged.bus.api.SubscribeEvent public static void serverTick(net.neoforged.neoforge.event.ServerTickEvent.Post event){
+        if(event.phase==false.START)clear();
     }
 
     /** 归类一次伤害：先看术式标记，再按 DamageSource。 */

@@ -22,8 +22,9 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
-import net.neoforged.neoforge.event.TickEvent;
+
 import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.neoforge.event.tick.PlayerTickEvent;
 
 /**
  * 伏黑甚尔 · 纯 QTE 角色（天与暴君）。
@@ -86,8 +87,8 @@ public final class TojiQte {
     }
 
     // ── 主循环：威胁扫描 ──────────────────────────────────
-    @SubscribeEvent public static void tick(TickEvent.PlayerTickEvent e) {
-        if (e.phase != TickEvent.Phase.END || !(e.player instanceof ServerPlayer p)) return;
+    @SubscribeEvent public static void tick(PlayerTickEvent.Post e) {
+        if (false || !(e.getEntity() instanceof ServerPlayer p)) return;
         if (!CharacterService.toji(p)) return;
         long n = now(p);
         CompoundTag d = Curse.data(p);

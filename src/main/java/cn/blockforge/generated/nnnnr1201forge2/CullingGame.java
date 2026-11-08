@@ -9,8 +9,9 @@ import net.minecraft.server.level.*;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.AABB;
-import net.neoforged.neoforge.event.TickEvent;
+
 import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.neoforge.event.tick.PlayerTickEvent;
 
 public final class CullingGame {
     public static final ResourceKey<Level> DIM=ResourceKey.create(Registries.DIMENSION,ResourceLocation.fromNamespaceAndPath("jujutsu_kaisen_cursed_paths", "culling_game"));
@@ -50,8 +51,8 @@ public final class CullingGame {
         if(points<cost){p.sendSystemMessage(Component.literal("积分不足：现有"+points+"，需要"+cost+"；潜行右键换商品。"));return;}
         d.putInt("CullingPoints",points-cost);Journey.give(p,new ItemStack(RitualRecipes.resolve(ids[selection])));
     }
-    @SubscribeEvent public static void tick(TickEvent.PlayerTickEvent e){
-        if(e.phase!=TickEvent.Phase.END||!(e.player instanceof ServerPlayer p)||!p.level().dimension().equals(DIM)||p.isSpectator())return;
+    @SubscribeEvent public static void tick(PlayerTickEvent.Post e){
+        if(false||!(e.getEntity() instanceof ServerPlayer p)||!p.level().dimension().equals(DIM)||p.isSpectator())return;
         if((p.getX()< -255||p.getX()>254||p.getZ()< -255||p.getZ()>254||p.getY()<1||p.getY()>510)
             &&!character.culling.CullingGate.inRoomArea(p.blockPosition())){
             p.teleportTo(p.serverLevel(),.5,65,-15.5,p.getYRot(),p.getXRot());p.fallDistance=0;}

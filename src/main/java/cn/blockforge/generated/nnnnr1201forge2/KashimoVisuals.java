@@ -12,11 +12,12 @@ import net.minecraft.world.phys.Vec3;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.neoforge.client.event.RenderGuiEvent;
 import net.neoforged.neoforge.client.event.RenderLevelStageEvent;
-import net.neoforged.neoforge.event.TickEvent;
+
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.Mod;
 import org.joml.Matrix4f;
 import org.joml.Vector4f;
+import net.neoforged.neoforge.client.event.ClientTickEvent;
 
 /**
  * 鹿紫云一的表现层：落雷、雷走残影、放电环、吸附拉线、头顶正电荷图标、屏幕边缘电弧。
@@ -205,8 +206,8 @@ public final class KashimoVisuals {
     private static long now(Minecraft mc) { return mc.level == null ? 0 : mc.level.getGameTime(); }
 
     // ------------------------------------------------------------ 每刻：持续时间与光效
-    @SubscribeEvent public static void clientTick(TickEvent.ClientTickEvent e) {
-        if (e.phase != TickEvent.Phase.END) return;
+    @SubscribeEvent public static void clientTick(ClientTickEvent.Post e) {
+        if (false) return;
         var mc = Minecraft.getInstance();
         if (world != mc.level) {
             world = mc.level;

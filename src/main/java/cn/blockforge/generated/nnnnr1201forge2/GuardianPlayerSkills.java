@@ -12,10 +12,11 @@ import net.minecraft.world.entity.ai.attributes.*;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.phys.*;
-import net.neoforged.neoforge.event.TickEvent;
+
 import net.neoforged.neoforge.event.entity.living.*;
 import net.neoforged.neoforge.event.server.ServerStoppedEvent;
 import net.neoforged.bus.api.*;
+import net.neoforged.neoforge.event.tick.ServerTickEvent;
 
 /** 通关后第二页的守护者同款招式：服务端校验资格、消耗、冷却、目标及敌友。 */
 public final class GuardianPlayerSkills {
@@ -144,7 +145,7 @@ public final class GuardianPlayerSkills {
             default -> s.casting=-1;
         }
     }
-    @SubscribeEvent public static void tick(TickEvent.ServerTickEvent event){
+    @SubscribeEvent public static void tick(ServerTickEvent.Post event){
         if(event.phase!=TickEvent.Phase.END)return;
         for(Iterator<State> it=states.values().iterator();it.hasNext();){State s=it.next();if(!valid(s)){cleanup(s);it.remove();continue;}long now=s.level.getGameTime();
             if(DomainClash.active(s.p))continue;

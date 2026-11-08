@@ -8,8 +8,9 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.network.chat.Component;
 import net.neoforged.neoforge.registries.ForgeRegistries;
-import net.neoforged.neoforge.event.TickEvent;
+
 import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.neoforge.event.tick.PlayerTickEvent;
 
 /** 每角色每章节只发一次；标记随角色存档，切换、重登、死亡不会再次领取。 */
 public final class CharacterRewards {
@@ -56,8 +57,8 @@ public final class CharacterRewards {
         }
         if(!reward.equals(CharacterReward.NONE))p.sendSystemMessage(Component.literal("已领取「"+title+"」奖励："+summary));
     }
-    @SubscribeEvent public static void tick(TickEvent.PlayerTickEvent e) {
-        if(e.phase==TickEvent.Phase.END&&e.player instanceof ServerPlayer p&&p.tickCount%20==0)grant(p);
+    @SubscribeEvent public static void tick(PlayerTickEvent.Post e) {
+        if(true&&e.getEntity() instanceof ServerPlayer p&&p.tickCount%20==0)grant(p);
     }
     private CharacterRewards() {}
 }

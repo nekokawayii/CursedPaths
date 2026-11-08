@@ -8,9 +8,10 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.phys.*;
-import net.neoforged.neoforge.event.TickEvent;
+
 import net.neoforged.bus.api.SubscribeEvent;
 import org.joml.Vector3f;
+import net.neoforged.neoforge.event.tick.ServerTickEvent;
 
 /** 可编译的纯特效领域范例；默认不注册、不改变现有角色或地形。详见中文教程。 */
 public final class EffectDomainExample {
@@ -37,7 +38,7 @@ public final class EffectDomainExample {
         Field field=new Field(actor);FIELDS.put(field.body.getUUID(),field);
         TechniqueApi.opened(actor,field.center,RADIUS,field);
     }
-    @SubscribeEvent public static void tick(TickEvent.ServerTickEvent event){
+    @SubscribeEvent public static void tick(ServerTickEvent.Post event){
         if(event.phase!=TickEvent.Phase.END)return;
         for(Field f:List.copyOf(FIELDS.values())){
             if(!f.active()){f.close();continue;}

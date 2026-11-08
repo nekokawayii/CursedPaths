@@ -5,11 +5,12 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.phys.Vec3;
-import net.neoforged.neoforge.event.TickEvent;
+
 import net.neoforged.neoforge.event.entity.EntityTeleportEvent;
 import net.neoforged.neoforge.event.server.ServerStoppedEvent;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.Mod;
+import net.neoforged.neoforge.event.tick.ServerTickEvent;
 
 /** 舌头是真正的双向定身，不只给缓慢效果；结束、死亡、收回时立即释放。 */
 @Mod.EventBusSubscriber(modid="jujutsu_kaisen_cursed_paths")
@@ -20,7 +21,7 @@ public final class ShadowBindings {
     public static boolean boundBy(LivingEntity target,ShadowEntity frog){Hold h=holds.get(frog.getUUID());return h!=null&&h.target==target;}
     public static void release(ShadowEntity frog){holds.remove(frog.getUUID());}
     private static void pin(LivingEntity e,Vec3 at){e.setDeltaMovement(Vec3.ZERO);e.fallDistance=0;if(e instanceof Mob mob)mob.getNavigation().stop();if(e.position().distanceToSqr(at)>.001){if(e instanceof ServerPlayer p)p.connection.teleport(at.x,at.y,at.z,p.getYRot(),p.getXRot());else e.teleportTo(at.x,at.y,at.z);}e.hurtMarked=true;}
-    @SubscribeEvent public static void tick(TickEvent.ServerTickEvent event){
+    @SubscribeEvent public static void tick(ServerTickEvent.Post event){
         if(event.phase!=TickEvent.Phase.END)return;
         for(var it=holds.values().iterator();it.hasNext();){Hold h=it.next();if(!h.frog.isAlive()||h.frog.isRemoved()||!h.target.isAlive()||h.frog.level()!=h.target.level()||h.frog.level().getGameTime()>=h.end||!h.frog.validTarget(h.target)||h.frog.distanceToSqr(h.target)>16*16){it.remove();continue;}pin(h.frog,h.frogAt);pin(h.target,h.targetAt);}
     }

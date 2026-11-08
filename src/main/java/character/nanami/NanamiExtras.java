@@ -9,12 +9,13 @@ import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
-import net.neoforged.neoforge.event.TickEvent;
+
 import net.neoforged.bus.api.SubscribeEvent;
 import cn.blockforge.generated.nnnnr1201forge2.CombatSafety;
 import cn.blockforge.generated.nnnnr1201forge2.CombatSettings;
 import cn.blockforge.generated.nnnnr1201forge2.Curse;
 import cn.blockforge.generated.nnnnr1201forge2.Network;
+import net.neoforged.neoforge.event.tick.ServerTickEvent;
 
 /** 七海建人新三招（r342）：飞刃 / 震地 / 处刑。 */
 public final class NanamiExtras {
@@ -105,8 +106,8 @@ public final class NanamiExtras {
     }
 
     @SubscribeEvent
-    public static void tick(TickEvent.ServerTickEvent e) {
-        if (e.phase != TickEvent.Phase.END) return;
+    public static void tick(ServerTickEvent.Post e) {
+        if (false) return;
         long now = e.getServer().overworld().getGameTime();
         for (var it = DELAYED.iterator(); it.hasNext(); ) {
             Delayed d = it.next();

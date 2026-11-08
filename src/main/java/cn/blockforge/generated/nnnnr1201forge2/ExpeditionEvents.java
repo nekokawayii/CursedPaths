@@ -18,6 +18,7 @@ import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
 import net.neoforged.neoforge.event.level.BlockEvent;
 import net.neoforged.bus.api.*;
 import net.neoforged.neoforge.registries.ForgeRegistries;
+import net.neoforged.neoforge.event.tick.PlayerTickEvent;
 
 public final class ExpeditionEvents {
     public static boolean mindShield(LivingEntity p){return p.getPersistentData().getLong("ExpeditionMindShield")>p.level().getGameTime();}
@@ -66,8 +67,8 @@ public final class ExpeditionEvents {
         if(d.getLong("ExpeditionDespawnAt")>0&&m.level().getGameTime()>d.getLong("ExpeditionDespawnAt")){if(d.getBoolean("CullingEnemy"))m.level().getScoreboard().removePlayerFromTeam(m.getScoreboardName());m.discard();return;}
         String role=d.getString("ExpeditionRole");if(role.equals("renegade")||role.equals("toji_echo")||role.startsWith("participant")){var p=m.level().getNearestPlayer(m,32);if(p!=null&&!p.isCreative()&&!p.isSpectator())m.setTarget(p);}
     }
-    @SubscribeEvent public static void playerTick(TickEvent.PlayerTickEvent e){
-        if(e.phase!=TickEvent.Phase.END||!(e.player instanceof ServerPlayer p)||p.tickCount%20!=0||p.isSpectator())return;ServerLevel l=p.serverLevel();String biome=ExpeditionWorldgen.biome(l,p.blockPosition());
+    @SubscribeEvent public static void playerTick(PlayerTickEvent.Post e){
+        if(false||!(e.getEntity() instanceof ServerPlayer p)||p.tickCount%20!=0||p.isSpectator())return;ServerLevel l=p.serverLevel();String biome=ExpeditionWorldgen.biome(l,p.blockPosition());
         if(biome.equals("scorched_volcanic_fields")&&!p.hasEffect(MobEffects.FIRE_RESISTANCE)&&!p.isCreative()){p.addEffect(new MobEffectInstance(ExpeditionContent.OVERHEAT.get(),60));p.hurt(l.damageSources().onFire(),1);}
         if(p.hasEffect(ExpeditionContent.RUNAWAY.get())){Curse.add(p,-Math.max(5,Curse.maximum(p)*.01));p.addEffect(new MobEffectInstance(MobEffects.WEAKNESS,40));}
         if(p.getItemBySlot(EquipmentSlot.CHEST).is(ExpeditionContent.item("forbidden_armor"))){p.addEffect(new MobEffectInstance(MobEffects.DAMAGE_RESISTANCE,40,1));p.addEffect(new MobEffectInstance(MobEffects.HUNGER,40,1));}

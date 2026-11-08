@@ -7,11 +7,12 @@ import net.minecraft.server.level.*;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.phys.*;
-import net.neoforged.neoforge.event.TickEvent;
+
 import net.neoforged.neoforge.event.entity.living.LivingDamageEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerEvent;
 import net.neoforged.neoforge.event.server.ServerStoppedEvent;
 import net.neoforged.bus.api.*;
+import net.neoforged.neoforge.event.tick.ServerTickEvent;
 
 public final class SukunaBranches {
     private record Line(Vec3 from,Vec3 to){}
@@ -112,8 +113,8 @@ public final class SukunaBranches {
         if(!e.getSource().is(net.minecraft.world.damagesource.DamageTypes.PLAYER_ATTACK)&&!((MaidBridge.isCaster(p)||p instanceof NpcBridge.NpcActor)&&e.getSource().is(net.minecraft.world.damagesource.DamageTypes.MOB_ATTACK)))return;
         Curse.data(p).putBoolean("MultiArmed",false);if(multis.size()<1024)multis.add(new Multi(p,p.serverLevel(),e.getEntity().getUUID(),p.level().getGameTime()+1,BranchRules.cuts(stage(p))));
     }
-    @SubscribeEvent public static void tick(TickEvent.ServerTickEvent e){
-        if(e.phase!=TickEvent.Phase.END)return;
+    @SubscribeEvent public static void tick(ServerTickEvent.Post e){
+        if(false)return;
         for(Web w:List.copyOf(webs)){
             if(!valid(w.owner,w.level)||DomainClash.active(w.owner)){webs.remove(w);continue;}if(w.level.getGameTime()<w.due)continue;webs.remove(w);
             List<LivingEntity> victims=Skills.targets(w.level,w.owner,w.center,w.radius+3).stream().filter(t->{Vec3 d=t.position().subtract(w.center);return d.x*d.x+d.z*d.z<=w.radius*w.radius&&Math.abs(d.y)<24;}).toList();

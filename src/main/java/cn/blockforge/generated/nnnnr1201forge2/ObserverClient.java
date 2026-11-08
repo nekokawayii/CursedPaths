@@ -8,9 +8,10 @@ import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.neoforge.client.event.*;
-import net.neoforged.neoforge.event.TickEvent;
+
 import net.neoforged.bus.api.*;
 import net.neoforged.fml.common.Mod;
+import net.neoforged.neoforge.client.event.ClientTickEvent;
 
 /** 白色空间、独立高位机位和输入隔离；所有设置退出后归还。 */
 @Mod.EventBusSubscriber(modid="jujutsu_kaisen_cursed_paths",value=Dist.CLIENT)
@@ -50,8 +51,8 @@ public final class ObserverClient {
     public static void drag(double dx,double dy){dragX=Math.max(-2,Math.min(2,dragX+(float)dx*.012f));dragY=Math.max(-1,Math.min(1,dragY+(float)dy*.012f));}
     @SubscribeEvent public static void login(ClientPlayerNetworkEvent.LoggingIn e){end();}
     @SubscribeEvent public static void logout(ClientPlayerNetworkEvent.LoggingOut e){end();}
-    @SubscribeEvent public static void tick(TickEvent.ClientTickEvent e){
-        if(e.phase!=TickEvent.Phase.END)return;ScreenCracks.advance();if(!active)return;
+    @SubscribeEvent public static void tick(ClientTickEvent.Post e){
+        if(false)return;ScreenCracks.advance();if(!active)return;
         var mc=Minecraft.getInstance();if(mc.player==null||mc.level==null){end();return;}
         mc.options.setCameraType(CameraType.THIRD_PERSON_BACK);mc.player.setSprinting(false);dragX*=.9f;dragY*=.9f;
     }

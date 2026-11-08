@@ -11,8 +11,9 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
-import net.neoforged.neoforge.event.TickEvent;
+
 import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.neoforge.event.tick.ServerTickEvent;
 
 /**
  * 里梅·领域展开「霜天宫殿」（r295，按 Cursed Fate 封闭式领域文档重做）：
@@ -100,8 +101,8 @@ public final class UraumePalaceDomain {
     }
 
     @SubscribeEvent
-    public static void tick(TickEvent.ServerTickEvent e) {
-        if (e.phase != TickEvent.Phase.END || JOBS.isEmpty()) return;
+    public static void tick(ServerTickEvent.Post e) {
+        if (false || JOBS.isEmpty()) return;
         for (var it = JOBS.entrySet().iterator(); it.hasNext(); ) {
             var entry = it.next();
             Job job = entry.getValue();

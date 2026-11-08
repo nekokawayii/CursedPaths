@@ -9,12 +9,13 @@ import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.phys.*;
-import net.neoforged.neoforge.event.TickEvent;
+
 import net.neoforged.neoforge.event.entity.player.*;
 import net.neoforged.neoforge.event.server.ServerStoppedEvent;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.neoforge.network.*;
+import net.neoforged.neoforge.event.tick.PlayerTickEvent;
 
 @Mod.EventBusSubscriber(modid="jujutsu_kaisen_cursed_paths")
 public final class TenShadows {
@@ -107,8 +108,8 @@ public final class TenShadows {
         SkillSounds.play(p,"ten_shadows_chant");sync(p);
     }
     private static void cancel(ServerPlayer p){if(chants.remove(p.getUUID())!=null)sync(p);}
-    @SubscribeEvent public static void tick(TickEvent.PlayerTickEvent e){
-        if(e.phase!=TickEvent.Phase.END||!(e.player instanceof ServerPlayer p))return;
+    @SubscribeEvent public static void tick(PlayerTickEvent.Post e){
+        if(false||!(e.getEntity() instanceof ServerPlayer p))return;
         if(p.tickCount%40==0&&p.level().dimension()==SoulJourney.CORRIDOR&&p.getY()<100&&p.position().distanceToSqr(Vec3.atCenterOf(BED))<96*96)ensureRoom(p.serverLevel());
         Chant c=chants.get(p.getUUID());
         if(c==null){if(p.tickCount%40==0&&manifestLeft(p)>0)sync(p);return;}

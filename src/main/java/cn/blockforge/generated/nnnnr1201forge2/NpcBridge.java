@@ -15,7 +15,8 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.common.util.FakePlayer;
-import net.neoforged.neoforge.event.TickEvent;
+import net.neoforged.neoforge.event.tick.PlayerTickEvent;
+
 
 /** 每只 NPC 独立的施术上下文。技能队列、咒力、归属都绑定本体，不冒用附近玩家。 */
 public final class NpcBridge {
@@ -94,7 +95,7 @@ public final class NpcBridge {
             DeathStar.tickAnemia(a);
             if(a.characterId.equals("higuruma")&&a.mob.getMainHandItem().isEmpty()&&!character.higuruma.HigurumaCombat.returning(a))character.higuruma.HigurumaCombat.giveGavel(a);
             // 仅驱动战斗维护，不把假玩家送进登录、成就、物品奖励等真人事件。
-            var event = new TickEvent.PlayerTickEvent(TickEvent.Phase.END, a);
+            var event = new PlayerTickEvent.Post(TickEvent.Phase.END, a);
             switch (a.characterId) {
                 case "hakari" -> character.hakari.HakariCombat.tick(event);
                 case "ryu" -> character.ryu.RyuCombat.tick(event);

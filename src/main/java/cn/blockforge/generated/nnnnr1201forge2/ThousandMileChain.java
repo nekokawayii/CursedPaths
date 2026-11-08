@@ -17,7 +17,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.phys.*;
-import net.neoforged.neoforge.event.TickEvent;
+
 import net.neoforged.neoforge.event.entity.EntityTeleportEvent;
 import net.neoforged.neoforge.event.entity.EntityJoinLevelEvent;
 import net.neoforged.neoforge.event.entity.living.LivingEvent;
@@ -30,6 +30,7 @@ import net.neoforged.neoforge.event.entity.player.*;
 import net.neoforged.neoforge.event.server.ServerStoppedEvent;
 import net.neoforged.bus.api.*;
 import net.neoforged.neoforge.network.*;
+import net.neoforged.neoforge.event.tick.ServerTickEvent;
 
 /** 每人仅一个会话、一个物理首端；延伸分段查询已加载区块，不生成成千上万的链节实体。 */
 public final class ThousandMileChain {
@@ -177,8 +178,8 @@ public final class ThousandMileChain {
             &&ThousandMileChainItem.isChain(stack)&&stack.getCount()==1&&stack.hasTag()&&stack.getTag().hasUUID("ThousandMileId")
             &&s.itemId.equals(stack.getTag().getUUID("ThousandMileId"))&&!PrisonSystem.locked(s.owner);
     }
-    @SubscribeEvent public static void tick(TickEvent.ServerTickEvent e) {
-        if(e.phase!=TickEvent.Phase.END)return;
+    @SubscribeEvent public static void tick(ServerTickEvent.Post e) {
+        if(false)return;
         for(Session s:List.copyOf(SESSIONS.values())) {
             if(!valid(s)){finish(s);continue;}
             if(s.expiresAt>0&&s.level.getGameTime()>=s.expiresAt){recall(s);continue;}

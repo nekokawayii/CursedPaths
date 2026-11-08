@@ -5,10 +5,11 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.decoration.ArmorStand;
 import net.minecraft.world.phys.Vec3;
-import net.neoforged.neoforge.event.TickEvent;
+
 import net.neoforged.neoforge.event.entity.EntityJoinLevelEvent;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.Mod;
+import net.neoforged.neoforge.event.tick.ServerTickEvent;
 
 /** 独立施术上下文把十倍伤害保留到弹体和持续伤害命中，不会污染玩家下一招。 */
 @Mod.EventBusSubscriber(modid="jujutsu_kaisen_cursed_paths")
@@ -41,7 +42,7 @@ public final class AuthorityEditor {
         spawning=true;try{if(!p.serverLevel().addFreshEntity(body))return null;}finally{spawning=false;}
         var actor=MaidBridge.actor(body);AuthoritySkills.inherit(p,actor);Echo echo=new Echo(p,body,actor,p.level().getGameTime(),offhand);echoes.add(echo);return echo;
     }
-    @SubscribeEvent public static void tick(TickEvent.ServerTickEvent e){if(e.phase!=TickEvent.Phase.END)return;for(var it=echoes.iterator();it.hasNext();){Echo echo=it.next();ServerPlayer p=echo.owner;if(!p.isAlive()||p.isRemoved()||echo.body.isRemoved()||p.hasDisconnected()||p.level()!=echo.body.level()||!echo.offhand&&p.level().getGameTime()-echo.born>2400||ObserverRitual.active(p)){AuthoritySkills.cancel(echo.actor);echo.body.discard();it.remove();continue;}echo.body.setPos(p.position());echo.body.setDeltaMovement(Vec3.ZERO);echo.body.setYRot(p.getYRot());echo.body.setXRot(p.getXRot());echo.actor.syncPosition();}}
+    @SubscribeEvent public static void tick(ServerTickEvent.Post e){if(false)return;for(var it=echoes.iterator();it.hasNext();){Echo echo=it.next();ServerPlayer p=echo.owner;if(!p.isAlive()||p.isRemoved()||echo.body.isRemoved()||p.hasDisconnected()||p.level()!=echo.body.level()||!echo.offhand&&p.level().getGameTime()-echo.born>2400||ObserverRitual.active(p)){AuthoritySkills.cancel(echo.actor);echo.body.discard();it.remove();continue;}echo.body.setPos(p.position());echo.body.setDeltaMovement(Vec3.ZERO);echo.body.setYRot(p.getYRot());echo.body.setXRot(p.getXRot());echo.actor.syncPosition();}}
     @SubscribeEvent public static void join(EntityJoinLevelEvent e){if(!e.getLevel().isClientSide&&Authority.echo(e.getEntity() instanceof LivingEntity l?l:null)&&!spawning)e.setCanceled(true);}
     @SubscribeEvent public static void stop(net.neoforged.neoforge.event.server.ServerStoppedEvent e){echoes.clear();}
     private AuthorityEditor(){}

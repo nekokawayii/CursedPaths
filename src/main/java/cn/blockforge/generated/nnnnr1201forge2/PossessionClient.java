@@ -3,9 +3,10 @@ package cn.blockforge.generated.nnnnr1201forge2;
 import net.minecraft.client.CameraType;
 import net.minecraft.client.Minecraft;
 import net.neoforged.api.distmarker.Dist;
-import net.neoforged.neoforge.event.TickEvent;
+
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.Mod;
+import net.neoforged.neoforge.client.event.ClientTickEvent;
 
 /** 被宿傩夺舍期间：强制第三人称（r326，事件号 798）。 */
 @Mod.EventBusSubscriber(modid = "jujutsu_kaisen_cursed_paths", value = Dist.CLIENT)
@@ -19,8 +20,8 @@ public final class PossessionClient {
     }
 
     @SubscribeEvent
-    public static void tick(TickEvent.ClientTickEvent e) {
-        if (e.phase != TickEvent.Phase.END) return;
+    public static void tick(ClientTickEvent.Post e) {
+        if (false) return;
         var mc = Minecraft.getInstance();
         if (mc.player == null || mc.options == null) return;
         boolean active = System.currentTimeMillis() < until;

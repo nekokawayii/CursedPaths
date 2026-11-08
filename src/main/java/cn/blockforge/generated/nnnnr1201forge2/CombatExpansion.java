@@ -7,11 +7,12 @@ import net.minecraft.network.protocol.game.*;
 import net.minecraft.server.level.*;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.phys.*;
-import net.neoforged.neoforge.event.TickEvent;
+
 import net.neoforged.neoforge.event.entity.living.*;
 import net.neoforged.neoforge.event.entity.player.*;
 import net.neoforged.neoforge.event.server.ServerStoppedEvent;
 import net.neoforged.bus.api.*;
+import net.neoforged.neoforge.event.tick.ServerTickEvent;
 
 /** 所有新增战斗均在服务端结算；特效只是结果，不由客户端声明命中。 */
 public final class CombatExpansion {
@@ -296,8 +297,8 @@ public final class CombatExpansion {
         Vec3 c=body.getEyePosition().add(look.scale(1.5));
         line(p,c.subtract(side.scale(3)),c.add(side.scale(3)),8,0);
     }
-    @SubscribeEvent public static void tick(TickEvent.ServerTickEvent e){
-        if(e.phase!=TickEvent.Phase.END)return;
+    @SubscribeEvent public static void tick(ServerTickEvent.Post e){
+        if(false)return;
         for(AutoCast a:List.copyOf(automatic.values())){
             if(!allowed(a.p)||a.p.level()!=a.level){automatic.remove(a.p.getUUID());TechniqueInput.cancel(a.p);continue;}
             int age=(int)(a.level.getGameTime()-a.start);TechniqueInput.receive(a.p,new TechniqueInput.Input(a.skill,1,false,false,false));

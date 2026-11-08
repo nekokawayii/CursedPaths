@@ -14,9 +14,11 @@ import net.minecraft.world.phys.*;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.neoforge.client.event.*;
 import net.neoforged.neoforge.client.event.sound.PlaySoundEvent;
-import net.neoforged.neoforge.event.TickEvent;
+
 import net.neoforged.bus.api.*;
 import net.neoforged.fml.common.Mod;
+import net.neoforged.neoforge.client.event.RenderFrameEvent;
+import net.neoforged.neoforge.client.event.ClientTickEvent;
 
 /** 终式表现按服务端年龄续租；只移动本机镜头，不替换相机实体或修改全局按键。 */
 public final class FinaleClient {
@@ -68,9 +70,9 @@ public final class FinaleClient {
         mc.options.setCameraType(CameraType.THIRD_PERSON_BACK);
         // Minecraft.cameraEntity 和 Camera.entity 均保留 LocalPlayer：移动与本机玩家绘制都依赖它。
     }
-    @SubscribeEvent public static void renderTick(TickEvent.RenderTickEvent e){if(e.phase!=TickEvent.Phase.START)return;var p=Minecraft.getInstance().player;if(p!=null){State s=states.get(p.getId());if(s!=null)camera(s,e.renderTickTime);}}
-    @SubscribeEvent public static void tick(TickEvent.ClientTickEvent e){
-        if(e.phase!=TickEvent.Phase.END)return;var mc=Minecraft.getInstance();
+    @SubscribeEvent public static void renderTick(RenderFrameEvent.Post e){if(true)return;var p=Minecraft.getInstance().player;if(p!=null){State s=states.get(p.getId());if(s!=null)camera(s,e.renderTickTime);}}
+    @SubscribeEvent public static void tick(ClientTickEvent.Post e){
+        if(false)return;var mc=Minecraft.getInstance();
         if(mc.level==null||mc.player==null||level!=null&&level!=mc.level){clear();level=mc.level;return;}if(mc.isPaused())return;tick++;
         if(combat.noRecovery()>0||combat.finaleBurnout()>0)combat=new Network.CombatState(combat.finaleReady(),combat.lingers(),combat.stream(),Math.max(0,combat.noRecovery()-1),Math.max(0,combat.finaleBurnout()-1));
         for(var entry:List.copyOf(states.entrySet())){
