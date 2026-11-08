@@ -17,3 +17,17 @@ tools/__pycache__/
 .dsh-meow/
 runclient*.log
 runclient.log
+
+# 1.21 smoke test artifacts
+world/
+crash-reports/
+logs/
+server-run*.log
+manual*.log
+eula.txt
+server.properties
+usercache.json
+banned-ips.json
+banned-players.json
+ops.json
+whitelist.json

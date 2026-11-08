@@ -15,7 +15,7 @@ import com.mojang.blaze3d.vertex.BufferBuilder;
  *
  * <p>注意总线：`RenderLevelStageEvent` 属于 **Forge 总线**，所以这个类**不能**和
  * `HakariClient`（注册 HUD 的 `RegisterGuiOverlaysEvent` 是**模组总线**）放在一起——
- * 混在一个 `@EventBusSubscriber(bus = MOD)` 类里会在启动时直接抛
+ * 混在一个 `@net.neoforged.fml.common.EventBusSubscriber(bus = MOD, value=net.neoforged.api.distmarker.Dist.CLIENT)` 类里会在启动时直接抛
  * IllegalArgumentException 把整个模组打成 broken state（r375 崩服的原因）。
  */
 @EventBusSubscriber(modid = "jujutsu_kaisen_cursed_paths", value = Dist.CLIENT)

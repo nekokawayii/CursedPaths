@@ -8,5 +8,14 @@ public final class CompatClient {
     public static void runWhenClient(Runnable action) {
         if (FMLEnvironment.dist == Dist.CLIENT) action.run();
     }
+    /** 反射打开客户端界面：调用方字节码里不能直接出现客户端类，否则服务端注册时会解析到 Screen。 */
+    public static void openScreenReflect(String className) {
+        if (FMLEnvironment.dist != Dist.CLIENT) return;
+        try {
+            Class.forName(className).getMethod("open").invoke(null);
+        } catch (Throwable t) {
+            com.mojang.logging.LogUtils.getLogger().warn("客户端界面打开失败：{}", className, t);
+        }
+    }
     private CompatClient() { }
 }
