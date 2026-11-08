@@ -70,7 +70,7 @@ public final class ExpeditionContent {
     private static Item makeItem(String id){
         if(id.equals("soul_splitter"))return new SoulDevourerItem();
         if(id.equals("thousand_mile_chain"))return new ThousandMileChainItem();
-        if(id.equals("blood_blade")||id.equals("alloy_sword"))return new SwordItem(Tiers.DIAMOND,id.equals("blood_blade")?6:4,-2.4f,new Item.Properties());
+        if(id.equals("blood_blade")||id.equals("alloy_sword"))return new CompatSwordItem(Tiers.DIAMOND,id.equals("blood_blade")?6:4,-2.4f,new Item.Properties());
         if(id.equals("frame_boots"))return new ExpeditionArmorItem(id,ArmorMaterials.DIAMOND,ArmorItem.Type.BOOTS,new Item.Properties());
         if(id.equals("blood_armor")||id.equals("alloy_chestplate")||id.equals("forbidden_armor"))return new ExpeditionArmorItem(id,ArmorMaterials.NETHERITE,ArmorItem.Type.CHESTPLATE,new Item.Properties().fireResistant());
         return new ExpeditionItem(id);
