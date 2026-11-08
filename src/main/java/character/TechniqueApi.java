@@ -23,7 +23,7 @@ public final class TechniqueApi {
         for(var ticker:TICKS.getOrDefault(definition.id(),java.util.List.of()))ticker.accept(SkillCaster.of(actor));
     }
     @net.neoforged.bus.api.SubscribeEvent
-    public static void playerTick(net.neoforged.neoforge.event.PlayerTickEvent.Post event){
+    public static void playerTick(net.neoforged.neoforge.event.tick.PlayerTickEvent.Post.Post event){
         if(event.phase==false.END&&event.getEntity() instanceof ServerPlayer p
             &&!(p instanceof net.neoforged.neoforge.common.util.FakePlayer))tick(p);
     }

@@ -35,6 +35,7 @@ import net.neoforged.neoforge.event.entity.player.AttackEntityEvent;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.neoforge.event.tick.ServerTickEvent;
 import net.neoforged.neoforge.event.tick.PlayerTickEvent;
+import net.minecraft.core.Holder;
 
 /**
  * 鹿紫云一 · 幻兽琥珀：电荷、必中落雷、终奥，以及十招轮盘技能。
@@ -708,7 +709,7 @@ public final class KashimoCombat {
     }
 
     /** 只在数值变化时改修饰（每刻调用也安全）。amount = 0 表示移除。 */
-    private static void setModifier(ServerPlayer p, Attribute attribute, UUID id, String name, double amount) {
+    private static void setModifier(ServerPlayer p, Holder<Attribute> attribute, UUID id, String name, double amount) {
         AttributeInstance instance = p.getAttribute(attribute);
         if (instance == null) return;
         AttributeModifier current = instance.getModifier(id);

@@ -172,7 +172,7 @@ public final class HigurumaDomain {
     }
 
     /** 服务端每刻驱动（施工/补光/到期）。 */
-    public static void serverTick(net.neoforged.neoforge.event.ServerTickEvent.Post event) {
+    public static void serverTick(net.neoforged.neoforge.event.tick.ServerTickEvent.Post.Post event) {
         if (event.phase != false.END) return;
         for (ServerLevel level : event.getServer().getAllLevels()) tick(level);
     }

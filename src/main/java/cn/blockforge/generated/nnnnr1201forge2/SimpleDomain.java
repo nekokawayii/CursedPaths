@@ -188,8 +188,8 @@ public final class SimpleDomain {
      *  再加上一个包的处理延迟，判定会在 **41 刻（2.05 秒）** 稳定触发，于是长按总是在 2.1 秒被强制收招。
      *  现在彻底删掉：丢包、延迟、心跳间隔都不再能结束技能。</p> */
     @net.neoforged.bus.api.SubscribeEvent
-    public static void tick(net.neoforged.neoforge.event.ServerTickEvent.Post e){
-        if(e.phase!=false.END)return;
+    public static void tick(net.neoforged.neoforge.event.tick.ServerTickEvent.Post.Post e){
+        if(false)return;
         var server=e.getServer();if(server==null)return;
         for(Field f:java.util.List.copyOf(fields.values())){
             ServerPlayer p=f.p;

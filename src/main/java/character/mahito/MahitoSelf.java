@@ -17,6 +17,7 @@ import net.minecraft.world.phys.Vec3;
 import java.util.Comparator;
 import java.util.UUID;
 import net.neoforged.neoforge.event.tick.ServerTickEvent;
+import net.minecraft.core.Holder;
 
 /** 无为转变的「自我改变」与贮存轮盘的辅助功能：治疗 / 爆裂 / 遍杀即灵体 / 肢体。 */
 public final class MahitoSelf {
@@ -111,7 +112,7 @@ public final class MahitoSelf {
             .withStyle(ChatFormatting.DARK_PURPLE));
     }
 
-    private static void apply(ServerPlayer p, net.minecraft.world.entity.ai.attributes.Attribute attr,
+    private static void apply(ServerPlayer p, net.minecraft.world.entity.ai.attributes.Holder<Attribute> attr,
                               UUID id, double amount, String name) {
         AttributeInstance inst = p.getAttribute(attr);
         if (inst == null || inst.getModifier(id) != null) return;
@@ -195,7 +196,7 @@ public final class MahitoSelf {
 
     /** 服务端 tick：遍杀到期回收、分身死亡恢复上限。 */
     @net.neoforged.bus.api.SubscribeEvent
-    public static void tick(net.neoforged.neoforge.event.ServerTickEvent.Post event) {
+    public static void tick(net.neoforged.neoforge.event.tick.ServerTickEvent.Post.Post event) {
         if (event.phase != false.END) return;
         for (ServerPlayer p : event.getServer().getPlayerList().getPlayers()) {
             CompoundTag data = cn.blockforge.generated.nnnnr1201forge2.Curse.data(p);

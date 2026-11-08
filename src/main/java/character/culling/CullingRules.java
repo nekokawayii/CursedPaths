@@ -31,6 +31,7 @@ import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.neoforge.server.ServerLifecycleHooks;
 import net.neoforged.neoforge.event.tick.PlayerTickEvent;
+import net.minecraft.core.Holder;
 
 /**
  * 死灭洄游规则卡池与结算（r218）。
@@ -376,8 +377,8 @@ public final class CullingRules {
         put(p,Attributes.JUMP_STRENGTH,JUMP,jump*.08);
         if(p.getHealth()>p.getMaxHealth())p.setHealth(p.getMaxHealth());
     }
-    private static final Attribute[] ATTRS={Attributes.MAX_HEALTH,Attributes.ATTACK_DAMAGE,Attributes.MOVEMENT_SPEED,Attributes.ATTACK_SPEED,Attributes.JUMP_STRENGTH,Attributes.ARMOR};
-    private static void put(ServerPlayer p,Attribute attr,UUID id,double amount){
+    private static final Holder<Attribute>[] ATTRS={Attributes.MAX_HEALTH,Attributes.ATTACK_DAMAGE,Attributes.MOVEMENT_SPEED,Attributes.ATTACK_SPEED,Attributes.JUMP_STRENGTH,Attributes.ARMOR};
+    private static void put(ServerPlayer p,Holder<Attribute> attr,UUID id,double amount){
         AttributeInstance a=p.getAttribute(attr);if(a==null)return;
         var old=a.getModifier(id);
         if(Math.abs(amount)<1e-6){if(old!=null)a.removeModifier(id);return;}
@@ -387,7 +388,7 @@ public final class CullingRules {
     }
     public static void clear(ServerPlayer p){
         for(UUID id:new UUID[]{HEALTH,ATTACK,SPEED,ATK_SPEED,JUMP,ARMOR}){
-            for(Attribute attr:ATTRS){AttributeInstance a=p.getAttribute(attr);if(a!=null&&a.getModifier(id)!=null)a.removeModifier(id);}
+            for(Holder<Attribute> attr:ATTRS){AttributeInstance a=p.getAttribute(attr);if(a!=null&&a.getModifier(id)!=null)a.removeModifier(id);}
         }
     }
     public static void onLeave(ServerPlayer p){

@@ -17,6 +17,7 @@ import net.neoforged.neoforge.event.server.ServerStoppedEvent;
 import net.neoforged.bus.api.*;
 import net.neoforged.neoforge.registries.ForgeRegistries;
 import net.neoforged.neoforge.event.tick.ServerTickEvent;
+import net.minecraft.core.Holder;
 
 /** 不引用女仆类；可选联动为每个实体提供独立施术上下文，共用玩家技能队列。 */
 public final class MaidBridge {
@@ -85,7 +86,7 @@ public final class MaidBridge {
         if(maid instanceof Mob mob&&(target==mob.getTarget()||target==mob.getLastHurtByMob()))return true;
         return target instanceof net.minecraft.world.entity.monster.Enemy;
     }
-    private static void modifier(LivingEntity maid,Attribute attribute,UUID id,double amount){var a=maid.getAttribute(attribute);if(a==null)return;var old=a.getModifier(id);if(old!=null&&Math.abs(old.getAmount()-amount)<0.00001)return;a.removeModifier(id);if(amount!=0)a.addTransientModifier(new AttributeModifier(id,"御厨子成长",amount,AttributeModifier.Operation.ADDITION));}
+    private static void modifier(LivingEntity maid,Holder<Attribute> attribute,UUID id,double amount){var a=maid.getAttribute(attribute);if(a==null)return;var old=a.getModifier(id);if(old!=null&&Math.abs(old.getAmount()-amount)<0.00001)return;a.removeModifier(id);if(amount!=0)a.addTransientModifier(new AttributeModifier(id,"御厨子成长",amount,AttributeModifier.Operation.ADDITION));}
     public static void apply(Actor a){
         if(Legion.member(a.maid)||Authority.echo(a.maid))return;
         modifier(a.maid,Attributes.MAX_HEALTH,HEALTH,Curse.healthBonus(a));modifier(a.maid,Attributes.ATTACK_DAMAGE,ATTACK,Curse.attackBonus(a));

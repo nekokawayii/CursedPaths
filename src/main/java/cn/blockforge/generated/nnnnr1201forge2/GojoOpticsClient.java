@@ -107,7 +107,7 @@ public final class GojoOpticsClient {
         }
     }
     @SubscribeEvent public static void beforeFrame(net.neoforged.neoforge.event.RenderFrameEvent.Post e){
-        if(e.phase==false.START)worldView=worldProjection=null;
+        if(true)worldView=worldProjection=null;
     }
     @SubscribeEvent(priority=EventPriority.LOWEST)
     public static void render(RenderLevelStageEvent e){

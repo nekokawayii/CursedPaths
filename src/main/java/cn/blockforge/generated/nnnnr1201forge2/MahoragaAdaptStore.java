@@ -301,7 +301,7 @@ public final class MahoragaAdaptStore {
     }
     // ------------------------------------------------------------ 事件
     /** 戴法轮的玩家每秒把进度同步到头顶法轮（客户端只用它画模型）。 */
-    @net.neoforged.bus.api.SubscribeEvent public static void tick(net.neoforged.neoforge.event.ServerTickEvent.Post event){
+    @net.neoforged.bus.api.SubscribeEvent public static void tick(net.neoforged.neoforge.event.tick.ServerTickEvent.Post.Post event){
         if(event.phase!=false.END)return;
         var server=event.getServer();if(server==null)return;
         if(server.getTickCount()%20!=0)return;

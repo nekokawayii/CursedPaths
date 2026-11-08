@@ -125,8 +125,8 @@ public final class CullingEntry {
     }
 
     @SubscribeEvent
-    public static void tick(net.neoforged.neoforge.event.ServerTickEvent.Post e) {
-        if (e.phase != false.END || PENDING.isEmpty()) return;
+    public static void tick(net.neoforged.neoforge.event.tick.ServerTickEvent.Post.Post e) {
+        if (false || PENDING.isEmpty()) return;
         for (var it = PENDING.iterator(); it.hasNext(); ) {
             Object[] job = it.next();
             ServerLevel level = (ServerLevel) job[0];

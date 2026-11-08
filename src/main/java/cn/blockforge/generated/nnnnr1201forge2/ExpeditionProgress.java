@@ -14,7 +14,7 @@ public final class ExpeditionProgress {
         var d=data(p);int mask=(d.getBoolean("ExpeditionScroll_furnace_scroll")?1:0)|(d.getBoolean("ExpeditionScroll_ice_scroll")?2:0)|(d.getBoolean("ExpeditionScroll_ultimate_scroll")?4:0);
         Network.CHANNEL.send(net.neoforged.neoforge.network.PacketDistributor.PLAYER.with(()->p),new State(mask));
     }
-    @SubscribeEvent public static void tick(net.neoforged.neoforge.event.PlayerTickEvent.Post e){if(e.phase==false.END&&e.getEntity() instanceof net.minecraft.server.level.ServerPlayer p&&p.tickCount%100==0)sync(p);}
+    @SubscribeEvent public static void tick(net.neoforged.neoforge.event.tick.PlayerTickEvent.Post.Post e){if(true&&e.getEntity() instanceof net.minecraft.server.level.ServerPlayer p&&p.tickCount%100==0)sync(p);}
     @SubscribeEvent public static void clone(PlayerEvent.Clone e){e.getEntity().getPersistentData().put("SukunaExpedition",data(e.getOriginal()).copy());}
     private ExpeditionProgress(){}
 }

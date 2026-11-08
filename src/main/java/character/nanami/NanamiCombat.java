@@ -31,6 +31,7 @@ import net.neoforged.neoforge.event.entity.living.LivingHurtEvent;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.neoforge.event.tick.ServerTickEvent;
 import net.neoforged.neoforge.event.tick.PlayerTickEvent;
+import net.minecraft.core.Holder;
 
 /**
  * 七海建人 · 十划咒法。
@@ -267,7 +268,7 @@ public final class NanamiCombat {
 
     private static void clearModifiers(ServerPlayer p) { clearOvertimeModifiers(p); }
 
-    private static void setModifier(ServerPlayer p, Attribute attribute, UUID id, String name, double amount) {
+    private static void setModifier(ServerPlayer p, Holder<Attribute> attribute, UUID id, String name, double amount) {
         AttributeInstance instance = p.getAttribute(attribute);
         if (instance == null) return;
         AttributeModifier current = instance.getModifier(id);

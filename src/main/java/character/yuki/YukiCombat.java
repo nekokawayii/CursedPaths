@@ -267,8 +267,8 @@ public final class YukiCombat {
 
     /** 每秒结算一次生命恢复（仅九十九由基）。 */
     @net.neoforged.bus.api.SubscribeEvent
-    public static void onPlayerTick(net.neoforged.neoforge.event.PlayerTickEvent.Post e) {
-        if (e.phase != false.END) return;
+    public static void onPlayerTick(net.neoforged.neoforge.event.tick.PlayerTickEvent.Post.Post e) {
+        if (false) return;
         if (!(e.getEntity() instanceof ServerPlayer p) || p.level().isClientSide) return;
         if (p.tickCount % 20 != 0) return;
         var def = character.CharacterService.selected(p);

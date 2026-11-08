@@ -16,6 +16,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.common.util.FakePlayer;
 import net.neoforged.neoforge.event.tick.PlayerTickEvent;
+import net.minecraft.core.Holder;
 
 
 /** 每只 NPC 独立的施术上下文。技能队列、咒力、归属都绑定本体，不冒用附近玩家。 */
@@ -160,8 +161,8 @@ public final class NpcBridge {
         }
         @Override public CompoundTag getPersistentData() { return mob == null ? super.getPersistentData() : mob.getPersistentData(); }
         @Override public boolean hasDisconnected() { return mob != null && (mob.isRemoved() || !mob.isAlive()); }
-        @Override public AttributeInstance getAttribute(Attribute key) { return mob != null && mob.getAttribute(key) != null ? mob.getAttribute(key) : super.getAttribute(key); }
-        @Override public double getAttributeValue(Attribute key) { return getAttribute(key) == null ? super.getAttributeValue(key) : getAttribute(key).getValue(); }
+        @Override public AttributeInstance getAttribute(Holder<Attribute> key) { return mob != null && mob.getAttribute(key) != null ? mob.getAttribute(key) : super.getAttribute(key); }
+        @Override public double getAttributeValue(Holder<Attribute> key) { return getAttribute(key) == null ? super.getAttributeValue(key) : getAttribute(key).getValue(); }
         @Override public float getHealth() { return mob == null ? super.getHealth() : mob.getHealth(); }
         @Override public void setHealth(float health) { if (mob == null) super.setHealth(health); else mob.setHealth(health); }
         @Override public void heal(float amount) { if (mob != null) mob.heal(amount); }

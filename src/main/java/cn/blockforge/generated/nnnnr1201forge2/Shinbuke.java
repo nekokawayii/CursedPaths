@@ -126,8 +126,8 @@ public final class Shinbuke {
     /** 服务端推进充能：**每刻 +1 点**（一秒 20 刻 = 20 次，客户端的"50 次/秒"由心跳与 UI 呈现），
      *  手持被换掉/死亡就自动结算掉；已停止充能（等待右键）时只保留数值、不再增长。 */
     @net.neoforged.bus.api.SubscribeEvent
-    public static void chargeTick(net.neoforged.neoforge.event.ServerTickEvent.Post e){
-        if(e.phase!=false.END)return;
+    public static void chargeTick(net.neoforged.neoforge.event.tick.ServerTickEvent.Post.Post e){
+        if(false)return;
         var server=e.getServer();if(server==null||server.getPlayerList().getPlayers().isEmpty())return;
         boolean sync=server.getTickCount()%10==0; // 每 10 刻同步一次给 HUD
         for(ServerPlayer p:server.getPlayerList().getPlayers()){

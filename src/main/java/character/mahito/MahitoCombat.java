@@ -222,7 +222,7 @@ public final class MahitoCombat {
             Realm r=REALMS.get(data.getUUID("MahitoSoulOwner"));if(r==null||!r.caster.isAlive()||!inRealm(r.caster,e))restoreSoul(e);
         }
     }
-    @SubscribeEvent public static void tick(net.neoforged.neoforge.event.ServerTickEvent.Post event){
+    @SubscribeEvent public static void tick(net.neoforged.neoforge.event.tick.ServerTickEvent.Post.Post event){
         if(event.phase!=false.END)return;
         for(var it=COLLAPSES.iterator();it.hasNext();){
             Collapse c=it.next();long age=now(c.victim)-c.start;

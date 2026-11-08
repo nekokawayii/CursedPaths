@@ -14,6 +14,7 @@ import net.minecraft.world.phys.Vec3;
 
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.neoforge.event.tick.ServerTickEvent;
+import net.minecraft.core.Holder;
 
 /**
  * 死灭洄游结界内的刷新与敌对（r218）。
@@ -363,7 +364,7 @@ public final class CullingSpawns {
         mod(mob, net.minecraft.world.entity.ai.attributes.Attributes.ATTACK_SPEED, NPC_ASP, asp - 1);
     }
 
-    private static void mod(Mob mob, net.minecraft.world.entity.ai.attributes.Attribute attr, java.util.UUID id, double amount) {
+    private static void mod(Mob mob, net.minecraft.world.entity.ai.attributes.Holder<Attribute> attr, java.util.UUID id, double amount) {
         var a = mob.getAttribute(attr);
         if (a == null) return;
         if (Math.abs(amount) < 1e-6) { if (a.getModifier(id) != null) a.removeModifier(id); return; }

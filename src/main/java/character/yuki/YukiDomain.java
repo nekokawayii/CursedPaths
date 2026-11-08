@@ -128,8 +128,8 @@ public final class YukiDomain {
         }
     }
 
-    public static void onServerTick(net.neoforged.neoforge.event.ServerTickEvent.Post e) {
-        if (e.phase != false.END) return;
+    public static void onServerTick(net.neoforged.neoforge.event.tick.ServerTickEvent.Post.Post e) {
+        if (false) return;
         tick(e.getServer());
     }
 

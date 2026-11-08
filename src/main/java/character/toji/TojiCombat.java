@@ -19,13 +19,14 @@ import net.minecraft.sounds.*;
 import net.neoforged.neoforge.event.entity.living.LivingFallEvent;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.neoforge.event.tick.PlayerTickEvent;
+import net.minecraft.core.Holder;
 
 /** 纯肉体技能：独立体术余额，不借用咒力，不触发咒术伤害；敌友仍走统一结算。 */
 public final class TojiCombat {
     private static final UUID SPEED=UUID.fromString("480bb88f-333a-45aa-8bbb-001100220001"),HEALTH=UUID.fromString("480bb88f-333a-45aa-8bbb-001100220002"),ATTACK=UUID.fromString("480bb88f-333a-45aa-8bbb-001100220003"),RESIST=UUID.fromString("480bb88f-333a-45aa-8bbb-001100220004");
     public static double maximum(Player p) { return TojiRules.maximum(CharacterService.rank(p)); }
     public static double stamina(Player p) { var d=Curse.data(p);return TojiRules.current(d.contains("TojiStamina")?d.getDouble("TojiStamina"):maximum(p),CharacterService.rank(p)); }
-    private static void modifier(Player p,Attribute attribute,UUID id,double value) {
+    private static void modifier(Player p,Holder<Attribute> attribute,UUID id,double value) {
         var a=p.getAttribute(attribute);if(a==null)return;var old=a.getModifier(id);
         if(old!=null&&Math.abs(old.getAmount()-value)<0.000001)return;
         a.removeModifier(id);if(value!=0)a.addTransientModifier(new AttributeModifier(id,"天宇暴君肉体",value,AttributeModifier.Operation.ADDITION));
