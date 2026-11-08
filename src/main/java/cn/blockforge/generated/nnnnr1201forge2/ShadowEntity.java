@@ -64,6 +64,7 @@ public final class ShadowEntity extends PathfinderMob {
         getAttribute(Attributes.MOVEMENT_SPEED).setBaseValue(TenShadowRules.speed(kind(),stage));
         getAttribute(Attributes.ARMOR).setBaseValue(TenShadowRules.armor(kind()));
         getAttribute(Attributes.KNOCKBACK_RESISTANCE).setBaseValue(kind()==TenShadowRules.DEER?1:kind()==TenShadowRules.SERPENT?.9:.3);
+        if(getAttribute(Attributes.STEP_HEIGHT)!=null)getAttribute(Attributes.STEP_HEIGHT).setBaseValue(1.2);
         setHealth(getMaxHealth()*ratio);
     }
     public void emergeFrom(Vec3 source){
