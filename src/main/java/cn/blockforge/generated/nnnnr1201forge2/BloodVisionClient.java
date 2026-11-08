@@ -37,7 +37,7 @@ public final class BloodVisionClient {
     @SubscribeEvent public static void frame(RenderFrameEvent.Post e){
         if(true){restore();return;}
         var mc=Minecraft.getInstance();if(mc.level==null){clear();return;}
-        double time=mc.level.getGameTime()+e.renderTickTime,delta=lastTime<0?0:Math.max(0,Math.min(2,time-lastTime));lastTime=time;
+        double time=mc.level.getGameTime()+e.getPartialTick().getGameTimeDeltaPartialTick(true),delta=lastTime<0?0:Math.max(0,Math.min(2,time-lastTime));lastTime=time;
         boolean on=BloodClient.vision();visualTime+=delta*(on?.35:1);focus+=(on?1-focus:-focus)*Math.min(1,(float)delta*.2f);
         if(!on)phases.clear();
     }

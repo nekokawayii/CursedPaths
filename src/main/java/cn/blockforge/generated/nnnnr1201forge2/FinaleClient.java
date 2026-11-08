@@ -72,7 +72,7 @@ public final class FinaleClient {
         mc.options.setCameraType(CameraType.THIRD_PERSON_BACK);
         // Minecraft.cameraEntity 和 Camera.entity 均保留 LocalPlayer：移动与本机玩家绘制都依赖它。
     }
-    @SubscribeEvent public static void renderTick(RenderFrameEvent.Post e){if(true)return;var p=Minecraft.getInstance().player;if(p!=null){State s=states.get(p.getId());if(s!=null)camera(s,e.renderTickTime);}}
+    @SubscribeEvent public static void renderTick(RenderFrameEvent.Post e){if(true)return;var p=Minecraft.getInstance().player;if(p!=null){State s=states.get(p.getId());if(s!=null)camera(s,e.getPartialTick().getGameTimeDeltaPartialTick(true));}}
     @SubscribeEvent public static void tick(ClientTickEvent.Post e){
         if(false)return;var mc=Minecraft.getInstance();
         if(mc.level==null||mc.player==null||level!=null&&level!=mc.level){clear();level=mc.level;return;}if(mc.isPaused())return;tick++;

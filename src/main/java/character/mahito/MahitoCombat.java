@@ -78,7 +78,7 @@ public final class MahitoCombat {
         boolean hit=soulDamage(p,victim,8);
         if(hit){
             if(victim instanceof ServerPlayer player&&SoulCombat.layers(player)>0)SoulCombat.peel(player,false);
-            else for(EquipmentSlot slot:EquipmentSlot.values())if(slot.getType()==EquipmentSlot.Type.ARMOR){
+            else for(EquipmentSlot slot:EquipmentSlot.values())if(slot.getType()==EquipmentSlot.Type.HUMANOID_ARMOR){
                 var stack=victim.getItemBySlot(slot);
                 if(stack.getItem() instanceof ArmorItem armor&&armor.getDefense()>=2&&stack.isDamageableItem())stack.hurtAndBreak(50,victim,slot);
             }
@@ -119,7 +119,7 @@ public final class MahitoCombat {
         if(target==null)return null;
         pose(p,1,12);fx(p,TOUCH,caster.getEyePosition(),target.getBoundingBox().getCenter(),1,12);
         if(!soulDamage(p,target,8))return null;
-        for(EquipmentSlot slot:EquipmentSlot.values())if(slot.getType()==EquipmentSlot.Type.ARMOR){
+        for(EquipmentSlot slot:EquipmentSlot.values())if(slot.getType()==EquipmentSlot.Type.HUMANOID_ARMOR){
             var stack=target.getItemBySlot(slot);
             if(stack.getItem() instanceof ArmorItem armor&&armor.getDefense()>=2&&stack.isDamageableItem())
                 stack.hurtAndBreak(50,target,slot);
