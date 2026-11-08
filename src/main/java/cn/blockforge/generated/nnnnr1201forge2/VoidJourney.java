@@ -98,7 +98,7 @@ public final class VoidJourney {
         if(p.level().dimension()==ARENA&&p.isAlive()&&p.tickCount%10==0&&(p.getY()<-60||p.getY()>-30||p.position().multiply(1,0,1).lengthSqr()>47*47))p.teleportTo(p.serverLevel(),0.5,-59,38.5,180,0);
     }
     @SubscribeEvent public static void livingTick(net.neoforged.neoforge.event.tick.EntityTickEvent.Post e){
-        var p=e.getEntity();if(p.level().isClientSide)return;
+        if(!(e.getEntity() instanceof net.minecraft.world.entity.LivingEntity p))return;if(p.level().isClientSide)return;
         if(p.getPersistentData().contains("VoidEyeUntil")&&p.getPersistentData().getLong("VoidEyeUntil")<=p.level().getGameTime()){p.getPersistentData().remove("VoidEyeUntil");var speed=p.getAttribute(net.minecraft.world.entity.ai.attributes.Attributes.MOVEMENT_SPEED);if(speed!=null)speed.removeModifier(cn.blockforge.generated.nnnnr1201forge2.CompatAttr.id(java.util.UUID.fromString("731c3ef0-7dc0-422e-b4cd-0fae77215392")));}
         if(p.getPersistentData().contains("VoidCaptured")&&p.getPersistentData().getLong("VoidCaptured")<=p.level().getGameTime()){p.getPersistentData().remove("VoidCaptured");p.setInvisible(false);}
     }

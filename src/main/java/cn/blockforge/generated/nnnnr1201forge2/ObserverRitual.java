@@ -49,7 +49,7 @@ public final class ObserverRitual {
         Session s=new Session(p,slot,party);sessions.put(p.getUUID(),s);
         CompoundTag d=Curse.data(p);d.putBoolean("ObserverRunning",true);d.putBoolean("ObserverShattered",false);
         d.putBoolean("ObserverOldGravity",p.isNoGravity());d.putBoolean("ObserverOldInvulnerable",p.isInvulnerable());d.putBoolean("ObserverOldInvisible",p.isInvisible());
-        if(p.hasEffect(MobEffects.CONFUSION))d.put("ObserverOldConfusion",CompatItem.save(p.getEffect(MobEffects.CONFUSION)));else d.remove("ObserverOldConfusion");
+        if(p.hasEffect(MobEffects.CONFUSION)){var eff=p.getEffect(MobEffects.CONFUSION);d.putInt("ObserverOldConfusionAmp",eff.getAmplifier());d.putInt("ObserverOldConfusionDur",eff.getDuration());}else{d.remove("ObserverOldConfusionAmp");d.remove("ObserverOldConfusionDur");}
         p.setInvulnerable(true);p.setNoGravity(true);p.setDeltaMovement(Vec3.ZERO);
         fire(p,FX_START,0);sync(s,0);
         sound(p,SoundEvents.WITHER_SPAWN,.6f,.6f);
@@ -143,7 +143,7 @@ public final class ObserverRitual {
     private static void restore(ServerPlayer p){
         var d=Curse.data(p);p.setNoGravity(d.getBoolean("ObserverOldGravity"));p.setInvulnerable(d.getBoolean("ObserverOldInvulnerable"));p.setInvisible(d.getBoolean("ObserverOldInvisible"));
         p.setDeltaMovement(Vec3.ZERO);p.fallDistance=0;p.removeEffect(MobEffects.CONFUSION);
-        if(d.contains("ObserverOldConfusion")){var effect=MobEffectInstance.load(d.getCompound("ObserverOldConfusion"));if(effect!=null)p.addEffect(effect);d.remove("ObserverOldConfusion");}
+        if(d.contains("ObserverOldConfusionDur")){p.addEffect(new MobEffectInstance(MobEffects.CONFUSION,d.getInt("ObserverOldConfusionDur"),d.getInt("ObserverOldConfusionAmp")));d.remove("ObserverOldConfusionDur");d.remove("ObserverOldConfusionAmp");}
         d.putBoolean("ObserverRunning",false);d.putBoolean("ObserverShattered",false);
     }
     private static void spawn(ServerPlayer p){var over=p.server.overworld();var at=over.getSharedSpawnPos();p.teleportTo(over,at.getX()+.5,at.getY(),at.getZ()+.5,0,0);}

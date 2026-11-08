@@ -81,8 +81,8 @@ public final class HigurumaCombat {
         ItemStack proxy = off.copy();
         double damage = 1.0, speed = 4.0;
         for (var entry : proxy.getAttributeModifiers().modifiers()) {
-            if (entry.getKey() == Attributes.ATTACK_DAMAGE) damage += entry.getValue().getAmount();
-            if (entry.getKey() == Attributes.ATTACK_SPEED) speed += entry.getValue().getAmount();
+            if (entry.attribute() == Attributes.ATTACK_DAMAGE) damage += entry.modifier().amount();
+            if (entry.attribute() == Attributes.ATTACK_SPEED) speed += entry.modifier().amount();
         }
         CompatNbt.update(gavel, t -> t.put(GavelItem.SEAL, seal));
         CompatNbt.update(gavel, t -> t.putFloat(GavelItem.SEAL_DAMAGE, (float) damage));
