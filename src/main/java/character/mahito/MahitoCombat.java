@@ -209,7 +209,7 @@ public final class MahitoCombat {
     private static void restoreSoul(LivingEntity entity){var attribute=entity.getAttribute(Attributes.MAX_HEALTH);if(attribute!=null)attribute.removeModifier(CompatAttr.id(SOUL_LOSS));entity.getPersistentData().remove("MahitoSoulOwner");}
     public static void root(LivingEntity victim,int ticks){
         victim.getPersistentData().putLong("MahitoRootUntil",Math.max(now(victim)+ticks,victim.getPersistentData().getLong("MahitoRootUntil")));
-        var speed=victim.getAttribute(Attributes.MOVEMENT_SPEED);if(speed!=null&&!speed.hasModifier(new AttributeModifier(CompatAttr.id(ROOT), -1, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL)))speed.addTransientModifier(new AttributeModifier(CompatAttr.id(ROOT), -1, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL));
+        var speed=victim.getAttribute(Attributes.MOVEMENT_SPEED);if(speed!=null&&!speed.hasModifier(CompatAttr.id(ROOT)))speed.addTransientModifier(new AttributeModifier(CompatAttr.id(ROOT), -1, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL));
         victim.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN,ticks,9));
     }
     @SubscribeEvent(priority=EventPriority.HIGHEST) public static void invincible(LivingIncomingDamageEvent event){

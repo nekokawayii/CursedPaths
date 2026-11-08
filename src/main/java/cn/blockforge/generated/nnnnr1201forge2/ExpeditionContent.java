@@ -26,7 +26,7 @@ public final class ExpeditionContent {
         new net.minecraft.world.item.enchantment.Enchantment(
             net.minecraft.network.chat.Component.literal("魂刃"),
             new net.minecraft.world.item.enchantment.Enchantment.EnchantmentDefinition(
-                BuiltInRegistries.ITEM.getOrThrow(net.minecraft.tags.ItemTags.SWORDS),
+                BuiltInRegistries.ITEM.getTag(net.minecraft.tags.ItemTags.SWORDS).orElse(net.minecraft.core.HolderSet.empty()),
                 java.util.Optional.empty(), 1, 1,
                 new net.minecraft.world.item.enchantment.Enchantment.Cost(25,0),
                 new net.minecraft.world.item.enchantment.Enchantment.Cost(75,0),
