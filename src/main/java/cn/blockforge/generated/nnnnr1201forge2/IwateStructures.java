@@ -53,7 +53,7 @@ public final class IwateStructures {
         if(!intersects(c,minX,minZ,size.getX(),size.getZ()))return;
         // 模板内显式空气负责室内空间，未记录的位置保留原地形。
         // 禁止清空整个包围盒：院落、附属物会把包围盒拉得远大于房屋。
-        BlockPos origin=new BlockPos(minX,base,minZ);StructurePlaceSettings settings=new StructurePlaceSettings().setIgnoreEntities(true).setKeepLiquids(false).setKnownShape(true).setBoundingBox(new BoundingBox(c.getPos().getMinBlockX(),c.getMinBuildHeight(),c.getPos().getMinBlockZ(),c.getPos().getMaxBlockX(),c.getMaxBuildHeight()-1,c.getPos().getMaxBlockZ()));
+        BlockPos origin=new BlockPos(minX,base,minZ);StructurePlaceSettings settings=new StructurePlaceSettings().setIgnoreEntities(true).setKnownShape(true).setBoundingBox(new BoundingBox(c.getPos().getMinBlockX(),c.getMinBuildHeight(),c.getPos().getMinBlockZ(),c.getPos().getMaxBlockX(),c.getMaxBuildHeight()-1,c.getPos().getMaxBlockZ()));
         t.structure.placeInWorld(level,origin,origin,settings,RandomSource.create(seed),2);
     }
     private IwateStructures(){}

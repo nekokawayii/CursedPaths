@@ -47,7 +47,7 @@ public final class RuinAtmosphere {
             base=new BlockPos(x,max-11,z);break search;
         }
         if(base==null){p.sendSystemMessage(Component.literal("附近没有合适的未使用平地。走到平原后再用 /sukuna soul ruins 生成。"));return false;}
-        if(!template.get().placeInWorld(level,base,base,new StructurePlaceSettings().setKeepLiquids(false),level.random,2))return false;
+        if(!template.get().placeInWorld(level,base,base,new StructurePlaceSettings(),level.random,2))return false;
         Sites data=sites(level);data.origins.add(base);data.setDirty();
         var tag=Curse.data(p);tag.putBoolean("SoulRuinBuilt",true);tag.putInt("SoulRuinVersion",20);tag.putInt("SoulRuinX",base.getX()+24);tag.putInt("SoulRuinY",base.getY()+11);tag.putInt("SoulRuinZ",base.getZ()+4);
         p.sendSystemMessage(Component.literal("新版高专遗迹校门："+(base.getX()+24)+", "+(base.getY()+11)+", "+(base.getZ()+4)+"。穿过操场进入主楼，沿走廊尽头石阶下到忌库。"));return true;

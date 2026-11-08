@@ -110,7 +110,7 @@ public final class Journey {
         if(SoulJourney.evolved(p)&&CombatSettings.caster(e.getSource())==p&&(e.getSource().is(net.minecraft.world.damagesource.DamageTypes.INDIRECT_MAGIC)||e.getSource().is(net.minecraft.world.damagesource.DamageTypes.SONIC_BOOM))&&victim.getPersistentData().hasUUID("SukunaSoulSlashOwner")&&p.getUUID().equals(victim.getPersistentData().getUUID("SukunaSoulSlashOwner"))){int feast=Math.min(300,Curse.data(p).getInt("SoulFeasts")+1);Curse.data(p).putInt("SoulFeasts",feast);p.sendSystemMessage(Component.literal("灵魂进食：斩击基础伤害永久 +"+BalanceRules.number(BalanceRules.strength(1,BalanceRules.Category.DAMAGE))+"（累计 "+BalanceRules.number(BalanceRules.strength(feast,BalanceRules.Category.DAMAGE))+" / "+BalanceRules.number(BalanceRules.strength(300,BalanceRules.Category.DAMAGE))+"点）"));Curse.sync(p);}
         // 残秽由击杀事件按0.1%掉落实物，食用才成长，不再自动积累击杀经验。
     }
-    @SubscribeEvent public static void pickup(PlayerEvent.ItemPickupEvent e){if(e.getEntity() instanceof ServerPlayer p)for(int i=0;i<9;i++)if(e.getStack().is(ProgressionContent.PAGES.get(i).get()))Curse.data(p).putBoolean("Page"+i,true);}
+    @SubscribeEvent public static void pickup(net.neoforged.neoforge.event.entity.player.ItemEntityPickupEvent.Post e){if(e.getEntity() instanceof ServerPlayer p)for(int i=0;i<9;i++)if(e.getStack().is(ProgressionContent.PAGES.get(i).get()))Curse.data(p).putBoolean("Page"+i,true);}
     @SubscribeEvent public static void logout(PlayerEvent.PlayerLoggedOutEvent e){positions.remove(e.getEntity().getUUID());}
     @SubscribeEvent public static void commands(RegisterCommandsEvent e){
         e.getDispatcher().register(Commands.literal("jujutsu_kaisen_cursed_paths")

@@ -226,7 +226,6 @@ public final class SukunaConfigScreen extends Screen {
     }
     @Override
     public void tick() {
-        for (EditBox box : boxes) box.tick();
         updateSaveButton();
     }
     @Override
