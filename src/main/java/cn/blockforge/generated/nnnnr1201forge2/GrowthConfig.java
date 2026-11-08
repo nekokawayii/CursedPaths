@@ -66,6 +66,6 @@ public final class GrowthConfig {
         for(int i=0;i<stages.length;i++){Stage s=stages[i];rows[i]=new GrowthRules.Row(s.health().get(),s.attack().get(),s.spell().get(),s.energy().get());}
         GrowthRules.configure(rows,BASE_ENERGY.get(),RESIDUE_ATTACK.get(),RESIDUE_SPELL.get());
     }
-    public static void register(){GeneratedMod.CONTAINER.registerConfig(ModConfig.Type.COMMON,SPEC);GeneratedMod.MOD_BUS.addListener(GrowthConfig::changed);}
+    public static void register(){GeneratedMod.CONTAINER.registerConfig(ModConfig.Type.COMMON,SPEC,FILE);GeneratedMod.MOD_BUS.addListener(GrowthConfig::changed);}
     private GrowthConfig(){}
 }

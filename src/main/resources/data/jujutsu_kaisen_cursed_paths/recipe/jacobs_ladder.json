@@ -7,5 +7,5 @@
     "N":{"item":"minecraft:nether_star"},
     "B":{"item":"minecraft:book"}
   },
-  "result":{"item":"jujutsu_kaisen_cursed_paths:jacobs_ladder","count":1}
+  "result":{"id":"jujutsu_kaisen_cursed_paths:jacobs_ladder","count":1}
 }

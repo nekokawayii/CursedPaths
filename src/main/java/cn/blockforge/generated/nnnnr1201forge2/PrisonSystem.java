@@ -185,7 +185,9 @@ public final class PrisonSystem {
     @SubscribeEvent(priority=EventPriority.HIGHEST) public static void command(CommandEvent e){Entity sender=e.getParseResults().getContext().getSource().getEntity();if(locked(sender)){e.setCanceled(true);if(sender instanceof ServerPlayer p)tell(p,"封印中不能执行指令或小地图传送");}}
     @SubscribeEvent(priority=EventPriority.HIGHEST) public static void damage(LivingIncomingDamageEvent e){if(locked(e.getEntity())||locked(e.getSource().getEntity()))e.setCanceled(true);}
     @SubscribeEvent(priority=EventPriority.HIGHEST) public static void death(LivingDeathEvent e){if(locked(e.getEntity())){e.setCanceled(true);e.getEntity().setHealth(Math.max(1,e.getEntity().getHealth()));}}
-    @SubscribeEvent(priority=EventPriority.HIGHEST) public static void use(PlayerInteractEvent e){if(locked(e.getEntity()))cn.blockforge.generated.nnnnr1201forge2.CompatEvents.cancel(e);}
+        @SubscribeEvent(priority=EventPriority.HIGHEST) public static void useBlock(PlayerInteractEvent.RightClickBlock e){if(locked(e.getEntity()))cn.blockforge.generated.nnnnr1201forge2.CompatEvents.cancel(e);}
+    @SubscribeEvent(priority=EventPriority.HIGHEST) public static void useItem(PlayerInteractEvent.RightClickItem e){if(locked(e.getEntity()))cn.blockforge.generated.nnnnr1201forge2.CompatEvents.cancel(e);}
+    @SubscribeEvent(priority=EventPriority.HIGHEST) public static void useLeft(PlayerInteractEvent.LeftClickBlock e){if(locked(e.getEntity()))cn.blockforge.generated.nnnnr1201forge2.CompatEvents.cancel(e);}
     @SubscribeEvent(priority=EventPriority.HIGHEST) public static void attack(AttackEntityEvent e){if(locked(e.getEntity()))e.setCanceled(true);}
     @SubscribeEvent(priority=EventPriority.HIGHEST) public static void pickup(net.neoforged.neoforge.event.entity.player.ItemEntityPickupEvent.Pre e){if(locked(e.getPlayer()))e.getItemEntity().discard();}
     @SubscribeEvent(priority=EventPriority.HIGHEST) public static void breakBlock(BlockEvent.BreakEvent e){if(locked(e.getPlayer())||e.getLevel() instanceof ServerLevel l&&l.dimension().equals(DIMENSION))e.setCanceled(true);}

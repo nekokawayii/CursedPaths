@@ -146,7 +146,11 @@ public final class BeyondRift {
     }
 
     /** 碎片对着方块或生物也走同一入口，避免联机准星命中队友时右键被交互吞掉。 */
-    @SubscribeEvent(priority=EventPriority.LOWEST) public static void useFragment(PlayerInteractEvent e){
+    @SubscribeEvent(priority=EventPriority.LOWEST) public static void useFragment_RightClickItem(PlayerInteractEvent.RightClickItem e){useFragment(e);}
+    @SubscribeEvent(priority=EventPriority.LOWEST) public static void useFragment_RightClickBlock(PlayerInteractEvent.RightClickBlock e){useFragment(e);}
+    @SubscribeEvent(priority=EventPriority.LOWEST) public static void useFragment_EntityInteract(PlayerInteractEvent.EntityInteract e){useFragment(e);}
+    @SubscribeEvent(priority=EventPriority.LOWEST) public static void useFragment_EntityInteractSpecific(PlayerInteractEvent.EntityInteractSpecific e){useFragment(e);}
+    private static void useFragment(PlayerInteractEvent e){
         if(!(e instanceof PlayerInteractEvent.RightClickItem||e instanceof PlayerInteractEvent.RightClickBlock
             ||e instanceof PlayerInteractEvent.EntityInteract||e instanceof PlayerInteractEvent.EntityInteractSpecific))return;
         if(!e.getItemStack().is(Content.BEYOND_FRAGMENT.get()))return;

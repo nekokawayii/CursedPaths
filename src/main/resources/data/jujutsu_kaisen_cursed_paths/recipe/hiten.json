@@ -10,5 +10,5 @@
     "B": { "item": "minecraft:netherite_sword" },
     "L": { "item": "minecraft:leather" }
   },
-  "result": { "item": "jujutsu_kaisen_cursed_paths:hiten" }
+  "result": { "id": "jujutsu_kaisen_cursed_paths:hiten" }
 }

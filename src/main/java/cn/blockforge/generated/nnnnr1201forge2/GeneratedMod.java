@@ -20,62 +20,61 @@ public final class GeneratedMod {
         if(net.neoforged.fml.loading.FMLEnvironment.dist==net.neoforged.api.distmarker.Dist.CLIENT)
             cn.blockforge.generated.nnnnr1201forge2.CompatClient.runWhenClient(()->ConfigClient.registerScreen());
         TechniqueConfig.register();
-        NeoForge.EVENT_BUS.register(TechniqueInput.class);
-        NeoForge.EVENT_BUS.register(CombatExpansion.class);
-        NeoForge.EVENT_BUS.register(SixfoldFinale.class);
+        EventBuses.registerSplit(TechniqueInput.class);
+        EventBuses.registerSplit(CombatExpansion.class);
+        EventBuses.registerSplit(SixfoldFinale.class);
         SkillDestruction.init();
         IceContent.init(GeneratedMod.MOD_BUS);
-        NeoForge.EVENT_BUS.register(SukunaBranches.class);
-        NeoForge.EVENT_BUS.register(Uraume.class);
+        EventBuses.registerSplit(SukunaBranches.class);
+        EventBuses.registerSplit(Uraume.class);
         SukunaTempleStructure.TYPES.register(GeneratedMod.MOD_BUS);
-        NeoForge.EVENT_BUS.register(SukunaTempleStructure.class);
+        EventBuses.registerSplit(SukunaTempleStructure.class);
         GeneratedMod.MOD_BUS.addListener(
             (net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent event)->event.enqueueWork(ControllerCraftingCondition::register));
         StageFood.init();
         TechniqueEffects.EFFECTS.register(GeneratedMod.MOD_BUS);
-        NeoForge.EVENT_BUS.register(StageFood.class);
-        NeoForge.EVENT_BUS.register(MaidBridge.class);
-        NeoForge.EVENT_BUS.register(GuardianPlayerSkills.class);
-        NeoForge.EVENT_BUS.register(DomainClash.class);
-        NeoForge.EVENT_BUS.register(TenkaPendantSync.class);
-        NeoForge.EVENT_BUS.register(ThousandMileChain.class);
+        EventBuses.registerSplit(StageFood.class);
+        EventBuses.registerSplit(MaidBridge.class);
+        EventBuses.registerSplit(GuardianPlayerSkills.class);
+        EventBuses.registerSplit(DomainClash.class);
+        EventBuses.registerSplit(TenkaPendantSync.class);
+        EventBuses.registerSplit(ThousandMileChain.class);
         // 原版生命属性会把5000截为1024；两端同步提升数值容许上限。
-        var health=(net.minecraft.world.entity.ai.attributes.RangedAttribute)net.minecraft.world.entity.ai.attributes.Attributes.MAX_HEALTH;
+        var health=(net.minecraft.world.entity.ai.attributes.RangedAttribute)net.minecraft.world.entity.ai.attributes.Attributes.MAX_HEALTH.value();
         if(health.getMaxValue()<150000){try{double cap=health.getMaxValue();for(var field:net.minecraft.world.entity.ai.attributes.RangedAttribute.class.getDeclaredFields())if(field.getType()==double.class){field.setAccessible(true);if(field.getDouble(health)==cap){field.setDouble(health,1000000);break;}}if(health.getMaxValue()<150000)throw new IllegalStateException("生命属性上限未能提高");}catch(ReflectiveOperationException ex){throw new IllegalStateException("无法启用即身佛5000生命",ex);}}
         VoidContent.init(GeneratedMod.MOD_BUS);
-        NeoForge.EVENT_BUS.register(VoidJourney.class);
-        NeoForge.EVENT_BUS.register(GojoEntity.class);
-        NeoForge.EVENT_BUS.register(MahoragaEntity.class);
-        NeoForge.EVENT_BUS.register(DomainAmplification.class);
-        NeoForge.EVENT_BUS.register(GojoCombat.class);
-        NeoForge.EVENT_BUS.register(VoidCombat.class);
+        EventBuses.registerSplit(VoidJourney.class);
+        EventBuses.registerSplit(GojoEntity.class);
+        EventBuses.registerSplit(DomainAmplification.class);
+        EventBuses.registerSplit(GojoCombat.class);
+        EventBuses.registerSplit(VoidCombat.class);
         EternalLove.init();
-        NeoForge.EVENT_BUS.register(BossTargets.class);
-        NeoForge.EVENT_BUS.register(BossControl.class);
-        NeoForge.EVENT_BUS.register(IwateWaterRepair.class);
+        EventBuses.registerSplit(BossTargets.class);
+        EventBuses.registerSplit(BossControl.class);
+        EventBuses.registerSplit(IwateWaterRepair.class);
         SoulContent.init(GeneratedMod.MOD_BUS);
         ShadowContent.init(GeneratedMod.MOD_BUS);
         PrisonContent.init();
-        NeoForge.EVENT_BUS.register(SoulJourney.class);
-        NeoForge.EVENT_BUS.register(RuinAtmosphere.class);
-        NeoForge.EVENT_BUS.register(SoulCombat.class);
+        EventBuses.registerSplit(SoulJourney.class);
+        EventBuses.registerSplit(RuinAtmosphere.class);
+        EventBuses.registerSplit(SoulCombat.class);
         ModTab.init(GeneratedMod.MOD_BUS);
-        var armor=(net.minecraft.world.entity.ai.attributes.RangedAttribute)net.minecraft.world.entity.ai.attributes.Attributes.ARMOR;
+        var armor=(net.minecraft.world.entity.ai.attributes.RangedAttribute)net.minecraft.world.entity.ai.attributes.Attributes.ARMOR.value();
         try{double cap=armor.getMaxValue();for(var field:net.minecraft.world.entity.ai.attributes.RangedAttribute.class.getDeclaredFields())if(field.getType()==double.class){field.setAccessible(true);if(field.getDouble(armor)==cap){field.setDouble(armor,1000000);break;}}}catch(ReflectiveOperationException ex){throw new IllegalStateException("无法启用净土守护者防御属性",ex);}
         ExpeditionContent.init(GeneratedMod.MOD_BUS);
         character.mahito.MahitoContent.init(GeneratedMod.MOD_BUS);
-        NeoForge.EVENT_BUS.register(ExpeditionWorldgen.class);
-        NeoForge.EVENT_BUS.register(ExpeditionEvents.class);
+        EventBuses.registerSplit(ExpeditionWorldgen.class);
+        EventBuses.registerSplit(ExpeditionEvents.class);
         CurseRoster.init(GeneratedMod.MOD_BUS);
-        NeoForge.EVENT_BUS.register(CurseHostility.class);
-        NeoForge.EVENT_BUS.register(CurseSpawning.class);
-        NeoForge.EVENT_BUS.register(HyakkiArena.class);
-        NeoForge.EVENT_BUS.register(CullingGame.class);
-        NeoForge.EVENT_BUS.register(SoulEchoes.class);
-        NeoForge.EVENT_BUS.register(ExpeditionProgress.class);
-        NeoForge.EVENT_BUS.register(ExpeditionCommands.class);
+        EventBuses.registerSplit(CurseHostility.class);
+        EventBuses.registerSplit(CurseSpawning.class);
+        EventBuses.registerSplit(HyakkiArena.class);
+        EventBuses.registerSplit(CullingGame.class);
+        EventBuses.registerSplit(SoulEchoes.class);
+        EventBuses.registerSplit(ExpeditionProgress.class);
+        EventBuses.registerSplit(ExpeditionCommands.class);
         ProgressionContent.init(GeneratedMod.MOD_BUS);
-        net.neoforged.neoforge.common.NeoForge.EVENT_BUS.register(Journey.class);
+        EventBuses.registerSplit(Journey.class);
         Authority.init();
         Content.init(GeneratedMod.MOD_BUS);
         SkillSounds.init(GeneratedMod.MOD_BUS);
@@ -91,7 +90,6 @@ public final class GeneratedMod {
         character.CharacterCasting.registerEffect("higuruma", character.higuruma.HigurumaSkills.ENHANCE, (character.CharacterCasting.Effect) (p, s2, r) -> character.higuruma.HigurumaCombat.enhanceThrow(p));
         character.CharacterCasting.registerEffect("higuruma", character.higuruma.HigurumaSkills.DOMAIN, (character.CharacterCasting.Effect) (p, s2, r) -> character.higuruma.HigurumaCombat.domain(p));
         NeoForge.EVENT_BUS.register(character.higuruma.HigurumaCombat.class);
-        NeoForge.EVENT_BUS.register(character.higuruma.HigurumaDomain.class);
         NeoForge.EVENT_BUS.addListener(character.higuruma.HigurumaDomain::serverTick);
         NeoForge.EVENT_BUS.addListener(character.higuruma.HigurumaDomain::serverStopped);
         // 鹿紫云一 · 幻兽琥珀：电荷 / 必中落雷 / 终奥
@@ -169,7 +167,6 @@ public final class GeneratedMod {
             @Override public String reason() { return "甜品时间：正在吃，2 秒内不能施术"; }
         });
         NeoForge.EVENT_BUS.register(character.ryu.RyuCombat.class);
-        NeoForge.EVENT_BUS.register(character.ryu.RyuDomain.class);
         NeoForge.EVENT_BUS.register(character.toji.TojiQte.class);
         // 禅院直哉·投射咒法：八个技能全部走自己的服务端逻辑
         for (int naoyaSkill : character.naoya.NaoyaSkills.wheel()) {
@@ -179,8 +176,7 @@ public final class GeneratedMod {
         NeoForge.EVENT_BUS.register(character.naoya.NaoyaCombat.class);
         NeoForge.EVENT_BUS.register(character.naoya.NaoyaDomain.class);
         NeoForge.EVENT_BUS.register(character.mainline.Mainline.class);
-        NeoForge.EVENT_BUS.register(GuideBook.class);   // 开局《游玩方法手册》   // 共同主线成就
-        NeoForge.EVENT_BUS.register(character.TechniqueApi.class);
+        EventBuses.registerSplit(GuideBook.class);   // 开局《游玩方法手册》   // 共同主线成就
         NeoForge.EVENT_BUS.register(character.domain.DomainStyleReload.class);
         NeoForge.EVENT_BUS.register(character.domain.PictureDomainApi.class);
         NeoForge.EVENT_BUS.register(character.npc.NpcControl.class);
@@ -237,13 +233,12 @@ public final class GeneratedMod {
         NeoForge.EVENT_BUS.register(character.mahito.MahitoTransfigure.class);
         NeoForge.EVENT_BUS.addListener((net.neoforged.neoforge.event.entity.living.LivingIncomingDamageEvent ev)->{if(ev.getEntity() instanceof net.minecraft.server.level.ServerPlayer sp&&character.mahito.MahitoSelf.damageScale(sp)<1f)ev.setAmount(ev.getAmount()*character.mahito.MahitoSelf.damageScale(sp));});
         NeoForge.EVENT_BUS.register(character.mahito.MahitoPowers.class);
-        NeoForge.EVENT_BUS.register(character.mahito.MahitoSelf.class);
         character.CharacterCasting.registerEffect("mahito",character.mahito.MahitoSkills.SELF_EMBRYO,
             (p,skill,rank)->character.domainking.SelfEmbryoDomain.toggle(p));
         character.domainking.DomainKingCombat.register();
         NeoForge.EVENT_BUS.register(character.domainking.DomainKingCombat.class);
         NeoForge.EVENT_BUS.register(character.domainking.SelfEmbryoDomain.class);
-        NeoForge.EVENT_BUS.register(NpcCurse.class);
+        EventBuses.registerSplit(NpcCurse.class);
         NeoForge.EVENT_BUS.addListener((ServerTickEvent.Post e)->{if(true)NpcBridge.tick();});
         NeoForge.EVENT_BUS.addListener((net.neoforged.neoforge.event.server.ServerStoppingEvent e)->NpcBridge.clear());
         character.CharacterCasting.registerNpcProvider(JogoNpcEntity.class,(e,skill)->PlayerSkillBridge.cast(character.CharacterCasting.caster(e),"jogo",skill));
@@ -269,33 +264,33 @@ public final class GeneratedMod {
         NeoForge.EVENT_BUS.register(character.culling.CullingPerks.class);
         NeoForge.EVENT_BUS.register(character.culling.CullingEntry.class);
         NeoForge.EVENT_BUS.register(character.culling.CullingGate.class);
-        NeoForge.EVENT_BUS.register(BloodWingsRain.class);
-        NeoForge.EVENT_BUS.register(UraumeIce.class);
+        EventBuses.registerSplit(BloodWingsRain.class);
+        EventBuses.registerSplit(UraumeIce.class);
         NeoForge.EVENT_BUS.register(character.uraume.UraumePalaceDomain.class);
-        NeoForge.EVENT_BUS.register(GojoBranchCombat.class);
+        EventBuses.registerSplit(GojoBranchCombat.class);
         NeoForge.EVENT_BUS.register(character.yuji.YujiRebuild.class);
-        NeoForge.EVENT_BUS.register(FingerPossession.class);
+        EventBuses.registerSplit(FingerPossession.class);
         for (int yujiSkill : character.yuji.YujiRebuildSkills.WHEEL)
             character.CharacterCasting.registerEffect("yuji", yujiSkill, (p, s, r) -> character.yuji.YujiRebuild.cast(p, s.id()));
-        NeoForge.EVENT_BUS.register(SukunaNpcTrueForm.class);
+        EventBuses.registerSplit(SukunaNpcTrueForm.class);
         Network.registerDrawing();
-        NeoForge.EVENT_BUS.register(SlashForms.class);
-        NeoForge.EVENT_BUS.register(DismantleMotion.class);
-        NeoForge.EVENT_BUS.register(MeleeCombo.class);
-        NeoForge.EVENT_BUS.register(FreehandDrawing.class);
-        NeoForge.EVENT_BUS.register(Skills.class);
-        NeoForge.EVENT_BUS.register(NetBranches.class);
-        NeoForge.EVENT_BUS.register(Curse.class);
-        NeoForge.EVENT_BUS.register(CombatSettings.class);
-        NeoForge.EVENT_BUS.register(CombatSafety.class);
-        NeoForge.EVENT_BUS.register(BloodArts.class);
-        NeoForge.EVENT_BUS.register(BloodDomain.class);
-        NeoForge.EVENT_BUS.register(DeathStar.class);
-        NeoForge.EVENT_BUS.register(GuardianCombat.class);
-        NeoForge.EVENT_BUS.register(GuardianProgress.class);
+        EventBuses.registerSplit(SlashForms.class);
+        EventBuses.registerSplit(DismantleMotion.class);
+        EventBuses.registerSplit(MeleeCombo.class);
+        EventBuses.registerSplit(FreehandDrawing.class);
+        EventBuses.registerSplit(Skills.class);
+        EventBuses.registerSplit(NetBranches.class);
+        EventBuses.registerSplit(Curse.class);
+        EventBuses.registerSplit(CombatSettings.class);
+        EventBuses.registerSplit(CombatSafety.class);
+        EventBuses.registerSplit(BloodArts.class);
+        EventBuses.registerSplit(BloodDomain.class);
+        EventBuses.registerSplit(DeathStar.class);
+        EventBuses.registerSplit(GuardianCombat.class);
+        EventBuses.registerSplit(GuardianProgress.class);
         // 对战败北在本模组的伤害加成结算后判断，防止附加伤害穿过1血保护。
-        NeoForge.EVENT_BUS.register(EternalLove.class);
-        if(net.neoforged.fml.ModList.get().isLoaded("touhou_little_maid"))NeoForge.EVENT_BUS.register(MaidDuel.class);
+        EventBuses.registerSplit(EternalLove.class);
+        if(net.neoforged.fml.ModList.get().isLoaded("touhou_little_maid"))EventBuses.registerSplit(MaidDuel.class);
         // 专用服务器不加载任何客户端类；客户端关键事件改为从入口显式接入。
         cn.blockforge.generated.nnnnr1201forge2.CompatClient.runWhenClient(()->ClientBootstrap.install());
     }

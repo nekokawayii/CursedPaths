@@ -23,8 +23,11 @@ public final class AuthorityMarkerItem extends Item {
     }
 
     /** 同时接住空气、方块、普通生物和有专用交互的生物，避免标记时误开门、交易或骑乘。 */
-    @SubscribeEvent(priority=EventPriority.LOWEST)
-    public static void interact(PlayerInteractEvent event){
+    @SubscribeEvent(priority=EventPriority.LOWEST) public static void interact_RightClickItem(PlayerInteractEvent.RightClickItem e){interact(e);}
+    @SubscribeEvent(priority=EventPriority.LOWEST) public static void interact_RightClickBlock(PlayerInteractEvent.RightClickBlock e){interact(e);}
+    @SubscribeEvent(priority=EventPriority.LOWEST) public static void interact_EntityInteract(PlayerInteractEvent.EntityInteract e){interact(e);}
+    @SubscribeEvent(priority=EventPriority.LOWEST) public static void interact_EntityInteractSpecific(PlayerInteractEvent.EntityInteractSpecific e){interact(e);}
+    private static void interact(PlayerInteractEvent event){
         if(!(event instanceof PlayerInteractEvent.RightClickItem||event instanceof PlayerInteractEvent.RightClickBlock
             ||event instanceof PlayerInteractEvent.EntityInteract||event instanceof PlayerInteractEvent.EntityInteractSpecific))return;
         if(!event.getItemStack().is(Authority.MARKER.get()))return;

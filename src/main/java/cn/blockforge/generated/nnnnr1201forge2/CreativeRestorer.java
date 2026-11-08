@@ -31,8 +31,11 @@ public final class CreativeRestorer extends Item {
         lines.add(Component.literal("保留成长、物品、敌友设置；不消耗道具"));
     }
     /** 定身时也可以使用测试道具，但绝不放开普通物品的交互。 */
-    @SubscribeEvent(priority=EventPriority.LOWEST,receiveCanceled=true)
-    public static void interact(PlayerInteractEvent event){
+    @SubscribeEvent(priority=EventPriority.LOWEST,receiveCanceled=true) public static void interact_RightClickItem(PlayerInteractEvent.RightClickItem e){interact(e);}
+    @SubscribeEvent(priority=EventPriority.LOWEST,receiveCanceled=true) public static void interact_RightClickBlock(PlayerInteractEvent.RightClickBlock e){interact(e);}
+    @SubscribeEvent(priority=EventPriority.LOWEST,receiveCanceled=true) public static void interact_EntityInteract(PlayerInteractEvent.EntityInteract e){interact(e);}
+    @SubscribeEvent(priority=EventPriority.LOWEST,receiveCanceled=true) public static void interact_EntityInteractSpecific(PlayerInteractEvent.EntityInteractSpecific e){interact(e);}
+    private static void interact(PlayerInteractEvent event){
         if(!(event instanceof PlayerInteractEvent.RightClickItem||event instanceof PlayerInteractEvent.RightClickBlock||event instanceof PlayerInteractEvent.EntityInteract||event instanceof PlayerInteractEvent.EntityInteractSpecific))return;
         if(!event.getEntity().isCreative()||!(event.getItemStack().getItem() instanceof CreativeRestorer))return;
         if(event.getEntity() instanceof ServerPlayer p)restore(p);

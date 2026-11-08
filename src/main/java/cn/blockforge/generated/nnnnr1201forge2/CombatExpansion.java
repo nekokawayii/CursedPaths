@@ -126,7 +126,9 @@ public final class CombatExpansion {
         if(e.getSource().getEntity() instanceof LivingEntity attacker&&controlled(attacker)){e.setCanceled(true);return;}
         if(DismantleMotion.active(e.getEntity())&&!e.getSource().is(net.minecraft.world.damagesource.DamageTypes.FELL_OUT_OF_WORLD)&&!e.getSource().is(net.minecraft.world.damagesource.DamageTypes.GENERIC_KILL))e.setCanceled(true);
     }
-    @SubscribeEvent public static void interact(PlayerInteractEvent e){if(true&&controlled(e.getEntity()))cn.blockforge.generated.nnnnr1201forge2.CompatEvents.cancel(e);}
+        @SubscribeEvent public static void interactBlock(PlayerInteractEvent.RightClickBlock e){if(true&&controlled(e.getEntity()))cn.blockforge.generated.nnnnr1201forge2.CompatEvents.cancel(e);}
+    @SubscribeEvent public static void interactItem(PlayerInteractEvent.RightClickItem e){if(true&&controlled(e.getEntity()))cn.blockforge.generated.nnnnr1201forge2.CompatEvents.cancel(e);}
+    @SubscribeEvent public static void interactLeft(PlayerInteractEvent.LeftClickBlock e){if(true&&controlled(e.getEntity()))cn.blockforge.generated.nnnnr1201forge2.CompatEvents.cancel(e);}
     @SubscribeEvent public static void breakSpeed(PlayerEvent.BreakSpeed e){if(controlled(e.getEntity()))e.setCanceled(true);}
     private static void schedule(ServerPlayer p,Vec3 from,Vec3 dir,UUID target,double width,int delay){if(scheduled.size()<2048)scheduled.add(new Scheduled(p,p.serverLevel(),p.level().getGameTime()+delay,from,dir.normalize(),target,width));}
     private static void add(Projectile b){if(projectiles.size()<2048)projectiles.add(b);}

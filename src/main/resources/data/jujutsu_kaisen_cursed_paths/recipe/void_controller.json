@@ -4,5 +4,5 @@
   "category": "misc",
   "pattern": ["DDD", "DDD", "DDD"],
   "key": {"D": {"item": "minecraft:dirt"}},
-  "result": {"item": "jujutsu_kaisen_cursed_paths:void_controller", "count": 1}
+  "result": {"id": "jujutsu_kaisen_cursed_paths:void_controller", "count": 1}
 }

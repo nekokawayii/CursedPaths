@@ -10,5 +10,5 @@
     "B": { "item": "minecraft:netherite_sword" },
     "O": { "item": "minecraft:obsidian" }
   },
-  "result": { "item": "jujutsu_kaisen_cursed_paths:shinbuke" }
+  "result": { "id": "jujutsu_kaisen_cursed_paths:shinbuke" }
 }

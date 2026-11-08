@@ -262,7 +262,9 @@ public final class SixfoldFinale {
     }
     @SubscribeEvent(priority=EventPriority.HIGHEST) public static void knockback(LivingKnockBackEvent e){if(active(e.getEntity())||controlled(e.getEntity()))e.setCanceled(true);}
     @SubscribeEvent public static void fall(LivingFallEvent e){if(active(e.getEntity())||controlled(e.getEntity())){e.setDistance(0);e.setDamageMultiplier(0);}}
-    @SubscribeEvent public static void interact(PlayerInteractEvent e){if(true&&(active(e.getEntity())||controlled(e.getEntity())))cn.blockforge.generated.nnnnr1201forge2.CompatEvents.cancel(e);}
+        @SubscribeEvent public static void interactBlock(PlayerInteractEvent.RightClickBlock e){if(true&&(active(e.getEntity())||controlled(e.getEntity())))cn.blockforge.generated.nnnnr1201forge2.CompatEvents.cancel(e);}
+    @SubscribeEvent public static void interactItem(PlayerInteractEvent.RightClickItem e){if(true&&(active(e.getEntity())||controlled(e.getEntity())))cn.blockforge.generated.nnnnr1201forge2.CompatEvents.cancel(e);}
+    @SubscribeEvent public static void interactLeft(PlayerInteractEvent.LeftClickBlock e){if(true&&(active(e.getEntity())||controlled(e.getEntity())))cn.blockforge.generated.nnnnr1201forge2.CompatEvents.cancel(e);}
     @SubscribeEvent public static void melee(AttackEntityEvent e){if(active(e.getEntity())||controlled(e.getEntity()))e.setCanceled(true);}
     @SubscribeEvent public static void breakSpeed(PlayerEvent.BreakSpeed e){if(active(e.getEntity())||controlled(e.getEntity()))e.setCanceled(true);}
     @SubscribeEvent public static void teleportEvent(EntityTeleportEvent e){if(true&&e.getEntity() instanceof LivingEntity t&&(controlled(t)||active(t)))e.setCanceled(true);}

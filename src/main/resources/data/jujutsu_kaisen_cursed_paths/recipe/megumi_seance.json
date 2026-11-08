@@ -6,5 +6,5 @@
     {"item": "minecraft:ink_sac"},
     {"item": "minecraft:amethyst_shard"}
   ],
-  "result": {"item": "jujutsu_kaisen_cursed_paths:megumi_seance", "count": 1}
+  "result": {"id": "jujutsu_kaisen_cursed_paths:megumi_seance", "count": 1}
 }
