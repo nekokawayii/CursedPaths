@@ -39,7 +39,7 @@ public final class SkillDestruction {
                 if(Vec3.atCenterOf(pos).distanceToSqr(point)>(radius+0.8)*(radius+0.8)||!visited.add(pos.immutable())||!l.hasChunkAt(pos)||!l.getWorldBorder().isWithinBounds(pos))continue;
                 var state=l.getBlockState(pos);if(state.isAir()||state.getDestroySpeed(l,pos)<0||state.hasBlockEntity()||SoulJourney.protectedBlock(l,pos))continue;
                 ServerPlayer authority=p instanceof MaidBridge.Actor a?MaidBridge.owner(a):p;if(authority==null||!l.mayInteract(authority,pos))continue;
-                if(NeoForge.EVENT_BUS.post(new BlockEvent.BreakEvent(l,pos.immutable(),state,authority))||!net.neoforged.neoforge.event.EventHooks.onEntityDestroyBlock(MaidBridge.body(p),pos,state))continue;
+                if(breakDenied(l,pos.immutable(),state,authority)||!net.neoforged.neoforge.event.EventHooks.onEntityDestroyBlock(MaidBridge.body(p),pos,state))continue;
                 l.destroyBlock(pos,false,MaidBridge.body(p));
             }
         }

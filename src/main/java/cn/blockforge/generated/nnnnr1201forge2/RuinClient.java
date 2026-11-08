@@ -57,7 +57,7 @@ public final class RuinClient {
             ghost.setupAnim(mc.player,runner?t*.3f:0,runner?.7f:0,t,0,0);ghost.hat.visible=false;
             if(!runner&&!teacher){ghost.rightLeg.xRot=ghost.leftLeg.xRot=-1.4f;ghost.rightArm.xRot=ghost.leftArm.xRot=-0.65f;}
             if(teacher)ghost.rightArm.xRot=-1.5f+(float)Math.sin(t*.04)*.2f;
-            ps.pushPose();ps.translate(p.x,p.y+1.5,p.z);ps.mulPose(Axis.YP.rotationDegrees((runner?90:180)-rotation*90));ps.scale(-1,-1,1);ghost.renderToBuffer(ps,buffer,0xF000F0,OverlayTexture.NO_OVERLAY,.7f,.72f,.9f,alpha);ps.popPose();
+            ps.pushPose();ps.translate(p.x,p.y+1.5,p.z);ps.mulPose(Axis.YP.rotationDegrees((runner?90:180)-rotation*90));ps.scale(-1,-1,1);ghost.renderToBuffer(ps,buffer,0xF000F0,OverlayTexture.NO_OVERLAY,((int)(Math.max(0f,Math.min(1f,alpha))*255)<<24)|0xFFFFFF);ps.popPose();
         }
         source.endBatch();
     }

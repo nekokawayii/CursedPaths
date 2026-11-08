@@ -80,7 +80,7 @@ public final class HigurumaCombat {
         seal.put("item", CompatItem.save(off));
         ItemStack proxy = off.copy();
         double damage = 1.0, speed = 4.0;
-        for (var entry : proxy.getAttributeModifiers(EquipmentSlot.MAINHAND).entries()) {
+        for (var entry : proxy.getAttributeModifiers().modifiers()) {
             if (entry.getKey() == Attributes.ATTACK_DAMAGE) damage += entry.getValue().getAmount();
             if (entry.getKey() == Attributes.ATTACK_SPEED) speed += entry.getValue().getAmount();
         }
