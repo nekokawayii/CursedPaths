@@ -254,7 +254,7 @@ public final class SixfoldFinale {
         }
         for(Prison prison:List.copyOf(prisoners.values()))hold(prison);
     }
-    @SubscribeEvent(priority=EventPriority.HIGHEST) public static void living(net.neoforged.neoforge.event.tick.EntityTickEvent.Post e){if(e.getEntity().level().isClientSide)return;Prison prison=prisoners.get(e.getEntity().getUUID());if(prison!=null){hold(prison);if(!(e.getEntity() instanceof Player))e.setCanceled(true);}}
+    @SubscribeEvent(priority=EventPriority.HIGHEST) public static void living(net.neoforged.neoforge.event.tick.EntityTickEvent.Post e){if(e.getEntity().level().isClientSide)return;Prison prison=prisoners.get(e.getEntity().getUUID());if(prison!=null){hold(prison);if(!(e.getEntity() instanceof Player))cn.blockforge.generated.nnnnr1201forge2.CompatEvents.cancel(e);}}
     private static boolean gathering(LivingEntity t){for(Cast s:casts.values())if(s.age>=FinaleRules.TRIGGERS[4]&&s.age<FinaleRules.END&&s.level==t.level()&&t.distanceToSqr(s.center)<=FinaleRules.RADIUS*FinaleRules.RADIUS)return true;return false;}
     @SubscribeEvent(priority=EventPriority.HIGHEST) public static void attack(LivingIncomingDamageEvent e){
         boolean administrative=e.getSource().is(net.minecraft.world.damagesource.DamageTypes.GENERIC_KILL)||e.getSource().is(net.minecraft.world.damagesource.DamageTypes.FELL_OUT_OF_WORLD);
@@ -262,7 +262,7 @@ public final class SixfoldFinale {
     }
     @SubscribeEvent(priority=EventPriority.HIGHEST) public static void knockback(LivingKnockBackEvent e){if(active(e.getEntity())||controlled(e.getEntity()))e.setCanceled(true);}
     @SubscribeEvent public static void fall(LivingFallEvent e){if(active(e.getEntity())||controlled(e.getEntity())){e.setDistance(0);e.setDamageMultiplier(0);}}
-    @SubscribeEvent public static void interact(PlayerInteractEvent e){if(true&&(active(e.getEntity())||controlled(e.getEntity())))e.setCanceled(true);}
+    @SubscribeEvent public static void interact(PlayerInteractEvent e){if(true&&(active(e.getEntity())||controlled(e.getEntity())))cn.blockforge.generated.nnnnr1201forge2.CompatEvents.cancel(e);}
     @SubscribeEvent public static void melee(AttackEntityEvent e){if(active(e.getEntity())||controlled(e.getEntity()))e.setCanceled(true);}
     @SubscribeEvent public static void breakSpeed(PlayerEvent.BreakSpeed e){if(active(e.getEntity())||controlled(e.getEntity()))e.setCanceled(true);}
     @SubscribeEvent public static void teleportEvent(EntityTeleportEvent e){if(true&&e.getEntity() instanceof LivingEntity t&&(controlled(t)||active(t)))e.setCanceled(true);}

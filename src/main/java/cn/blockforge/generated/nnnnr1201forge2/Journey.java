@@ -88,7 +88,7 @@ public final class Journey {
         if(!ready(p))return;
         int i=page(p);LivingEntity subject=MaidBridge.body(p);
         if(i==0){boolean fighting=Curse.active(p,"Combat")&&!p.level().getEntitiesOfClass(Monster.class,p.getBoundingBox().inflate(24),e->e.isAlive()).isEmpty();if(subject.getHealth()<subject.getMaxHealth()*0.3f&&fighting)add(p,0,1);else d.putDouble("Task0",0);}
-        if(i==3){if(subject.getActiveEffects().stream().filter(e->!e.getEffect().isBeneficial()).count()>=3)add(p,3,1);else d.putDouble("Task3",0);}
+        if(i==3){if(subject.getActiveEffects().stream().filter(e->!e.getEffect().value().isBeneficial()).count()>=3)add(p,3,1);else d.putDouble("Task3",0);}
         if(i==4){Position old=positions.put(p.getUUID(),new Position(p.level().dimension(),p.position()));if(old!=null&&old.dimension.equals(p.level().dimension())&&(subject.hasEffect(MobEffects.INVISIBILITY)||subject.hasEffect(MobEffects.DARKNESS))){double distance=old.pos.distanceTo(p.position());if(distance<2&&!subject.isPassenger())add(p,4,distance);}}
         else positions.remove(p.getUUID());
         if(i==7&&p.tickCount%20==0&&!Curse.active(p,"Combat")&&p.level().getEntitiesOfClass(Monster.class,p.getBoundingBox().inflate(32),LivingEntity::isAlive).isEmpty())add(p,7,20);

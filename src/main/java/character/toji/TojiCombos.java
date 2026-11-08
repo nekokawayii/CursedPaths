@@ -106,7 +106,7 @@ public final class TojiCombos {
             case 4 -> { return suplex(p); }
             case 5 -> { return p.onGround() && slideKick(p); }
             case 6 -> {
-                if (target == null || target.getActiveEffects().stream().noneMatch(effect -> effect.getEffect().isBeneficial()))
+                if (target == null || target.getActiveEffects().stream().noneMatch(effect -> effect.getEffect().value().isBeneficial()))
                     return false;                                   // 目标身上没有增益就不算破魔
                 return breakMagic(p);
             }
@@ -199,7 +199,7 @@ public final class TojiCombos {
     private static boolean breakMagic(ServerPlayer p) {
         LivingEntity target = TojiQte.approach(p, 4.5);
         if (target == null) return false;
-        target.getActiveEffects().stream().filter(effect -> effect.getEffect().isBeneficial()).toList()
+        target.getActiveEffects().stream().filter(effect -> effect.getEffect().value().isBeneficial()).toList()
             .forEach(effect -> target.removeEffect(effect.getEffect()));
         hit(p, target, C6, 0.6, 0.5, 10);
         fx(p, 6, target.position());

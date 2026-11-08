@@ -11,7 +11,7 @@ import net.neoforged.fml.common.Mod;
 import java.io.IOException;
 import net.neoforged.fml.common.EventBusSubscriber;
 
-/** 盖棺铁围山的不透明球壳材质：POSITION_COLOR_TEX，uv.x=经度、uv.y=纬度。 */
+/** 盖棺铁围山的不透明球壳材质：POSITION_TEX_COLOR，uv.x=经度、uv.y=纬度。 */
 @EventBusSubscriber(modid = "jujutsu_kaisen_cursed_paths", value = Dist.CLIENT, bus = EventBusSubscriber.Bus.MOD)
 public final class JogoDomainShaders {
     public static ShaderInstance shell;
@@ -25,7 +25,7 @@ public final class JogoDomainShaders {
         if(!textured) LogUtils.getLogger().warn("盖棺铁围山缺少 wall_base/wall_emission 贴图：本次只保留纯色结界，请补齐资源");
         try {
             event.registerShader(new ShaderInstance(event.getResourceProvider(),
-                ResourceLocation.fromNamespaceAndPath("jujutsu_kaisen_cursed_paths", "jogo_domain"),DefaultVertexFormat.POSITION_COLOR_TEX),
+                ResourceLocation.fromNamespaceAndPath("jujutsu_kaisen_cursed_paths", "jogo_domain"),DefaultVertexFormat.POSITION_TEX_COLOR),
                 shader -> shell = shader);
         } catch (IOException | RuntimeException error) {
             LogUtils.getLogger().warn("盖棺铁围山球壳材质加载失败，退回纯色结界",error);

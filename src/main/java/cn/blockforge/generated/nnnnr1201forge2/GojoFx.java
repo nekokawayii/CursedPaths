@@ -22,8 +22,8 @@ public final class GojoFx {
     public static void tick(){
         time++;GojoVoidClient.tick();GojoBlastClient.tick();GojoBeamClient.tick();GojoTrailClient.tick();GojoOpticsClient.tick();
         active.values().removeIf(e->{
-            if(e.sticky()&&time<e.buildOrThrow())return false;
-            if(time>=e.buildOrThrow()){PhotonFx.stop(e.handle());return true;}
+            if(e.sticky()&&time<e.end())return false;
+            if(time>=e.end()){PhotonFx.stop(e.handle());return true;}
             return false;
         });
     }

@@ -126,7 +126,7 @@ public final class MahitoCombat {
         return target;
     }
     public static boolean ready(ServerPlayer p,LivingEntity target,int id){
-        if(id==MahitoSkills.REFORGE)return body(p).getHealth()<body(p).getMaxHealth()*.8f||target.getActiveEffects().stream().anyMatch(e->e.getEffect().isBeneficial());
+        if(id==MahitoSkills.REFORGE)return body(p).getHealth()<body(p).getMaxHealth()*.8f||target.getActiveEffects().stream().anyMatch(e->e.getEffect().value().isBeneficial());
         if(id==MahitoSkills.DODGE)return body(p).hurtTime>0||body(p).distanceToSqr(target)<16;
         if(id==MahitoSkills.COLLAPSE)return body(p).distanceToSqr(target)<=100&&body(p).hasLineOfSight(target);
         if(id==MahitoSkills.TAIL)return body(p).distanceToSqr(target)<=100;
@@ -175,7 +175,7 @@ public final class MahitoCombat {
             if(puppet.getHealth()/puppet.getMaxHealth()<friend.getHealth()/friend.getMaxHealth())friend=puppet;
         friend.heal(friend.getMaxHealth()*.2f);fx(p,REFORGE,friend.position(),Vec3.ZERO,1,20);
         LivingEntity enemy=aimed(p,5);if(!(enemy instanceof Player))return;
-        MobEffectInstance buff=enemy.getActiveEffects().stream().filter(e->e.getEffect().isBeneficial()).findFirst().orElse(null);if(buff==null)return;
+        MobEffectInstance buff=enemy.getActiveEffects().stream().filter(e->e.getEffect().value().isBeneficial()).findFirst().orElse(null);if(buff==null)return;
         Holder<MobEffect> negative=buff.getEffect()==MobEffects.DAMAGE_BOOST?MobEffects.WEAKNESS:buff.getEffect()==MobEffects.MOVEMENT_SPEED?MobEffects.MOVEMENT_SLOWDOWN:buff.getEffect()==MobEffects.DIG_SPEED?MobEffects.DIG_SLOWDOWN:buff.getEffect()==MobEffects.REGENERATION?MobEffects.POISON:MobEffects.WITHER;
         enemy.removeEffect(buff.getEffect());enemy.addEffect(new MobEffectInstance(negative,Math.max(40,Math.min(200,buff.getDuration())),buff.getAmplifier()));
     }

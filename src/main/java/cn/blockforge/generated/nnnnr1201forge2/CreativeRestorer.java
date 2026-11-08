@@ -36,7 +36,7 @@ public final class CreativeRestorer extends Item {
         if(!(event instanceof PlayerInteractEvent.RightClickItem||event instanceof PlayerInteractEvent.RightClickBlock||event instanceof PlayerInteractEvent.EntityInteract||event instanceof PlayerInteractEvent.EntityInteractSpecific))return;
         if(!event.getEntity().isCreative()||!(event.getItemStack().getItem() instanceof CreativeRestorer))return;
         if(event.getEntity() instanceof ServerPlayer p)restore(p);
-        event.setCancellationResult(InteractionResult.SUCCESS);event.setCanceled(true);
+        event.setCancellationResult(InteractionResult.SUCCESS);cn.blockforge.generated.nnnnr1201forge2.CompatEvents.cancel(event);
     }
     static void restore(ServerPlayer p){
         if(!p.isCreative()||!p.isAlive())return;

@@ -107,7 +107,7 @@ public final class DomainKingCombat {
             Field f = it.next();
             ServerPlayer owner = f.owner();
             if (owner == null || !owner.isAlive() || !(owner.level() instanceof ServerLevel level)) { it.remove(); continue; }
-            if (level.getGameTime() >= f.buildOrThrow()) {
+            if (level.getGameTime() >= f.end()) {
                 it.remove();
                 if (f.name().equals("盖棺铁围山")) character.jogo.JogoTerrain.restore(owner);
             }

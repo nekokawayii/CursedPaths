@@ -312,7 +312,7 @@ public final class JogoCombat {
         for(Iterator<Fan> it=FANS.iterator();it.hasNext();){
             Fan fan=it.next();ServerLevel level=fan.level();
             ServerPlayer owner=MaidBridge.find(level,fan.owner());
-            if(owner==null||level.getServer().getTickCount()>=fan.buildOrThrow()){it.remove();continue;}
+            if(owner==null||level.getServer().getTickCount()>=fan.end()){it.remove();continue;}
             if(DomainClash.active(owner)||level.getServer().getTickCount()%5!=0)continue;
             Vec3 side=fan.dir().cross(new Vec3(0,1,0)).normalize();
             int count=Math.max(3,Math.min(5,1+CharacterService.rank(owner)));
@@ -447,7 +447,7 @@ public final class JogoCombat {
         for(Iterator<Domain> it=DOMAINS.iterator();it.hasNext();){
             Domain d=it.next();ServerPlayer owner=d.owner();
             if(owner==null||!owner.isAlive()||owner.hasDisconnected()||!JogoTerrain.sameLevel(owner)){it.remove();if(owner!=null)JogoTerrain.restore(owner);continue;}
-            if(owner.getServer().getTickCount()>=d.buildOrThrow()){
+            if(owner.getServer().getTickCount()>=d.end()){
                 JogoTerrain.restore(owner);
                 Network.send(owner.serverLevel(),new Network.Effect(JogoFx.DOMAIN_END,owner.getId(),d.center(),Vec3.ZERO,0,0,0));
                 it.remove();continue;

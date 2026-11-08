@@ -75,7 +75,7 @@ public final class JogoFxClient {
         var mc=Minecraft.getInstance();
         if(mc.level==null||DOMAINS.isEmpty())return;
         long now=mc.level.getGameTime();
-        DOMAINS.removeIf(d->now>=d.buildOrThrow());
+        DOMAINS.removeIf(d->now>=d.end());
         // 地面表现全部交给真实方块（见 JogoTerrain），这里不再生成任何地面粒子
     }
     public static void clear(){DOMAINS.clear();}

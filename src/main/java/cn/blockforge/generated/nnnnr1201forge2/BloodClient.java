@@ -27,7 +27,7 @@ public final class BloodClient {
     private static Object world;
     private static long tick;
     public static final class Registration {
-        @SubscribeEvent public static void shaders(RegisterShadersEvent event){shader=null;try{event.registerShader(new ShaderInstance(event.getResourceProvider(),ResourceLocation.fromNamespaceAndPath("jujutsu_kaisen_cursed_paths", "blood_fluid"),DefaultVertexFormat.POSITION_COLOR_TEX),s->shader=s);}catch(java.io.IOException|RuntimeException error){com.mojang.logging.LogUtils.getLogger().warn("赤血动态材质加载失败，保留流动血线与基础材质",error);}}
+        @SubscribeEvent public static void shaders(RegisterShadersEvent event){shader=null;try{event.registerShader(new ShaderInstance(event.getResourceProvider(),ResourceLocation.fromNamespaceAndPath("jujutsu_kaisen_cursed_paths", "blood_fluid"),DefaultVertexFormat.POSITION_TEX_COLOR),s->shader=s);}catch(java.io.IOException|RuntimeException error){com.mojang.logging.LogUtils.getLogger().warn("赤血动态材质加载失败，保留流动血线与基础材质",error);}}
     }
     /** 翅王是否仍在持续（客户端判断，供左键血雨用）。 */
     private static long wingsUntil;
@@ -79,12 +79,12 @@ public final class BloodClient {
         ps.pushPose();try{
             ps.translate(-camera.x,-camera.y,-camera.z);RenderSystem.enableDepthTest();RenderSystem.enableBlend();RenderSystem.defaultBlendFunc();RenderSystem.disableCull();RenderSystem.depthMask(false);RenderSystem.setShaderColor(1,1,1,1);RenderSystem.setShaderTexture(0,TEXTURE);
             if(shader!=null){shader.safeGetUniform("BloodTime").set((float)(time/20));shader.safeGetUniform("FluidMode").set(0f);RenderSystem.setShader(()->shader);}else RenderSystem.setShader(GameRenderer::getPositionColorTexShader);
-            BufferBuilder b=Tesselator.getInstance().begin(VertexFormat.Mode.QUADS,DefaultVertexFormat.POSITION_COLOR_TEX);
+            BufferBuilder b=Tesselator.getInstance().begin(VertexFormat.Mode.QUADS,DefaultVertexFormat.POSITION_TEX_COLOR);
             for(Visual v:visuals)if(v.e.position().distanceToSqr(camera)<180*180)draw(b,ps,v,camera,time);
             for(Visual v:oceans.values())if(v.e.position().distanceToSqr(camera)<240*240)ocean(b,ps,v,camera,time);
             BufferUploader.drawWithShader(b.buildOrThrow());
             if(shader!=null)shader.safeGetUniform("FluidMode").set(1f);
-            b.begin(VertexFormat.Mode.QUADS,DefaultVertexFormat.POSITION_COLOR_TEX);
+            b.begin(VertexFormat.Mode.QUADS,DefaultVertexFormat.POSITION_TEX_COLOR);
             for(Visual v:domains.values())if(v.e.position().distanceToSqr(camera)<240*240)domain(b,ps,v,camera,time);
             BufferUploader.drawWithShader(b.buildOrThrow());
             // 眼白与瞳孔独立使用纯色通道，绝不经过红色血液材质染色。
@@ -93,7 +93,7 @@ public final class BloodClient {
             BufferUploader.drawWithShader(b.buildOrThrow());
             if(shader!=null){shader.safeGetUniform("FluidMode").set(0f);RenderSystem.setShader(()->shader);}else RenderSystem.setShader(GameRenderer::getPositionColorTexShader);
             // 预测轨迹不修改服务端时间，也不会标记友方。
-            RenderSystem.disableDepthTest();b.begin(VertexFormat.Mode.QUADS,DefaultVertexFormat.POSITION_COLOR_TEX);
+            RenderSystem.disableDepthTest();b.begin(VertexFormat.Mode.QUADS,DefaultVertexFormat.POSITION_TEX_COLOR);
             for(Visual v:visuals)if(v.e.kind()==BloodArts.FX_HEART){Entity target=mc.level.getEntity(v.e.owner());Vec3 at=target==null?v.e.position():target.position();heart(b,ps,at.add(0,target==null?2:target.getEyeHeight()+.3,0),camera,time);prediction(b,ps,at,v.e.direction(),v.e.size(),camera,time);}
             BufferUploader.drawWithShader(b.buildOrThrow());
         }finally{ps.popPose();RenderSystem.depthMask(mask);if(depth)RenderSystem.enableDepthTest();else RenderSystem.disableDepthTest();if(cull)RenderSystem.enableCull();else RenderSystem.disableCull();RenderSystem.blendFuncSeparate(src,dst,srcA,dstA);if(blend)RenderSystem.enableBlend();else RenderSystem.disableBlend();RenderSystem.setShaderTexture(0,texture);RenderSystem.setShader(()->previous);RenderSystem.setShaderColor(color[0],color[1],color[2],color[3]);}

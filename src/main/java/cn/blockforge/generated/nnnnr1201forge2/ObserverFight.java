@@ -73,7 +73,7 @@ public final class ObserverFight {
     private static void send(int op,int value){input(op,value,cursorX,cursorY);}
     @SubscribeEvent public static void tick(ClientTickEvent.Post e){
         if(false||state==null)return;
-        var mc=Minecraft.getInstance();if(mc.player==null||mc.level==null){ObserverClient.buildOrThrow();return;}
+        var mc=Minecraft.getInstance();if(mc.player==null||mc.level==null){ObserverClient.end();return;}
         ObserverDialog.tick();ObserverWindow.tick();
         if(++stale>100){ObserverWindow.restore();return;}
         var desktop=ObserverWindow.desktopAllowed()?ObserverDesktop.sample():null;
@@ -204,7 +204,7 @@ public final class ObserverFight {
             if(key==GLFW.GLFW_KEY_F8){ObserverWindow.disable();return true;}
             if(key==GLFW.GLFW_KEY_ESCAPE){
                 if(!exitRequested){exitRequested=true;closeOnVictory=shatter();send(shatter()?ObserverBattleRules.RESET:ObserverBattleRules.ABORT,0);ObserverWindow.restore();}
-                if(stale>200)ObserverClient.buildOrThrow();return true;
+                if(stale>200)ObserverClient.end();return true;
             }
             if(shatter()){
                 if(key==GLFW.GLFW_KEY_BACKSPACE&&!command.isEmpty())command=command.substring(0,command.length()-1);

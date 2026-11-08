@@ -46,7 +46,7 @@ public final class ObserverClient {
         }
     }
     public static void end(){
-        active=false;ObserverFight.buildOrThrow();ScreenCracks.clear();
+        active=false;ObserverFight.end();ScreenCracks.clear();
         if(savedCamera!=null){Minecraft.getInstance().options.setCameraType(savedCamera);savedCamera=null;}
     }
     public static void drag(double dx,double dy){dragX=Math.max(-2,Math.min(2,dragX+(float)dx*.012f));dragY=Math.max(-1,Math.min(1,dragY+(float)dy*.012f));}

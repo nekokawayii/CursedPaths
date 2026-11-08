@@ -36,7 +36,7 @@ public final class JogoDomainRender {
     }
     private static RenderType textured() {
         if(texturedType==null)texturedType=RenderType.create("sukuna_jogo_shell_tex",
-            DefaultVertexFormat.POSITION_COLOR_TEX, VertexFormat.Mode.QUADS, 256, false,false,
+            DefaultVertexFormat.POSITION_TEX_COLOR, VertexFormat.Mode.QUADS, 256, false,false,
             states(new RenderStateShard.TextureStateShard(JogoDomainShaders.WALL,false,false)).createCompositeState(false));
         return texturedType;
     }

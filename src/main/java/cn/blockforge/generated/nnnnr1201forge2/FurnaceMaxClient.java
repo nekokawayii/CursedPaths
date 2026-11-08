@@ -180,7 +180,7 @@ public final class FurnaceMaxClient {
     public static void tick(){
         if(Minecraft.getInstance().level==null){clear();return;}
         time++;
-        spares.removeIf(s->{if(time>=s.buildOrThrow()){PhotonFx.stop(s.handle());return true;}return false;});
+        spares.removeIf(s->{if(time>=s.end()){PhotonFx.stop(s.handle());return true;}return false;});
         // FOV：蓄力期间放大到 2 倍，每刻 8% 平滑（约 1 秒到位）
         var local=Minecraft.getInstance().player;
         boolean chargingNow=local!=null&&charges.containsKey(local.getId());

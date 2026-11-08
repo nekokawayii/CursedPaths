@@ -82,7 +82,7 @@ public final class DismantleMotionClient {
         var mc=Minecraft.getInstance();if(mc.level==null||mc.player==null)return;
         if(world!=mc.level){clear();world=mc.level;}
         State state=states.get(packet.owner());
-        if(packet.buildOrThrow()){
+        if(packet.end()){
             if(state!=null&&state.packet.token().equals(packet.token()))states.remove(packet.owner());
             if(packet.owner()==mc.player.getId()&&!locked()&&!MotionFallbackClient.active(packet.owner()))restoreCamera();return;
         }
