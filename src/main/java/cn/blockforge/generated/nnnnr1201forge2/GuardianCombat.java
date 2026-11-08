@@ -3,8 +3,8 @@ package cn.blockforge.generated.nnnnr1201forge2;
 import net.minecraft.server.level.*;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
-import net.minecraftforge.event.entity.living.*;
-import net.minecraftforge.eventbus.api.*;
+import net.neoforged.neoforge.event.entity.living.*;
+import net.neoforged.bus.api.*;
 
 public final class GuardianCombat {
     public static void poison(LivingEntity p,GuardianEntity source,int ticks,float damage,double cooldown){ServerPlayer caster=MaidBridge.progression(p);var t=caster!=null?Curse.data(caster):p.getPersistentData();t.putLong("GuardianPoisonUntil",p.level().getGameTime()+ticks);t.putFloat("GuardianPoisonDamage",damage);t.putDouble("GuardianPoisonCooldown",cooldown);t.putUUID("GuardianPoisonSource",source.getUUID());}

@@ -3,13 +3,13 @@ package cn.blockforge.generated.nnnnr1201forge2;
 import java.util.*;
 import net.minecraft.client.Minecraft;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.client.event.*;
-import net.minecraftforge.event.TickEvent;
-import net.minecraftforge.eventbus.api.*;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.neoforge.client.event.*;
+import net.neoforged.neoforge.event.TickEvent;
+import net.neoforged.bus.api.*;
 
 /** 只放慢本机绘制的呼吸/挥手动画；实体位置、碰撞和服务器时间绝不改动。 */
-@net.minecraftforge.fml.common.Mod.EventBusSubscriber(modid="jujutsu_kaisen_cursed_paths",value=Dist.CLIENT)
+@net.neoforged.fml.common.Mod.EventBusSubscriber(modid="jujutsu_kaisen_cursed_paths",value=Dist.CLIENT)
 public final class BloodVisionClient {
     private record Saved(int tick,float attack,float oldAttack){}
     private static final Map<LivingEntity,Saved> saved=new IdentityHashMap<>();

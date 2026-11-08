@@ -11,11 +11,11 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.item.*;
 import net.minecraft.world.level.Level;
-import net.minecraftforge.event.TickEvent;
-import net.minecraftforge.event.entity.player.PlayerEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.registries.RegistryObject;
+import net.neoforged.neoforge.event.TickEvent;
+import net.neoforged.neoforge.event.entity.player.PlayerEvent;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.Mod;
+import net.neoforged.neoforge.registries.RegistryObject;
 
 /** 通关奖励与永久权限；不向未通关者泄露路线。 */
 @Mod.EventBusSubscriber(modid="jujutsu_kaisen_cursed_paths")
@@ -92,14 +92,14 @@ public final class Authority {
         remember(p);Curse.data(p).putBoolean("WorldAuthority",true);Curse.add(p,Curse.maximum(p));
         Journey.give(p,new ItemStack(CURSE.get()));Journey.give(p,new ItemStack(BANNER.get()));upgradeFragment(p);settleMarker(p);
         if(!p.getInventory().contains(new ItemStack(EDITOR.get())))Journey.give(p,new ItemStack(EDITOR.get()));
-        var advancement=p.server.getAdvancements().getAdvancement(new ResourceLocation("jujutsu_kaisen_cursed_paths","transgressor"));
+        var advancement=p.server.getAdvancements().getAdvancement(ResourceLocation.fromNamespaceAndPath("jujutsu_kaisen_cursed_paths", "transgressor"));
         if(advancement!=null)for(String criterion:advancement.getCriteria().keySet())p.getAdvancements().award(advancement,criterion);
         Curse.sync(p);AuthorityPackets.sync(p);
     }
     private static void upgradeFragment(ServerPlayer p){for(int i=0;i<p.getInventory().getContainerSize();i++)if(p.getInventory().getItem(i).is(Content.BEYOND_FRAGMENT.get()))p.getInventory().setItem(i,new ItemStack(EDITOR.get()));}
     /** 给新旧权限角色各补一份；背包满时保留待领取状态，不掉在地上也不覆盖物品。 */
     public static void settleMarker(ServerPlayer p){
-        if(!unlocked(p)||p instanceof net.minecraftforge.common.util.FakePlayer)return;
+        if(!unlocked(p)||p instanceof net.neoforged.neoforge.common.util.FakePlayer)return;
         CompoundTag d=Curse.data(p);
         if(p.getInventory().countItem(MARKER.get())>0){d.putBoolean("AuthorityMarkerDelivered",true);return;}
         if(d.getBoolean("AuthorityMarkerDelivered")||!p.isAlive()||p.isSpectator()||p.getInventory().getFreeSlot()<0)return;

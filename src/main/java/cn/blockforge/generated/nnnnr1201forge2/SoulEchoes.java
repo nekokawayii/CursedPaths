@@ -3,9 +3,9 @@ import java.util.*;
 import net.minecraft.server.level.*;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.core.particles.DustParticleOptions;
-import net.minecraftforge.event.TickEvent;
-import net.minecraftforge.event.server.ServerStoppedEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.neoforged.neoforge.event.TickEvent;
+import net.neoforged.neoforge.event.server.ServerStoppedEvent;
+import net.neoforged.bus.api.SubscribeEvent;
 /** 金色光点按玩家附近短时存在；只能在服务端距离校验通过后捕捉一次。 */
 public final class SoulEchoes {
     private record Echo(ServerLevel level,Vec3 pos,long expires){}

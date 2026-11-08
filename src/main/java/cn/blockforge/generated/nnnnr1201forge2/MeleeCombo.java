@@ -3,13 +3,13 @@ package cn.blockforge.generated.nnnnr1201forge2;
 import java.util.*;
 import java.util.function.Consumer;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraftforge.event.TickEvent;
-import net.minecraftforge.event.entity.living.LivingDamageEvent;
-import net.minecraftforge.event.entity.player.PlayerEvent;
-import net.minecraftforge.event.server.ServerStoppedEvent;
-import net.minecraftforge.eventbus.api.*;
-import net.minecraftforge.network.NetworkDirection;
-import net.minecraftforge.network.PacketDistributor;
+import net.neoforged.neoforge.event.TickEvent;
+import net.neoforged.neoforge.event.entity.living.LivingDamageEvent;
+import net.neoforged.neoforge.event.entity.player.PlayerEvent;
+import net.neoforged.neoforge.event.server.ServerStoppedEvent;
+import net.neoforged.bus.api.*;
+import net.neoforged.neoforge.network.NetworkDirection;
+import net.neoforged.neoforge.network.PacketDistributor;
 
 /** 服务端只批准和广播动作，不调用攻击、不修改伤害、击退或玩家位置。 */
 public final class MeleeCombo {

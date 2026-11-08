@@ -26,7 +26,7 @@ import net.minecraft.world.phys.Vec3;
  *        减速是**直接改 MOVEMENT_SPEED 属性**，不是「缓慢」药水效果 —— HUD 上不会出现药水图标，
  *        也只在这个技能维持期间存在，收招立刻恢复。</li>
  *  </ul> */
-@net.minecraftforge.fml.common.Mod.EventBusSubscriber(modid="jujutsu_kaisen_cursed_paths")
+@net.neoforged.fml.common.Mod.EventBusSubscriber(modid="jujutsu_kaisen_cursed_paths")
 public final class SimpleDomain {
     /** 技能号（捌的新分支，挂在轮盘 side 列表里）。
      *  **注意：不能用 33** —— 33 是 {@code FinaleRules.SKILL}（终式），
@@ -186,9 +186,9 @@ public final class SimpleDomain {
      *  <p>这里曾经还有一条 `心跳断了 40 刻` 的判定 —— 那是遗留的心跳依赖：客户端每 10 刻发一次心跳，
      *  再加上一个包的处理延迟，判定会在 **41 刻（2.05 秒）** 稳定触发，于是长按总是在 2.1 秒被强制收招。
      *  现在彻底删掉：丢包、延迟、心跳间隔都不再能结束技能。</p> */
-    @net.minecraftforge.eventbus.api.SubscribeEvent
-    public static void tick(net.minecraftforge.event.TickEvent.ServerTickEvent e){
-        if(e.phase!=net.minecraftforge.event.TickEvent.Phase.END)return;
+    @net.neoforged.bus.api.SubscribeEvent
+    public static void tick(net.neoforged.neoforge.event.TickEvent.ServerTickEvent e){
+        if(e.phase!=net.neoforged.neoforge.event.TickEvent.Phase.END)return;
         var server=e.getServer();if(server==null)return;
         for(Field f:java.util.List.copyOf(fields.values())){
             ServerPlayer p=f.p;

@@ -6,8 +6,8 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.level.saveddata.SavedData;
-import net.minecraftforge.event.entity.EntityJoinLevelEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.neoforged.neoforge.event.entity.EntityJoinLevelEvent;
+import net.neoforged.bus.api.SubscribeEvent;
 
 /** 存档保存控制器原值，生效时按模式换算；重载不会重复缩放。 */
 public final class BossControl extends SavedData {
@@ -65,7 +65,7 @@ public final class BossControl extends SavedData {
         if(boss instanceof GuardianEntity g){g.refreshSettings(guardian(boss.getServer()),changed==null?"":changed);return;}
         stats(boss,changed!=null&&changed.equals(healthKey(boss)));
     }
-    @SubscribeEvent(priority=net.minecraftforge.eventbus.api.EventPriority.LOWEST) public static void enforce(net.minecraftforge.event.entity.living.LivingEvent.LivingTickEvent event){
+    @SubscribeEvent(priority=net.neoforged.bus.api.EventPriority.LOWEST) public static void enforce(net.neoforged.neoforge.event.entity.living.LivingEvent.LivingTickEvent event){
         var boss=event.getEntity();if(boss.level().isClientSide||!managed(boss)||excluded(boss))return;
         if(boss instanceof GuardianEntity g)g.enforceSettings();else stats(boss,false);
     }

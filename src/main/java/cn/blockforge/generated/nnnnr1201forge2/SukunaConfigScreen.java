@@ -10,7 +10,7 @@ import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.client.gui.screens.ConfirmScreen;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
-import net.minecraftforge.common.ForgeConfigSpec;
+import net.neoforged.neoforge.common.ModConfigSpec;
 
 /** 模组列表里的本地配置编辑器；草稿只在明确保存后写入原有配置文件。 */
 public final class SukunaConfigScreen extends Screen {
@@ -25,12 +25,12 @@ public final class SukunaConfigScreen extends Screen {
 
     private static final class Entry<T> {
         final String label;
-        final ForgeConfigSpec.ConfigValue<T> value;
-        final ForgeConfigSpec.ValueSpec spec;
+        final ModConfigSpec.ConfigValue<T> value;
+        final ModConfigSpec.ValueSpec spec;
         String draft;
         String saved;
 
-        Entry(String label, ForgeConfigSpec.ConfigValue<T> value) {
+        Entry(String label, ModConfigSpec.ConfigValue<T> value) {
             this.label = label;
             this.value = value;
             this.spec = GrowthConfig.SPEC.getSpec().get(value.getPath());
@@ -38,11 +38,11 @@ public final class SukunaConfigScreen extends Screen {
             this.saved = draft;
         }
 
-        boolean isBoolean() { return value instanceof ForgeConfigSpec.BooleanValue; }
+        boolean isBoolean() { return value instanceof ModConfigSpec.BooleanValue; }
         boolean changed() { return !draft.equals(saved); }
         Object parsed() {
             Object result = isBoolean() ? Boolean.valueOf(draft)
-                : ConfigNumberInput.parse(draft, value instanceof ForgeConfigSpec.IntValue);
+                : ConfigNumberInput.parse(draft, value instanceof ModConfigSpec.IntValue);
             if (!spec.test(result)) throw new IllegalArgumentException("超出允许范围");
             return result;
         }
@@ -77,7 +77,7 @@ public final class SukunaConfigScreen extends Screen {
         stage("净土通关", GrowthConfig.GUARDIAN);
     }
 
-    private <T> void add(String label, ForgeConfigSpec.ConfigValue<T> value) {
+    private <T> void add(String label, ModConfigSpec.ConfigValue<T> value) {
         entries.add(new Entry<>(label, value));
     }
     private void stage(String label, GrowthConfig.Stage stage) {

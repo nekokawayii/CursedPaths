@@ -2,8 +2,8 @@ package character.mainline;
 
 import cn.blockforge.generated.nnnnr1201forge2.Network;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraftforge.network.NetworkDirection;
-import net.minecraftforge.network.PacketDistributor;
+import net.neoforged.neoforge.network.NetworkDirection;
+import net.neoforged.neoforge.network.PacketDistributor;
 
 /** 主线进度专用同步，不再占用烟花/甜品特效编号。 */
 public final class MainlinePackets {

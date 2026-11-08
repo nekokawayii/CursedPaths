@@ -1,11 +1,11 @@
 package cn.blockforge.generated.nnnnr1201forge2;
 
 import net.minecraft.client.Minecraft;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.client.event.*;
-import net.minecraftforge.client.gui.overlay.VanillaGuiOverlay;
-import net.minecraftforge.eventbus.api.*;
-import net.minecraftforge.fml.common.Mod;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.neoforge.client.event.*;
+import net.neoforged.neoforge.client.gui.overlay.VanillaGuiOverlay;
+import net.neoforged.bus.api.*;
+import net.neoforged.fml.common.Mod;
 
 @Mod.EventBusSubscriber(modid="jujutsu_kaisen_cursed_paths",value=Dist.CLIENT)
 public final class AimAssistClient {

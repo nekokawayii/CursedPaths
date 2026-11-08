@@ -11,12 +11,12 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.client.event.RenderGuiEvent;
-import net.minecraftforge.client.event.RenderLevelStageEvent;
-import net.minecraftforge.event.TickEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.neoforge.client.event.RenderGuiEvent;
+import net.neoforged.neoforge.client.event.RenderLevelStageEvent;
+import net.neoforged.neoforge.event.TickEvent;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.Mod;
 
 /**
  * 十划咒法的表现层：
@@ -312,7 +312,7 @@ public final class RatioVisuals {
     }
 
     // ------------------------------------------------------------ HUD：加班时第一人称黑边
-    @SubscribeEvent(priority = net.minecraftforge.eventbus.api.EventPriority.LOW)
+    @SubscribeEvent(priority = net.neoforged.bus.api.EventPriority.LOW)
     public static void hud(RenderGuiEvent.Post e) {
         var mc = Minecraft.getInstance();
         if (mc.player == null || mc.options.hideGui || mc.level == null) return;

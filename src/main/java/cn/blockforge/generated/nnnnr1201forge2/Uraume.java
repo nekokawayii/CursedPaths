@@ -7,11 +7,11 @@ import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.phys.*;
-import net.minecraftforge.event.TickEvent;
-import net.minecraftforge.event.entity.living.*;
-import net.minecraftforge.event.entity.player.*;
-import net.minecraftforge.event.server.ServerStoppedEvent;
-import net.minecraftforge.eventbus.api.*;
+import net.neoforged.neoforge.event.TickEvent;
+import net.neoforged.neoforge.event.entity.living.*;
+import net.neoforged.neoforge.event.entity.player.*;
+import net.neoforged.neoforge.event.server.ServerStoppedEvent;
+import net.neoforged.bus.api.*;
 
 /** 冰系施法、强控和成长均在服务端执行，不永久改变重力或AI。 */
 public final class Uraume {
@@ -147,7 +147,7 @@ public final class Uraume {
     @SubscribeEvent(priority=EventPriority.HIGHEST) public static void interact(PlayerInteractEvent e){if(e.isCancelable()&&locked(e.getEntity()))e.setCanceled(true);}
     @SubscribeEvent(priority=EventPriority.HIGHEST) public static void outgoing(LivingAttackEvent e){if(e.getSource().getEntity() instanceof LivingEntity t&&locked(t))e.setCanceled(true);}
     @SubscribeEvent(priority=EventPriority.HIGHEST) public static void breakSpeed(PlayerEvent.BreakSpeed e){if(locked(e.getEntity()))e.setCanceled(true);}
-    @SubscribeEvent(priority=EventPriority.HIGHEST) public static void teleport(net.minecraftforge.event.entity.EntityTeleportEvent e){if(e.isCancelable()&&e.getEntity() instanceof LivingEntity t&&locked(t))e.setCanceled(true);}
+    @SubscribeEvent(priority=EventPriority.HIGHEST) public static void teleport(net.neoforged.neoforge.event.entity.EntityTeleportEvent e){if(e.isCancelable()&&e.getEntity() instanceof LivingEntity t&&locked(t))e.setCanceled(true);}
     @SubscribeEvent public static void logout(PlayerEvent.PlayerLoggedOutEvent e){if(e.getEntity() instanceof ServerPlayer p)cancel(p);}
     @SubscribeEvent public static void dimension(PlayerEvent.PlayerChangedDimensionEvent e){if(e.getEntity() instanceof ServerPlayer p)cancel(p);}
     @SubscribeEvent public static void stop(ServerStoppedEvent e){breaths.clear();pillars.clear();frozen.clear();nextFreeze=0;}

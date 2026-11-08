@@ -10,10 +10,10 @@ import net.minecraft.client.renderer.*;
 import net.minecraft.client.renderer.entity.player.PlayerRenderer;
 import net.minecraft.client.renderer.entity.layers.RenderLayer;
 import net.minecraft.client.renderer.texture.OverlayTexture;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.client.event.*;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.fml.common.Mod;
+import net.neoforged.neoforge.client.event.*;
+import net.neoforged.bus.api.SubscribeEvent;
 import net.minecraft.world.InteractionHand;
 
 /** 复用玩家皮肤与原版手臂，施法时保留盔甲、名字和其他渲染层。 */

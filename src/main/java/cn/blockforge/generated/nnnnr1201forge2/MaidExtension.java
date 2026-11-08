@@ -16,37 +16,37 @@ import net.minecraft.world.entity.ai.behavior.BehaviorControl;
 import net.minecraft.world.entity.ai.behavior.EntityTracker;
 import net.minecraft.world.entity.ai.memory.MemoryModuleType;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.event.entity.player.PlayerInteractEvent;
-import net.minecraftforge.event.entity.living.LivingEvent;
-import net.minecraftforge.eventbus.api.*;
+import net.neoforged.neoforge.common.NeoForge;
+import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
+import net.neoforged.neoforge.event.entity.living.LivingEvent;
+import net.neoforged.bus.api.*;
 
 /** 由车万女仆的扩展发现机制加载；未安装时主模组不链接此类。 */
 @LittleMaidExtension
 public final class MaidExtension implements ILittleMaid {
-    private static final ResourceLocation ID=new ResourceLocation("jujutsu_kaisen_cursed_paths","malevolent_shrine");
+    private static final ResourceLocation ID=ResourceLocation.fromNamespaceAndPath("jujutsu_kaisen_cursed_paths", "malevolent_shrine");
     // 仅供女仆内部选招，不占用玩家轮盘技能编号。
     private static final int MAID_BACKFLIP=101,MAID_KICK=102;
     private static int motionKind(int skill){return skill==MAID_BACKFLIP?DismantleMotionRules.BACKFLIP:skill==MAID_KICK?DismantleMotionRules.FLYING_KICK:skill==DismantleMotionRules.RING_SKILL?DismantleMotionRules.SPIN:skill>=103&&skill<=106?skill-99:0;}
     private static final com.github.tartaricacid.touhoulittlemaid.api.entity.data.TaskDataKey<Boolean> MEMORY=new com.github.tartaricacid.touhoulittlemaid.api.entity.data.TaskDataKey<>() {
-        @Override public ResourceLocation getKey(){return new ResourceLocation("jujutsu_kaisen_cursed_paths","shrine_memory");}
+        @Override public ResourceLocation getKey(){return ResourceLocation.fromNamespaceAndPath("jujutsu_kaisen_cursed_paths", "shrine_memory");}
         @Override public net.minecraft.nbt.CompoundTag writeSaveData(Boolean value){var tag=new net.minecraft.nbt.CompoundTag();tag.putBoolean("Unlocked",Boolean.TRUE.equals(value));return tag;}
         @Override public Boolean readSaveData(net.minecraft.nbt.CompoundTag tag){return tag.getBoolean("Unlocked");}
     };
-    private static final ResourceLocation ICE_ID=new ResourceLocation("jujutsu_kaisen_cursed_paths","ice_formation");
+    private static final ResourceLocation ICE_ID=ResourceLocation.fromNamespaceAndPath("jujutsu_kaisen_cursed_paths", "ice_formation");
     private static final com.github.tartaricacid.touhoulittlemaid.api.entity.data.TaskDataKey<Boolean> ICE_MEMORY=new com.github.tartaricacid.touhoulittlemaid.api.entity.data.TaskDataKey<>(){
-        @Override public ResourceLocation getKey(){return new ResourceLocation("jujutsu_kaisen_cursed_paths","ice_memory");}
+        @Override public ResourceLocation getKey(){return ResourceLocation.fromNamespaceAndPath("jujutsu_kaisen_cursed_paths", "ice_memory");}
         @Override public net.minecraft.nbt.CompoundTag writeSaveData(Boolean value){var tag=new net.minecraft.nbt.CompoundTag();tag.putBoolean("Unlocked",Boolean.TRUE.equals(value));return tag;}
         @Override public Boolean readSaveData(net.minecraft.nbt.CompoundTag tag){return tag.getBoolean("Unlocked");}
     };
     /** 六眼：与宿傩记忆、里梅记忆并存，互不覆盖；只在女仆任务里切换由谁出手。 */
-    private static final ResourceLocation SIX_EYES_ID=new ResourceLocation("jujutsu_kaisen_cursed_paths","six_eyes");
+    private static final ResourceLocation SIX_EYES_ID=ResourceLocation.fromNamespaceAndPath("jujutsu_kaisen_cursed_paths", "six_eyes");
     private static final com.github.tartaricacid.touhoulittlemaid.api.entity.data.TaskDataKey<Boolean> SIX_EYES=new com.github.tartaricacid.touhoulittlemaid.api.entity.data.TaskDataKey<>(){
-        @Override public ResourceLocation getKey(){return new ResourceLocation("jujutsu_kaisen_cursed_paths","six_eyes_memory");}
+        @Override public ResourceLocation getKey(){return ResourceLocation.fromNamespaceAndPath("jujutsu_kaisen_cursed_paths", "six_eyes_memory");}
         @Override public net.minecraft.nbt.CompoundTag writeSaveData(Boolean value){var tag=new net.minecraft.nbt.CompoundTag();tag.putBoolean("Unlocked",Boolean.TRUE.equals(value));return tag;}
         @Override public Boolean readSaveData(net.minecraft.nbt.CompoundTag tag){return tag.getBoolean("Unlocked");}
     };
-    public MaidExtension(){MinecraftForge.EVENT_BUS.register(this);}
+    public MaidExtension(){NeoForge.EVENT_BUS.register(this);}
     @Override public void registerTaskData(com.github.tartaricacid.touhoulittlemaid.entity.data.TaskDataRegister register){register.register(MEMORY);register.register(ICE_MEMORY);register.register(SIX_EYES);}
     @Override public void addMaidTask(TaskManager manager){manager.add(new ShrineTask());manager.add(new IceTask());manager.add(new SixEyesTask());}
     @Override public void bindMaidBauble(com.github.tartaricacid.touhoulittlemaid.item.bauble.BaubleManager manager){

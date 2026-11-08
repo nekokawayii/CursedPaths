@@ -1,7 +1,7 @@
 package cn.blockforge.generated.nnnnr1201forge2;
 
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraftforge.fml.ModList;
+import net.neoforged.fml.ModList;
 
 /** 帕秋莉打开：全程反射，未安装时返回 false。 */
 public final class ManualOpen {

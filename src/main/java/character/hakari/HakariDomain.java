@@ -57,8 +57,8 @@ public final class HakariDomain {
             }
         }
     }
-    public static void onServerTick(net.minecraftforge.event.TickEvent.ServerTickEvent event){
-        if(event.phase!=net.minecraftforge.event.TickEvent.Phase.END)return;
+    public static void onServerTick(net.neoforged.neoforge.event.TickEvent.ServerTickEvent event){
+        if(event.phase!=net.neoforged.neoforge.event.TickEvent.Phase.END)return;
         int budget=GLOBAL_BATCH;
         // 中奖会同步 close，必须迭代快照，不能边 roll 边移除 HashMap 迭代器。
         for(Job job:List.copyOf(JOBS.values())){

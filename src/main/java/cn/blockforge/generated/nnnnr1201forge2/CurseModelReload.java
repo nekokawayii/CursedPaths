@@ -3,7 +3,7 @@ package cn.blockforge.generated.nnnnr1201forge2;
 import java.util.*;
 import net.minecraft.server.packs.resources.*;
 import net.minecraft.util.profiling.ProfilerFiller;
-import net.minecraftforge.client.event.RegisterClientReloadListenersEvent;
+import net.neoforged.neoforge.client.event.RegisterClientReloadListenersEvent;
 
 /** 在资源加载工作线程预解码原始模型，不在第一只咒灵出现的渲染帧解析数MB JSON。 */
 public final class CurseModelReload extends SimplePreparableReloadListener<Map<String,BbModel>> {

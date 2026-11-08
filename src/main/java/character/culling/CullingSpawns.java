@@ -11,8 +11,8 @@ import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.event.TickEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.neoforged.neoforge.event.TickEvent;
+import net.neoforged.bus.api.SubscribeEvent;
 
 /**
  * 死灭洄游结界内的刷新与敌对（r218）。
@@ -386,7 +386,7 @@ public final class CullingSpawns {
     }
 
     @SubscribeEvent
-    public static void npcKill(net.minecraftforge.event.entity.living.LivingDeathEvent e) {
+    public static void npcKill(net.neoforged.neoforge.event.entity.living.LivingDeathEvent e) {
         if (!e.getEntity().level().dimension().equals(CullingGame.DIM)) return;
         if (!(e.getSource().getEntity() instanceof Mob killer)) return;
         if (!killer.getPersistentData().getBoolean("CullingEnemy")) return;

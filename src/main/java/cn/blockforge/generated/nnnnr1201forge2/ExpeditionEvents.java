@@ -12,12 +12,12 @@ import net.minecraft.world.item.enchantment.*;
 import net.minecraft.world.level.*;
 import net.minecraft.world.level.block.*;
 import net.minecraft.world.phys.*;
-import net.minecraftforge.event.*;
-import net.minecraftforge.event.entity.living.*;
-import net.minecraftforge.event.entity.player.PlayerInteractEvent;
-import net.minecraftforge.event.level.BlockEvent;
-import net.minecraftforge.eventbus.api.*;
-import net.minecraftforge.registries.ForgeRegistries;
+import net.neoforged.neoforge.event.*;
+import net.neoforged.neoforge.event.entity.living.*;
+import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
+import net.neoforged.neoforge.event.level.BlockEvent;
+import net.neoforged.bus.api.*;
+import net.neoforged.neoforge.registries.ForgeRegistries;
 
 public final class ExpeditionEvents {
     public static boolean mindShield(LivingEntity p){return p.getPersistentData().getLong("ExpeditionMindShield")>p.level().getGameTime();}
@@ -25,7 +25,7 @@ public final class ExpeditionEvents {
     @SubscribeEvent public static void drops(LivingDropsEvent e){
         var mob=e.getEntity();if(!(mob.level() instanceof ServerLevel l))return;
         ServerPlayer p=CombatSettings.caster(e.getSource());if(p==null&&mob.getKillCredit() instanceof ServerPlayer credited)p=credited;
-        if(p==null||p instanceof net.minecraftforge.common.util.FakePlayer)return;
+        if(p==null||p instanceof net.neoforged.neoforge.common.util.FakePlayer)return;
         String id=ForgeRegistries.ENTITY_TYPES.getKey(mob.getType()).getPath(),role=mob.getPersistentData().getString("ExpeditionRole");
         if(mob instanceof LowCurseEntity||mob instanceof DaitianEntity||id.equals("broken_mahito")||id.equals("mahito_npc")){
             drop(e,"residue_"+(mob instanceof LowCurseEntity curse?(curse.form().grade()<=1?"high":curse.form().grade()==2?"medium":"low"):(mob.getMaxHealth()>=400?"high":mob.getMaxHealth()>=100?"medium":"low")),1+l.random.nextInt(3));

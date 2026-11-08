@@ -12,10 +12,10 @@ import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.event.TickEvent;
-import net.minecraftforge.event.entity.living.LivingHurtEvent;
-import net.minecraftforge.eventbus.api.EventPriority;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.neoforged.neoforge.event.TickEvent;
+import net.neoforged.neoforge.event.entity.living.LivingHurtEvent;
+import net.neoforged.bus.api.EventPriority;
+import net.neoforged.bus.api.SubscribeEvent;
 import cn.blockforge.generated.nnnnr1201forge2.CombatSafety;
 import cn.blockforge.generated.nnnnr1201forge2.CombatSettings;
 import cn.blockforge.generated.nnnnr1201forge2.Curse;
@@ -65,7 +65,7 @@ public final class YujiRebuild {
 
     /** 径庭拳是被动：左键攻击必定挂上二段（哪怕这一下被闪避/无敌帧吃掉），0.5 秒后在敌人体内炸开。 */
     @SubscribeEvent
-    public static void attack(net.minecraftforge.event.entity.player.AttackEntityEvent e) {
+    public static void attack(net.neoforged.neoforge.event.entity.player.AttackEntityEvent e) {
         if (!(e.getEntity() instanceof ServerPlayer p) || p.level().isClientSide) return;
         if (!"yuji".equals(role(p))) return;
         if (!(e.getTarget() instanceof LivingEntity t) || !t.isAlive()) return;

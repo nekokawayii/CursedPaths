@@ -4,7 +4,7 @@ import cn.blockforge.generated.nnnnr1201forge2.*;
 import java.util.function.Consumer;
 import character.toji.TojiCombat;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraftforge.network.*;
+import net.neoforged.neoforge.network.*;
 
 /** 消息只带角色编号和服务端计算后的显示值，客户端不能提交解锁标记或体术余额。 */
 public final class CharacterPackets {
@@ -22,7 +22,7 @@ public final class CharacterPackets {
     }
     public static void open(ServerPlayer p) { sync(p,false);Network.CHANNEL.send(PacketDistributor.PLAYER.with(()->p),new Open()); }
     public static void sync(ServerPlayer p,boolean changed) {
-        if(p instanceof net.minecraftforge.common.util.FakePlayer)return;
+        if(p instanceof net.neoforged.neoforge.common.util.FakePlayer)return;
         var d=CharacterService.selected(p);
         Network.CHANNEL.send(PacketDistributor.PLAYER.with(()->p),new State(d==null?"":d.id(),TojiCombat.stamina(p),TojiCombat.maximum(p),CharacterService.rank(p),changed,character.yuta.YutaCopies.array(p)));
     }

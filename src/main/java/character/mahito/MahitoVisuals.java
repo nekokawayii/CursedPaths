@@ -10,10 +10,10 @@ import net.minecraft.client.renderer.entity.*;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.client.event.*;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.neoforge.client.event.*;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.Mod;
 
 /** 纯客户端演出，不生成一堆装饰生物；每个领域固定24只倒悬手臂。 */
 @Mod.EventBusSubscriber(modid="jujutsu_kaisen_cursed_paths",value=Dist.CLIENT)
@@ -22,8 +22,8 @@ public final class MahitoVisuals {
     private static final List<Visual> EFFECTS=new ArrayList<>();
     private static final Map<Integer,Visual> DOMAINS=new HashMap<>();
     private static BbModel tail=new BbModel("mahito_tail","mahito_soul"),arm=new BbModel("mahito_arm","mahito_soul");
-    private static final ResourceLocation SKIN=new ResourceLocation("jujutsu_kaisen_cursed_paths","textures/entity/mahito_soul_0.png");
-    private static final ResourceLocation FACES=new ResourceLocation("jujutsu_kaisen_cursed_paths","textures/block/mahito_faces.png");
+    private static final ResourceLocation SKIN=ResourceLocation.fromNamespaceAndPath("jujutsu_kaisen_cursed_paths", "textures/entity/mahito_soul_0.png");
+    private static final ResourceLocation FACES=ResourceLocation.fromNamespaceAndPath("jujutsu_kaisen_cursed_paths", "textures/block/mahito_faces.png");
     public static void receive(Network.Effect e){
         var mc=Minecraft.getInstance();if(mc.level==null)return;
         if(e.kind()==MahitoCombat.DOMAIN_END){DOMAINS.remove(e.owner());return;}

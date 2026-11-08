@@ -18,10 +18,10 @@ import net.minecraft.client.renderer.entity.layers.RenderLayer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.client.event.*;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.neoforge.client.event.*;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.Mod;
 
 /** 「咒力附拳」＝挂在**双手**上的用户特效 `ldlib/assets/photon/fx/11.fx`。
  *
@@ -37,7 +37,7 @@ import net.minecraftforge.fml.common.Mod;
 public final class FistFlameClient {
     /** 服务端广播的特效号：附拳期间每 15 刻一条（带 entityId 与寿命）。 */
     public static final int FX=236;
-    private static final ResourceLocation PUNCH_FX=new ResourceLocation("photon","11");
+    private static final ResourceLocation PUNCH_FX=ResourceLocation.fromNamespaceAndPath("photon", "11");
     private static final String PHOTON_ROOT="com.lowdragmc.photon.client.";
     /** 宽限：这么久没被刷新才回收（约 2 秒）。 */
     private static final int GRACE=40;
@@ -46,7 +46,7 @@ public final class FistFlameClient {
     /** 拖尾滞后：按实体位移往回拖多少刻（以及最大拖出多少格），挥拳时咒力会拖在后面。 */
     private static final double DRAG_TICKS=1.6,DRAG_MAX=0.35;
     // ---------- 「包覆手臂的咒力」自绘层（复刻 jujutsu-vfx 那套观感：逐帧自绘、裹住整条手臂、随出拳放大） ----------
-    private static final ResourceLocation GLOW=new ResourceLocation("photon","textures/particle/circle.png");
+    private static final ResourceLocation GLOW=ResourceLocation.fromNamespaceAndPath("photon", "textures/particle/circle.png");
     private static final ResourceLocation AURA_FX_TEXTURE=GLOW;
     private static final int AURA_SEG=6;                        // 每条手臂几段
     private static final double AURA_WIDTH=0.90,AURA_LEN=0.42;  // 单段尺寸（格）；手臂本体只有 0.25 格宽，所以这是明显"裹一圈"

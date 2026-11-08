@@ -1,17 +1,17 @@
 package cn.blockforge.generated.nnnnr1201forge2;
 
-import net.minecraftforge.client.settings.KeyConflictContext;
+import net.neoforged.neoforge.client.settings.KeyConflictContext;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.*;
 import com.mojang.math.Axis;
 import net.minecraft.client.*;
 import net.minecraft.client.renderer.*;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.client.event.*;
-import net.minecraftforge.event.TickEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.neoforge.client.event.*;
+import net.neoforged.neoforge.event.TickEvent;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.Mod;
 import org.lwjgl.glfw.GLFW;
 import java.util.*;
 
@@ -192,7 +192,7 @@ public final class Client {
         }
     }
     public static class Registration {
-        @SubscribeEvent public static void setup(net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent e){e.enqueueWork(()->{ItemBlockRenderTypes.setRenderLayer(SoulContent.THREAD.get(),RenderType.cutout());ItemBlockRenderTypes.setRenderLayer(SoulContent.RICE.get(),RenderType.cutout());MahoragaArmorModel.register();});}
+        @SubscribeEvent public static void setup(net.neoforged.fml.event.lifecycle.FMLClientSetupEvent e){e.enqueueWork(()->{ItemBlockRenderTypes.setRenderLayer(SoulContent.THREAD.get(),RenderType.cutout());ItemBlockRenderTypes.setRenderLayer(SoulContent.RICE.get(),RenderType.cutout());MahoragaArmorModel.register();});}
         @SubscribeEvent public static void keys(RegisterKeyMappingsEvent e){e.register(WHEEL);e.register(CAST);e.register(GUIDE);e.register(ROTATE);e.register(RELATIONS);e.register(FIST);e.register(STREAM);e.register(AMPLIFY);e.register(LIMBS);e.register(LIMB_1);e.register(LIMB_2);e.register(LIMB_3);e.register(LIMB_4);AuthorityClient.setup();TenShadows.receiver=TenShadowsClient::receive;SlashTerrain.receiver=SlashTerrainClient::receive;ObserverPackets.receiver=ObserverFight::receive;ObserverPackets.cursorReceiver=ObserverFight::cursors;Network.aimReceiver=AimAssistClient::receive;Network.testResetReceiver=Client::testReset;WallpaperPackets.receiver=WallpaperClient::receive;Network.motionReceiver=DismantleMotionClient::receive;Network.drawReceiver=FreehandClient::receive;Network.clashReceiver=DomainClashClient::receive;Network.clientReceiver=Client::receive;Network.progressReceiver=p->progress=p;Network.combatReceiver=FinaleClient::state;Network.relationsReceiver=p->{if(Minecraft.getInstance().screen instanceof RelationsScreen screen)screen.receive(p);};Network.controllerReceiver=p->{if(Minecraft.getInstance().screen instanceof VoidControllerScreen screen)screen.receive(p);else if(Minecraft.getInstance().screen instanceof AimOptionsScreen screen)screen.receive(p);};Network.pendantReceiver=TenkaPendantClient::receive;}
     }
     public static boolean wheelHeld(){return ClientInput.held(WHEEL);}
@@ -412,7 +412,7 @@ public final class Client {
     public static void shake(int ticks){shakeUntil=Math.max(shakeUntil,tick+ticks);}
     public static void flash(int ticks){flashUntil=Math.max(flashUntil,tick+ticks);}
     /** 蓄力期间的视角变化（最大功率·开：FOV 放大 2 倍）。 */
-    @SubscribeEvent public static void computeFov(net.minecraftforge.client.event.ViewportEvent.ComputeFov e){FurnaceMaxClient.fov(e);}
+    @SubscribeEvent public static void computeFov(net.neoforged.neoforge.client.event.ViewportEvent.ComputeFov e){FurnaceMaxClient.fov(e);}
     private static boolean bossDark(){var mc=Minecraft.getInstance();return mc.player!=null&&mc.player.hasEffect(net.minecraft.world.effect.MobEffects.DARKNESS)&&visuals.stream().anyMatch(v->v.e.kind()==38&&mc.player.distanceToSqr(v.e.position())<2304);}
     @SubscribeEvent public static void fog(ViewportEvent.ComputeFogColor e){if(ObserverClient.white()){e.setRed(1);e.setGreen(1);e.setBlue(1);return;}if(bossDark()){e.setRed(0.028f);e.setGreen(0.008f);e.setBlue(0.045f);}else if(insideBlueVoid()){e.setRed(0.02f);e.setGreen(0.10f);e.setBlue(0.24f);}else if(insideVoid()){e.setRed(0.11f);e.setGreen(0.045f);e.setBlue(0.19f);}else if(inside()){e.setRed(0.40f);e.setGreen(0.018f);e.setBlue(0.045f);}FurnaceMaxClient.fog(e);}
     @SubscribeEvent public static void fogDistance(ViewportEvent.RenderFog e){if(ObserverClient.white()&&e.getType()==net.minecraft.world.level.material.FogType.NONE){e.setNearPlaneDistance(0.2f);e.setFarPlaneDistance(64);e.setCanceled(true);return;}if(bossDark()&&e.getType()==net.minecraft.world.level.material.FogType.NONE){e.setNearPlaneDistance(1);e.setFarPlaneDistance(5);e.setCanceled(true);}}

@@ -25,7 +25,7 @@ public class ExecutionerSwordItem extends SwordItem {
     @Override public int getMaxDamage(ItemStack stack) { return 1; }
     @Override public boolean isDamageable(ItemStack stack) { return true; }
 
-    @Override public void initializeClient(java.util.function.Consumer<net.minecraftforge.client.extensions.common.IClientItemExtensions> consumer) {
+    @Override public void initializeClient(java.util.function.Consumer<net.neoforged.neoforge.client.extensions.common.IClientItemExtensions> consumer) {
         HigurumaClient.item(consumer);
     }
 

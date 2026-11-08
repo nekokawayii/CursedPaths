@@ -1,8 +1,8 @@
 package cn.blockforge.generated.nnnnr1201forge2;
 
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.fml.common.Mod;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.fml.common.Mod;
 
 /** 虎杖重做（r321）表现层：改用 Photon 粒子 + 简单贴图（PhotonBridge），不再用 PhotonFx 光球/光环。 */
 @Mod.EventBusSubscriber(modid = "jujutsu_kaisen_cursed_paths", value = Dist.CLIENT)
@@ -72,9 +72,9 @@ public final class YujiFxClient {
     private record Ring(Vec3 at, long born, int life) { }
     private static final java.util.List<Ring> RINGS = new java.util.ArrayList<>();
 
-    @net.minecraftforge.eventbus.api.SubscribeEvent
-    public static void render(net.minecraftforge.client.event.RenderLevelStageEvent e) {
-        if (e.getStage() != net.minecraftforge.client.event.RenderLevelStageEvent.Stage.AFTER_PARTICLES || RINGS.isEmpty()) return;
+    @net.neoforged.bus.api.SubscribeEvent
+    public static void render(net.neoforged.neoforge.client.event.RenderLevelStageEvent e) {
+        if (e.getStage() != net.neoforged.neoforge.client.event.RenderLevelStageEvent.Stage.AFTER_PARTICLES || RINGS.isEmpty()) return;
         var mc = net.minecraft.client.Minecraft.getInstance();
         if (mc.level == null) return;
         long now = System.currentTimeMillis();

@@ -8,14 +8,14 @@ import net.minecraft.client.renderer.*;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.client.event.*;
-import net.minecraftforge.event.TickEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.neoforged.neoforge.client.event.*;
+import net.neoforged.neoforge.event.TickEvent;
+import net.neoforged.bus.api.SubscribeEvent;
 import org.lwjgl.opengl.GL30;
 
 /** 动态血液材质负责主体，Photon 负责雾、飞沫与亮点；后者失败不吞掉整招。 */
 public final class BloodClient {
-    private static final ResourceLocation TEXTURE=new ResourceLocation("jujutsu_kaisen_cursed_paths","textures/effect/living_blood.png");
+    private static final ResourceLocation TEXTURE=ResourceLocation.fromNamespaceAndPath("jujutsu_kaisen_cursed_paths", "textures/effect/living_blood.png");
     private static ShaderInstance shader;
     private record Visual(Network.Effect e,long born,long end){}
     private record Particle(PhotonFx.Handle h,long end){}
@@ -26,7 +26,7 @@ public final class BloodClient {
     private static Object world;
     private static long tick;
     public static final class Registration {
-        @SubscribeEvent public static void shaders(RegisterShadersEvent event){shader=null;try{event.registerShader(new ShaderInstance(event.getResourceProvider(),new ResourceLocation("jujutsu_kaisen_cursed_paths","blood_fluid"),DefaultVertexFormat.POSITION_COLOR_TEX),s->shader=s);}catch(java.io.IOException|RuntimeException error){com.mojang.logging.LogUtils.getLogger().warn("赤血动态材质加载失败，保留流动血线与基础材质",error);}}
+        @SubscribeEvent public static void shaders(RegisterShadersEvent event){shader=null;try{event.registerShader(new ShaderInstance(event.getResourceProvider(),ResourceLocation.fromNamespaceAndPath("jujutsu_kaisen_cursed_paths", "blood_fluid"),DefaultVertexFormat.POSITION_COLOR_TEX),s->shader=s);}catch(java.io.IOException|RuntimeException error){com.mojang.logging.LogUtils.getLogger().warn("赤血动态材质加载失败，保留流动血线与基础材质",error);}}
     }
     /** 翅王是否仍在持续（客户端判断，供左键血雨用）。 */
     private static long wingsUntil;
@@ -44,7 +44,7 @@ public final class BloodClient {
         if(e.kind()==BloodArts.FX+2)GojoOpticsClient.receive(e);
         if(e.kind()==BloodArts.FX+4||e.kind()==BloodArts.FX+5&&e.seed()==0||e.kind()==BloodArts.FX+7||e.kind()==BloodArts.FX+10||e.kind()==BloodArts.FX+13&&e.seed()==0||e.kind()==BloodArts.FX+2||e.kind()==BloodArts.FX_HEART||e.kind()==BloodArts.FX_READY)visuals.removeIf(v->v.e.kind()==e.kind()&&v.e.owner()==e.owner()&&v.e.seed()==e.seed());
         if(visuals.size()>=700)visuals.remove(0);visuals.add(new Visual(e,tick,tick+Math.min(700,e.life())));
-        if(net.minecraftforge.fml.ModList.get().isLoaded("photon")&&particles.size()<96&&(e.kind()==BloodArts.FX_HIT||e.kind()==BloodArts.FX+8||e.kind()==BloodArts.FX+11||e.kind()==BloodArts.FX_SHATTER)){
+        if(net.neoforged.fml.ModList.get().isLoaded("photon")&&particles.size()<96&&(e.kind()==BloodArts.FX_HIT||e.kind()==BloodArts.FX+8||e.kind()==BloodArts.FX+11||e.kind()==BloodArts.FX_SHATTER)){
             boolean mist=e.kind()==BloodArts.FX+11;
             var h=PhotonFx.sphere(e.position(),mist?Math.min(6,e.size()):.7,mist?1.8:.15,mist?0xAA760D28:0xFFD30D2A,0xFF480711,"textures/effect/dust.png",false,5,mist?20:12,mist?5:2,.6);
             if(h!=null)particles.add(new Particle(h,tick+30));

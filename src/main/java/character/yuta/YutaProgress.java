@@ -20,10 +20,10 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraft.world.phys.AABB;
-import net.minecraftforge.event.TickEvent;
-import net.minecraftforge.event.entity.living.LivingDeathEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
+import net.neoforged.neoforge.event.TickEvent;
+import net.neoforged.neoforge.event.entity.living.LivingDeathEvent;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.Mod;
 
 /**
  * 乙骨忧太三条个人线的真实判定（框架只提供 {@link CharacterService#markChapter}，由这里触发）。
@@ -36,7 +36,7 @@ import net.minecraftforge.fml.common.Mod;
 @Mod.EventBusSubscriber(modid = "jujutsu_kaisen_cursed_paths")
 public final class YutaProgress {
     public static final ResourceKey<Level> HYAKKI =
-        ResourceKey.create(Registries.DIMENSION, new ResourceLocation("jujutsu_kaisen_cursed_paths", "hyakki"));
+        ResourceKey.create(Registries.DIMENSION, ResourceLocation.fromNamespaceAndPath("jujutsu_kaisen_cursed_paths", "hyakki"));
 
     private static final int VILLAGER_RANGE = 100;
     private static final int WINDOW_TICKS = 2400;      // 120 秒
@@ -52,7 +52,7 @@ public final class YutaProgress {
 
     /** 虎杖残影被乙骨打过就记账：死亡归属丢失时用它兜底。 */
     @SubscribeEvent
-    public static void yujiHurt(net.minecraftforge.event.entity.living.LivingHurtEvent e) {
+    public static void yujiHurt(net.neoforged.neoforge.event.entity.living.LivingHurtEvent e) {
         if (!(e.getEntity() instanceof cn.blockforge.generated.nnnnr1201forge2.YujiEntity yuji)) return;
         if (yuji.decoy() || yuji.familyMember()) return;
         ServerPlayer attacker = CombatSettings.caster(e.getSource());

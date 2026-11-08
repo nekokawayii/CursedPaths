@@ -3,7 +3,7 @@ package cn.blockforge.generated.nnnnr1201forge2;
 import java.util.List;
 import net.minecraft.world.effect.*;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.registries.*;
+import net.neoforged.neoforge.registries.*;
 
 public final class TechniqueEffects {
     public static final DeferredRegister<MobEffect> EFFECTS=DeferredRegister.create(ForgeRegistries.MOB_EFFECTS,"jujutsu_kaisen_cursed_paths");

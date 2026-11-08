@@ -9,12 +9,12 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.renderer.*;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.client.event.RenderGuiEvent;
-import net.minecraftforge.client.event.RenderLevelStageEvent;
-import net.minecraftforge.event.TickEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.neoforge.client.event.RenderGuiEvent;
+import net.neoforged.neoforge.client.event.RenderLevelStageEvent;
+import net.neoforged.neoforge.event.TickEvent;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.Mod;
 import org.joml.Matrix4f;
 import org.joml.Vector4f;
 
@@ -469,13 +469,13 @@ public final class KashimoVisuals {
     }
 
     /** 幻兽·琥珀：周围空气的"高温扭曲"用 FOV 脉冲 + 极轻微的镜头抖动来近似。 */
-    @SubscribeEvent public static void computeFov(net.minecraftforge.client.event.ViewportEvent.ComputeFov e) {
+    @SubscribeEvent public static void computeFov(net.neoforged.neoforge.client.event.ViewportEvent.ComputeFov e) {
         var mc = Minecraft.getInstance();
         if (mc.player == null || !e.usedConfiguredFov() || mc.level == null) return;
         if (local(ultUntil, now(mc)) > 0) e.setFOV(e.getFOV() * (1.03f + 0.02f * (float) Math.sin(tick * 0.35)));
     }
 
-    @SubscribeEvent public static void cameraAngles(net.minecraftforge.client.event.ViewportEvent.ComputeCameraAngles e) {
+    @SubscribeEvent public static void cameraAngles(net.neoforged.neoforge.client.event.ViewportEvent.ComputeCameraAngles e) {
         var mc = Minecraft.getInstance();
         if (mc.player == null || mc.level == null || local(ultUntil, now(mc)) <= 0) return;
         e.setRoll(e.getRoll() + 0.55f * (float) Math.sin(tick * 1.7));
@@ -570,7 +570,7 @@ public final class KashimoVisuals {
     public static int negativeStacks() { return localNeg(); }
 
     // ------------------------------------------------------------ HUD
-    @SubscribeEvent(priority = net.minecraftforge.eventbus.api.EventPriority.LOW)
+    @SubscribeEvent(priority = net.neoforged.bus.api.EventPriority.LOW)
     public static void hud(RenderGuiEvent.Post e) {
         var mc = Minecraft.getInstance();
         if (mc.player == null || mc.options.hideGui || mc.level == null) return;

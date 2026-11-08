@@ -15,9 +15,9 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.ai.attributes.*;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.sounds.*;
-import net.minecraftforge.event.TickEvent;
-import net.minecraftforge.event.entity.living.LivingFallEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.neoforged.neoforge.event.TickEvent;
+import net.neoforged.neoforge.event.entity.living.LivingFallEvent;
+import net.neoforged.bus.api.SubscribeEvent;
 
 /** 纯肉体技能：独立体术余额，不借用咒力，不触发咒术伤害；敌友仍走统一结算。 */
 public final class TojiCombat {
@@ -80,7 +80,7 @@ public final class TojiCombat {
             strike(p,rank,direction,false);
         }else if(kind==1){strike(p,rank,direction,true);}
         else {
-            p.setDeltaMovement(direction.scale(.65+.1*rank).add(0,.65+.08*rank,0));p.hurtMarked=true;if(!(p instanceof net.minecraftforge.common.util.FakePlayer))p.connection.send(new ClientboundSetEntityMotionPacket(p));
+            p.setDeltaMovement(direction.scale(.65+.1*rank).add(0,.65+.08*rank,0));p.hurtMarked=true;if(!(p instanceof net.neoforged.neoforge.common.util.FakePlayer))p.connection.send(new ClientboundSetEntityMotionPacket(p));
             Curse.data(p).putBoolean("TojiAirUsed",true);Curse.status(p,"TojiLeapLock",10);p.fallDistance=0;
             p.serverLevel().sendParticles(ParticleTypes.CLOUD,p.getX(),p.getY(),p.getZ(),18,.45,.1,.45,.04);
         }

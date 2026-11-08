@@ -5,9 +5,9 @@ import character.*;
 import java.util.*;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.event.TickEvent;
-import net.minecraftforge.event.server.ServerStoppingEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.neoforged.neoforge.event.TickEvent;
+import net.neoforged.neoforge.event.server.ServerStoppingEvent;
+import net.neoforged.bus.api.SubscribeEvent;
 
 /** 图片领域模板：不施工、不改地形。玩家与 NPC 进入完全相同的状态机和效果。 */
 public final class PictureDomainApi {

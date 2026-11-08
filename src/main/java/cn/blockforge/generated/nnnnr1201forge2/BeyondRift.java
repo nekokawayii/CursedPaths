@@ -15,10 +15,10 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.event.TickEvent;
-import net.minecraftforge.event.entity.player.PlayerInteractEvent;
-import net.minecraftforge.eventbus.api.*;
-import net.minecraftforge.fml.common.Mod;
+import net.neoforged.neoforge.event.TickEvent;
+import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
+import net.neoforged.bus.api.*;
+import net.neoforged.fml.common.Mod;
 
 /**
  * 隐藏剧情「观测者」的服务端部分。
@@ -39,7 +39,7 @@ public final class BeyondRift {
     private static final Map<UUID,Long> nextDrop=new HashMap<>();
 
     @SubscribeEvent public static void tick(TickEvent.PlayerTickEvent e){
-        if(e.phase!=TickEvent.Phase.END||!(e.player instanceof ServerPlayer p)||p instanceof net.minecraftforge.common.util.FakePlayer||!p.isAlive()||p.isSpectator())return;
+        if(e.phase!=TickEvent.Phase.END||!(e.player instanceof ServerPlayer p)||p instanceof net.neoforged.neoforge.common.util.FakePlayer||!p.isAlive()||p.isSpectator())return;
         // 讲台读信也算亲自阅读，不要求把唯一一本书从讲台拿走。
         if(p.containerMenu instanceof net.minecraft.world.inventory.LecternMenu menu&&isNote(menu.getBook()))recordRead(p);
         if(p.level().dimension()!=SoulJourney.CORRIDOR)return;
@@ -156,8 +156,8 @@ public final class BeyondRift {
             p.setItemInHand(hand,new ItemStack(Authority.EDITOR.get()));AuthorityPackets.open(p);
         }else ObserverRitual.start(p);
     }
-    @SubscribeEvent public static void logout(net.minecraftforge.event.entity.player.PlayerEvent.PlayerLoggedOutEvent e){nextDrop.remove(e.getEntity().getUUID());}
-    @SubscribeEvent public static void stop(net.minecraftforge.event.server.ServerStoppedEvent e){nextDrop.clear();}
+    @SubscribeEvent public static void logout(net.neoforged.neoforge.event.entity.player.PlayerEvent.PlayerLoggedOutEvent e){nextDrop.remove(e.getEntity().getUUID());}
+    @SubscribeEvent public static void stop(net.neoforged.neoforge.event.server.ServerStoppedEvent e){nextDrop.clear();}
 
     /** 那封信：书与笔，只有一页。 */
     private static ItemStack letter(){

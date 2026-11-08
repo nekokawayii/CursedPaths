@@ -3,8 +3,8 @@ package cn.blockforge.generated.nnnnr1201forge2;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.*;
-import net.minecraftforge.registries.*;
-import net.minecraftforge.eventbus.api.IEventBus;
+import net.neoforged.neoforge.registries.*;
+import net.neoforged.bus.api.IEventBus;
 
 public final class ModTab {
     private static final DeferredRegister<CreativeModeTab> TABS=DeferredRegister.create(Registries.CREATIVE_MODE_TAB,"jujutsu_kaisen_cursed_paths");

@@ -5,8 +5,8 @@ import java.util.*;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.*;
 import net.minecraft.util.profiling.ProfilerFiller;
-import net.minecraftforge.event.AddReloadListenerEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.neoforged.neoforge.event.AddReloadListenerEvent;
+import net.neoforged.bus.api.SubscribeEvent;
 
 /** 数据包更换现有领域天空，无需再改渲染器；图片资源由客户端资源包提供。 */
 public final class DomainStyleReload extends SimpleJsonResourceReloadListener {

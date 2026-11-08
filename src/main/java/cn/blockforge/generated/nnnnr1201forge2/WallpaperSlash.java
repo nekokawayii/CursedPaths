@@ -7,10 +7,10 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.*;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.client.event.RegisterShadersEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.neoforge.client.event.RegisterShadersEvent;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.Mod;
 
 /** 黑芯负责未授权或读取失败时的回退；壁纸按屏幕坐标覆盖同一尖梭内部。 */
 public final class WallpaperSlash {
@@ -24,7 +24,7 @@ public final class WallpaperSlash {
     @Mod.EventBusSubscriber(modid="jujutsu_kaisen_cursed_paths",value=Dist.CLIENT,bus=Mod.EventBusSubscriber.Bus.MOD)
     public static final class Registration {
         @SubscribeEvent public static void shaders(RegisterShadersEvent e){
-            shader=null;try{e.registerShader(new ShaderInstance(e.getResourceProvider(),new ResourceLocation("jujutsu_kaisen_cursed_paths","wallpaper_slash"),DefaultVertexFormat.POSITION_COLOR),s->shader=s);}catch(java.io.IOException|RuntimeException ex){com.mojang.logging.LogUtils.getLogger().warn("壁纸专用材质不可用，斩击保留原版贴图通道",ex);}
+            shader=null;try{e.registerShader(new ShaderInstance(e.getResourceProvider(),ResourceLocation.fromNamespaceAndPath("jujutsu_kaisen_cursed_paths", "wallpaper_slash"),DefaultVertexFormat.POSITION_COLOR),s->shader=s);}catch(java.io.IOException|RuntimeException ex){com.mojang.logging.LogUtils.getLogger().warn("壁纸专用材质不可用，斩击保留原版贴图通道",ex);}
         }
     }
     public static void begin(){pending.clear();batchCuts=0;collecting=true;SlashAppearance.reset();}

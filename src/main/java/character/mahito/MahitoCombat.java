@@ -20,16 +20,16 @@ import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ArmorItem;
 import net.minecraft.world.phys.*;
-import net.minecraftforge.event.entity.living.*;
-import net.minecraftforge.event.entity.player.PlayerEvent;
-import net.minecraftforge.eventbus.api.*;
-import net.minecraftforge.fml.common.Mod;
+import net.neoforged.neoforge.event.entity.living.*;
+import net.neoforged.neoforge.event.entity.player.PlayerEvent;
+import net.neoforged.bus.api.*;
+import net.neoforged.fml.common.Mod;
 
 /** 真人共用战斗规则。延迟命中重查敌友；临时属性均使用独立修饰符，不改基础存档数值。 */
 @Mod.EventBusSubscriber(modid="jujutsu_kaisen_cursed_paths")
 public final class MahitoCombat {
     public static final int TOUCH=730,TAIL=731,THREADS=732,ARMS=733,DODGE=734,REFORGE=735,DOMAIN=736,DOMAIN_END=737,PUPPET=738;
-    private static final ResourceKey<DamageType> SOUL=ResourceKey.create(Registries.DAMAGE_TYPE,new ResourceLocation("jujutsu_kaisen_cursed_paths","mahito_soul"));
+    private static final ResourceKey<DamageType> SOUL=ResourceKey.create(Registries.DAMAGE_TYPE,ResourceLocation.fromNamespaceAndPath("jujutsu_kaisen_cursed_paths", "mahito_soul"));
     private static final UUID ARMOR_ZERO=UUID.fromString("a3e7c83d-1883-486a-a617-1bac84e21d00");
     private static final UUID SOUL_LOSS=UUID.fromString("a3e7c83d-1883-486a-a617-1bac84e21d01");
     private static final UUID ROOT=UUID.fromString("a3e7c83d-1883-486a-a617-1bac84e21d02");
@@ -221,8 +221,8 @@ public final class MahitoCombat {
             Realm r=REALMS.get(data.getUUID("MahitoSoulOwner"));if(r==null||!r.caster.isAlive()||!inRealm(r.caster,e))restoreSoul(e);
         }
     }
-    @SubscribeEvent public static void tick(net.minecraftforge.event.TickEvent.ServerTickEvent event){
-        if(event.phase!=net.minecraftforge.event.TickEvent.Phase.END)return;
+    @SubscribeEvent public static void tick(net.neoforged.neoforge.event.TickEvent.ServerTickEvent event){
+        if(event.phase!=net.neoforged.neoforge.event.TickEvent.Phase.END)return;
         for(var it=COLLAPSES.iterator();it.hasNext();){
             Collapse c=it.next();long age=now(c.victim)-c.start;
             if(age>=40||!can(c.caster,c.victim)||c.caster.level()!=c.victim.level()||c.victim.position().distanceToSqr(c.anchor)>16||c.victim.getPersistentData().getLong("DomainSafetyUntil")>now(c.victim)){
@@ -260,6 +260,6 @@ public final class MahitoCombat {
         level.addFreshEntity(puppet);var actor=NpcBridge.actorFor(killer);if(actor!=null)fx(actor,PUPPET,victim.position(),Vec3.ZERO,1,20);
     }
     @SubscribeEvent public static void login(PlayerEvent.PlayerLoggedInEvent event){restoreSoul(event.getEntity());}
-    @SubscribeEvent public static void stop(net.minecraftforge.event.server.ServerStoppingEvent event){for(UUID owner:List.copyOf(REALMS.keySet()))closeRealm(owner);COLLAPSES.clear();CASTS.clear();MARKED.clear();}
+    @SubscribeEvent public static void stop(net.neoforged.neoforge.event.server.ServerStoppingEvent event){for(UUID owner:List.copyOf(REALMS.keySet()))closeRealm(owner);COLLAPSES.clear();CASTS.clear();MARKED.clear();}
     private MahitoCombat(){}
 }

@@ -8,8 +8,8 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.phys.*;
-import net.minecraftforge.event.TickEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.neoforged.neoforge.event.TickEvent;
+import net.neoforged.bus.api.SubscribeEvent;
 import org.joml.Vector3f;
 
 /** 可编译的纯特效领域范例；默认不注册、不改变现有角色或地形。详见中文教程。 */
@@ -30,7 +30,7 @@ public final class EffectDomainExample {
     /** 在公共初始化阶段调用一次；角色定义里还必须加入对应技能数据。 */
     public static void install(String role){
         TechniqueApi.registerDomain(role,SKILL,(caster,skill,rank)->open(TechniqueApi.actor(caster.body())));
-        net.minecraftforge.common.MinecraftForge.EVENT_BUS.register(EffectDomainExample.class);
+        net.neoforged.neoforge.common.NeoForge.EVENT_BUS.register(EffectDomainExample.class);
     }
     public static void open(ServerPlayer actor){
         if(actor==null||actor.level().isClientSide||DomainClash.hasDomain(actor))return;
@@ -59,6 +59,6 @@ public final class EffectDomainExample {
             }
         }
     }
-    @SubscribeEvent public static void stop(net.minecraftforge.event.server.ServerStoppingEvent event){for(Field f:List.copyOf(FIELDS.values()))f.close();}
+    @SubscribeEvent public static void stop(net.neoforged.neoforge.event.server.ServerStoppingEvent event){for(Field f:List.copyOf(FIELDS.values()))f.close();}
     private EffectDomainExample() { }
 }

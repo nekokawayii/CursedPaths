@@ -7,11 +7,11 @@ import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.InventoryScreen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.client.event.RenderLevelStageEvent;
-import net.minecraftforge.event.TickEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.neoforge.client.event.RenderLevelStageEvent;
+import net.neoforged.neoforge.event.TickEvent;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.Mod;
 import org.joml.Vector4f;
 import org.lwjgl.glfw.GLFW;
 
@@ -31,7 +31,7 @@ public final class ObserverFight {
     public static void slash(){if(state!=null)slashAt=state.age();}
     private static boolean exitRequested,closeOnVictory,drawingMelee;
     public static boolean melee(){return state!=null&&state.phase()==1&&state.attack()==ObserverBattleRules.MELEE&&state.attackLeft()>0;}
-    @SubscribeEvent public static void hideTeleported(net.minecraftforge.client.event.RenderLivingEvent.Pre<?,?> e){
+    @SubscribeEvent public static void hideTeleported(net.neoforged.neoforge.client.event.RenderLivingEvent.Pre<?,?> e){
         if(melee()&&!drawingMelee&&e.getEntity().getId()==state.boss())e.setCanceled(true);
     }
     public static boolean closeOnVictory(){return closeOnVictory;}

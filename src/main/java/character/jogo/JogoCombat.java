@@ -15,9 +15,9 @@ import net.minecraft.world.entity.item.FallingBlockEntity;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.event.TickEvent;
-import net.minecraftforge.event.entity.living.LivingDamageEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.neoforged.neoforge.event.TickEvent;
+import net.neoforged.neoforge.event.entity.living.LivingDamageEvent;
+import net.neoforged.bus.api.SubscribeEvent;
 import java.util.*;
 
 /** 漏壶的三招实现、被动免疫与第一章「泡岩浆 30 秒」。全部在服务端结算，客户端只看粒子。 */
@@ -156,7 +156,7 @@ public final class JogoCombat {
         }
     }
     /** 五条悟被漏壶击杀（无掉落物）→ 第三章条件之一。 */
-    @SubscribeEvent public static void gojoDeath(net.minecraftforge.event.entity.living.LivingDeathEvent e) {
+    @SubscribeEvent public static void gojoDeath(net.neoforged.neoforge.event.entity.living.LivingDeathEvent e) {
         if(!(e.getEntity() instanceof GojoEntity))return;
         if(!(e.getSource().getEntity() instanceof ServerPlayer p))return;
         var d=CharacterService.selected(p);if(d==null||!d.id().equals("jogo"))return;
@@ -165,7 +165,7 @@ public final class JogoCombat {
     }
     private static void tickBeam() {
         if(BEAM_EXPIRE.isEmpty())return;
-        var server=net.minecraftforge.server.ServerLifecycleHooks.getCurrentServer();if(server==null)return;
+        var server=net.neoforged.neoforge.server.ServerLifecycleHooks.getCurrentServer();if(server==null)return;
         for(var it=BEAM_EXPIRE.entrySet().iterator();it.hasNext();){
             var entry=it.next();
             var owner=NpcBridge.find(server,entry.getKey());
@@ -481,7 +481,7 @@ public final class JogoCombat {
     }
 
     /** 关服/退存档兜底：把没结束的领域地形还原，避免残留。 */
-    @SubscribeEvent public static void serverStopped(net.minecraftforge.event.server.ServerStoppingEvent e) {
+    @SubscribeEvent public static void serverStopped(net.neoforged.neoforge.event.server.ServerStoppingEvent e) {
         JogoTerrain.reset();
         DOMAINS.clear();BUGS.clear();METEORS.clear();FALLING.clear();PILLARS.clear();
     }

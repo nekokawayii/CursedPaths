@@ -2,8 +2,8 @@ package cn.blockforge.generated.nnnnr1201forge2;
 
 import java.util.HashSet;
 import java.util.Set;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.fml.common.Mod;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.fml.common.Mod;
 
 /** 宿傩 NPC 原身形态的客户端标记：服务端用 Effect(640) 广播实体 id（r275）。 */
 @Mod.EventBusSubscriber(modid = "jujutsu_kaisen_cursed_paths", value = Dist.CLIENT)

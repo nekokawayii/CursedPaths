@@ -265,9 +265,9 @@ public final class YukiCombat {
     }
 
     /** 每秒结算一次生命恢复（仅九十九由基）。 */
-    @net.minecraftforge.eventbus.api.SubscribeEvent
-    public static void onPlayerTick(net.minecraftforge.event.TickEvent.PlayerTickEvent e) {
-        if (e.phase != net.minecraftforge.event.TickEvent.Phase.END) return;
+    @net.neoforged.bus.api.SubscribeEvent
+    public static void onPlayerTick(net.neoforged.neoforge.event.TickEvent.PlayerTickEvent e) {
+        if (e.phase != net.neoforged.neoforge.event.TickEvent.Phase.END) return;
         if (!(e.player instanceof ServerPlayer p) || p.level().isClientSide) return;
         if (p.tickCount % 20 != 0) return;
         var def = character.CharacterService.selected(p);
@@ -294,8 +294,8 @@ public final class YukiCombat {
         return Math.min(0.60, Math.max(0, rank - 27) * 0.01);
     }
 
-    @net.minecraftforge.eventbus.api.SubscribeEvent
-    public static void onHurt(net.minecraftforge.event.entity.living.LivingHurtEvent e) {
+    @net.neoforged.bus.api.SubscribeEvent
+    public static void onHurt(net.neoforged.neoforge.event.entity.living.LivingHurtEvent e) {
         if (!(e.getEntity() instanceof ServerPlayer p)) return;
         double cut = resist(p);
         if (cut <= 0) return;

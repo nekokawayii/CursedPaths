@@ -5,14 +5,14 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.network.NetworkRegistry;
-import net.minecraftforge.network.NetworkDirection;
-import net.minecraftforge.network.PacketDistributor;
-import net.minecraftforge.network.simple.SimpleChannel;
+import net.neoforged.neoforge.network.NetworkRegistry;
+import net.neoforged.neoforge.network.NetworkDirection;
+import net.neoforged.neoforge.network.PacketDistributor;
+import net.neoforged.neoforge.network.simple.SimpleChannel;
 import java.util.function.Consumer;
 
 public final class Network {
-    public static final SimpleChannel CHANNEL = NetworkRegistry.newSimpleChannel(new ResourceLocation("jujutsu_kaisen_cursed_paths", "skills"), () -> "sukuna-chain-r295", "sukuna-chain-r295"::equals, "sukuna-chain-r295"::equals);
+    public static final SimpleChannel CHANNEL = NetworkRegistry.newSimpleChannel(ResourceLocation.fromNamespaceAndPath("jujutsu_kaisen_cursed_paths", "skills"), () -> "sukuna-chain-r295", "sukuna-chain-r295"::equals, "sukuna-chain-r295"::equals);
     public static Consumer<Effect> clientReceiver = e -> {};
     /** 天逆蛑腰间挂件：服务端告诉客户端某个玩家背包里有没有这件咒具。 */
     public static Consumer<PendantState> pendantReceiver = p -> {};
@@ -27,7 +27,7 @@ public final class Network {
     public static Runnable testResetReceiver=()->{};
     public static Consumer<CombatState> combatReceiver=s->{};
     public record CombatState(boolean finaleReady,int lingers,boolean stream,int noRecovery,int finaleBurnout){}
-    public static void syncCombat(ServerPlayer p){if(p instanceof net.minecraftforge.common.util.FakePlayer)return;long now=p.level().getGameTime();CHANNEL.send(PacketDistributor.PLAYER.with(()->p),new CombatState(SixfoldFinale.ready(p),CombatExpansion.lingerCount(p),CombatExpansion.streaming(p),(int)Math.max(0,Curse.data(p).getLong("FinaleNoRecovery")-now),(int)Math.max(0,Curse.data(p).getLong("FinaleBurnout")-now)));}
+    public static void syncCombat(ServerPlayer p){if(p instanceof net.neoforged.neoforge.common.util.FakePlayer)return;long now=p.level().getGameTime();CHANNEL.send(PacketDistributor.PLAYER.with(()->p),new CombatState(SixfoldFinale.ready(p),CombatExpansion.lingerCount(p),CombatExpansion.streaming(p),(int)Math.max(0,Curse.data(p).getLong("FinaleNoRecovery")-now),(int)Math.max(0,Curse.data(p).getLong("FinaleBurnout")-now)));}
     public static Consumer<MotionState> motionReceiver=m->{};
     public record MotionState(int owner,java.util.UUID token,int kind,int age,float yaw,Vec3 position,boolean end){
         static MotionState read(FriendlyByteBuf b){return new MotionState(b.readVarInt(),b.readUUID(),b.readVarInt(),b.readVarInt(),b.readFloat(),vec(b),b.readBoolean());}
@@ -238,7 +238,7 @@ public final class Network {
      * 用 {@link #send(ServerLevel, Effect)} 广播的话，附近所有玩家的客户端都会打开同一块界面。
      */
     public static void sendTo(ServerPlayer p, Effect e) {
-        if(p instanceof net.minecraftforge.common.util.FakePlayer)return;
+        if(p instanceof net.neoforged.neoforge.common.util.FakePlayer)return;
         CHANNEL.send(PacketDistributor.PLAYER.with(() -> p), e);
     }
     public static void send(ServerLevel level, Effect e) {
@@ -253,7 +253,7 @@ public final class Network {
         if(e.size()==SlashReach.INFINITE){for(ServerPlayer listener:level.players()){var audience=PacketDistributor.PLAYER.with(()->listener);if(tint!=null)CHANNEL.send(audience,tint);CHANNEL.send(audience,visual);}return;}
         var audience=PacketDistributor.NEAR.with(()->new PacketDistributor.TargetPoint(e.position.x,e.position.y,e.position.z,512,level.dimension()));if(tint!=null)CHANNEL.send(audience,tint);CHANNEL.send(audience,visual);
     }
-    public static void sendController(ServerPlayer p) { if(p instanceof net.minecraftforge.common.util.FakePlayer)return;CHANNEL.send(PacketDistributor.PLAYER.with(()->p),VoidController.state(p)); }
+    public static void sendController(ServerPlayer p) { if(p instanceof net.neoforged.neoforge.common.util.FakePlayer)return;CHANNEL.send(PacketDistributor.PLAYER.with(()->p),VoidController.state(p)); }
     public static void sendControllerRequest(int field, int delta) { CHANNEL.sendToServer(new ControllerRequest(field,delta)); }
     public static void sendControllerValue(int field,String value) { CHANNEL.sendToServer(new ControllerValueRequest(field,value)); }
 }

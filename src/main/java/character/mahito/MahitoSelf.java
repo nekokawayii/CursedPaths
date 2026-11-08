@@ -193,9 +193,9 @@ public final class MahitoSelf {
     }
 
     /** 服务端 tick：遍杀到期回收、分身死亡恢复上限。 */
-    @net.minecraftforge.eventbus.api.SubscribeEvent
-    public static void tick(net.minecraftforge.event.TickEvent.ServerTickEvent event) {
-        if (event.phase != net.minecraftforge.event.TickEvent.Phase.END) return;
+    @net.neoforged.bus.api.SubscribeEvent
+    public static void tick(net.neoforged.neoforge.event.TickEvent.ServerTickEvent event) {
+        if (event.phase != net.neoforged.neoforge.event.TickEvent.Phase.END) return;
         for (ServerPlayer p : event.getServer().getPlayerList().getPlayers()) {
             CompoundTag data = cn.blockforge.generated.nnnnr1201forge2.Curse.data(p);
             if (data.getBoolean(SPIRIT_FLAG) && p.level().getGameTime() >= data.getLong("MahitoSpiritUntil")) {
@@ -381,14 +381,14 @@ public final class MahitoSelf {
     }
 
     /** 进服时补一次手臂物品同步。 */
-    @net.minecraftforge.eventbus.api.SubscribeEvent
-    public static void join(net.minecraftforge.event.entity.player.PlayerEvent.PlayerLoggedInEvent event) {
+    @net.neoforged.bus.api.SubscribeEvent
+    public static void join(net.neoforged.neoforge.event.entity.player.PlayerEvent.PlayerLoggedInEvent event) {
         if (event.getEntity() instanceof ServerPlayer p) syncArms(p);
     }
 
     /** 右键：同时使用所有手臂里的物品（不取消主手行为）。 */
-    @net.minecraftforge.eventbus.api.SubscribeEvent
-    public static void rightClick(net.minecraftforge.event.entity.player.PlayerInteractEvent.RightClickItem event) {
+    @net.neoforged.bus.api.SubscribeEvent
+    public static void rightClick(net.neoforged.neoforge.event.entity.player.PlayerInteractEvent.RightClickItem event) {
         if (event.getLevel().isClientSide) return;
         if (!(event.getEntity() instanceof ServerPlayer p)) return;
         if (cn.blockforge.generated.nnnnr1201forge2.Curse.data(p).getInt(ARMS) <= 0) return;

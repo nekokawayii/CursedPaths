@@ -6,8 +6,8 @@ import character.CharacterRegistry;
 import java.util.*;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
-import net.minecraftforge.event.entity.living.LivingEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.neoforged.neoforge.event.entity.living.LivingEvent;
+import net.neoforged.bus.api.SubscribeEvent;
 
 /** NPC 独立调度玩家同款术式；没有真人在场也会运行。 */
 public final class NpcCombatCasting {

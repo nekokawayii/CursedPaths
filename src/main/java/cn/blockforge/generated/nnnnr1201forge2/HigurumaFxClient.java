@@ -1,8 +1,8 @@
 package cn.blockforge.generated.nnnnr1201forge2;
 
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.fml.common.Mod;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.fml.common.Mod;
 
 /** 日车宽见新招粒子（r344）：PhotonBridge 贴图粒子，金色法庭风。 */
 @Mod.EventBusSubscriber(modid = "jujutsu_kaisen_cursed_paths", value = Dist.CLIENT)

@@ -5,11 +5,11 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.*;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.phys.*;
-import net.minecraftforge.event.TickEvent;
-import net.minecraftforge.event.entity.living.*;
-import net.minecraftforge.event.entity.player.*;
-import net.minecraftforge.event.server.ServerStoppedEvent;
-import net.minecraftforge.eventbus.api.*;
+import net.neoforged.neoforge.event.TickEvent;
+import net.neoforged.neoforge.event.entity.living.*;
+import net.neoforged.neoforge.event.entity.player.*;
+import net.neoforged.neoforge.event.server.ServerStoppedEvent;
+import net.neoforged.bus.api.*;
 
 /** 玩家和女仆共用：服务端锁定、结算、敌友检查；不永久修改AI或重力。 */
 public final class NetBranches {
@@ -166,7 +166,7 @@ public final class NetBranches {
     @SubscribeEvent(priority=EventPriority.HIGHEST) public static void interact(PlayerInteractEvent event){if(event.isCancelable()&&locked(event.getEntity()))event.setCanceled(true);}
     @SubscribeEvent(priority=EventPriority.HIGHEST) public static void outgoing(LivingAttackEvent event){if(event.getSource().getEntity() instanceof LivingEntity living&&locked(living))event.setCanceled(true);}
     @SubscribeEvent(priority=EventPriority.HIGHEST) public static void breakSpeed(PlayerEvent.BreakSpeed event){if(locked(event.getEntity()))event.setCanceled(true);}
-    @SubscribeEvent(priority=EventPriority.HIGHEST) public static void teleport(net.minecraftforge.event.entity.EntityTeleportEvent event){if(event.isCancelable()&&event.getEntity() instanceof LivingEntity living&&locked(living))event.setCanceled(true);}
+    @SubscribeEvent(priority=EventPriority.HIGHEST) public static void teleport(net.neoforged.neoforge.event.entity.EntityTeleportEvent event){if(event.isCancelable()&&event.getEntity() instanceof LivingEntity living&&locked(living))event.setCanceled(true);}
     @SubscribeEvent public static void logout(PlayerEvent.PlayerLoggedOutEvent event){if(event.getEntity() instanceof ServerPlayer p)cancel(p);}
     @SubscribeEvent public static void dimension(PlayerEvent.PlayerChangedDimensionEvent event){if(event.getEntity() instanceof ServerPlayer p)cancel(p);}
     @SubscribeEvent public static void stop(ServerStoppedEvent event){crosses.clear();airCrosses.clear();projectiles.clear();crossFlights.clear();nextId=0;}

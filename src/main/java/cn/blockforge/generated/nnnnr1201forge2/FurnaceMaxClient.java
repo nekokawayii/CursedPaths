@@ -249,12 +249,12 @@ public final class FurnaceMaxClient {
         return k;
     }
     /** 蓄力期间 FOV ×{@link #SEEK_FOV}（2 倍）：视野拉宽，不是缩窄。 */
-    public static void fov(net.minecraftforge.client.event.ViewportEvent.ComputeFov e){
+    public static void fov(net.neoforged.neoforge.client.event.ViewportEvent.ComputeFov e){
         if(Math.abs(fovBoost-1)<0.01)return;
         e.setFOV(e.getFOV()*(float)fovBoost);
     }
     /** 雾色向橙金靠拢（比上一版轻，避免"糊屏"）。 */
-    public static void fog(net.minecraftforge.client.event.ViewportEvent.ComputeFogColor e){
+    public static void fog(net.neoforged.neoforge.client.event.ViewportEvent.ComputeFogColor e){
         double k=intensity();
         if(k<=0.01)return;
         double m=0.55*k;

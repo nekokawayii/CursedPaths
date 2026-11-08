@@ -1,26 +1,26 @@
 package cn.blockforge.generated.nnnnr1201forge2;
 
-import net.minecraftforge.common.ForgeConfigSpec;
-import net.minecraftforge.fml.ModLoadingContext;
-import net.minecraftforge.fml.config.ModConfig;
+import net.neoforged.neoforge.common.ModConfigSpec;
+import net.neoforged.fml.ModLoadingContext;
+import net.neoforged.fml.config.ModConfig;
 
 /** 主 config 目录中的成长配置；不改变已经获得的阶段，只重新计算固定加成。 */
 public final class GrowthConfig {
     public static final String FILE="jujutsu_kaisen_cursed_paths-growth.toml";
-    public static final ForgeConfigSpec SPEC;
-    public static final ForgeConfigSpec.DoubleValue BASE_ENERGY, RESIDUE_ATTACK, RESIDUE_SPELL;
-    public static final ForgeConfigSpec.IntValue REVEAL_DENOMINATOR;
-    public static final ForgeConfigSpec.BooleanValue CONTROLLER_CRAFTING, MODPACK_MODE;
+    public static final ModConfigSpec SPEC;
+    public static final ModConfigSpec.DoubleValue BASE_ENERGY, RESIDUE_ATTACK, RESIDUE_SPELL;
+    public static final ModConfigSpec.IntValue REVEAL_DENOMINATOR;
+    public static final ModConfigSpec.BooleanValue CONTROLLER_CRAFTING, MODPACK_MODE;
     public static final Stage FINGER,BODY,NINE,SOUL,VOID,GUARDIAN;
-    public record Stage(ForgeConfigSpec.DoubleValue health,ForgeConfigSpec.DoubleValue attack,
-                        ForgeConfigSpec.DoubleValue spell,ForgeConfigSpec.DoubleValue energy) {
+    public record Stage(ModConfigSpec.DoubleValue health,ModConfigSpec.DoubleValue attack,
+                        ModConfigSpec.DoubleValue spell,ModConfigSpec.DoubleValue energy) {
         /** 生命/普攻/术式各自按分类比值换算（关闭模式不再是同一个因子），咒力上限始终用原值。 */
         public String description(){return description(BalanceRules.factor(BalanceRules.modpackMode(),BalanceRules.Category.PLAYER_HEALTH),BalanceRules.factor(BalanceRules.modpackMode(),BalanceRules.Category.PLAYER_ATTACK),BalanceRules.factor(BalanceRules.modpackMode(),BalanceRules.Category.DAMAGE));}
         /** 客户端按当前模式的分类比值展开（与服务端同步的 modpackMode 一致）。 */
         public String description(double healthFactor,double attackFactor,double spellFactor){return "生命+"+number(value(health)*healthFactor)+"、普攻+"+number(value(attack)*attackFactor)+"、术式+"+number(value(spell)*spellFactor)+"、咒力上限+"+number(value(energy));}
     }
     static {
-        ForgeConfigSpec.Builder b=new ForgeConfigSpec.Builder();
+        ModConfigSpec.Builder b=new ModConfigSpec.Builder();
         // 关闭模式的分类比值与推导依据直接取自 BalanceRules，避免注释与实际数值脱节。
         String ratioComment=BalanceRules.ratios();for(String line:BalanceRules.RATIONALE)ratioComment=ratioComment+"\n"+line;
         b.comment("整合包模式：配置内始终填写原始数值；修改后彻底重启游戏或服务器。联机战斗以服务端为准。").push("balance");
@@ -42,7 +42,7 @@ public final class GrowthConfig {
         CONTROLLER_CRAFTING=b.comment("是否允许用工作台九格泥土合成咒术战斗控制器。默认关闭；修改后重启游戏或服务器，联机以服务端为准。").define("controllerCrafting",false);
         b.pop();SPEC=b.build();
     }
-    private static Stage stage(ForgeConfigSpec.Builder b,String key,String comment,GrowthRules.Row row){
+    private static Stage stage(ModConfigSpec.Builder b,String key,String comment,GrowthRules.Row row){
         double h=row.health(),a=row.attack(),s=row.spell(),e=row.energy();
         b.comment(comment).push(key);
         Stage result=new Stage(b.comment("额外生命点数").defineInRange("health",h,0.0,10000.0),
@@ -51,11 +51,11 @@ public final class GrowthConfig {
             b.comment("额外咒力上限").defineInRange("energy",e,0.0,1000000.0));
         b.pop();return result;
     }
-    private static double value(ForgeConfigSpec.DoubleValue v){return SPEC.isLoaded()?v.get():v.getDefault();}
+    private static double value(ModConfigSpec.DoubleValue v){return SPEC.isLoaded()?v.get():v.getDefault();}
     private static String number(double v){return BalanceRules.number(v);}
-    private static void changed(net.minecraftforge.fml.event.config.ModConfigEvent event){
+    private static void changed(net.neoforged.fml.event.config.ModConfigEvent event){
         if(event.getConfig().getSpec()!=SPEC)return;
-        if(event instanceof net.minecraftforge.fml.event.config.ModConfigEvent.Unloading){GrowthRules.reset();BalanceRules.configure(false);return;}
+        if(event instanceof net.neoforged.fml.event.config.ModConfigEvent.Unloading){GrowthRules.reset();BalanceRules.configure(false);return;}
         applyCurrentValues();
     }
     /** 配置界面保存后同步纯数值缓存；配方和已有实体仍按提示重启后生效。 */
@@ -66,6 +66,6 @@ public final class GrowthConfig {
         for(int i=0;i<stages.length;i++){Stage s=stages[i];rows[i]=new GrowthRules.Row(s.health().get(),s.attack().get(),s.spell().get(),s.energy().get());}
         GrowthRules.configure(rows,BASE_ENERGY.get(),RESIDUE_ATTACK.get(),RESIDUE_SPELL.get());
     }
-    public static void register(){ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON,SPEC,FILE);net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext.get().getModEventBus().addListener(GrowthConfig::changed);}
+    public static void register(){ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON,SPEC,FILE);net.neoforged.fml.javafmlmod.FMLJavaModLoadingContext.get().getModEventBus().addListener(GrowthConfig::changed);}
     private GrowthConfig(){}
 }

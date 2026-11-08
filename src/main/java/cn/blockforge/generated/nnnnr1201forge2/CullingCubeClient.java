@@ -10,10 +10,10 @@ import net.minecraft.client.CameraType;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.client.event.RenderLevelStageEvent;
-import net.minecraftforge.event.TickEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.neoforge.client.event.RenderLevelStageEvent;
+import net.neoforged.neoforge.event.TickEvent;
+import net.neoforged.bus.api.SubscribeEvent;
 import org.lwjgl.opengl.GL11;
 import com.mojang.blaze3d.systems.RenderSystem;
 
@@ -23,7 +23,7 @@ import com.mojang.blaze3d.systems.RenderSystem;
  * <p>服务端用 {@code Network.Effect(623)} 广播（position=展开点、life=时长刻）；客户端收到后
  * 强制切第三人称，画 40 刻的扩张黑立方（面 + 棱线），播完自动切回第一人称。
  */
-@net.minecraftforge.fml.common.Mod.EventBusSubscriber(modid = "jujutsu_kaisen_cursed_paths", value = Dist.CLIENT)
+@net.neoforged.fml.common.Mod.EventBusSubscriber(modid = "jujutsu_kaisen_cursed_paths", value = Dist.CLIENT)
 public final class CullingCubeClient {
     private static final int LIFE = 40;
     private static Vec3 center;

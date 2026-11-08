@@ -22,7 +22,7 @@ public final class ReverseOutput {
         Network.send(p.serverLevel(),new Network.Effect(137,target.getId(),target.position(),Vec3.ZERO,1,20,0));
     }
     public static void cast(ServerPlayer p){
-        if(!(p instanceof net.minecraftforge.common.util.FakePlayer)){character.mainline.Mainline.reverseOut(p);return;}
+        if(!(p instanceof net.neoforged.neoforge.common.util.FakePlayer)){character.mainline.Mainline.reverseOut(p);return;}
         if(!p.isAlive()||p.isSpectator()||DomainClash.active(p)||!GuardianCombat.awakened(p)||Curse.active(p,"ReverseOutputCooldown"))return;
         if(p instanceof MaidBridge.Actor actor){if(maidReady(actor))healTarget(p,MaidBridge.owner(actor));return;}
         if(p instanceof NpcBridge.NpcActor npc){

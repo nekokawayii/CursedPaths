@@ -11,12 +11,12 @@ import net.minecraft.client.resources.sounds.SimpleSoundInstance;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.phys.*;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.client.event.*;
-import net.minecraftforge.client.event.sound.PlaySoundEvent;
-import net.minecraftforge.event.TickEvent;
-import net.minecraftforge.eventbus.api.*;
-import net.minecraftforge.fml.common.Mod;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.neoforge.client.event.*;
+import net.neoforged.neoforge.client.event.sound.PlaySoundEvent;
+import net.neoforged.neoforge.event.TickEvent;
+import net.neoforged.bus.api.*;
+import net.neoforged.fml.common.Mod;
 
 /** 终式表现按服务端年龄续租；只移动本机镜头，不替换相机实体或修改全局按键。 */
 public final class FinaleClient {

@@ -16,5 +16,5 @@ public final class SoulDevourerItem extends SwordItem {
         lines.add(Component.literal("每次有效命中后永久累加基础伤害的5%，不按复利计算"));
         lines.add(Component.literal("已噬魂 "+hits(stack)+" 次 · 当前伤害 ×"+String.format(java.util.Locale.ROOT,"%.2f",multiplier(stack))));
     }
-    @Override public void initializeClient(java.util.function.Consumer<net.minecraftforge.client.extensions.common.IClientItemExtensions> consumer){SoulDevourerClient.item(consumer);}
+    @Override public void initializeClient(java.util.function.Consumer<net.neoforged.neoforge.client.extensions.common.IClientItemExtensions> consumer){SoulDevourerClient.item(consumer);}
 }

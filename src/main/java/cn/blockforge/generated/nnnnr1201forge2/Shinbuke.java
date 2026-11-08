@@ -14,7 +14,7 @@ import net.minecraft.world.phys.Vec3;
  *  <p>雷击伤害 = {@link #STRIKE_DAMAGE}（基准 15 的 **20 倍** = 300 原值），走模组统一的
  *  {@code BalanceRules} / {@code CombatSettings.hurt} 结算，并按 {@link AttackTypes#LIGHTNING}
  *  归类（魔虚罗的"雷电适应"吃这一条）。</p> */
-@net.minecraftforge.fml.common.Mod.EventBusSubscriber(modid="jujutsu_kaisen_cursed_paths")
+@net.neoforged.fml.common.Mod.EventBusSubscriber(modid="jujutsu_kaisen_cursed_paths")
 public final class Shinbuke {
     /** 左键近战伤害（原值）。 */
     public static final double MELEE_DAMAGE=15;
@@ -124,9 +124,9 @@ public final class Shinbuke {
     }
     /** 服务端推进充能：**每刻 +1 点**（一秒 20 刻 = 20 次，客户端的"50 次/秒"由心跳与 UI 呈现），
      *  手持被换掉/死亡就自动结算掉；已停止充能（等待右键）时只保留数值、不再增长。 */
-    @net.minecraftforge.eventbus.api.SubscribeEvent
-    public static void chargeTick(net.minecraftforge.event.TickEvent.ServerTickEvent e){
-        if(e.phase!=net.minecraftforge.event.TickEvent.Phase.END)return;
+    @net.neoforged.bus.api.SubscribeEvent
+    public static void chargeTick(net.neoforged.neoforge.event.TickEvent.ServerTickEvent e){
+        if(e.phase!=net.neoforged.neoforge.event.TickEvent.Phase.END)return;
         var server=e.getServer();if(server==null||server.getPlayerList().getPlayers().isEmpty())return;
         boolean sync=server.getTickCount()%10==0; // 每 10 刻同步一次给 HUD
         for(ServerPlayer p:server.getPlayerList().getPlayers()){

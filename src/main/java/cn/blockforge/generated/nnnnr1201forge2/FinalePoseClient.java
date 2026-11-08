@@ -12,10 +12,10 @@ import net.minecraft.client.renderer.entity.layers.RenderLayer;
 import net.minecraft.world.item.*;
 import net.minecraft.world.entity.HumanoidArm;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.client.event.*;
-import net.minecraftforge.eventbus.api.*;
-import net.minecraftforge.fml.common.Mod;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.neoforge.client.event.*;
+import net.neoforged.bus.api.*;
+import net.neoforged.fml.common.Mod;
 
 /** 复用已有玩家骨架、皮肤和盔甲；神武解只是渲染层的铁剑，不改玩家背包。 */
 public final class FinalePoseClient {

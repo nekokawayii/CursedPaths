@@ -10,10 +10,10 @@ import net.minecraft.client.renderer.texture.DynamicTexture;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.phys.*;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.client.event.*;
-import net.minecraftforge.eventbus.api.*;
-import net.minecraftforge.fml.common.Mod;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.neoforge.client.event.*;
+import net.neoforged.bus.api.*;
+import net.neoforged.fml.common.Mod;
 import org.joml.Matrix4f;
 import org.joml.Vector4f;
 import org.lwjgl.opengl.GL30;
@@ -41,7 +41,7 @@ public final class GojoOpticsClient {
     public static final class Registration {
         @SubscribeEvent public static void shaders(RegisterShadersEvent e){
             shader=null;warned=false;
-            try{e.registerShader(new ShaderInstance(e.getResourceProvider(),new ResourceLocation("jujutsu_kaisen_cursed_paths","gojo_optics"),DefaultVertexFormat.POSITION),s->{shader=s;warned=false;});}
+            try{e.registerShader(new ShaderInstance(e.getResourceProvider(),ResourceLocation.fromNamespaceAndPath("jujutsu_kaisen_cursed_paths", "gojo_optics"),DefaultVertexFormat.POSITION),s->{shader=s;warned=false;});}
             catch(java.io.IOException|RuntimeException ex){warned=true;com.mojang.logging.LogUtils.getLogger().warn("苍赫茈后期加载失败，保留独立亮核与光环",ex);}
         }
     }
@@ -105,8 +105,8 @@ public final class GojoOpticsClient {
             l.distances[y*MAP+x]=GojoOpticsRules.shadowRange(distance);
         }
     }
-    @SubscribeEvent public static void beforeFrame(net.minecraftforge.event.TickEvent.RenderTickEvent e){
-        if(e.phase==net.minecraftforge.event.TickEvent.Phase.START)worldView=worldProjection=null;
+    @SubscribeEvent public static void beforeFrame(net.neoforged.neoforge.event.TickEvent.RenderTickEvent e){
+        if(e.phase==net.neoforged.neoforge.event.TickEvent.Phase.START)worldView=worldProjection=null;
     }
     @SubscribeEvent(priority=EventPriority.LOWEST)
     public static void render(RenderLevelStageEvent e){

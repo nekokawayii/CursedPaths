@@ -9,11 +9,11 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.client.event.RenderLevelStageEvent;
-import net.minecraftforge.event.TickEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.neoforge.client.event.RenderLevelStageEvent;
+import net.neoforged.neoforge.event.TickEvent;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.Mod;
 
 /** 咒力附拳期间的黑闪标记（用户要求）：
  *  <ul>
@@ -39,7 +39,7 @@ public final class BlackFlashMarks {
     private static final Map<UUID,Map<Integer,Long>> MARKS=new HashMap<>();
 
     private record ServerMark(UUID entity,Vec3 offset,long until,boolean extended){}
-    public static void extendBloodVision(ServerPlayer p){var points=POINTS.get(p.getUUID());var mine=MARKS.get(p.getUUID());if(points==null||mine==null)return;long now=p.level().getGameTime();for(var entry:List.copyOf(points.entrySet())){ServerMark m=entry.getValue();if(m.extended||m.until<now)continue;if(!(p.level().getEntity(entry.getKey()) instanceof LivingEntity target)||!m.entity.equals(target.getUUID())||!CombatSafety.canTarget(p,target))continue;long until=m.until+40;points.put(entry.getKey(),new ServerMark(m.entity,m.offset,until,true));mine.put(entry.getKey(),until);Network.CHANNEL.send(net.minecraftforge.network.PacketDistributor.PLAYER.with(()->p),new Network.Effect(FX_MARK,target.getId(),target.position().add(m.offset),Vec3.ZERO,1,(int)(until-now),0));}}
+    public static void extendBloodVision(ServerPlayer p){var points=POINTS.get(p.getUUID());var mine=MARKS.get(p.getUUID());if(points==null||mine==null)return;long now=p.level().getGameTime();for(var entry:List.copyOf(points.entrySet())){ServerMark m=entry.getValue();if(m.extended||m.until<now)continue;if(!(p.level().getEntity(entry.getKey()) instanceof LivingEntity target)||!m.entity.equals(target.getUUID())||!CombatSafety.canTarget(p,target))continue;long until=m.until+40;points.put(entry.getKey(),new ServerMark(m.entity,m.offset,until,true));mine.put(entry.getKey(),until);Network.CHANNEL.send(net.neoforged.neoforge.network.PacketDistributor.PLAYER.with(()->p),new Network.Effect(FX_MARK,target.getId(),target.position().add(m.offset),Vec3.ZERO,1,(int)(until-now),0));}}
     private static final Map<UUID,Map<Integer,ServerMark>> POINTS=new HashMap<>();
     /** 穿血使用服务端生成的红圈位置，不能仅因目标有红圈就算弱点。 */
     public static boolean bloodWeakPoint(ServerPlayer p,LivingEntity target,Vec3 start,Vec3 end){
@@ -49,15 +49,15 @@ public final class BlackFlashMarks {
         if(length<1e-8)return false;double t=point.subtract(start).dot(line)/length;
         return t>=0&&t<=1&&point.distanceToSqr(start.add(line.scale(t)))<=MARK_RADIUS*MARK_RADIUS;
     }
-    @SubscribeEvent public static void logout(net.minecraftforge.event.entity.player.PlayerEvent.PlayerLoggedOutEvent event){MARKS.remove(event.getEntity().getUUID());POINTS.remove(event.getEntity().getUUID());}
-    @SubscribeEvent public static void dimension(net.minecraftforge.event.entity.player.PlayerEvent.PlayerChangedDimensionEvent event){MARKS.remove(event.getEntity().getUUID());POINTS.remove(event.getEntity().getUUID());}
-    @SubscribeEvent public static void stopped(net.minecraftforge.event.server.ServerStoppedEvent event){MARKS.clear();POINTS.clear();}
+    @SubscribeEvent public static void logout(net.neoforged.neoforge.event.entity.player.PlayerEvent.PlayerLoggedOutEvent event){MARKS.remove(event.getEntity().getUUID());POINTS.remove(event.getEntity().getUUID());}
+    @SubscribeEvent public static void dimension(net.neoforged.neoforge.event.entity.player.PlayerEvent.PlayerChangedDimensionEvent event){MARKS.remove(event.getEntity().getUUID());POINTS.remove(event.getEntity().getUUID());}
+    @SubscribeEvent public static void stopped(net.neoforged.neoforge.event.server.ServerStoppedEvent event){MARKS.clear();POINTS.clear();}
     // ------------------------------------------------------------------ 服务端
     /** 独立的服务端每刻钩子：**每刻都跑**，内部再按 10 刻（0.5 秒）掷骰。
      *  （之前挂在附拳每 15 刻的广播循环里，和 10 刻取最小公倍数 → 实际 30 刻才掷一次，看起来像只出现一次。） */
     @SubscribeEvent public static void serverTick(TickEvent.ServerTickEvent e){
         if(e.phase!=TickEvent.Phase.END)return;
-        var server=net.minecraftforge.server.ServerLifecycleHooks.getCurrentServer();
+        var server=net.neoforged.neoforge.server.ServerLifecycleHooks.getCurrentServer();
         if(server==null)return;
         for(ServerPlayer p:server.getPlayerList().getPlayers())tick(p);
     }
@@ -81,7 +81,7 @@ public final class BlackFlashMarks {
             mine.put(e.getId(),until);
             var points=POINTS.computeIfAbsent(p.getUUID(),k->new HashMap<>());points.entrySet().removeIf(entry->entry.getValue().until<p.level().getGameTime());
             points.put(e.getId(),new ServerMark(e.getUUID(),at.subtract(e.position()),until,BloodArts.vision(p)));
-            Network.CHANNEL.send(net.minecraftforge.network.PacketDistributor.PLAYER.with(()->p),
+            Network.CHANNEL.send(net.neoforged.neoforge.network.PacketDistributor.PLAYER.with(()->p),
                 new Network.Effect(FX_MARK,e.getId(),at,Vec3.ZERO,1,duration,0));
             SkillSounds.play(p,"domainshatter",3.5f);   // 红圈出现音效（声音要大）
         }
@@ -117,7 +117,7 @@ public final class BlackFlashMarks {
         fx(p,target.getEyePosition(),dir);
     }
     private static void fx(ServerPlayer p,Vec3 at,Vec3 dir){
-        Network.CHANNEL.send(net.minecraftforge.network.PacketDistributor.TRACKING_ENTITY_AND_SELF.with(()->p),
+        Network.CHANNEL.send(net.neoforged.neoforge.network.PacketDistributor.TRACKING_ENTITY_AND_SELF.with(()->p),
             new Network.Effect(85,p.getId(),at,dir,1,16,p.getId()));
         SkillSounds.play(p,"black_flash",3.5f);   // 打击感：音效更响
     }

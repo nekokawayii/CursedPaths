@@ -11,7 +11,7 @@ import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
-import net.minecraftforge.network.NetworkHooks;
+import net.neoforged.neoforge.network.NetworkHooks;
 
 /** 不可被普通攻击、爆炸或活塞摧毁的地面咒物；只有圣光的显式解封路径可破坏。 */
 public final class PrisonRealmEntity extends Entity {

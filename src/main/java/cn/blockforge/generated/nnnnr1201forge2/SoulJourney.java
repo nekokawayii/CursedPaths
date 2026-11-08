@@ -15,17 +15,17 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.phys.AABB;
-import net.minecraftforge.event.RegisterCommandsEvent;
-import net.minecraftforge.event.TickEvent;
-import net.minecraftforge.event.entity.EntityJoinLevelEvent;
-import net.minecraftforge.event.entity.living.LivingDeathEvent;
-import net.minecraftforge.event.level.BlockEvent;
-import net.minecraftforge.event.level.ExplosionEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.neoforged.neoforge.event.RegisterCommandsEvent;
+import net.neoforged.neoforge.event.TickEvent;
+import net.neoforged.neoforge.event.entity.EntityJoinLevelEvent;
+import net.neoforged.neoforge.event.entity.living.LivingDeathEvent;
+import net.neoforged.neoforge.event.level.BlockEvent;
+import net.neoforged.neoforge.event.level.ExplosionEvent;
+import net.neoforged.bus.api.SubscribeEvent;
 
 /** 阶段五入口、岩手乡村、世界保护、首领补刷与维度重建。 */
 public final class SoulJourney {
-    public static final ResourceKey<Level> CORRIDOR=ResourceKey.create(Registries.DIMENSION,new ResourceLocation("jujutsu_kaisen_cursed_paths","soul_corridor"));
+    public static final ResourceKey<Level> CORRIDOR=ResourceKey.create(Registries.DIMENSION,ResourceLocation.fromNamespaceAndPath("jujutsu_kaisen_cursed_paths", "soul_corridor"));
     private static final ArrayDeque<ChunkPos> REBUILD_QUEUE=new ArrayDeque<>();
     private static ServerLevel rebuildLevel;
     private static UUID rebuildRequester;
@@ -112,9 +112,9 @@ public final class SoulJourney {
     @SubscribeEvent public static void protectBreak(BlockEvent.BreakEvent e){
         if(e.getLevel() instanceof Level level&&protectedBlock(level,e.getPos())){boolean flesh=e.getState().is(ProgressionContent.TRANSFIGURED_FLESH.get());boolean needle=e.getPlayer().getMainHandItem().is(Content.SOUL_SEPARATION_NEEDLE.get());if(!flesh||!needle){e.setCanceled(true);e.getPlayer().displayClientMessage(Component.literal(flesh?"无为转变改造肉块只能用无为转变·解离针挖掘":"灵魂通道内只有无为转变改造肉块可以被破坏"),true);}}}
     @SubscribeEvent public static void protectExplosion(ExplosionEvent.Detonate e){if(e.getLevel().dimension()==CORRIDOR)e.getAffectedBlocks().removeIf(pos->protectedBlock(e.getLevel(),pos));}
-    @SubscribeEvent public static void protectPiston(net.minecraftforge.event.level.PistonEvent.Pre e){if(e.getLevel() instanceof Level level&&protectedBlock(level,e.getPos()))e.setCanceled(true);}
-    @SubscribeEvent public static void protectMob(net.minecraftforge.event.entity.living.LivingDestroyBlockEvent e){if(protectedBlock(e.getEntity().level(),e.getPos()))e.setCanceled(true);}
-    @SubscribeEvent public static void stop(net.minecraftforge.event.server.ServerStoppedEvent e){REBUILD_QUEUE.clear();missingMahitoSince.clear();rebuildLevel=null;rebuildRequester=null;}
+    @SubscribeEvent public static void protectPiston(net.neoforged.neoforge.event.level.PistonEvent.Pre e){if(e.getLevel() instanceof Level level&&protectedBlock(level,e.getPos()))e.setCanceled(true);}
+    @SubscribeEvent public static void protectMob(net.neoforged.neoforge.event.entity.living.LivingDestroyBlockEvent e){if(protectedBlock(e.getEntity().level(),e.getPos()))e.setCanceled(true);}
+    @SubscribeEvent public static void stop(net.neoforged.neoforge.event.server.ServerStoppedEvent e){REBUILD_QUEUE.clear();missingMahitoSince.clear();rebuildLevel=null;rebuildRequester=null;}
     public static void leave(ServerPlayer p){if(p.level().dimension()!=CORRIDOR)return;var tag=Curse.data(p);ServerLevel target=null;try{target=p.server.getLevel(ResourceKey.create(Registries.DIMENSION,new ResourceLocation(tag.getString("SoulReturnDimension"))));}catch(RuntimeException ignored){}if(target==null)target=p.server.overworld();BlockPos spawn=target.getSharedSpawnPos();double x=tag.contains("SoulReturnX")?tag.getDouble("SoulReturnX"):spawn.getX()+0.5,y=tag.contains("SoulReturnY")?tag.getDouble("SoulReturnY"):spawn.getY(),z=tag.contains("SoulReturnZ")?tag.getDouble("SoulReturnZ"):spawn.getZ()+0.5;Skills.closeDomain(p);Skills.cancelCharge(p);p.teleportTo(target,x,y,z,p.getYRot(),p.getXRot());p.getPersistentData().putLong("SukunaGateCooldown",target.getGameTime()+100);SoulCombat.clearTransient(p);}
     @SubscribeEvent public static void death(LivingDeathEvent e){
         if(e.isCanceled()||e.getEntity().level().isClientSide||!(e.getEntity() instanceof YujiEntity boss)||boss.decoy()||boss.familyMember())return;

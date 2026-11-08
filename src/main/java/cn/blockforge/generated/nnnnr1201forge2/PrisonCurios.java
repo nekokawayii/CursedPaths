@@ -6,9 +6,9 @@ import net.minecraft.nbt.*;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.fml.ModList;
-import net.minecraftforge.items.IItemHandlerModifiable;
+import net.neoforged.neoforge.common.util.LazyOptional;
+import net.neoforged.fml.ModList;
+import net.neoforged.neoforge.items.IItemHandlerModifiable;
 
 /** 可选 Curios 1.20.x 兼容，不把饰品模组变成必装依赖。 */
 public final class PrisonCurios {

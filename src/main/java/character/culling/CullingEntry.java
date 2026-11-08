@@ -11,8 +11,8 @@ import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.monster.Monster;
-import net.minecraftforge.event.entity.living.LivingDeathEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.neoforged.neoforge.event.entity.living.LivingDeathEvent;
+import net.neoforged.bus.api.SubscribeEvent;
 
 /**
  * 死灭洄游的「入场」逻辑（r250）：
@@ -91,13 +91,13 @@ public final class CullingEntry {
 
     /** 死亡重生后属性会重建：把「暴力」的 +20% 重新挂上（退出结界也保留）。 */
     @SubscribeEvent
-    public static void clone(net.minecraftforge.event.entity.player.PlayerEvent.Clone e) {
+    public static void clone(net.neoforged.neoforge.event.entity.player.PlayerEvent.Clone e) {
         if (!e.isWasDeath() || !(e.getEntity() instanceof ServerPlayer p)) return;
         applyViolence(p);
     }
 
     @SubscribeEvent
-    public static void login(net.minecraftforge.event.entity.player.PlayerEvent.PlayerLoggedInEvent e) {
+    public static void login(net.neoforged.neoforge.event.entity.player.PlayerEvent.PlayerLoggedInEvent e) {
         if (e.getEntity() instanceof ServerPlayer p) applyViolence(p);
     }
 
@@ -124,8 +124,8 @@ public final class CullingEntry {
     }
 
     @SubscribeEvent
-    public static void tick(net.minecraftforge.event.TickEvent.ServerTickEvent e) {
-        if (e.phase != net.minecraftforge.event.TickEvent.Phase.END || PENDING.isEmpty()) return;
+    public static void tick(net.neoforged.neoforge.event.TickEvent.ServerTickEvent e) {
+        if (e.phase != net.neoforged.neoforge.event.TickEvent.Phase.END || PENDING.isEmpty()) return;
         for (var it = PENDING.iterator(); it.hasNext(); ) {
             Object[] job = it.next();
             ServerLevel level = (ServerLevel) job[0];

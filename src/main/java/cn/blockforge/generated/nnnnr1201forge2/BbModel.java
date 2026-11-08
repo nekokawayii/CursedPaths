@@ -96,7 +96,7 @@ public final class BbModel {
         for(JsonElement e:root.getAsJsonArray("animations"))if(e.getAsJsonObject().get("name").getAsString().equals(animation))return true;
         return false;
     }
-    public ResourceLocation texture(int index){return textures.computeIfAbsent(index,k->new ResourceLocation("jujutsu_kaisen_cursed_paths","textures/entity/"+texture+"_"+k+".png"));}
+    public ResourceLocation texture(int index){return textures.computeIfAbsent(index,k->ResourceLocation.fromNamespaceAndPath("jujutsu_kaisen_cursed_paths", "textures/entity/"+texture+"_"+k+".png"));}
     private float textureSize(int index,boolean width){
         String key=width?"uv_width":"uv_height",fallback=width?"width":"height";
         if(root.has("textures")&&index>=0&&index<root.getAsJsonArray("textures").size()){
@@ -108,7 +108,7 @@ public final class BbModel {
     private static float number(JsonObject o,String key,float fallback){return o.has(key)?o.get(key).getAsFloat():fallback;}
     private static float[] vec(JsonObject o,String key){if(!o.has(key))return new float[3];JsonArray a=o.getAsJsonArray(key);return new float[]{a.get(0).getAsFloat(),a.get(1).getAsFloat(),a.get(2).getAsFloat()};}
     private void load(){load(Minecraft.getInstance().getResourceManager());}
-    private void load(net.minecraft.server.packs.resources.ResourceManager resources){try(var in=resources.open(new ResourceLocation("jujutsu_kaisen_cursed_paths","models/"+name+".bbmodel"));var r=new InputStreamReader(in,StandardCharsets.UTF_8)){root=JsonParser.parseReader(r).getAsJsonObject();if(root.has("textures"))for(JsonElement tex:root.getAsJsonArray("textures"))tex.getAsJsonObject().remove("source");for(JsonElement e:root.getAsJsonArray("elements")){JsonObject o=e.getAsJsonObject();String u=objUuid(o);cubes.put(u,o);byKey.put(u,o);byKey.put(canon(u),o);if(o.has("name"))byKey.putIfAbsent(o.get("name").getAsString(),o);}if(root.has("groups"))for(JsonElement e:root.getAsJsonArray("groups")){JsonObject o=e.getAsJsonObject();String u=objUuid(o);groups.put(u,o);byKey.put(u,o);byKey.put(canon(u),o);if(o.has("name"))byKey.putIfAbsent(o.get("name").getAsString(),o);}}catch(Exception e){throw new IllegalStateException("无法读取模型 "+name,e);}}
+    private void load(net.minecraft.server.packs.resources.ResourceManager resources){try(var in=resources.open(ResourceLocation.fromNamespaceAndPath("jujutsu_kaisen_cursed_paths", "models/"+name+".bbmodel"));var r=new InputStreamReader(in,StandardCharsets.UTF_8)){root=JsonParser.parseReader(r).getAsJsonObject();if(root.has("textures"))for(JsonElement tex:root.getAsJsonArray("textures"))tex.getAsJsonObject().remove("source");for(JsonElement e:root.getAsJsonArray("elements")){JsonObject o=e.getAsJsonObject();String u=objUuid(o);cubes.put(u,o);byKey.put(u,o);byKey.put(canon(u),o);if(o.has("name"))byKey.putIfAbsent(o.get("name").getAsString(),o);}if(root.has("groups"))for(JsonElement e:root.getAsJsonArray("groups")){JsonObject o=e.getAsJsonObject();String u=objUuid(o);groups.put(u,o);byKey.put(u,o);byKey.put(canon(u),o);if(o.has("name"))byKey.putIfAbsent(o.get("name").getAsString(),o);}}catch(Exception e){throw new IllegalStateException("无法读取模型 "+name,e);}}
     // 每个模型实例只整理一次关键帧；不在每帧、每骨骼、每通道反复排序分配列表。
     private final Map<JsonObject,Map<String,List<JsonObject>>> channels=new IdentityHashMap<>();
     private float[] sample(JsonObject animator,String channel,float time){
@@ -203,7 +203,7 @@ public final class BbModel {
             int n=names.size();if(n<3)continue;
             int texIdx=f.get("texture").getAsInt();tw=textureSize(texIdx,true);th=textureSize(texIdx,false);
             VertexConsumer out=consumers.computeIfAbsent(texIdx,k->{
-                ResourceLocation tex=new ResourceLocation("jujutsu_kaisen_cursed_paths","textures/entity/"+texture+"_"+k+".png");
+                ResourceLocation tex=ResourceLocation.fromNamespaceAndPath("jujutsu_kaisen_cursed_paths", "textures/entity/"+texture+"_"+k+".png");
                 return buffers.getBuffer(alpha<1?RenderType.entityTranslucent(tex):RenderType.entityCutoutNoCull(tex));
             });
             Vector3f[] p=new Vector3f[n];float[] u=new float[n],v=new float[n];

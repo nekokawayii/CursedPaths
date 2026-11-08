@@ -372,7 +372,7 @@ public final class RyuDomain {
     }
 
     /** 领域里不掉血：球心在施术者身上、球底在 65 格外，掉下去不该摔死人。 */
-    @net.minecraftforge.eventbus.api.SubscribeEvent public static void fall(net.minecraftforge.event.entity.living.LivingFallEvent e) {
+    @net.neoforged.bus.api.SubscribeEvent public static void fall(net.neoforged.neoforge.event.entity.living.LivingFallEvent e) {
         if (e.getEntity().level().isClientSide()) return;
         for (Fract f : ACTIVE.values()) {
             if (f.level != e.getEntity().level()) continue;

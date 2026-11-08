@@ -14,8 +14,8 @@ import net.minecraft.world.entity.ai.attributes.*;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.common.util.FakePlayer;
-import net.minecraftforge.event.TickEvent;
+import net.neoforged.neoforge.common.util.FakePlayer;
+import net.neoforged.neoforge.event.TickEvent;
 
 /** 每只 NPC 独立的施术上下文。技能队列、咒力、归属都绑定本体，不冒用附近玩家。 */
 public final class NpcBridge {

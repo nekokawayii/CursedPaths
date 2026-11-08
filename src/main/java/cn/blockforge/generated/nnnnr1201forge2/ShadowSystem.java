@@ -9,12 +9,12 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.monster.Enemy;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.phys.*;
-import net.minecraftforge.event.TickEvent;
-import net.minecraftforge.event.entity.living.LivingDeathEvent;
-import net.minecraftforge.event.entity.player.PlayerEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.network.*;
+import net.neoforged.neoforge.event.TickEvent;
+import net.neoforged.neoforge.event.entity.living.LivingDeathEvent;
+import net.neoforged.neoforge.event.entity.player.PlayerEvent;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.Mod;
+import net.neoforged.neoforge.network.*;
 
 /** 服务端保存调服和存续令牌；区块卸载不允许绕过唯一式神/五只虾蟇限制。 */
 @Mod.EventBusSubscriber(modid="jujutsu_kaisen_cursed_paths")
@@ -140,7 +140,7 @@ public final class ShadowSystem {
         LivingEntity current=e.getTarget();if(e.validTarget(current)&&e.distanceToSqr(current)<64*64)return current;
         return nearby.stream().filter(x->x instanceof Enemy).min(Comparator.comparingDouble(e::distanceToSqr)).orElse(null);
     }
-    @SubscribeEvent public static void inheritAttack(net.minecraftforge.event.entity.living.LivingDamageEvent event){
+    @SubscribeEvent public static void inheritAttack(net.neoforged.neoforge.event.entity.living.LivingDamageEvent event){
         ServerPlayer p=CombatSettings.caster(event.getSource());
         if(event.getAmount()>0&&p!=null&&TenShadows.canUse(p)&&!friendly(p,event.getEntity()))p.setLastHurtMob(event.getEntity());
     }

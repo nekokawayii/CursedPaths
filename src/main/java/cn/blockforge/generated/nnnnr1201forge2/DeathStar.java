@@ -14,18 +14,18 @@ import net.minecraft.world.entity.ai.attributes.*;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.phys.*;
-import net.minecraftforge.event.TickEvent;
-import net.minecraftforge.event.entity.living.*;
-import net.minecraftforge.event.entity.player.PlayerEvent;
-import net.minecraftforge.event.server.ServerStoppedEvent;
-import net.minecraftforge.eventbus.api.*;
+import net.neoforged.neoforge.event.TickEvent;
+import net.neoforged.neoforge.event.entity.living.*;
+import net.neoforged.neoforge.event.entity.player.PlayerEvent;
+import net.neoforged.neoforge.event.server.ServerStoppedEvent;
+import net.neoforged.bus.api.*;
 
 /** 极之番服务端：单次扣费、40刻蓄力、扫掠碰撞、每次命中重新核验敌友。 */
 public final class DeathStar {
     public static final int FX_CHARGE=440,FX_FLIGHT=441,FX_BURST=442,FX_STOP=443,FX_ANEMIA=444;
-    public static final ResourceKey<DamageType> DAMAGE=ResourceKey.create(Registries.DAMAGE_TYPE,new ResourceLocation("jujutsu_kaisen_cursed_paths","death_star"));
-    private static final TagKey<EntityType<?>> BOSSES=TagKey.create(Registries.ENTITY_TYPE,new ResourceLocation("jujutsu_kaisen_cursed_paths","death_star_bosses"));
-    private static final TagKey<EntityType<?>> FORGE_BOSSES=TagKey.create(Registries.ENTITY_TYPE,new ResourceLocation("forge","bosses"));
+    public static final ResourceKey<DamageType> DAMAGE=ResourceKey.create(Registries.DAMAGE_TYPE,ResourceLocation.fromNamespaceAndPath("jujutsu_kaisen_cursed_paths", "death_star"));
+    private static final TagKey<EntityType<?>> BOSSES=TagKey.create(Registries.ENTITY_TYPE,ResourceLocation.fromNamespaceAndPath("jujutsu_kaisen_cursed_paths", "death_star_bosses"));
+    private static final TagKey<EntityType<?>> FORGE_BOSSES=TagKey.create(Registries.ENTITY_TYPE,ResourceLocation.fromNamespaceAndPath("forge", "bosses"));
     private static final UUID SLOW=UUID.fromString("ae134000-0001-4000-8000-000000000001");
     private static final String UNTIL="DeathStarAnemiaUntil",CEILING="DeathStarHealthCeiling";
     private static final Map<UUID,Cast> casts=new HashMap<>();
@@ -63,7 +63,7 @@ public final class DeathStar {
         tell(p,"极之番·死胎星：蓄力2秒，生命与咒力已献祭，中断不返还");
     }
     private static void slow(ServerPlayer p,boolean on){var a=MaidBridge.body(p).getAttribute(Attributes.MOVEMENT_SPEED);if(a==null)return;if(!on)a.removeModifier(SLOW);else if(a.getModifier(SLOW)==null)a.addTransientModifier(new AttributeModifier(SLOW,"严重贫血",-.5,AttributeModifier.Operation.MULTIPLY_TOTAL));}
-    private static void syncAnemia(ServerPlayer p){if(p instanceof net.minecraftforge.common.util.FakePlayer)return;int ticks=(int)Math.max(0,Curse.data(p).getLong(UNTIL)-now(p));Network.CHANNEL.send(net.minecraftforge.network.PacketDistributor.PLAYER.with(()->p),new Network.Effect(FX_ANEMIA,p.getId(),p.position(),Vec3.ZERO,0,ticks,0));}
+    private static void syncAnemia(ServerPlayer p){if(p instanceof net.neoforged.neoforge.common.util.FakePlayer)return;int ticks=(int)Math.max(0,Curse.data(p).getLong(UNTIL)-now(p));Network.CHANNEL.send(net.neoforged.neoforge.network.PacketDistributor.PLAYER.with(()->p),new Network.Effect(FX_ANEMIA,p.getId(),p.position(),Vec3.ZERO,0,ticks,0));}
     public static void cancel(ServerPlayer p){Cast c=casts.remove(p.getUUID());if(c!=null){pose(p,0);fx(p,FX_STOP,hand(p),Vec3.ZERO,0,0,c.id);}}
     private static boolean boss(LivingEntity t){
         // 玩家不是可秒杀的杂兵；第三方首领可通过标签补充，不以最大生命值猜测身份。

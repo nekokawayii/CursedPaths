@@ -5,7 +5,7 @@ import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.client.extensions.common.IClientItemExtensions;
+import net.neoforged.neoforge.client.extensions.common.IClientItemExtensions;
 
 /** 「法轮」戴在头上时**不画任何原版防具层**：它自己就是一个横着的法轮模型
  *  （见 {@link MahoragaWheelRenderer}），所以不能再用方盒子挡住玩家的头部建模。

@@ -13,8 +13,8 @@ import net.minecraft.world.level.block.entity.*;
 import net.minecraft.world.level.block.state.*;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraftforge.eventbus.api.IEventBus;
-import net.minecraftforge.registries.*;
+import net.neoforged.bus.api.IEventBus;
+import net.neoforged.neoforge.registries.*;
 
 /** 生存探索物品统一登记；旧版可食用残秽不改用途，新燃料独立分级。 */
 public final class ExpeditionContent {

@@ -12,9 +12,9 @@ import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.event.TickEvent;
-import net.minecraftforge.event.entity.living.LivingHurtEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.neoforged.neoforge.event.TickEvent;
+import net.neoforged.neoforge.event.entity.living.LivingHurtEvent;
+import net.neoforged.bus.api.SubscribeEvent;
 
 /** 开 的终盘分支「**灶 · 最大功率 · 开**」（技能号 44）。
  *
@@ -30,7 +30,7 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
  *
  *  <p>与其它技能的关系：这是「开」的一支，**灶/开系对魔虚罗 ×20**的规则照旧生效
  *  （{@link MahoragaRules#bossDamage}）；蓄力期间接管输入，宿傩六式一律不理（同简易领域的做法）。</p> */
-@net.minecraftforge.fml.common.Mod.EventBusSubscriber(modid="jujutsu_kaisen_cursed_paths")
+@net.neoforged.fml.common.Mod.EventBusSubscriber(modid="jujutsu_kaisen_cursed_paths")
 public final class FurnaceMax {
     /** 技能号（开的分支，挂在轮盘 side 列表里）。已占用到 43（简易领域），所以取 44。 */
     public static final int SKILL=44;
@@ -293,7 +293,7 @@ public final class FurnaceMax {
         Network.send(c.level,new Network.Effect(FX_CHARGE,c.p.getId(),MaidBridge.body(c.p).position(),Vec3.ZERO,1,0,0));
     }
     /** 受伤即中断（30 秒冷却）：只有正在蓄力的那个身体算数。 */
-    @SubscribeEvent(priority=net.minecraftforge.eventbus.api.EventPriority.LOW)
+    @SubscribeEvent(priority=net.neoforged.bus.api.EventPriority.LOW)
     public static void hurt(LivingHurtEvent event){
         if(event.getAmount()<=0)return;
         LivingEntity victim=event.getEntity();
@@ -302,13 +302,13 @@ public final class FurnaceMax {
         cancel(p,"受伤");
     }
     /** 死亡/下线/换维度一律中断。 */
-    @SubscribeEvent public static void logout(net.minecraftforge.event.entity.player.PlayerEvent.PlayerLoggedOutEvent e){
+    @SubscribeEvent public static void logout(net.neoforged.neoforge.event.entity.player.PlayerEvent.PlayerLoggedOutEvent e){
         if(e.getEntity() instanceof ServerPlayer p&&charges.containsKey(p.getUUID()))cancel(p,"下线");
     }
-    @SubscribeEvent public static void dimension(net.minecraftforge.event.entity.player.PlayerEvent.PlayerChangedDimensionEvent e){
+    @SubscribeEvent public static void dimension(net.neoforged.neoforge.event.entity.player.PlayerEvent.PlayerChangedDimensionEvent e){
         if(e.getEntity() instanceof ServerPlayer p&&charges.containsKey(p.getUUID()))cancel(p,"跨维度");
     }
-    @SubscribeEvent public static void stop(net.minecraftforge.event.server.ServerStoppedEvent e){
+    @SubscribeEvent public static void stop(net.neoforged.neoforge.event.server.ServerStoppedEvent e){
         charges.clear();shots.clear();pillars.clear();
     }
     private FurnaceMax(){}

@@ -64,7 +64,7 @@ public final class PlayerAnimClient {
     private static KeyframeAnimation animation(String name){
         return CACHE.computeIfAbsent(name,k->{
             try{
-                return PlayerAnimationRegistry.getAnimation(new ResourceLocation("jujutsu_kaisen_cursed_paths",k));
+                return PlayerAnimationRegistry.getAnimation(ResourceLocation.fromNamespaceAndPath("jujutsu_kaisen_cursed_paths", k));
             }catch(Throwable t){
                 System.err.println("[SUKUNA] PlayerAnimator 动画读取失败 "+k+"："+t);
                 return null;

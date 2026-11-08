@@ -21,10 +21,10 @@ public final class TechniqueApi {
         var definition=CharacterService.selected(actor);if(definition==null)return;
         for(var ticker:TICKS.getOrDefault(definition.id(),java.util.List.of()))ticker.accept(SkillCaster.of(actor));
     }
-    @net.minecraftforge.eventbus.api.SubscribeEvent
-    public static void playerTick(net.minecraftforge.event.TickEvent.PlayerTickEvent event){
-        if(event.phase==net.minecraftforge.event.TickEvent.Phase.END&&event.player instanceof ServerPlayer p
-            &&!(p instanceof net.minecraftforge.common.util.FakePlayer))tick(p);
+    @net.neoforged.bus.api.SubscribeEvent
+    public static void playerTick(net.neoforged.neoforge.event.TickEvent.PlayerTickEvent event){
+        if(event.phase==net.neoforged.neoforge.event.TickEvent.Phase.END&&event.player instanceof ServerPlayer p
+            &&!(p instanceof net.neoforged.neoforge.common.util.FakePlayer))tick(p);
     }
     public static void registerSkill(String role,int id,Effect effect){
         CharacterCasting.registerEffect(role,id,(actor,skill,rank)->effect.cast(SkillCaster.of(actor),skill,rank));

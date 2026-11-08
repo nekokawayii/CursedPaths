@@ -9,9 +9,9 @@ import net.minecraft.world.effect.*;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.phys.*;
-import net.minecraftforge.event.TickEvent;
-import net.minecraftforge.event.server.ServerStoppedEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.neoforged.neoforge.event.TickEvent;
+import net.neoforged.neoforge.event.server.ServerStoppedEvent;
+import net.neoforged.bus.api.SubscribeEvent;
 
 /** 玩家侧五条悟技能组：吃下碎片后可用，各自独立冷却，与右侧小轮盘一一对应。 */
 public final class GojoCombat {
@@ -671,7 +671,7 @@ public final class GojoCombat {
         }
     }
     @SubscribeEvent public static void stop(ServerStoppedEvent event){states.clear();orbs.clear();beams.clear();zones.clear();sucked.clear();}
-    @SubscribeEvent public static void logout(net.minecraftforge.event.entity.player.PlayerEvent.PlayerLoggedOutEvent event){if(event.getEntity() instanceof ServerPlayer p){states.remove(p.getUUID());orbs.removeIf(o->o.owner==p);beams.removeIf(b->b.owner==p);zones.removeIf(z->z.owner==p);sucked.removeIf(s->s.orb.owner==p);}}
+    @SubscribeEvent public static void logout(net.neoforged.neoforge.event.entity.player.PlayerEvent.PlayerLoggedOutEvent event){if(event.getEntity() instanceof ServerPlayer p){states.remove(p.getUUID());orbs.removeIf(o->o.owner==p);beams.removeIf(b->b.owner==p);zones.removeIf(z->z.owner==p);sucked.removeIf(s->s.orb.owner==p);}}
     public static void cancel(ServerPlayer p){State s=states.remove(p.getUUID());if(s!=null)s.casting=-1;Skills.endVoidSeal(p);orbs.removeIf(o->o.owner==p);beams.removeIf(b->b.owner==p);zones.removeIf(z->z.owner==p);sucked.removeIf(x->x.orb.owner==p);}
     private GojoCombat(){}
 }

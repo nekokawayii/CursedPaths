@@ -12,16 +12,16 @@ import net.minecraft.world.entity.*;
 import net.minecraft.world.level.*;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.phys.*;
-import net.minecraftforge.event.*;
-import net.minecraftforge.event.entity.*;
-import net.minecraftforge.event.entity.living.*;
-import net.minecraftforge.event.entity.player.*;
-import net.minecraftforge.event.level.BlockEvent;
-import net.minecraftforge.eventbus.api.*;
+import net.neoforged.neoforge.event.*;
+import net.neoforged.neoforge.event.entity.*;
+import net.neoforged.neoforge.event.entity.living.*;
+import net.neoforged.neoforge.event.entity.player.*;
+import net.neoforged.neoforge.event.level.BlockEvent;
+import net.neoforged.bus.api.*;
 
 /** 所有封印、解封、库存和传送约束只由服务端裁决。 */
 public final class PrisonSystem {
-    public static final ResourceKey<Level> DIMENSION=ResourceKey.create(Registries.DIMENSION,new ResourceLocation("jujutsu_kaisen_cursed_paths","prison_realm"));
+    public static final ResourceKey<Level> DIMENSION=ResourceKey.create(Registries.DIMENSION,ResourceLocation.fromNamespaceAndPath("jujutsu_kaisen_cursed_paths", "prison_realm"));
     private static final Set<UUID> TRANSFERRING=new HashSet<>();
     private static final TicketType<UUID> TICKET=TicketType.create("sukuna_prison",Comparator.comparing(UUID::toString),40);
     public static boolean locked(Entity entity){
@@ -90,7 +90,7 @@ public final class PrisonSystem {
             transferPlayer(player,prison,x,64,z);player.setGameMode(GameType.ADVENTURE);player.setDeltaMovement(Vec3.ZERO);
             tell(player,"你已被狱门僵封印 · 物品暂存，等待外部的邪去悔天梯解封");
         }else{
-            CompoundTag snapshot=new CompoundTag();entity.saveWithoutId(snapshot);snapshot.putString("id",net.minecraftforge.registries.ForgeRegistries.ENTITY_TYPES.getKey(entity.getType()).toString());snapshot.remove("Passengers");
+            CompoundTag snapshot=new CompoundTag();entity.saveWithoutId(snapshot);snapshot.putString("id",net.neoforged.neoforge.registries.ForgeRegistries.ENTITY_TYPES.getKey(entity.getType()).toString());snapshot.remove("Passengers");
             record.put("Entity",snapshot);record.putBoolean("CanUpdate",entity.canUpdate());
             Entity copy=EntityType.loadEntityRecursive(snapshot.copy(),prison,e->e);if(!(copy instanceof LivingEntity captive))return false;
             captive.moveTo(x,64,z,entity.getYRot(),0);if(captive instanceof Mob mob){mob.setNoAi(true);mob.setPersistenceRequired();mob.setTarget(null);}captive.setInvulnerable(true);captive.canUpdate(false);
@@ -176,7 +176,7 @@ public final class PrisonSystem {
         }
     }
     @SubscribeEvent(priority=EventPriority.HIGHEST) public static void targeting(LivingChangeTargetEvent e){if(locked(e.getEntity())||locked(e.getNewTarget()))e.setNewTarget(null);}
-    @SubscribeEvent(priority=EventPriority.HIGHEST) public static void explosion(net.minecraftforge.event.level.ExplosionEvent.Detonate e){if(e.getLevel().dimension().equals(DIMENSION)){e.getAffectedBlocks().clear();e.getAffectedEntities().clear();}}
+    @SubscribeEvent(priority=EventPriority.HIGHEST) public static void explosion(net.neoforged.neoforge.event.level.ExplosionEvent.Detonate e){if(e.getLevel().dimension().equals(DIMENSION)){e.getAffectedBlocks().clear();e.getAffectedEntities().clear();}}
     @SubscribeEvent(priority=EventPriority.HIGHEST) public static void travel(EntityTravelToDimensionEvent e){if(!TRANSFERRING.contains(e.getEntity().getUUID())&&locked(e.getEntity()))e.setCanceled(true);}
     @SubscribeEvent(priority=EventPriority.HIGHEST) public static void teleport(EntityTeleportEvent e){if(!TRANSFERRING.contains(e.getEntity().getUUID())&&locked(e.getEntity())&&e.isCancelable())e.setCanceled(true);}
     @SubscribeEvent(priority=EventPriority.HIGHEST) public static void command(CommandEvent e){Entity sender=e.getParseResults().getContext().getSource().getEntity();if(locked(sender)){e.setCanceled(true);if(sender instanceof ServerPlayer p)tell(p,"封印中不能执行指令或小地图传送");}}

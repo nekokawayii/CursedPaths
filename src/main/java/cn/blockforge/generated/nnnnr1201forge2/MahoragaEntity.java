@@ -36,10 +36,10 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.event.entity.EntityAttributeCreationEvent;
-import net.minecraftforge.event.entity.living.LivingHealEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.registries.ForgeRegistries;
+import net.neoforged.neoforge.event.entity.EntityAttributeCreationEvent;
+import net.neoforged.neoforge.event.entity.living.LivingHealEvent;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.neoforge.registries.ForgeRegistries;
 
 public final class MahoragaEntity extends Monster {
    public static final double HEALTH = 180000.0D;
@@ -581,7 +581,7 @@ public final class MahoragaEntity extends Monster {
          return "\u5176\u4ed6\u4f24\u5bb3";
       } else {
          try {
-            EntityType<?> type = (EntityType)ForgeRegistries.ENTITY_TYPES.getValue(new ResourceLocation(bare));
+            EntityType<?> type = (EntityType)ForgeRegistries.ENTITY_TYPES.getValue(ResourceLocation.parse(bare));
             if (type != null) {
                return "\u300c" + type.getDescription().getString() + "\u300d";
             }

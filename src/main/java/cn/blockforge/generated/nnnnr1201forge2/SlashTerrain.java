@@ -6,7 +6,7 @@ import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.*;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.phys.*;
-import net.minecraftforge.network.*;
+import net.neoforged.neoforge.network.*;
 
 /** 服务端权威的局部截断。普通剑气不再先破坏墙体；世界斩不调用此入口。 */
 public final class SlashTerrain {

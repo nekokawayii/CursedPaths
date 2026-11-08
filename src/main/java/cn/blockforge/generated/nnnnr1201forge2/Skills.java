@@ -6,9 +6,9 @@ import net.minecraft.world.phys.*;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.sounds.*;
-import net.minecraftforge.event.TickEvent;
-import net.minecraftforge.event.server.ServerStoppedEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.neoforged.neoforge.event.TickEvent;
+import net.neoforged.neoforge.event.server.ServerStoppedEvent;
+import net.neoforged.bus.api.SubscribeEvent;
 import java.util.*;
 
 public final class Skills {
@@ -86,8 +86,8 @@ public final class Skills {
         for(Rift r:rifts)if(r.owner.getUUID().equals(owner.getUUID())&&target.equals(r.target))r.target=null;
         burns.entrySet().removeIf(entry->{if(entry.getKey().getUUID().equals(target)&&entry.getValue().owner.equals(owner.getUUID())){entry.getKey().clearFire();return true;}return false;});
     }
-    @SubscribeEvent(priority=net.minecraftforge.eventbus.api.EventPriority.LOWEST)
-    public static void fistDamage(net.minecraftforge.event.entity.living.LivingDamageEvent event){
+    @SubscribeEvent(priority=net.neoforged.bus.api.EventPriority.LOWEST)
+    public static void fistDamage(net.neoforged.neoforge.event.entity.living.LivingDamageEvent event){
         ServerPlayer p=CombatSettings.caster(event.getSource());if(event.isCanceled()||event.getAmount()<=0||p==null)return;
         LivingEntity target=event.getEntity();if(!canHit(p,target))return;
         remember(p,target);
@@ -104,7 +104,7 @@ public final class Skills {
         if(memory.size()>=4096)memory.remove(memory.iterator().next());memory.add(target.getUUID());
     }
     private static boolean remembered(ServerPlayer p,LivingEntity target){return cleaveMemory.getOrDefault(p.getUUID(),Set.of()).contains(target.getUUID());}
-    @SubscribeEvent public static void burnDamage(net.minecraftforge.event.entity.living.LivingHurtEvent event){
+    @SubscribeEvent public static void burnDamage(net.neoforged.neoforge.event.entity.living.LivingHurtEvent event){
         if(!event.getSource().is(net.minecraft.world.damagesource.DamageTypes.ON_FIRE))return;
         LivingEntity target=event.getEntity();Burn burn=burns.get(target);
         if(burn==null&&target.getPersistentData().getBoolean("SukunaSoulFire")&&target.getPersistentData().hasUUID("SukunaSoulFireOwner")){
@@ -380,7 +380,7 @@ public final class Skills {
     }
     /** 逐刻发一次传送，客户端才能平滑跟随。 */
     private static void warp(ServerPlayer p,Vec3 pos){
-        if(!(p instanceof net.minecraftforge.common.util.FakePlayer)&&p.connection!=null)p.connection.teleport(pos.x,pos.y,pos.z,p.getYRot(),p.getXRot());
+        if(!(p instanceof net.neoforged.neoforge.common.util.FakePlayer)&&p.connection!=null)p.connection.teleport(pos.x,pos.y,pos.z,p.getYRot(),p.getXRot());
         else p.teleportTo(pos.x,pos.y,pos.z);
     }
     private static void tickLeaps(){
@@ -476,7 +476,7 @@ public final class Skills {
         if(sent>0)com.mojang.logging.LogUtils.getLogger().info("[附拳] 服务端广播 kind={} 给 {} 名附拳中的玩家",FistFlameClient.FX,sent);
     }
     private static List<ServerPlayer> serverPlayers(){
-        var server=net.minecraftforge.server.ServerLifecycleHooks.getCurrentServer();
+        var server=net.neoforged.neoforge.server.ServerLifecycleHooks.getCurrentServer();
         return server==null?List.of():List.copyOf(server.getPlayerList().getPlayers());
     }
     /** 咒力附拳（技能号 45）的技能号声明见 {@link #FIST_SKILL}。 */
@@ -531,7 +531,7 @@ public final class Skills {
     public static void purpleBow(ServerPlayer p){if(Authority.instant(p)){LivingEntity t=aimTarget(p);detonate(p,p.serverLevel(),t==null?aimPoint(p,96):t.getBoundingBox().getCenter(),6,true);return;}int draw=Curse.tier(p)>=3?20:30;bows.add(new Bow(p,p.serverLevel(),p.level().getGameTime()+draw,true));fx(p,CombatExpansionRules.FX_PURPLE,p.getEyePosition(),p.getLookAngle(),2,draw,1);SkillSounds.cast(p,3);}
     private static class Fire {ServerPlayer owner;ServerLevel level;Vec3 pos,dir;UUID target;int age;boolean purple;Fire(ServerPlayer p){owner=p;level=p.serverLevel();pos=p.getEyePosition();LivingEntity aimed=aimTarget(p);target=aimed==null?null:aimed.getUUID();dir=aimed==null?p.getLookAngle():aimed.getBoundingBox().getCenter().subtract(pos).normalize();}}
     private record Detonation(ServerPlayer owner,ServerLevel level,Vec3 pos,long time,float radius){}
-    private static void fx(ServerPlayer p,int kind,Vec3 pos,Vec3 dir,float size,int life,long seed){Network.Effect effect=new Network.Effect(kind,p.getId(),pos,dir,size,life,seed).fromCaster(p);Network.send(p.serverLevel(),effect);if(size!=SlashReach.INFINITE&&(kind==96||kind==72)&&p.position().distanceToSqr(pos)>512*512)Network.CHANNEL.send(net.minecraftforge.network.PacketDistributor.PLAYER.with(()->p),effect);}
+    private static void fx(ServerPlayer p,int kind,Vec3 pos,Vec3 dir,float size,int life,long seed){Network.Effect effect=new Network.Effect(kind,p.getId(),pos,dir,size,life,seed).fromCaster(p);Network.send(p.serverLevel(),effect);if(size!=SlashReach.INFINITE&&(kind==96||kind==72)&&p.position().distanceToSqr(pos)>512*512)Network.CHANNEL.send(net.neoforged.neoforge.network.PacketDistributor.PLAYER.with(()->p),effect);}
     private static boolean valid(ServerPlayer p,ServerLevel l){return p.isAlive()&&!p.isRemoved()&&p.serverLevel()==l;}
     public static boolean sustaining(ServerPlayer p){return auras.containsKey(p.getUUID())||domains.containsKey(p.getUUID());}
     /** 灵魂剥离只能由专属请求进入；解和蓄力释放不经过此入口。 */

@@ -4,9 +4,9 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.Attributes;
-import net.minecraftforge.event.entity.EntityJoinLevelEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
+import net.neoforged.neoforge.event.entity.EntityJoinLevelEvent;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.Mod;
 
 /**
  * NPC 血量的整合包倍率：**整合包模式开启时所有 NPC 血量 ×30，关闭时保持原值**。
@@ -49,7 +49,7 @@ public final class NpcBalance {
 
     @SubscribeEvent public static void join(EntityJoinLevelEvent e) {
         if (e.getLevel().isClientSide() || !(e.getEntity() instanceof LivingEntity living)) return;
-        String id = net.minecraftforge.registries.ForgeRegistries.ENTITY_TYPES.getKey(living.getType()).toString();
+        String id = net.neoforged.neoforge.registries.ForgeRegistries.ENTITY_TYPES.getKey(living.getType()).toString();
         Double base = BASE.get(id);
         if (base == null) return;
         var attribute = living.getAttribute(Attributes.MAX_HEALTH);

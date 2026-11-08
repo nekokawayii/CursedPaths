@@ -2,9 +2,9 @@ package cn.blockforge.generated.nnnnr1201forge2;
 
 import java.util.*;
 import net.minecraft.server.level.*;
-import net.minecraftforge.event.TickEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.network.PacketDistributor;
+import net.neoforged.neoforge.event.TickEvent;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.neoforge.network.PacketDistributor;
 
 /** 服务端保存付费线段，拒绝越界、重复会话和未付费发射。 */
 public final class FreehandDrawing {

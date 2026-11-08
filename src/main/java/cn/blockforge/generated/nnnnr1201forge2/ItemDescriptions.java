@@ -1,9 +1,9 @@
 package cn.blockforge.generated.nnnnr1201forge2;
 
-import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.event.entity.player.ItemTooltipEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.registries.ForgeRegistries;
+import net.neoforged.fml.common.Mod;
+import net.neoforged.neoforge.event.entity.player.ItemTooltipEvent;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.neoforge.registries.ForgeRegistries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.ChatFormatting;
 

@@ -8,9 +8,9 @@ import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.item.*;
 import net.minecraft.world.level.Level;
 import net.minecraft.network.chat.Component;
-import net.minecraftforge.registries.RegistryObject;
-import net.minecraftforge.event.entity.living.LivingDeathEvent;
-import net.minecraftforge.eventbus.api.*;
+import net.neoforged.neoforge.registries.RegistryObject;
+import net.neoforged.neoforge.event.entity.living.LivingDeathEvent;
+import net.neoforged.bus.api.*;
 
 /** 玩家和女仆共用同一份阶段校验与奖励。 */
 public final class StageFood extends Item {

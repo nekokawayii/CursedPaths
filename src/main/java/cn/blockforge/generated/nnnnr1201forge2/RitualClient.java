@@ -9,7 +9,7 @@ import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.core.particles.*;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.client.event.EntityRenderersEvent;
+import net.neoforged.neoforge.client.event.EntityRenderersEvent;
 import java.util.*;
 
 /** 视觉只读取同步状态，不生成可拾取实体；离开视距后发射器自行到期。 */
@@ -34,7 +34,7 @@ public final class RitualClient implements BlockEntityRenderer<RitualBlockEntity
         if(!be.running()||mc.player==null||mc.player.distanceToSqr(Vec3.atCenterOf(be.getBlockPos()))>64*64)return;
         if(tick-pulses.getOrDefault(be.getBlockPos(),-100L)<10)return;pulses.put(be.getBlockPos(),tick);
         if(pulses.size()>128){pulses.entrySet().removeIf(e->tick-e.getValue()>200);while(pulses.size()>128)pulses.remove(pulses.keySet().iterator().next());}
-        Vec3 at=Vec3.atBottomCenterOf(be.getBlockPos());boolean photon=net.minecraftforge.fml.ModList.get().isLoaded("photon");
+        Vec3 at=Vec3.atBottomCenterOf(be.getBlockPos());boolean photon=net.neoforged.fml.ModList.get().isLoaded("photon");
         if(be.tier()==0){for(int[] d:RitualBlockEntity.FOUR){Vec3 start=at.add(d[0],1,d[1]),end=at.add(0,1.4+progress*.4,0);if(photon)PhotonFx.ritualBeam(start,end,.07,0xDDB05FFF,true,12);else line(start,end,0xAA55FF,.12f);} }
         else if(be.tier()==1){
             if(photon)PhotonFx.sphere(at.add(0,1.4,0),1.8,1.3,0x702C8D16,0,"textures/effect/dust.png",false,12,30,4,.1);
@@ -46,7 +46,7 @@ public final class RitualClient implements BlockEntityRenderer<RitualBlockEntity
     }
     private static void line(Vec3 a,Vec3 b,int rgb,float size){var l=Minecraft.getInstance().level;if(l==null)return;var dust=new DustParticleOptions(new org.joml.Vector3f(((rgb>>16)&255)/255f,((rgb>>8)&255)/255f,(rgb&255)/255f),size*5);for(int i=0;i<32;i++){Vec3 p=a.lerp(b,i/31.0);l.addParticle(dust,p.x,p.y,p.z,0,0,0);}}
     public static void lightning(Network.Effect effect){
-        Vec3 ground=effect.position(),top=ground.add(0,45,0);Random random=new Random(effect.seed());boolean photon=net.minecraftforge.fml.ModList.get().isLoaded("photon");
+        Vec3 ground=effect.position(),top=ground.add(0,45,0);Random random=new Random(effect.seed());boolean photon=net.neoforged.fml.ModList.get().isLoaded("photon");
         for(int i=1;i<=9;i++){Vec3 next=i==9?ground:ground.add((random.nextDouble()-.5)*6,45-i*5,(random.nextDouble()-.5)*6);
             if(photon){PhotonFx.ritualBeam(top,next,.4,0xDA9E072C,true,12);PhotonFx.ritualBeam(top,next,.17,0xF0080208,false,12);}else line(top,next,0xA30928,.3f);top=next;
         }

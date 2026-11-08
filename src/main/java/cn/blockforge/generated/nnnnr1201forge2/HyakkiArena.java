@@ -5,9 +5,9 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.*;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.level.block.Blocks;
-import net.minecraftforge.event.TickEvent;
-import net.minecraftforge.event.server.ServerStoppedEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.neoforged.neoforge.event.TickEvent;
+import net.neoforged.neoforge.event.server.ServerStoppedEvent;
+import net.neoforged.bus.api.SubscribeEvent;
 
 /** 旧存档仍可能保存旧平地生成器：在远离旧场地的空中分批搭建教堂，不覆盖旧建筑。 */
 public final class HyakkiArena {

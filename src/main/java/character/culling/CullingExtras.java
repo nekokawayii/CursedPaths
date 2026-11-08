@@ -15,15 +15,15 @@ import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.event.TickEvent;
-import net.minecraftforge.event.entity.EntityJoinLevelEvent;
-import net.minecraftforge.event.entity.ProjectileImpactEvent;
-import net.minecraftforge.event.entity.living.LivingDeathEvent;
-import net.minecraftforge.event.entity.living.LivingHurtEvent;
-import net.minecraftforge.event.entity.living.MobEffectEvent;
-import net.minecraftforge.event.entity.player.PlayerInteractEvent;
-import net.minecraftforge.eventbus.api.EventPriority;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.neoforged.neoforge.event.TickEvent;
+import net.neoforged.neoforge.event.entity.EntityJoinLevelEvent;
+import net.neoforged.neoforge.event.entity.ProjectileImpactEvent;
+import net.neoforged.neoforge.event.entity.living.LivingDeathEvent;
+import net.neoforged.neoforge.event.entity.living.LivingHurtEvent;
+import net.neoforged.neoforge.event.entity.living.MobEffectEvent;
+import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
+import net.neoforged.bus.api.EventPriority;
+import net.neoforged.bus.api.SubscribeEvent;
 
 /**
  * 死灭洄游 r219：把 r218 里只登记未实现的 8 条规则补齐。
@@ -105,7 +105,7 @@ public final class CullingExtras {
 
     // ========== 反转剥夺：治疗减半 ==========
     @SubscribeEvent
-    public static void healed(net.minecraftforge.event.entity.living.LivingHealEvent e) {
+    public static void healed(net.neoforged.neoforge.event.entity.living.LivingHealEvent e) {
         if (!(e.getEntity() instanceof ServerPlayer p) || !CullingRules.inDimension(p)) return;
         double mul = CullingRules.healMul(p);
         if (mul < 1) e.setAmount((float) (e.getAmount() * mul));

@@ -19,13 +19,13 @@ public final class GuiEntityPreview {
         if(mc.level==null)return false; // 退出世界后屏幕还在画时，跳过 3D 预览
         try{
             if(mc.getEntityRenderDispatcher().getRenderer(entity)==null){
-                System.out.println("[宿傩] 实体预览缺少渲染器，已改用二维占位："+net.minecraftforge.registries.ForgeRegistries.ENTITY_TYPES.getKey(entity.getType()));
+                System.out.println("[宿傩] 实体预览缺少渲染器，已改用二维占位："+net.neoforged.neoforge.registries.ForgeRegistries.ENTITY_TYPES.getKey(entity.getType()));
                 return false;
             }
             InventoryScreen.renderEntityInInventoryFollowsMouse(g,x,y,scale,angleX,angleY,entity);
             return true;
         }catch(Throwable t){
-            System.out.println("[宿傩] 实体预览绘制抛错，已改用二维占位："+net.minecraftforge.registries.ForgeRegistries.ENTITY_TYPES.getKey(entity.getType())+" "+t);
+            System.out.println("[宿傩] 实体预览绘制抛错，已改用二维占位："+net.neoforged.neoforge.registries.ForgeRegistries.ENTITY_TYPES.getKey(entity.getType())+" "+t);
             return false;
         }
     }

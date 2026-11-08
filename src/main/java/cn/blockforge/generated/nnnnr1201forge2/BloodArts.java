@@ -14,17 +14,17 @@ import net.minecraft.world.entity.ai.attributes.*;
 import net.minecraft.world.entity.projectile.*;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.phys.*;
-import net.minecraftforge.event.TickEvent;
-import net.minecraftforge.event.entity.living.*;
-import net.minecraftforge.event.entity.player.PlayerEvent;
-import net.minecraftforge.event.server.ServerStoppedEvent;
-import net.minecraftforge.eventbus.api.*;
+import net.neoforged.neoforge.event.TickEvent;
+import net.neoforged.neoforge.event.entity.living.*;
+import net.neoforged.neoforge.event.entity.player.PlayerEvent;
+import net.neoforged.neoforge.event.server.ServerStoppedEvent;
+import net.neoforged.bus.api.*;
 
 /** 赤血操术服务端。客户端只能提交按键，耗能、冷却、命中和状态均在这里核验。 */
 public final class BloodArts {
     public static final int FX=400,FX_HIT=420,FX_POISON=421,FX_TRAIL=422,FX_HEART=423,FX_DRAIN=424,FX_SHATTER=425,FX_READY=426,FX_SPIKE=427;
-    private static final ResourceKey<DamageType> BLOOD=ResourceKey.create(Registries.DAMAGE_TYPE,new ResourceLocation("jujutsu_kaisen_cursed_paths","blood"));
-    private static final ResourceKey<DamageType> TRUE=ResourceKey.create(Registries.DAMAGE_TYPE,new ResourceLocation("jujutsu_kaisen_cursed_paths","blood_true"));
+    private static final ResourceKey<DamageType> BLOOD=ResourceKey.create(Registries.DAMAGE_TYPE,ResourceLocation.fromNamespaceAndPath("jujutsu_kaisen_cursed_paths", "blood"));
+    private static final ResourceKey<DamageType> TRUE=ResourceKey.create(Registries.DAMAGE_TYPE,ResourceLocation.fromNamespaceAndPath("jujutsu_kaisen_cursed_paths", "blood_true"));
     private static final UUID SPEED=UUID.fromString("ae133000-0001-4000-8000-000000000001"),ATTACK=UUID.fromString("ae133000-0001-4000-8000-000000000002"),SLOW=UUID.fromString("ae133000-0001-4000-8000-000000000003"),BREAK=UUID.fromString("ae133000-0001-4000-8000-000000000004");
     private static final Map<UUID,State> states=new HashMap<>();
     private static final List<Dot> dots=new ArrayList<>();
@@ -144,12 +144,12 @@ public final class BloodArts {
             case BloodRules.DOMAIN -> BloodDomain.open(p,echo?origin.subtract(0,1,0):p.position(),echo);
             case BloodRules.OCEAN -> BloodExpansion.ocean(p,floor);
             case BloodRules.TRAP -> BloodExpansion.trap(p,origin,dir);
-            case BloodRules.VISION -> {s.vision=true;if(!(p instanceof net.minecraftforge.common.util.FakePlayer))BlackFlashMarks.extendBloodVision(p);}
+            case BloodRules.VISION -> {s.vision=true;if(!(p instanceof net.neoforged.neoforge.common.util.FakePlayer))BlackFlashMarks.extendBloodVision(p);}
             case BloodRules.SENBON -> {s.blade=0;BloodExpansion.senbon(p,origin,dir);}
             default -> {}
         }
     }
-    public static void fx(ServerPlayer p,int kind,Vec3 at,Vec3 direction,float size,int life,long seed){Network.CHANNEL.send(net.minecraftforge.network.PacketDistributor.NEAR.with(()->new net.minecraftforge.network.PacketDistributor.TargetPoint(at.x,at.y,at.z,192,p.level().dimension())),new Network.Effect(kind,p.getId(),at,direction,size,life,seed));}
+    public static void fx(ServerPlayer p,int kind,Vec3 at,Vec3 direction,float size,int life,long seed){Network.CHANNEL.send(net.neoforged.neoforge.network.PacketDistributor.NEAR.with(()->new net.neoforged.neoforge.network.PacketDistributor.TargetPoint(at.x,at.y,at.z,192,p.level().dimension())),new Network.Effect(kind,p.getId(),at,direction,size,life,seed));}
     private static void pose(ServerPlayer p,int skill,int ticks){Network.send(p.serverLevel(),new Network.Effect(70,p.getId(),p.position(),p.getLookAngle(),skill,ticks,0));}
     private static void tell(ServerPlayer p,String text){p.displayClientMessage(Component.literal(text),true);}
     private static Vec3 ground(ServerPlayer p,Vec3 origin){var hit=p.level().clip(new ClipContext(origin.add(0,2,0),origin.add(0,-8,0),ClipContext.Block.COLLIDER,ClipContext.Fluid.NONE,p));return hit.getType()==HitResult.Type.MISS?origin.subtract(0,p.getEyeHeight(),0):hit.getLocation().add(0,.03,0);}
@@ -244,7 +244,7 @@ public final class BloodArts {
             if(s.mirror>now)reflect(s);
             if(now%5==0){
                 if(s.compressed>now)fx(p,FX_READY,p.getEyePosition(),p.getLookAngle(),1,7,0);
-                if(s.flow>now){fx(p,FX+4,p.position(),p.getDeltaMovement(),1,7,s.vision?1:0);if(s.vision&&!(p instanceof net.minecraftforge.common.util.FakePlayer))for(LivingEntity t:near(p,p.getEyePosition(),40+rank(p)*8))if(visible(p,p.getEyePosition(),t)){Vec3 velocity=t.position().subtract(t.xo,t.yo,t.zo);Network.CHANNEL.send(net.minecraftforge.network.PacketDistributor.PLAYER.with(()->p),new Network.Effect(FX_HEART,t.getId(),t.position(),velocity,1+rank(p)*.25f,7,0));}}
+                if(s.flow>now){fx(p,FX+4,p.position(),p.getDeltaMovement(),1,7,s.vision?1:0);if(s.vision&&!(p instanceof net.neoforged.neoforge.common.util.FakePlayer))for(LivingEntity t:near(p,p.getEyePosition(),40+rank(p)*8))if(visible(p,p.getEyePosition(),t)){Vec3 velocity=t.position().subtract(t.xo,t.yo,t.zo);Network.CHANNEL.send(net.neoforged.neoforge.network.PacketDistributor.PLAYER.with(()->p),new Network.Effect(FX_HEART,t.getId(),t.position(),velocity,1+rank(p)*.25f,7,0));}}
                 if(s.blade>now)fx(p,FX+5,p.position(),p.getLookAngle(),1,7,0);
                 if(s.shield>0)fx(p,FX+7,p.position(),Vec3.ZERO,s.shield,7,0);
                 if(s.wings>now)fx(p,FX+10,p.position(),p.getLookAngle(),1,7,0);

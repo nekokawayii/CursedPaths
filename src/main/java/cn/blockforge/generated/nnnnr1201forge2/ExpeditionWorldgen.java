@@ -13,9 +13,9 @@ import net.minecraft.world.level.chunk.ChunkGenerator;
 import net.minecraft.world.level.dimension.LevelStem;
 import net.minecraft.world.level.levelgen.NoiseBasedChunkGenerator;
 import net.minecraft.world.level.levelgen.feature.Feature;
-import net.minecraftforge.registries.*;
-import net.minecraftforge.eventbus.api.*;
-import net.minecraftforge.event.server.ServerAboutToStartEvent;
+import net.neoforged.neoforge.registries.*;
+import net.neoforged.bus.api.*;
+import net.neoforged.neoforge.event.server.ServerAboutToStartEvent;
 
 public final class ExpeditionWorldgen {
     public static final List<String> BIOMES=List.of("cursed_wasteland","cursed_sakura_forest","scorched_volcanic_fields","ancient_battlefield");
@@ -39,7 +39,7 @@ public final class ExpeditionWorldgen {
         var base=generator.getBiomeSource();
         // 已经由其他模组全面接管的群系源保持原样，避免破坏整合包；专用探索维度仍可使用。
         if(!(base instanceof MultiNoiseBiomeSource))return;
-        List<Holder<Biome>> added=BIOMES.stream().map(id->(Holder<Biome>)registry.registryOrThrow(Registries.BIOME).getHolderOrThrow(ResourceKey.create(Registries.BIOME,new ResourceLocation("jujutsu_kaisen_cursed_paths",id)))).toList();
+        List<Holder<Biome>> added=BIOMES.stream().map(id->(Holder<Biome>)registry.registryOrThrow(Registries.BIOME).getHolderOrThrow(ResourceKey.create(Registries.BIOME,ResourceLocation.fromNamespaceAndPath("jujutsu_kaisen_cursed_paths", id)))).toList();
         try{
             var field=Arrays.stream(ChunkGenerator.class.getDeclaredFields()).filter(f->f.getType()==BiomeSource.class).findFirst().orElseThrow();
             var source=new CursedSource(base,added);field.setAccessible(true);field.set(generator,source);

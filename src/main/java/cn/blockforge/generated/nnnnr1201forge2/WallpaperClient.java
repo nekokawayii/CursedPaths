@@ -9,11 +9,11 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.commands.Commands;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.client.event.*;
-import net.minecraftforge.event.TickEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.neoforge.client.event.*;
+import net.neoforged.neoforge.event.TickEvent;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.Mod;
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.system.MemoryStack;
 
@@ -36,7 +36,7 @@ public final class WallpaperClient {
     private static String imageStatus="尚未读取";
     private static long session,generation,tick,nextUploadTick,decodeFrame=-1;
     private static final Properties config=new Properties();
-    private static Path configPath(){return net.minecraftforge.fml.loading.FMLPaths.CONFIGDIR.get().resolve("jujutsu_kaisen_cursed_paths-wallpaper.properties");}
+    private static Path configPath(){return net.neoforged.fml.loading.FMLPaths.CONFIGDIR.get().resolve("jujutsu_kaisen_cursed_paths-wallpaper.properties");}
     private static void load(){
         boolean failed=false;
         config.clear();try{if(Files.isRegularFile(configPath()))try(var reader=Files.newBufferedReader(configPath())){config.load(reader);}}catch(IOException|IllegalArgumentException ex){failed=true;tell("壁纸配置读取失败，本次仍会询问。");}
@@ -132,7 +132,7 @@ public final class WallpaperClient {
         try{
             // 先淘汰旧纹理，再解码新图，避免暂时同时保留九张完整像素图。
             while(textures.size()>=8)releaseTexture(textures.keySet().iterator().next());
-            ResourceLocation location=new ResourceLocation("jujutsu_kaisen_cursed_paths","wallpaper/"+id);
+            ResourceLocation location=ResourceLocation.fromNamespaceAndPath("jujutsu_kaisen_cursed_paths", "wallpaper/"+id);
             WallpaperTexture.register(mc.getTextureManager(),location,bytes);textures.put(id,location);if(mc.player!=null&&id.equals(mc.player.getUUID())){imageStatus="图片已上传，可绘制";tellBar("斩击壁纸：图片已就绪");}return location;
         }catch(IOException|RuntimeException ex){
             // 当前图片失败后不在每帧重试；重新授权或收到新图片时才恢复尝试。

@@ -16,12 +16,12 @@ import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.*;
-import net.minecraftforge.common.util.FakePlayer;
-import net.minecraftforge.event.TickEvent;
-import net.minecraftforge.event.entity.living.LivingDeathEvent;
-import net.minecraftforge.event.entity.player.PlayerEvent;
-import net.minecraftforge.event.server.ServerStoppingEvent;
-import net.minecraftforge.eventbus.api.*;
+import net.neoforged.neoforge.common.util.FakePlayer;
+import net.neoforged.neoforge.event.TickEvent;
+import net.neoforged.neoforge.event.entity.living.LivingDeathEvent;
+import net.neoforged.neoforge.event.entity.player.PlayerEvent;
+import net.neoforged.neoforge.event.server.ServerStoppingEvent;
+import net.neoforged.bus.api.*;
 import org.joml.Vector3f;
 
 /** 所有术式共用的服务端成长线；永久状态随玩家保存，临时领域不写进角色快照。 */
@@ -98,8 +98,8 @@ public final class Mainline {
         Curse.data(p).putBoolean(PREFIX+id,true);award(p,id);
         p.sendSystemMessage(Component.literal("【成就解锁】"+NAMES[id]).withStyle(ChatFormatting.GOLD));sync(p);
     }
-    private static void award(ServerPlayer p,int id){var a=p.server.getAdvancements().getAdvancement(new ResourceLocation("jujutsu_kaisen_cursed_paths","mainline/"+IDS[id]));if(a!=null)for(String criterion:a.getCriteria().keySet())p.getAdvancements().award(a,criterion);}
-    private static void awardCount(ServerPlayer p,int id,int count){var a=p.server.getAdvancements().getAdvancement(new ResourceLocation("jujutsu_kaisen_cursed_paths","mainline/"+IDS[id]));if(a!=null)for(int i=1;i<=count;i++)p.getAdvancements().award(a,"use_"+i);}
+    private static void award(ServerPlayer p,int id){var a=p.server.getAdvancements().getAdvancement(ResourceLocation.fromNamespaceAndPath("jujutsu_kaisen_cursed_paths", "mainline/"+IDS[id]));if(a!=null)for(String criterion:a.getCriteria().keySet())p.getAdvancements().award(a,criterion);}
+    private static void awardCount(ServerPlayer p,int id,int count){var a=p.server.getAdvancements().getAdvancement(ResourceLocation.fromNamespaceAndPath("jujutsu_kaisen_cursed_paths", "mainline/"+IDS[id]));if(a!=null)for(int i=1;i<=count;i++)p.getAdvancements().award(a,"use_"+i);}
     private static void addCount(ServerPlayer p,int id,int cap){Curse.data(p).putInt(COUNT+id,MainlineRules.nextCount(count(p,id),cap));awardCount(p,id==SIMPLE?DOMAIN:AMPLIFY,count(p,id));sync(p);}
     public static void onCharacterChosen(ServerPlayer p){unlock(p,SORCERER);}
     public static int mask(Player p){int m=0;for(int i=0;i<NAMES.length;i++)if(unlocked(p,i))m|=1<<i;return m;}

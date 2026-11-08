@@ -8,9 +8,9 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
-import net.minecraftforge.event.RegisterCommandsEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.network.PacketDistributor;
+import net.neoforged.neoforge.event.RegisterCommandsEvent;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.neoforge.network.PacketDistributor;
 
 /** 每位施术者独立保存敌友关系和术式倍率，客户端只提交选择。 */
 public final class CombatSettings {
@@ -97,8 +97,8 @@ public final class CombatSettings {
         }return accepted;}finally{AttackTypes.consume();if(previousOwner==null)spellOwners.remove(source);else spellOwners.put(source,previousOwner);}
     }
     /** 同队禁伤会早于LivingDamageEvent返回，只为明确标敌的咒术近战补上入口。 */
-    @SubscribeEvent(priority=net.minecraftforge.eventbus.api.EventPriority.LOWEST)
-    public static void enemyMelee(net.minecraftforge.event.entity.player.AttackEntityEvent event){
+    @SubscribeEvent(priority=net.neoforged.bus.api.EventPriority.LOWEST)
+    public static void enemyMelee(net.neoforged.neoforge.event.entity.player.AttackEntityEvent event){
         if(!(event.getEntity() instanceof ServerPlayer p)||MaidBridge.isCaster(p)||!(event.getTarget() instanceof Player target))return;
         boolean physical=character.CharacterService.toji(p)||character.CharacterService.yuji(p);
         if(target.canHarmPlayer(p)||!canHit(p,target)||(!physical&&(Curse.fingers(p)<5||!Curse.canUseTechnique(p)))||SoulCombat.suppressed(p)||DomainClash.active(p)||DomainClash.active(target))return;

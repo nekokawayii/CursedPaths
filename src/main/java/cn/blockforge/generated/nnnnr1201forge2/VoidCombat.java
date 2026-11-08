@@ -8,9 +8,9 @@ import net.minecraft.world.damagesource.DamageTypes;
 import net.minecraft.world.phys.*;
 import net.minecraft.network.chat.Component;
 import net.minecraft.sounds.*;
-import net.minecraftforge.event.entity.living.*;
-import net.minecraftforge.event.server.ServerStoppedEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.neoforged.neoforge.event.entity.living.*;
+import net.neoforged.neoforge.event.server.ServerStoppedEvent;
+import net.neoforged.bus.api.SubscribeEvent;
 
 /** 服务端管理裂隙，不依赖原版火焰或可被牛奶解除的药水。 */
 public final class VoidCombat {
@@ -31,7 +31,7 @@ public final class VoidCombat {
     private static LivingEntity fixedTarget;
     private static net.minecraft.world.damagesource.DamageSource fixedSource;
     private static float fixedAmount;
-    @SubscribeEvent(priority=net.minecraftforge.eventbus.api.EventPriority.LOWEST)
+    @SubscribeEvent(priority=net.neoforged.bus.api.EventPriority.LOWEST)
     public static void exactDamage(LivingDamageEvent e){if(e.getEntity()==fixedTarget&&(e.getSource()==fixedSource||fixedSource!=null&&CombatSettings.caster(e.getSource())==fixedSource.getEntity()))e.setAmount(fixedAmount);}
     private record ContactHit(ServerPlayer owner,LivingEntity target){}
     private static final List<ContactHit> contacts=new ArrayList<>();
@@ -140,7 +140,7 @@ public final class VoidCombat {
         }
     }
     private static ServerPlayer playerBlast;
-    @SubscribeEvent(priority=net.minecraftforge.eventbus.api.EventPriority.HIGHEST)
+    @SubscribeEvent(priority=net.neoforged.bus.api.EventPriority.HIGHEST)
     public static void playerBlastDamage(LivingHurtEvent event){
         if(playerBlast!=null&&event.getSource().is(net.minecraft.tags.DamageTypeTags.IS_EXPLOSION)&&CombatSettings.caster(event.getSource())==playerBlast){
             if(!CombatSettings.canHit(playerBlast,event.getEntity())){event.setCanceled(true);return;}
@@ -150,7 +150,7 @@ public final class VoidCombat {
     }
     private static void furnaceBlast(ServerPlayer p,Vec3 center){
         ServerLevel level=p.serverLevel();
-        if(!(p instanceof net.minecraftforge.common.util.FakePlayer)){
+        if(!(p instanceof net.neoforged.neoforge.common.util.FakePlayer)){
             // 玩家原有爆炸行为不变；女仆绝不把FakePlayer交给第三方爆炸监听器。
             ServerPlayer previous=playerBlast;playerBlast=p;
             try{level.explode(p,center.x,center.y,center.z,2.5f,false,net.minecraft.world.level.Level.ExplosionInteraction.NONE);}finally{playerBlast=previous;}

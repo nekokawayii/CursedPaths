@@ -9,12 +9,12 @@ import net.minecraft.world.effect.MobEffects;
 import net.minecraft.network.chat.Component;
 import net.minecraft.tags.DamageTypeTags;
 import net.minecraft.commands.Commands;
-import net.minecraftforge.event.TickEvent;
-import net.minecraftforge.event.RegisterCommandsEvent;
-import net.minecraftforge.event.entity.living.*;
-import net.minecraftforge.event.entity.player.PlayerEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.eventbus.api.EventPriority;
+import net.neoforged.neoforge.event.TickEvent;
+import net.neoforged.neoforge.event.RegisterCommandsEvent;
+import net.neoforged.neoforge.event.entity.living.*;
+import net.neoforged.neoforge.event.entity.player.PlayerEvent;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.bus.api.EventPriority;
 import java.util.*;
 import com.mojang.brigadier.arguments.IntegerArgumentType;
 
@@ -81,7 +81,7 @@ public final class Journey {
         var d=Curse.data(p);
         if(!d.getBoolean("R7Migrated")){if(Curse.awakened(p))d.putBoolean("BuddhaDefeated",true);d.putBoolean("R7Migrated",true);}
         if(p.tickCount%20==0){
-            if(!(p instanceof net.minecraftforge.common.util.FakePlayer)&&!d.getBoolean("ChoiceBookGiven")){if(p.getInventory().countItem(ProgressionContent.MEMORY.get())==0)give(p,new ItemStack(ProgressionContent.MEMORY.get()));d.putBoolean("MemoryGiven",true);d.putBoolean("ChoiceBookGiven",true);p.sendSystemMessage(Component.literal("你获得了咒术选择书。右键选择角色；N选择术式，R释放，J查看个人线。甚尔使用体术条，没有轮盘。"));}
+            if(!(p instanceof net.neoforged.neoforge.common.util.FakePlayer)&&!d.getBoolean("ChoiceBookGiven")){if(p.getInventory().countItem(ProgressionContent.MEMORY.get())==0)give(p,new ItemStack(ProgressionContent.MEMORY.get()));d.putBoolean("MemoryGiven",true);d.putBoolean("ChoiceBookGiven",true);p.sendSystemMessage(Component.literal("你获得了咒术选择书。右键选择角色；N选择术式，R释放，J查看个人线。甚尔使用体术条，没有轮盘。"));}
             if(ready(p)){for(int i=0;i<9;i++)if(p.getInventory().countItem(ProgressionContent.PAGES.get(i).get())>0)d.putBoolean("Page"+i,true);}
         }
         if(!ready(p))return;

@@ -14,7 +14,7 @@ import net.minecraft.world.item.SwordItem;
  *  <p>模组自己的术式用 {@link #mark(String)} 在施术前打标记；标记是**一次伤害一份**：
  *  {@code CombatSettings.hurt} 在结算时 {@link #consume()} 取走，服务端每刻开始再兜底清空，
  *  所以原版/其他模组的伤害永远不会被前一刻残留的标记污染。原版与其他模组的伤害按 DamageSource 归类。</p> */
-@net.minecraftforge.fml.common.Mod.EventBusSubscriber(modid="jujutsu_kaisen_cursed_paths")
+@net.neoforged.fml.common.Mod.EventBusSubscriber(modid="jujutsu_kaisen_cursed_paths")
 public final class AttackTypes {
     public static final String SLASH="slash",FIRE="fire",SOUL="soul",VOID="void",ARROW="arrow",TRIDENT="trident",
         UNARMED="unarmed",THROWN="thrown",EXPLOSION="explosion",MAGIC="magic",ICE="ice",LIGHTNING="lightning";
@@ -125,8 +125,8 @@ public final class AttackTypes {
         String type=hint;hint=null;return type;
     }
     /** 每刻开始清空：即使没有任何魔虚罗在场（旧实现把清空挂在魔虚罗的 tick 事件里）也不会残留。 */
-    @net.minecraftforge.eventbus.api.SubscribeEvent public static void serverTick(net.minecraftforge.event.TickEvent.ServerTickEvent event){
-        if(event.phase==net.minecraftforge.event.TickEvent.Phase.START)clear();
+    @net.neoforged.bus.api.SubscribeEvent public static void serverTick(net.neoforged.neoforge.event.TickEvent.ServerTickEvent event){
+        if(event.phase==net.neoforged.neoforge.event.TickEvent.Phase.START)clear();
     }
 
     /** 归类一次伤害：先看术式标记，再按 DamageSource。 */

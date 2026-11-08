@@ -12,10 +12,10 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundSource;
-import net.minecraftforge.event.TickEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.registries.ForgeRegistries;
+import net.neoforged.neoforge.event.TickEvent;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.Mod;
+import net.neoforged.neoforge.registries.ForgeRegistries;
 
 /**
  * 领域展开 · 真赝相爱。
@@ -149,11 +149,11 @@ public final class YutaDomain {
     private static void play(ServerPlayer p, String id) {
         // 不查 ForgeRegistries：sounds.json 的动态事件在某些环境里取不到，
         // 直接用可变范围事件按 ResourceLocation 构造，客户端会按 sounds.json 的键解析。
-        var loc = new ResourceLocation(id);
+        var loc = ResourceLocation.parse(id);
         var sound = net.minecraft.sounds.SoundEvent.createVariableRangeEvent(loc);
         p.serverLevel().playSound(null, p.blockPosition(), sound, SoundSource.PLAYERS, 1.6f, 1f);
     }
 
-    @SubscribeEvent public static void stop(net.minecraftforge.event.server.ServerStoppingEvent event){for(Active a:ACTIVE.values())YutaTerrain.restore(a.owner);ACTIVE.clear();}
+    @SubscribeEvent public static void stop(net.neoforged.neoforge.event.server.ServerStoppingEvent event){for(Active a:ACTIVE.values())YutaTerrain.restore(a.owner);ACTIVE.clear();}
     private YutaDomain() {}
 }

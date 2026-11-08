@@ -2,20 +2,20 @@ package cn.blockforge.generated.nnnnr1201forge2;
 
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
-import net.minecraftforge.event.entity.EntityJoinLevelEvent;
-import net.minecraftforge.event.entity.living.LivingEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.neoforged.neoforge.event.entity.EntityJoinLevelEvent;
+import net.neoforged.neoforge.event.entity.living.LivingEvent;
+import net.neoforged.bus.api.SubscribeEvent;
 
 /** NPC与首领共同识别敌对咒灵；不攻击自己的召唤物、队友和玩家友军。 */
 public final class CurseHostility {
     public static boolean curse(LivingEntity e){return e instanceof LowCurseEntity||e instanceof BuddhaEntity||e instanceof DaitianEntity||e instanceof ParasiteEntity||e instanceof BrokenMahitoEntity||e instanceof RikaEntity||e instanceof JogoNpcEntity||e instanceof SorcererNpcEntity s&&s.characterId().equals("mahito");}
     public static boolean hunter(LivingEntity e){return e instanceof Mob&&!(e instanceof GetoEntity)&&!(e instanceof LowCurseEntity)&&!(e instanceof ParasiteEntity)&&(NpcBridge.supports(e)||BossTargets.managed(e)||e instanceof MegumiEntity);}
     public static boolean truce(LivingEntity a,LivingEntity b){return a!=null&&b!=null&&(a instanceof GetoEntity&&curse(b)||b instanceof GetoEntity&&curse(a));}
-    @SubscribeEvent public static void target(net.minecraftforge.event.entity.living.LivingChangeTargetEvent event){
+    @SubscribeEvent public static void target(net.neoforged.neoforge.event.entity.living.LivingChangeTargetEvent event){
         if(truce(event.getEntity(),event.getNewTarget()))event.setNewTarget(null);
     }
-    @SubscribeEvent(priority=net.minecraftforge.eventbus.api.EventPriority.HIGHEST)
-    public static void preventDamage(net.minecraftforge.event.entity.living.LivingAttackEvent event){
+    @SubscribeEvent(priority=net.neoforged.bus.api.EventPriority.HIGHEST)
+    public static void preventDamage(net.neoforged.neoforge.event.entity.living.LivingAttackEvent event){
         var source=event.getSource().getEntity();
         if(source instanceof NpcBridge.NpcActor actor)source=actor.mob;
         if(source instanceof net.minecraft.world.entity.projectile.Projectile projectile)source=projectile.getOwner();

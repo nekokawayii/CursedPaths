@@ -6,8 +6,8 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.phys.*;
-import net.minecraftforge.event.entity.living.*;
-import net.minecraftforge.eventbus.api.*;
+import net.neoforged.neoforge.event.entity.living.*;
+import net.neoforged.bus.api.*;
 
 /** 只主动寻找玩家；保留受伤或外部模组赋予的生物仇恨。 */
 public final class BossTargets {

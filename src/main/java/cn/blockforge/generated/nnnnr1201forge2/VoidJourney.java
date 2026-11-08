@@ -9,14 +9,14 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.network.chat.Component;
 import net.minecraft.commands.Commands;
-import net.minecraftforge.event.RegisterCommandsEvent;
-import net.minecraftforge.event.TickEvent;
-import net.minecraftforge.event.entity.living.*;
-import net.minecraftforge.event.entity.player.PlayerEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.neoforged.neoforge.event.RegisterCommandsEvent;
+import net.neoforged.neoforge.event.TickEvent;
+import net.neoforged.neoforge.event.entity.living.*;
+import net.neoforged.neoforge.event.entity.player.PlayerEvent;
+import net.neoforged.bus.api.SubscribeEvent;
 
 public final class VoidJourney {
-    public static final ResourceKey<Level> ARENA=ResourceKey.create(Registries.DIMENSION,new ResourceLocation("jujutsu_kaisen_cursed_paths","void_arena"));
+    public static final ResourceKey<Level> ARENA=ResourceKey.create(Registries.DIMENSION,ResourceLocation.fromNamespaceAndPath("jujutsu_kaisen_cursed_paths", "void_arena"));
     public static boolean evolved(Player p){return Curse.data(p).getBoolean("VoidShrine");}
     public static void enter(ServerPlayer p){
         if(p.level().dimension()==ARENA){leave(p);return;}

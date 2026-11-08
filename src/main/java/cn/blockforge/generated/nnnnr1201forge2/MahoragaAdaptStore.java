@@ -10,14 +10,14 @@ import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraftforge.registries.ForgeRegistries;
+import net.neoforged.neoforge.registries.ForgeRegistries;
 
 /** 戴上「法轮」之后的**自身适应**：与魔虚罗同款的法轮机制，但直接以"整只生物"为单位。
  *
  *  <p>规则：被某只生物打中 → 对该生物**整只**累积适应，打满 {@link #CLEAR} 次后它的**所有攻击**对你无效
  *  （不再区分招式）。所有非生物来源的伤害（摔落、火焰、溺水、虚空、中毒、其他模组的场地伤害…）
  *  共用一条「其他伤害」进度，打满后一并免疫。进度按玩家存档，召唤友方魔虚罗时**继承**过去。</p> */
-@net.minecraftforge.fml.common.Mod.EventBusSubscriber(modid="jujutsu_kaisen_cursed_paths")
+@net.neoforged.fml.common.Mod.EventBusSubscriber(modid="jujutsu_kaisen_cursed_paths")
 public final class MahoragaAdaptStore {
     /** 打同一个来源达到这一次数 → "完全适应它的存在"：对其真伤 ×2 + 命中 20 秒禁疗。 */
     public static final int CLEAR=12;
@@ -40,7 +40,7 @@ public final class MahoragaAdaptStore {
         e.getPersistentData().putLong(NO_HEAL_UNTIL,e.level().getGameTime()+ADAPTED_NO_HEAL_TICKS);
         e.getPersistentData().putBoolean("SukunaNoHeal",true);
     }
-    @net.minecraftforge.eventbus.api.SubscribeEvent public static void noHealEvent(net.minecraftforge.event.entity.living.LivingHealEvent event){
+    @net.neoforged.bus.api.SubscribeEvent public static void noHealEvent(net.neoforged.neoforge.event.entity.living.LivingHealEvent event){
         if(noHeal(event.getEntity()))event.setCanceled(true);
     }
     /** 非生物伤害（环境/摔落/其他模组场地伤害）专用的键。 */
@@ -61,7 +61,7 @@ public final class MahoragaAdaptStore {
         if(key.equals("technique:ten_shadows"))return "十影";
         return TYPE_NAMES.computeIfAbsent(key,k->{
             try{
-                ResourceLocation id=new ResourceLocation(k);
+                ResourceLocation id=ResourceLocation.parse(k);
                 EntityType<?> type=ForgeRegistries.ENTITY_TYPES.getValue(id);
                 if(type!=null)return type.getDescription().getString();
             }catch(RuntimeException ignored){}
@@ -300,8 +300,8 @@ public final class MahoragaAdaptStore {
     }
     // ------------------------------------------------------------ 事件
     /** 戴法轮的玩家每秒把进度同步到头顶法轮（客户端只用它画模型）。 */
-    @net.minecraftforge.eventbus.api.SubscribeEvent public static void tick(net.minecraftforge.event.TickEvent.ServerTickEvent event){
-        if(event.phase!=net.minecraftforge.event.TickEvent.Phase.END)return;
+    @net.neoforged.bus.api.SubscribeEvent public static void tick(net.neoforged.neoforge.event.TickEvent.ServerTickEvent event){
+        if(event.phase!=net.neoforged.neoforge.event.TickEvent.Phase.END)return;
         var server=event.getServer();if(server==null)return;
         if(server.getTickCount()%20!=0)return;
         for(ServerPlayer p:server.getPlayerList().getPlayers()){
@@ -310,8 +310,8 @@ public final class MahoragaAdaptStore {
         }
     }
     /** 挨打：完全适应过的来源直接免疫；没满的记一次进度。 */
-    @net.minecraftforge.eventbus.api.SubscribeEvent(priority=net.minecraftforge.eventbus.api.EventPriority.LOW)
-    public static void hurt(net.minecraftforge.event.entity.living.LivingHurtEvent event){
+    @net.neoforged.bus.api.SubscribeEvent(priority=net.neoforged.bus.api.EventPriority.LOW)
+    public static void hurt(net.neoforged.neoforge.event.entity.living.LivingHurtEvent event){
         if(event.getAmount()<=0)return;
         LivingEntity victim=event.getEntity();
         // 玩家本体或"女仆施术上下文"都归到同一个玩家身上
@@ -340,8 +340,8 @@ public final class MahoragaAdaptStore {
         adapt(wearer,attacker instanceof LivingEntity le?le:null,event.getSource());
     }
     /** 玩家打中某个生物：也计入"适应它的存在"（12 次后你打它、它打你都无效）。 */
-    @net.minecraftforge.eventbus.api.SubscribeEvent(priority=net.minecraftforge.eventbus.api.EventPriority.LOW)
-    public static void dealt(net.minecraftforge.event.entity.living.LivingHurtEvent event){
+    @net.neoforged.bus.api.SubscribeEvent(priority=net.neoforged.bus.api.EventPriority.LOW)
+    public static void dealt(net.neoforged.neoforge.event.entity.living.LivingHurtEvent event){
         if(trueDamage||event.getAmount()<=0||event.getSource().getDirectEntity() instanceof MahoragaEntity)return;
         LivingEntity victim=event.getEntity();
         if(victim.level().isClientSide)return;

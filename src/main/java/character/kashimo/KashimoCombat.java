@@ -28,11 +28,11 @@ import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.event.TickEvent;
-import net.minecraftforge.event.entity.living.LivingDeathEvent;
-import net.minecraftforge.event.entity.living.LivingHurtEvent;
-import net.minecraftforge.event.entity.player.AttackEntityEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.neoforged.neoforge.event.TickEvent;
+import net.neoforged.neoforge.event.entity.living.LivingDeathEvent;
+import net.neoforged.neoforge.event.entity.living.LivingHurtEvent;
+import net.neoforged.neoforge.event.entity.player.AttackEntityEvent;
+import net.neoforged.bus.api.SubscribeEvent;
 
 /**
  * 鹿紫云一 · 幻兽琥珀：电荷、必中落雷、终奥，以及十招轮盘技能。
@@ -595,7 +595,7 @@ public final class KashimoCombat {
         KashimoZones.release(p);
         if (p.level() instanceof ServerLevel level) {
             for (int kind : new int[]{KashimoFx.ULT, KashimoFx.CRASH, KashimoFx.ATTACH, KashimoFx.MAGNET, KashimoFx.CHAIN_DARK}) {
-                Network.CHANNEL.send(net.minecraftforge.network.PacketDistributor.PLAYER.with(() -> p),
+                Network.CHANNEL.send(net.neoforged.neoforge.network.PacketDistributor.PLAYER.with(() -> p),
                     new Network.Effect(kind, p.getId(), p.position(), Vec3.ZERO, 0f, 0, 0));
             }
             KashimoCharges.syncNegative(p);

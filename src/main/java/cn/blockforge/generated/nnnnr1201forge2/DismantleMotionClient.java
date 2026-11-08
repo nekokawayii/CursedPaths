@@ -9,10 +9,10 @@ import net.minecraft.client.player.AbstractClientPlayer;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.player.PlayerRenderer;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.client.event.*;
-import net.minecraftforge.eventbus.api.*;
-import net.minecraftforge.fml.common.Mod;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.neoforge.client.event.*;
+import net.neoforged.bus.api.*;
+import net.neoforged.fml.common.Mod;
 
 /** 仅动作期间借用第三人称；无论正常收招、死亡还是断线都会归还原视角。 */
 public final class DismantleMotionClient {
@@ -41,8 +41,8 @@ public final class DismantleMotionClient {
             &&!FinaleClient.active(player.getId())&&!TenShadowsClient.chanting(player.getUUID())
             &&!(mc.getCameraEntity()==player&&mc.options.getCameraType().isFirstPerson());
     }
-    @SubscribeEvent public static void beforeFrame(net.minecraftforge.event.TickEvent.RenderTickEvent e){
-        if(e.phase==net.minecraftforge.event.TickEvent.Phase.START)frames.begin();
+    @SubscribeEvent public static void beforeFrame(net.neoforged.neoforge.event.TickEvent.RenderTickEvent e){
+        if(e.phase==net.neoforged.neoforge.event.TickEvent.Phase.START)frames.begin();
     }
     /** 其他模型模组未派发玩家事件时，世界实体阶段再补一次；只补漏，不叠两个玩家。 */
     @SubscribeEvent(priority=EventPriority.LOWEST) public static void rescue(RenderLevelStageEvent e){

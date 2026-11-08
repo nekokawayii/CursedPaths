@@ -5,7 +5,7 @@ import com.mojang.math.Axis;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.*;
 import net.minecraft.world.item.*;
-import net.minecraftforge.client.extensions.common.IClientItemExtensions;
+import net.neoforged.neoforge.client.extensions.common.IClientItemExtensions;
 
 /** 原始自由格式模型不能用普通物品JSON表达，直接保留bbmodel的旋转与逐面UV。 */
 public final class SoulDevourerClient {

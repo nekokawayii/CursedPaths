@@ -7,7 +7,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.network.*;
+import net.neoforged.neoforge.network.*;
 
 /** 服务端只声明外观与快照，不加载任何客户端渲染类。图片文件由双方资源包提供。 */
 public final class DomainPresentation {

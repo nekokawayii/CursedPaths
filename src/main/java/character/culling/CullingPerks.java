@@ -17,14 +17,14 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.event.TickEvent;
-import net.minecraftforge.event.entity.living.LivingDeathEvent;
-import net.minecraftforge.event.entity.living.LivingHurtEvent;
-import net.minecraftforge.event.entity.living.LivingKnockBackEvent;
-import net.minecraftforge.event.entity.player.PlayerEvent;
-import net.minecraftforge.event.level.BlockEvent;
-import net.minecraftforge.eventbus.api.EventPriority;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.neoforged.neoforge.event.TickEvent;
+import net.neoforged.neoforge.event.entity.living.LivingDeathEvent;
+import net.neoforged.neoforge.event.entity.living.LivingHurtEvent;
+import net.neoforged.neoforge.event.entity.living.LivingKnockBackEvent;
+import net.neoforged.neoforge.event.entity.player.PlayerEvent;
+import net.neoforged.neoforge.event.level.BlockEvent;
+import net.neoforged.bus.api.EventPriority;
+import net.neoforged.bus.api.SubscribeEvent;
 
 /**
  * 死灭洄游规则「第二批」的实际结算（r225）：绝对暴力 / 无限火力 / 绝对生存 / 机动风筝 / 资源爆率。
@@ -275,7 +275,7 @@ public final class CullingPerks {
 
     // ===== 穿甲弹：远程弹道不被方块阻挡 =====
     @SubscribeEvent
-    public static void projectile(net.minecraftforge.event.entity.ProjectileImpactEvent e) {
+    public static void projectile(net.neoforged.neoforge.event.entity.ProjectileImpactEvent e) {
         if (e.getRayTraceResult().getType() != net.minecraft.world.phys.HitResult.Type.BLOCK) return;
         net.minecraft.world.entity.Entity owner = e.getProjectile().getOwner();
         if (!(owner instanceof ServerPlayer p) || !CullingRules.inDimension(p)) return;

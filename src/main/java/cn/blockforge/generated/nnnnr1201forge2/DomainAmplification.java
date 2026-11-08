@@ -6,8 +6,8 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
-import net.minecraftforge.event.TickEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.neoforged.neoforge.event.TickEvent;
+import net.neoforged.bus.api.SubscribeEvent;
 
 /** 领域展延：持续消耗咒力，把简易领域覆在身体表面，使术式可以穿透五条悟的无下限。 */
 public final class DomainAmplification {
@@ -17,7 +17,7 @@ public final class DomainAmplification {
         if(e instanceof Player p)return Curse.data(p).getBoolean("DomainAmplification");
         return e.getPersistentData().getBoolean("SukunaDomainAmplification");
     }
-    public static boolean unlocked(Player p){return p instanceof net.minecraftforge.common.util.FakePlayer||character.mainline.Mainline.unlocked(p,character.mainline.Mainline.AMPLIFY);}
+    public static boolean unlocked(Player p){return p instanceof net.neoforged.neoforge.common.util.FakePlayer||character.mainline.Mainline.unlocked(p,character.mainline.Mainline.AMPLIFY);}
     public static void toggle(ServerPlayer p){
         if(!p.isAlive()||p.isSpectator())return;
         if(!unlocked(p)){p.displayClientMessage(Component.literal("领域展延尚未解锁：累计展开领域 10 次（L 查看进度）"),true);return;}

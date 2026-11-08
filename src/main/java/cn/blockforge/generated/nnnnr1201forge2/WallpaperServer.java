@@ -3,12 +3,12 @@ package cn.blockforge.generated.nnnnr1201forge2;
 import java.util.*;
 import java.util.concurrent.*;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraftforge.event.TickEvent;
-import net.minecraftforge.event.entity.player.PlayerEvent;
-import net.minecraftforge.event.server.ServerStoppedEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.network.PacketDistributor;
+import net.neoforged.neoforge.event.TickEvent;
+import net.neoforged.neoforge.event.entity.player.PlayerEvent;
+import net.neoforged.neoforge.event.server.ServerStoppedEvent;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.Mod;
+import net.neoforged.neoforge.network.PacketDistributor;
 
 /** 服务器只在本次连接内暂存自愿上传的壁纸；按发送者身份归属，分片限速，不落盘。 */
 @Mod.EventBusSubscriber(modid="jujutsu_kaisen_cursed_paths")
@@ -64,7 +64,7 @@ public final class WallpaperServer {
         int budget=16;
         // 队列按轮换顺序推进，单人每刻最多两片，不把大图一次性塞进技能数据包。
         var keys=new ArrayList<>(outgoing.keySet());if(!keys.isEmpty())Collections.rotate(keys,(int)(tick%keys.size()));
-        for(UUID id:keys){if(budget<=0)break;var server=net.minecraftforge.server.ServerLifecycleHooks.getCurrentServer();ServerPlayer p=server==null?null:server.getPlayerList().getPlayer(id);if(p==null){outgoing.remove(id);continue;}
+        for(UUID id:keys){if(budget<=0)break;var server=net.neoforged.neoforge.server.ServerLifecycleHooks.getCurrentServer();ServerPlayer p=server==null?null:server.getPlayerList().getPlayer(id);if(p==null){outgoing.remove(id);continue;}
             var q=outgoing.get(id);for(int i=0;i<2&&!q.isEmpty()&&budget>0;i++,budget--){Delivery d=q.peek();byte[] bytes=d.image.data;int count=(bytes.length+WallpaperRules.CHUNK-1)/WallpaperRules.CHUNK,from=d.part*WallpaperRules.CHUNK;
                 Network.CHANNEL.send(PacketDistributor.PLAYER.with(()->p),new WallpaperPackets.Download(d.owner,d.image.revision,d.part,count,bytes.length,Arrays.copyOfRange(bytes,from,Math.min(bytes.length,from+WallpaperRules.CHUNK))));
                 if(++d.part>=count)q.remove();

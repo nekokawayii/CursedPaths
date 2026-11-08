@@ -5,9 +5,9 @@ import net.minecraft.server.level.*;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.phys.*;
-import net.minecraftforge.event.TickEvent;
-import net.minecraftforge.event.entity.*;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.neoforged.neoforge.event.TickEvent;
+import net.neoforged.neoforge.event.entity.*;
+import net.neoforged.bus.api.SubscribeEvent;
 
 /** 胎海封闭结界：不修改地形，范围与所有命中由服务器负责。 */
 public final class BloodDomain {

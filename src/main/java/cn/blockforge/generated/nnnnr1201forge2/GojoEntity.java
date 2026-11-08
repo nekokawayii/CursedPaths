@@ -17,8 +17,8 @@ import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.level.*;
 import net.minecraft.world.phys.*;
-import net.minecraftforge.event.entity.living.*;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.neoforged.neoforge.event.entity.living.*;
+import net.neoforged.bus.api.SubscribeEvent;
 
 /** 虚空竞技场阶段首领：五条悟。玩家模型外观，无下限免疫除世界斩与领域展延外的全部伤害。 */
 public final class GojoEntity extends Monster {
@@ -39,7 +39,7 @@ public final class GojoEntity extends Monster {
     private Vec3 center=Vec3.ZERO;
     private int domain;
     public GojoEntity(EntityType<? extends Monster> type,Level level){super(type,level);setPersistenceRequired();xpReward=5000;}
-    public static void attributes(net.minecraftforge.event.entity.EntityAttributeCreationEvent e){
+    public static void attributes(net.neoforged.neoforge.event.entity.EntityAttributeCreationEvent e){
         e.put(VoidContent.GOJO.get(),Monster.createMonsterAttributes().add(Attributes.MAX_HEALTH,HEALTH).add(Attributes.ARMOR,ARMOR).add(Attributes.MOVEMENT_SPEED,0.3).add(Attributes.ATTACK_DAMAGE,20).add(Attributes.FOLLOW_RANGE,120).add(Attributes.KNOCKBACK_RESISTANCE,0.8).build());
     }
     @Override protected void defineSynchedData(){super.defineSynchedData();entityData.define(ACTION,0);entityData.define(AGE,0);}
@@ -95,7 +95,7 @@ public final class GojoEntity extends Monster {
         return hurt;
     }
     private DamageSource soulSource(){
-        var holder=server().registryAccess().registryOrThrow(Registries.DAMAGE_TYPE).getHolderOrThrow(ResourceKey.create(Registries.DAMAGE_TYPE,new ResourceLocation("jujutsu_kaisen_cursed_paths","guardian_soul")));
+        var holder=server().registryAccess().registryOrThrow(Registries.DAMAGE_TYPE).getHolderOrThrow(ResourceKey.create(Registries.DAMAGE_TYPE,ResourceLocation.fromNamespaceAndPath("jujutsu_kaisen_cursed_paths", "guardian_soul")));
         return new DamageSource(holder,this);
     }
     private void face(Vec3 point){

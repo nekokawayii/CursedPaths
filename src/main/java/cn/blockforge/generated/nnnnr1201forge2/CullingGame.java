@@ -9,11 +9,11 @@ import net.minecraft.server.level.*;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.AABB;
-import net.minecraftforge.event.TickEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.neoforged.neoforge.event.TickEvent;
+import net.neoforged.bus.api.SubscribeEvent;
 
 public final class CullingGame {
-    public static final ResourceKey<Level> DIM=ResourceKey.create(Registries.DIMENSION,new ResourceLocation("jujutsu_kaisen_cursed_paths","culling_game"));
+    public static final ResourceKey<Level> DIM=ResourceKey.create(Registries.DIMENSION,ResourceLocation.fromNamespaceAndPath("jujutsu_kaisen_cursed_paths", "culling_game"));
     public static void enter(ServerPlayer p){
         if(PrisonSystem.locked(p)){p.sendSystemMessage(Component.literal("封印中无法使用死灭回游通行咒符。"));return;}
         if(p.level().dimension().equals(DIM)){leave(p);return;}
@@ -60,7 +60,7 @@ public final class CullingGame {
     }
     /** r259：老存档里已经生成的沙砾层，在区块加载时替换成基岩。 */
     @SubscribeEvent
-    public static void chunkLoad(net.minecraftforge.event.level.ChunkEvent.Load e) {
+    public static void chunkLoad(net.neoforged.neoforge.event.level.ChunkEvent.Load e) {
         if (!(e.getLevel() instanceof ServerLevel level) || !level.dimension().equals(DIM)) return;
         var chunk = e.getChunk();
         BlockPos origin = chunk.getPos().getWorldPosition();

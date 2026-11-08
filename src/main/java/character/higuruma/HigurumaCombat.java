@@ -13,9 +13,9 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.event.TickEvent;
-import net.minecraftforge.event.entity.living.LivingHurtEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.neoforged.neoforge.event.TickEvent;
+import net.neoforged.neoforge.event.entity.living.LivingHurtEvent;
+import net.neoforged.bus.api.SubscribeEvent;
 
 import static cn.blockforge.generated.nnnnr1201forge2.Content.GAVEL;
 
@@ -116,7 +116,7 @@ public final class HigurumaCombat {
         if (main.getTag().contains(GavelItem.SEAL_DAMAGE)) e.setAmount(main.getTag().getFloat(GavelItem.SEAL_DAMAGE));
     }
 
-    @SubscribeEvent public static void executed(net.minecraftforge.event.entity.living.LivingDamageEvent e){
+    @SubscribeEvent public static void executed(net.neoforged.neoforge.event.entity.living.LivingDamageEvent e){
         var p=cn.blockforge.generated.nnnnr1201forge2.CombatSettings.caster(e.getSource());
         if(p instanceof cn.blockforge.generated.nnnnr1201forge2.NpcBridge.NpcActor&&e.getAmount()>0&&e.getSource().getDirectEntity()==cn.blockforge.generated.nnnnr1201forge2.MaidBridge.body(p)&&p.getMainHandItem().is(cn.blockforge.generated.nnnnr1201forge2.Content.EXECUTIONER_SWORD.get()))p.getMainHandItem().shrink(1);
     }
@@ -128,7 +128,7 @@ public final class HigurumaCombat {
         for(var it=RETURNS.iterator();it.hasNext();){var r=it.next();if(r.owner.isAlive()&&r.projectile.level().getGameTime()<r.at)continue;
             r.projectile.discard();if(r.owner.isAlive()&&r.owner.getMainHandItem().isEmpty())r.owner.setItemSlot(EquipmentSlot.MAINHAND,r.item);it.remove();}
     }
-    @SubscribeEvent public static void stop(net.minecraftforge.event.server.ServerStoppingEvent event){for(var r:RETURNS){r.projectile.discard();if(r.owner.isAlive()&&r.owner.getMainHandItem().isEmpty())r.owner.setItemSlot(EquipmentSlot.MAINHAND,r.item);}RETURNS.clear();}
+    @SubscribeEvent public static void stop(net.neoforged.neoforge.event.server.ServerStoppingEvent event){for(var r:RETURNS){r.projectile.discard();if(r.owner.isAlive()&&r.owner.getMainHandItem().isEmpty())r.owner.setItemSlot(EquipmentSlot.MAINHAND,r.item);}RETURNS.clear();}
     private static ItemStack findGavel(ServerPlayer p) {
         if(p.getMainHandItem().is(GAVEL.get()))return p.getMainHandItem();
         for (int i = 0; i < p.getInventory().getContainerSize(); i++) {

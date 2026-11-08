@@ -6,10 +6,10 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.ai.attributes.*;
 import net.minecraft.network.chat.Component;
-import net.minecraftforge.event.entity.living.*;
-import net.minecraftforge.event.TickEvent;
-import net.minecraftforge.event.entity.player.PlayerEvent;
-import net.minecraftforge.eventbus.api.*;
+import net.neoforged.neoforge.event.entity.living.*;
+import net.neoforged.neoforge.event.TickEvent;
+import net.neoforged.neoforge.event.entity.player.PlayerEvent;
+import net.neoforged.bus.api.*;
 
 /** 所有控制、层数和治疗限制均在服务端执行。 */
 public final class SoulCombat {
@@ -39,7 +39,7 @@ public final class SoulCombat {
     }
     public static void soulHit(ServerPlayer owner,net.minecraft.world.entity.LivingEntity target){target.getPersistentData().putBoolean("SukunaNoHeal",true);}
     public static void iwate(ServerPlayer p,int ticks){Curse.status(p,"Iwate",ticks);}
-    private static void direct(ServerPlayer p,int kind,int life,long seed){if(p instanceof net.minecraftforge.common.util.FakePlayer)return;Network.CHANNEL.send(net.minecraftforge.network.PacketDistributor.PLAYER.with(()->p),new Network.Effect(kind,p.getId(),p.position(),net.minecraft.world.phys.Vec3.ZERO,layers(p),life,seed));}
+    private static void direct(ServerPlayer p,int kind,int life,long seed){if(p instanceof net.neoforged.neoforge.common.util.FakePlayer)return;Network.CHANNEL.send(net.neoforged.neoforge.network.PacketDistributor.PLAYER.with(()->p),new Network.Effect(kind,p.getId(),p.position(),net.minecraft.world.phys.Vec3.ZERO,layers(p),life,seed));}
     public static void sync(ServerPlayer p){direct(p,89,stacks(p),layers(p));}
     private static void applySlow(ServerPlayer p){var a=MaidBridge.body(p).getAttribute(Attributes.MOVEMENT_SPEED);if(a==null)return;int n=stacks(p);var old=a.getModifier(SLOW);if(old!=null&&Math.abs(old.getAmount()+n*0.15)<0.001)return;a.removeModifier(SLOW);if(n>0)a.addTransientModifier(new AttributeModifier(SLOW,"灵魂僵直",-n*0.15,AttributeModifier.Operation.MULTIPLY_TOTAL));}
     public static void clearOwnedEffects(ServerPlayer owner,net.minecraft.world.entity.LivingEntity target){

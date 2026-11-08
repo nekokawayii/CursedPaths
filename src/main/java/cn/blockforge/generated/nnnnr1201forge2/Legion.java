@@ -8,12 +8,12 @@ import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.event.TickEvent;
-import net.minecraftforge.event.entity.EntityJoinLevelEvent;
-import net.minecraftforge.event.entity.living.*;
-import net.minecraftforge.event.entity.player.*;
-import net.minecraftforge.eventbus.api.*;
-import net.minecraftforge.fml.common.Mod;
+import net.neoforged.neoforge.event.TickEvent;
+import net.neoforged.neoforge.event.entity.EntityJoinLevelEvent;
+import net.neoforged.neoforge.event.entity.living.*;
+import net.neoforged.neoforge.event.entity.player.*;
+import net.neoforged.bus.api.*;
+import net.neoforged.fml.common.Mod;
 
 /** 言灵恩赐：服务端成员、目标、传送和序列化，实体 AI 仍可使用原生技能。 */
 @Mod.EventBusSubscriber(modid="jujutsu_kaisen_cursed_paths")
@@ -23,7 +23,7 @@ public final class Legion {
     private static final Map<UUID,Integer> NEXT=new HashMap<>();
     private static final Set<UUID> RELEASING=new HashSet<>();
     private static final Map<UUID,Mob> UNLOADED=new HashMap<>();
-    @SubscribeEvent public static void unloaded(net.minecraftforge.event.entity.EntityLeaveLevelEvent e){if(e.getLevel() instanceof ServerLevel&&e.getEntity() instanceof Mob mob&&member(mob)&&mob.getHealth()>0&&mob.getRemovalReason()==Entity.RemovalReason.UNLOADED_TO_CHUNK)UNLOADED.put(mob.getUUID(),mob);}
+    @SubscribeEvent public static void unloaded(net.neoforged.neoforge.event.entity.EntityLeaveLevelEvent e){if(e.getLevel() instanceof ServerLevel&&e.getEntity() instanceof Mob mob&&member(mob)&&mob.getHealth()>0&&mob.getRemovalReason()==Entity.RemovalReason.UNLOADED_TO_CHUNK)UNLOADED.put(mob.getUUID(),mob);}
     @SubscribeEvent public static void recoverUnloaded(TickEvent.ServerTickEvent e){
         if(e.phase!=TickEvent.Phase.END)return;
         for(Mob mob:List.copyOf(UNLOADED.values())){
@@ -33,7 +33,7 @@ public final class Legion {
             if(exists||stored.size()>=AuthorityRules.MAX_MEMBERS)continue;
             var actor=MaidBridge.caster(mob);if(actor!=null)AuthoritySkills.cancel(actor);
             var versions=army.getCompound("Versions");int rev=Math.max(versions.getInt(mob.getStringUUID()),mob.getPersistentData().getInt("AuthorityRevision"))+1;mob.getPersistentData().putInt("AuthorityRevision",rev);versions.putInt(mob.getStringUUID(),rev);army.put("Versions",versions);
-            CompoundTag saved=mob.saveWithoutId(new CompoundTag());saved.putString("id",net.minecraftforge.registries.ForgeRegistries.ENTITY_TYPES.getKey(mob.getType()).toString());saved.remove("Passengers");stored.add(saved);army.put("Stored",stored);state.setDirty();
+            CompoundTag saved=mob.saveWithoutId(new CompoundTag());saved.putString("id",net.neoforged.neoforge.registries.ForgeRegistries.ENTITY_TYPES.getKey(mob.getType()).toString());saved.remove("Passengers");stored.add(saved);army.put("Stored",stored);state.setDirty();
             ServerPlayer p=owner(mob);if(p!=null&&p.isAlive()&&!p.hasDisconnected()&&!army.getBoolean("RecallPending"))releaseAll(p);
         }
     }
@@ -151,6 +151,6 @@ public final class Legion {
     @SubscribeEvent(priority=EventPriority.LOWEST) public static void died(LivingDeathEvent e){if(!(e.getEntity().level() instanceof ServerLevel level)||!member(e.getEntity()))return;var state=LegionStore.get(level.getServer());var army=state.army(ownerId(e.getEntity()));var ids=army.getList("Members",Tag.TAG_INT_ARRAY);ids.removeIf(tag->NbtUtils.loadUUID(tag).equals(e.getEntity().getUUID()));army.put("Members",ids);state.setDirty();NEXT.remove(e.getEntity().getUUID());}
     @SubscribeEvent public static void logout(PlayerEvent.PlayerLoggedOutEvent e){if(e.getEntity() instanceof ServerPlayer p){if(Authority.unlocked(p))storeAll(p);TARGETS.remove(p.getUUID());}}
     @SubscribeEvent public static void dimension(PlayerEvent.PlayerChangedDimensionEvent e){if(e.getEntity() instanceof ServerPlayer p&&Authority.unlocked(p))for(Mob mob:loaded(p))recall(p,mob);}
-    @SubscribeEvent public static void stopped(net.minecraftforge.event.server.ServerStoppedEvent e){TARGETS.clear();NEXT.clear();RELEASING.clear();UNLOADED.clear();AuthoritySkills.clear();}
+    @SubscribeEvent public static void stopped(net.neoforged.neoforge.event.server.ServerStoppedEvent e){TARGETS.clear();NEXT.clear();RELEASING.clear();UNLOADED.clear();AuthoritySkills.clear();}
     private Legion(){}
 }

@@ -5,11 +5,11 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.*;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.phys.*;
-import net.minecraftforge.event.TickEvent;
-import net.minecraftforge.event.entity.player.PlayerEvent;
-import net.minecraftforge.event.server.ServerStoppedEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.network.PacketDistributor;
+import net.neoforged.neoforge.event.TickEvent;
+import net.neoforged.neoforge.event.entity.player.PlayerEvent;
+import net.neoforged.neoforge.event.server.ServerStoppedEvent;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.neoforge.network.PacketDistributor;
 
 /** 服务端决定动作、碰撞、扣费和逐道发射；玩家和女仆共用时间轴。 */
 public final class DismantleMotion {

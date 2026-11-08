@@ -3,7 +3,7 @@ package cn.blockforge.generated.nnnnr1201forge2;
 import java.util.*;
 import java.util.function.Consumer;
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraftforge.network.NetworkDirection;
+import net.neoforged.neoforge.network.NetworkDirection;
 
 /** 高位专用通道消息：会话令牌防止上一次战斗的延迟输入落入下一局。 */
 public final class ObserverPackets {

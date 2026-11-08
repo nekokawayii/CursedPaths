@@ -19,8 +19,8 @@ import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.event.TickEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.neoforged.neoforge.event.TickEvent;
+import net.neoforged.bus.api.SubscribeEvent;
 
 /**
  * 禅院直哉 · 投射咒法（服务端权威）。
@@ -458,7 +458,7 @@ public final class NaoyaCombat {
     }
 
     /** 被击打：平面状态直接被打破（伤害由 shatter 结算）。 */
-    @SubscribeEvent public static void planeHurt(net.minecraftforge.event.entity.living.LivingHurtEvent e) {
+    @SubscribeEvent public static void planeHurt(net.neoforged.neoforge.event.entity.living.LivingHurtEvent e) {
         if (!(e.getEntity() instanceof LivingEntity)) return;
         LivingEntity target = (LivingEntity) e.getEntity();
         long plane = target.getPersistentData().getLong(K_PLANE);

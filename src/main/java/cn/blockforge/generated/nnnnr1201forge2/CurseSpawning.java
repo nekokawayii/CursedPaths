@@ -5,8 +5,8 @@ import net.minecraft.server.level.*;
 import net.minecraft.world.Difficulty;
 import net.minecraft.world.level.*;
 import net.minecraft.world.level.levelgen.Heightmap;
-import net.minecraftforge.event.TickEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.neoforged.neoforge.event.TickEvent;
+import net.neoforged.bus.api.SubscribeEvent;
 
 /** 主世界地表低概率生成：每位生存玩家每30秒一次20%尝试，最多生成一只。 */
 public final class CurseSpawning {

@@ -171,12 +171,12 @@ public final class HigurumaDomain {
     }
 
     /** 服务端每刻驱动（施工/补光/到期）。 */
-    public static void serverTick(net.minecraftforge.event.TickEvent.ServerTickEvent event) {
-        if (event.phase != net.minecraftforge.event.TickEvent.Phase.END) return;
+    public static void serverTick(net.neoforged.neoforge.event.TickEvent.ServerTickEvent event) {
+        if (event.phase != net.neoforged.neoforge.event.TickEvent.Phase.END) return;
         for (ServerLevel level : event.getServer().getAllLevels()) tick(level);
     }
 
-    public static void serverStopped(net.minecraftforge.event.server.ServerStoppingEvent event) {
+    public static void serverStopped(net.neoforged.neoforge.event.server.ServerStoppingEvent event) {
         for (Built b : ACTIVE.values()) restore(b.level, b);
         ACTIVE.clear();
     }
@@ -264,8 +264,8 @@ public final class HigurumaDomain {
     }
 
     /** 领域内所有人/生物互相不能造成伤害。 */
-    @net.minecraftforge.eventbus.api.SubscribeEvent
-    public static void noDamage(net.minecraftforge.event.entity.living.LivingHurtEvent e) {
+    @net.neoforged.bus.api.SubscribeEvent
+    public static void noDamage(net.neoforged.neoforge.event.entity.living.LivingHurtEvent e) {
         if(e.getSource().getDirectEntity() instanceof LivingEntity attacker&&attacker.getMainHandItem().is(cn.blockforge.generated.nnnnr1201forge2.Content.EXECUTIONER_SWORD.get()))return;
         for (var entry : ACTIVE.entrySet()) {
             Built b=entry.getValue();var owner=cn.blockforge.generated.nnnnr1201forge2.MaidBridge.find(b.level,entry.getKey());if(owner==null||cn.blockforge.generated.nnnnr1201forge2.DomainClash.active(owner))continue;

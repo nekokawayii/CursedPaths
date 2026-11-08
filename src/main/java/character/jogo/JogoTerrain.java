@@ -100,7 +100,7 @@ public final class JogoTerrain {
     public static void tick() {
         if(QUEUE.isEmpty())return;
         int budget=1024;
-        var server=net.minecraftforge.server.ServerLifecycleHooks.getCurrentServer();
+        var server=net.neoforged.neoforge.server.ServerLifecycleHooks.getCurrentServer();
         if(server==null)return;
         for(var it=QUEUE.entrySet().iterator();it.hasNext();){
             var entry=it.next();

@@ -8,10 +8,10 @@ import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.*;
-import net.minecraftforge.event.entity.player.PlayerInteractEvent;
-import net.minecraftforge.event.entity.living.*;
-import net.minecraftforge.eventbus.api.*;
-import net.minecraftforge.registries.RegistryObject;
+import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
+import net.neoforged.neoforge.event.entity.living.*;
+import net.neoforged.bus.api.*;
+import net.neoforged.neoforge.registries.RegistryObject;
 
 /** 每位施术者单独保存挚爱名单，目标端镜像用于离线持续伤害保护。 */
 public final class EternalLove {
@@ -19,7 +19,7 @@ public final class EternalLove {
     public static final RegistryObject<Item> TRUE_FALSE=Content.ITEMS.register("true_false_love",()->new Item(new Item.Properties().stacksTo(1).rarity(Rarity.EPIC)));
     private static final String KEY="EternalLoved",OWNERS="SukunaLovedBy";
     public static boolean settling(LivingEntity maid){return maid.getPersistentData().getLong("SukunaDuelEndUntil")>maid.level().getGameTime();}
-    public static boolean duel(LivingEntity maid){return net.minecraftforge.fml.ModList.get().isLoaded("touhou_little_maid")&&MaidBridge.isMaid(maid)&&MaidDuel.duel(maid);}
+    public static boolean duel(LivingEntity maid){return net.neoforged.fml.ModList.get().isLoaded("touhou_little_maid")&&MaidBridge.isMaid(maid)&&MaidDuel.duel(maid);}
     public static boolean protects(Player owner,LivingEntity target){return Curse.data(owner).getCompound(KEY).contains(target.getUUID().toString())||protects(owner.getUUID(),target);}
     public static boolean protects(UUID owner,LivingEntity target){return target.getPersistentData().getCompound(OWNERS).contains(owner.toString());}
     /** 是否被任何一位玩家选为永恒挚爱：无量空处这类"绝对控制"据此免疫（非玩家施法者也要认这条）。 */

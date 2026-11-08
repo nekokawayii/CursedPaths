@@ -12,7 +12,7 @@ import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.registries.ForgeRegistries;
+import net.neoforged.neoforge.registries.ForgeRegistries;
 
 /** 原模型、等级、碰撞尺寸统一由FORM同步，召唤归属单独存档。 */
 public final class LowCurseEntity extends Monster {

@@ -7,12 +7,12 @@ import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.*;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.phys.*;
-import net.minecraftforge.event.TickEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.event.server.ServerStoppedEvent;
+import net.neoforged.neoforge.event.TickEvent;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.neoforge.event.server.ServerStoppedEvent;
 
 /** 有界弹幕队列与逻辑血海：不放置方块、不强载区块，每格最多一次自动索敌。 */
-@net.minecraftforge.fml.common.Mod.EventBusSubscriber(modid="jujutsu_kaisen_cursed_paths")
+@net.neoforged.fml.common.Mod.EventBusSubscriber(modid="jujutsu_kaisen_cursed_paths")
 public final class BloodExpansion {
     public static final int FX_OCEAN=470,FX_CELL=471,FX_TRAP=472,FX_NEEDLE=473,FX_METEOR=474,FX_OCEAN_CLOSE=475;
     private static final List<Shot> shots=new ArrayList<>();

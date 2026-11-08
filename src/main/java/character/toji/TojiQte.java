@@ -22,8 +22,8 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.event.TickEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.neoforged.neoforge.event.TickEvent;
+import net.neoforged.bus.api.SubscribeEvent;
 
 /**
  * 伏黑甚尔 · 纯 QTE 角色（天与暴君）。
@@ -286,7 +286,7 @@ public final class TojiQte {
             destination = next;
         }
         p.teleportTo(destination.x, destination.y, destination.z);
-        if (!(p instanceof net.minecraftforge.common.util.FakePlayer))
+        if (!(p instanceof net.neoforged.neoforge.common.util.FakePlayer))
             p.connection.send(new net.minecraft.network.protocol.game.ClientboundSetEntityMotionPacket(p));
         p.hurtMarked = true;
     }
@@ -440,7 +440,7 @@ public final class TojiQte {
     }
 
     /** 受到伤害时给天逆蛑记耐久，累计到上限就碎掉。 */
-    @SubscribeEvent public static void tenkaWear(net.minecraftforge.event.entity.living.LivingHurtEvent e) {
+    @SubscribeEvent public static void tenkaWear(net.neoforged.neoforge.event.entity.living.LivingHurtEvent e) {
         LivingEntity victim = e.getEntity();
         if (e.getAmount() <= 0 || !isToji(victim) || tenkaBroken(victim)) return;
         if (!victim.getMainHandItem().is(Content.TENKA_SPEAR.get())) return;
@@ -467,7 +467,7 @@ public final class TojiQte {
             net.minecraft.sounds.SoundSource.PLAYERS, 1f, .7f);
     }
 
-    @SubscribeEvent public static void staggerOnHit(net.minecraftforge.event.entity.living.LivingHurtEvent e) {
+    @SubscribeEvent public static void staggerOnHit(net.neoforged.neoforge.event.entity.living.LivingHurtEvent e) {
         if (e.isCanceled() || e.getAmount() <= 0) return;
         LivingEntity victim = e.getEntity();
         if (!(e.getSource().getEntity() instanceof LivingEntity attacker) || attacker == victim) return;
@@ -484,7 +484,7 @@ public final class TojiQte {
     }
 
     /** 闪避无敌帧 + 夺命挡箭牌：伤害转移给替死鬼。 */
-    @SubscribeEvent public static void hurt(net.minecraftforge.event.entity.living.LivingHurtEvent e) {
+    @SubscribeEvent public static void hurt(net.neoforged.neoforge.event.entity.living.LivingHurtEvent e) {
         ServerPlayer p = MaidBridge.progression(e.getEntity());
         if (p == null || !CharacterService.toji(p)) return;
         if (invulnerable(p)) { e.setCanceled(true); return; }

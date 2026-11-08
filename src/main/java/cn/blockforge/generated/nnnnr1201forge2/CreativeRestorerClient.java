@@ -1,10 +1,10 @@
 package cn.blockforge.generated.nnnnr1201forge2;
 
 import net.minecraft.client.Minecraft;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.client.event.InputEvent;
-import net.minecraftforge.eventbus.api.*;
-import net.minecraftforge.fml.common.Mod;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.neoforge.client.event.InputEvent;
+import net.neoforged.bus.api.*;
+import net.neoforged.fml.common.Mod;
 
 /** 仅为创造测试符放行右键，熔断或动作锁定不影响恢复入口。 */
 @Mod.EventBusSubscriber(modid="jujutsu_kaisen_cursed_paths",value=Dist.CLIENT)

@@ -3,9 +3,9 @@ package cn.blockforge.generated.nnnnr1201forge2;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.item.*;
-import net.minecraftforge.registries.RegistryObject;
-import net.minecraftforge.event.entity.EntityAttributeCreationEvent;
-import net.minecraftforge.eventbus.api.IEventBus;
+import net.neoforged.neoforge.registries.RegistryObject;
+import net.neoforged.neoforge.event.entity.EntityAttributeCreationEvent;
+import net.neoforged.bus.api.IEventBus;
 
 public final class ShadowContent {
     public static final RegistryObject<EntityType<ShadowEntity>> SHIKIGAMI=Content.ENTITIES.register("ten_shadow",()->EntityType.Builder.of(ShadowEntity::new,MobCategory.CREATURE).sized(.9f,1.2f).clientTrackingRange(16).updateInterval(1).build("jujutsu_kaisen_cursed_paths:ten_shadow"));

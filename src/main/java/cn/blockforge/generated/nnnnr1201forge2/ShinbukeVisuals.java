@@ -8,10 +8,10 @@ import java.util.concurrent.ConcurrentHashMap;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.client.event.RenderLevelStageEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.neoforge.client.event.RenderLevelStageEvent;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.Mod;
 
 /** 「神武解」右键雷击的**彩色闪电**（纯自绘顶点，不用 Photon、也不用原版蓝闪电）。
  *
@@ -39,8 +39,8 @@ public final class ShinbukeVisuals {
         }
     }
     /** HUD：手持神武解时在准星下方显示充能与"下一发的范围/伤害"。 */
-    @net.minecraftforge.eventbus.api.SubscribeEvent
-    public static void hud(net.minecraftforge.client.event.RenderGuiEvent.Post e){
+    @net.neoforged.bus.api.SubscribeEvent
+    public static void hud(net.neoforged.neoforge.client.event.RenderGuiEvent.Post e){
         var mc=Minecraft.getInstance();
         if(mc.player==null||mc.options.hideGui||mc.screen!=null)return;
         if(!Shinbuke.holding(mc.player))return;

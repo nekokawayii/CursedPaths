@@ -13,9 +13,9 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.phys.BlockHitResult;
-import net.minecraftforge.registries.*;
-import net.minecraftforge.eventbus.api.IEventBus;
-import net.minecraftforge.event.BuildCreativeModeTabContentsEvent;
+import net.neoforged.neoforge.registries.*;
+import net.neoforged.bus.api.IEventBus;
+import net.neoforged.neoforge.event.BuildCreativeModeTabContentsEvent;
 
 public final class ProgressionContent {
     public static final DeferredRegister<Block> BLOCKS=DeferredRegister.create(ForgeRegistries.BLOCKS,"jujutsu_kaisen_cursed_paths");
@@ -39,7 +39,7 @@ public final class ProgressionContent {
             if(pages&&!Journey.nine(p)){for(var r:PAGES)take(p,r.get(),1);Journey.give(sp,new ItemStack(NINE.get()));sp.sendSystemMessage(Component.literal("九相归一，咒胎九相图已合成。长按右键吞噬。"));}else sp.sendSystemMessage(Component.literal(Journey.guide(p)));}return InteractionResult.sidedSuccess(level.isClientSide);}
     });
     public static final RegistryObject<Item> ALTAR_ITEM=item("cursed_altar",()->new BlockItem(ALTAR.get(),new Item.Properties().rarity(Rarity.EPIC).fireResistant()));
-    public static final RegistryObject<Item> DAITIAN_EGG=item("daitian_spawn_egg",()->new net.minecraftforge.common.ForgeSpawnEggItem(Content.DAITIAN,0x756981,0xbf733c,new Item.Properties()));
+    public static final RegistryObject<Item> DAITIAN_EGG=item("daitian_spawn_egg",()->new net.neoforged.neoforge.common.ForgeSpawnEggItem(Content.DAITIAN,0x756981,0xbf733c,new Item.Properties()));
     private static void take(Player p,Item item,int n){for(int i=0;i<p.getInventory().getContainerSize();i++){ItemStack s=p.getInventory().getItem(i);if(s.is(item)){int amount=Math.min(n,s.getCount());s.shrink(amount);n-=amount;if(n==0)return;}}}
     public static void init(IEventBus bus){BLOCKS.register(bus);}
     private static void tabs(BuildCreativeModeTabContentsEvent e){if(e.getTabKey()==CreativeModeTabs.COMBAT)for(var r:ALL)e.accept(r.get());}

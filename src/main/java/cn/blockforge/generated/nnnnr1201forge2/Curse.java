@@ -6,10 +6,10 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.ai.attributes.*;
 import net.minecraft.network.chat.Component;
-import net.minecraftforge.event.TickEvent;
-import net.minecraftforge.event.entity.player.PlayerEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.network.PacketDistributor;
+import net.neoforged.neoforge.event.TickEvent;
+import net.neoforged.neoforge.event.entity.player.PlayerEvent;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.neoforge.network.PacketDistributor;
 
 /** 所有成长和消耗由服务端决定；持久数据随存档及死亡重生保留。 */
 public final class Curse {
@@ -81,7 +81,7 @@ public final class Curse {
         MaidBridge.body(p).addEffect(new net.minecraft.world.effect.MobEffectInstance(TechniqueEffects.BURNOUT.get(),ticks,0,false,true));
         Skills.cancelSustained(p);sync(p);p.displayClientMessage(Component.literal("术式熔断：持续"+(ticks/20)+"秒，除反转外无法使用术式，术式伤害-30%"),true);
     }
-    @SubscribeEvent public static void allDamage(net.minecraftforge.event.entity.living.LivingHurtEvent event){
+    @SubscribeEvent public static void allDamage(net.neoforged.neoforge.event.entity.living.LivingHurtEvent event){
         ServerPlayer p=CombatSettings.caster(event.getSource());
         if(p==null)p=MaidBridge.caster(event.getSource().getEntity());
         if(p==null)return;
@@ -89,7 +89,7 @@ public final class Curse {
         if(event.getSource().is(net.minecraft.world.damagesource.DamageTypes.PLAYER_ATTACK)||event.getSource().is(net.minecraft.world.damagesource.DamageTypes.MOB_ATTACK))factor*=residueFactor(p);
         event.setAmount((float)(event.getAmount()*factor));
     }
-    @SubscribeEvent(priority=net.minecraftforge.eventbus.api.EventPriority.LOWEST) public static void repairedDamage(net.minecraftforge.event.entity.living.LivingDamageEvent event){ServerPlayer p=CombatSettings.caster(event.getSource());if(p!=null&&repaired(p)&&!DeathStar.source(event.getSource()))event.setAmount(event.getAmount()*1.1f);}
+    @SubscribeEvent(priority=net.neoforged.bus.api.EventPriority.LOWEST) public static void repairedDamage(net.neoforged.neoforge.event.entity.living.LivingDamageEvent event){ServerPlayer p=CombatSettings.caster(event.getSource());if(p!=null&&repaired(p)&&!DeathStar.source(event.getSource()))event.setAmount(event.getAmount()*1.1f);}
     public static void permanentSoulFire(ServerPlayer p,net.minecraft.world.entity.LivingEntity target){
         target.setSecondsOnFire(8);var tag=target.getPersistentData();tag.putBoolean("SukunaSoulFire",true);tag.putUUID("SukunaSoulFireOwner",p.getUUID());tag.putBoolean("SukunaSoulFireMaid",MaidBridge.isCaster(p));tag.putBoolean("SukunaNoHeal",true);
     }
@@ -124,10 +124,10 @@ public final class Curse {
         if(body||old!=tier)Network.send(p.serverLevel(),new Network.Effect(20,p.getId(),p.position(),net.minecraft.world.phys.Vec3.ZERO,body?6:tier,80,body?1:0));
         p.displayClientMessage(Component.literal(body?"即身佛肉体融合：世界斩觉醒，"+GrowthConfig.BODY.description():"宿傩手指 "+fingers(p)+" / 20 · 每根"+GrowthConfig.FINGER.description()),false);
     }
-    public static void sync(ServerPlayer p){if(p instanceof net.minecraftforge.common.util.FakePlayer)return;character.CharacterPackets.sync(p,false);Network.syncCombat(p);Network.CHANNEL.send(PacketDistributor.PLAYER.with(()->p),new Network.Progress(energy(p),maximum(p),fingers(p),awakened(p),active(p,"Siphon"),active(p,"Disorder"),Journey.unlocked(p)||Uraume.unlocked(p)||GojoPlayer.unlocked(p)||character.CharacterService.active(p),Journey.nine(p),Journey.rotation(p),data(p).getBoolean("Fist"),Journey.guide(p),SoulJourney.evolved(p),VoidJourney.evolved(p),GuardianCombat.awakened(p),burnout(p),reverseHealing(p),reverseCost(p),BalanceRules.modpackMode(),DomainClash.penaltyTicks(p),Journey.unlocked(p),Uraume.unlocked(p),Uraume.fish(p),SukunaBranches.wallSpacing(p),SukunaBranches.diagonal(p),SlashForms.qi(p),DomainAmplification.active(p),GojoPlayer.unlocked(p),SukunaBranches.domainRadiusPts(p),SukunaBranches.domainDamagePts(p),SukunaBranches.domainSpeedPts(p),SukunaBranches.domainVerticalKill(p)));}
+    public static void sync(ServerPlayer p){if(p instanceof net.neoforged.neoforge.common.util.FakePlayer)return;character.CharacterPackets.sync(p,false);Network.syncCombat(p);Network.CHANNEL.send(PacketDistributor.PLAYER.with(()->p),new Network.Progress(energy(p),maximum(p),fingers(p),awakened(p),active(p,"Siphon"),active(p,"Disorder"),Journey.unlocked(p)||Uraume.unlocked(p)||GojoPlayer.unlocked(p)||character.CharacterService.active(p),Journey.nine(p),Journey.rotation(p),data(p).getBoolean("Fist"),Journey.guide(p),SoulJourney.evolved(p),VoidJourney.evolved(p),GuardianCombat.awakened(p),burnout(p),reverseHealing(p),reverseCost(p),BalanceRules.modpackMode(),DomainClash.penaltyTicks(p),Journey.unlocked(p),Uraume.unlocked(p),Uraume.fish(p),SukunaBranches.wallSpacing(p),SukunaBranches.diagonal(p),SlashForms.qi(p),DomainAmplification.active(p),GojoPlayer.unlocked(p),SukunaBranches.domainRadiusPts(p),SukunaBranches.domainDamagePts(p),SukunaBranches.domainSpeedPts(p),SukunaBranches.domainVerticalKill(p)));}
     private static String reverseBlocked(ServerPlayer p){
         if(DeathStar.anemic(p))return "严重贫血期间无法回血";
-        if(SixfoldFinale.active(p)||SixfoldFinale.controlled(p)||!p.isAlive()||p.isSpectator()||!(p instanceof net.minecraftforge.common.util.FakePlayer)&&!character.mainline.Mainline.unlocked(p,character.mainline.Mainline.REVERSE)||DomainClash.active(p)||NetBranches.locked(p)||Uraume.locked(p))return "当前无法使用反转术式";
+        if(SixfoldFinale.active(p)||SixfoldFinale.controlled(p)||!p.isAlive()||p.isSpectator()||!(p instanceof net.neoforged.neoforge.common.util.FakePlayer)&&!character.mainline.Mainline.unlocked(p,character.mainline.Mainline.REVERSE)||DomainClash.active(p)||NetBranches.locked(p)||Uraume.locked(p))return "当前无法使用反转术式";
         if(active(p,"ReverseCooldown"))return "反转术式冷却中";
         if(severed(p))return ThousandMileChain.bound(MaidBridge.body(p))?"正被天逆蛑锁链缠绕，持续封锁咒术":"术式被天逆蛑斩断，暂时无法使用任何术式";
         var body=MaidBridge.body(p);var tag=body.getPersistentData();long now=p.level().getGameTime();
@@ -184,7 +184,7 @@ public final class Curse {
         if(!(p instanceof NpcBridge.NpcActor)&&p.isAlive()&&!fist&&!SixfoldFinale.active(p)&&!active(p,"FinaleNoRecovery")&&!active(p,"RecoveryDelay")&&!Skills.sustaining(p)&&!GuardianPlayerSkills.sustaining(p))addRaw(p,(character.CharacterService.active(p)&&!Journey.unlocked(p)?character.CharacterService.stats(p).recovery():15)+fingers(p)*3+(awakened(p)?10:0)+(nine(p)?10:0)+(soul(p)?20:0)+(VoidController.boosted(p)?15:0)+(GuardianCombat.awakened(p)?30:0));sync(p);
     }
     @SubscribeEvent public static void soulFire(TickEvent.LevelTickEvent e){if(e.phase!=TickEvent.Phase.END||!(e.level instanceof net.minecraft.server.level.ServerLevel l)||l.getGameTime()%20!=0)return;for(var entity:l.getAllEntities())if(entity instanceof net.minecraft.world.entity.LivingEntity target&&target.getPersistentData().getBoolean("SukunaSoulFire")){var tag=target.getPersistentData();ServerPlayer owner=tag.hasUUID("SukunaSoulFireOwner")?MaidBridge.find(l,tag.getUUID("SukunaSoulFireOwner")):null;if(owner==null){target.clearFire();continue;}if(!CombatSafety.canAffect(owner,target)){target.clearFire();tag.remove("SukunaSoulFire");tag.remove("SukunaSoulFireOwner");tag.remove("SukunaNoHeal");continue;}target.setSecondsOnFire(3);tag.putBoolean("SukunaNoHeal",true);}}
-    @SubscribeEvent public static void noSoulHeal(net.minecraftforge.event.entity.living.LivingHealEvent e){if(e.getEntity().getPersistentData().getBoolean("SukunaNoHeal"))e.setCanceled(true);}
+    @SubscribeEvent public static void noSoulHeal(net.neoforged.neoforge.event.entity.living.LivingHealEvent e){if(e.getEntity().getPersistentData().getBoolean("SukunaNoHeal"))e.setCanceled(true);}
     @SubscribeEvent public static void clone(PlayerEvent.Clone e){e.getEntity().getPersistentData().put(KEY,data(e.getOriginal()).copy());apply(e.getEntity());if(e.isWasDeath()){data(e.getEntity()).putDouble("Energy",active(e.getEntity(),"FinaleNoRecovery")?0:rawMaximum(e.getEntity()));data(e.getEntity()).remove("Siphon");data(e.getEntity()).remove("Disorder");data(e.getEntity()).remove("RecoveryDelay");data(e.getEntity()).remove("MultiArmed");for(String k:new java.util.ArrayList<>(data(e.getEntity()).getAllKeys()))if(k.startsWith("CharacterSkillCooldown_")||k.equals("DomainCooldown"))data(e.getEntity()).remove(k);if(character.CharacterService.toji(e.getEntity())){data(e.getEntity()).putDouble("TojiStamina",character.toji.TojiCombat.maximum(e.getEntity()));data(e.getEntity()).remove("TojiAirUsed");data(e.getEntity()).remove("TojiRecoveryDelay");data(e.getEntity()).remove("TojiLeapLock");}}}
     @SubscribeEvent public static void pickup(PlayerEvent.ItemPickupEvent e){if(e.getEntity() instanceof ServerPlayer p&&e.getStack().is(Content.BODY.get())){Network.send(p.serverLevel(),new Network.Effect(44,p.getId(),p.position(),net.minecraft.world.phys.Vec3.ZERO,1,30,0));p.serverLevel().playSound(null,p.blockPosition(),net.minecraft.sounds.SoundEvents.EVOKER_CELEBRATE,net.minecraft.sounds.SoundSource.PLAYERS,1,0.55f);}}
     @SubscribeEvent public static void login(PlayerEvent.PlayerLoggedInEvent e){if(e.getEntity() instanceof ServerPlayer p){apply(p);sync(p);}}

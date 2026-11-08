@@ -12,7 +12,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 
 /** 由 tools/bbmodel_to_java.py 从 model.bbmodel 自动生成（方块数 85，贴图 128×128）。 */
-@net.minecraftforge.fml.common.Mod.EventBusSubscriber(modid="jujutsu_kaisen_cursed_paths", value=net.minecraftforge.api.distmarker.Dist.CLIENT, bus=net.minecraftforge.fml.common.Mod.EventBusSubscriber.Bus.MOD)
+@net.neoforged.fml.common.Mod.EventBusSubscriber(modid="jujutsu_kaisen_cursed_paths", value=net.neoforged.api.distmarker.Dist.CLIENT, bus=net.neoforged.fml.common.Mod.EventBusSubscriber.Bus.MOD)
 public final class JogoNpcModel extends EntityModel<JogoNpcEntity> {
     public static final net.minecraft.client.model.geom.ModelLayerLocation LAYER =
         new net.minecraft.client.model.geom.ModelLayerLocation(new net.minecraft.resources.ResourceLocation("jujutsu_kaisen_cursed_paths", "jogo_npc"), "main");
@@ -111,9 +111,9 @@ public final class JogoNpcModel extends EntityModel<JogoNpcEntity> {
         return LayerDefinition.create(mesh, 128, 128);
     }
 
-    @net.minecraftforge.api.distmarker.OnlyIn(net.minecraftforge.api.distmarker.Dist.CLIENT)
-    @net.minecraftforge.eventbus.api.SubscribeEvent
-    public static void registerLayer(net.minecraftforge.client.event.EntityRenderersEvent.RegisterLayerDefinitions event) {
+    @net.neoforged.api.distmarker.OnlyIn(net.neoforged.api.distmarker.Dist.CLIENT)
+    @net.neoforged.bus.api.SubscribeEvent
+    public static void registerLayer(net.neoforged.neoforge.client.event.EntityRenderersEvent.RegisterLayerDefinitions event) {
         event.registerLayerDefinition(LAYER, JogoNpcModel::createBodyLayer);
     }
 

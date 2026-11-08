@@ -6,15 +6,15 @@ import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.*;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.client.event.*;
-import net.minecraftforge.event.TickEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.neoforged.neoforge.client.event.*;
+import net.neoforged.neoforge.event.TickEvent;
+import net.neoforged.bus.api.SubscribeEvent;
 import org.lwjgl.glfw.GLFW;
 
 /** 显式注册的客户端表现；按键只提交操作，不能自行更改服务端调服/扣费。 */
 public final class ShadowClient {
-    public static final KeyMapping RECALL=new KeyMapping("key.jujutsu_kaisen_cursed_paths.shadow_recall",net.minecraftforge.client.settings.KeyConflictContext.IN_GAME,com.mojang.blaze3d.platform.InputConstants.Type.KEYSYM,GLFW.GLFW_KEY_UNKNOWN,"key.categories.sukuna");
-    public static final KeyMapping OPEN=new KeyMapping("key.jujutsu_kaisen_cursed_paths.ten_shadows",net.minecraftforge.client.settings.KeyConflictContext.IN_GAME,com.mojang.blaze3d.platform.InputConstants.Type.KEYSYM,GLFW.GLFW_KEY_UNKNOWN,"key.categories.sukuna");
+    public static final KeyMapping RECALL=new KeyMapping("key.jujutsu_kaisen_cursed_paths.shadow_recall",net.neoforged.neoforge.client.settings.KeyConflictContext.IN_GAME,com.mojang.blaze3d.platform.InputConstants.Type.KEYSYM,GLFW.GLFW_KEY_UNKNOWN,"key.categories.sukuna");
+    public static final KeyMapping OPEN=new KeyMapping("key.jujutsu_kaisen_cursed_paths.ten_shadows",net.neoforged.neoforge.client.settings.KeyConflictContext.IN_GAME,com.mojang.blaze3d.platform.InputConstants.Type.KEYSYM,GLFW.GLFW_KEY_UNKNOWN,"key.categories.sukuna");
     private static ShadowSystem.State state=new ShadowSystem.State(3,false,new int[11],new int[11]);
     private record Effect(ShadowSystem.Fx fx,long start){}
     private static final List<Effect> effects=new ArrayList<>();

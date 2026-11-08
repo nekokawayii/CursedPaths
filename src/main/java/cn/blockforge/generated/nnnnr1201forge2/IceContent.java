@@ -13,8 +13,8 @@ import net.minecraft.world.inventory.CraftingContainer;
 import net.minecraft.world.item.*;
 import net.minecraft.world.item.crafting.*;
 import net.minecraft.world.level.Level;
-import net.minecraftforge.eventbus.api.IEventBus;
-import net.minecraftforge.registries.*;
+import net.neoforged.bus.api.IEventBus;
+import net.neoforged.neoforge.registries.*;
 
 public final class IceContent {
     public static final RegistryObject<Item> MEMORY=Content.ITEMS.register("uraume_memory",()->new IceFood(true));

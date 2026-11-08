@@ -8,8 +8,8 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.*;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.*;
-import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.registries.RegistryObject;
+import net.neoforged.neoforge.common.NeoForge;
+import net.neoforged.neoforge.registries.RegistryObject;
 
 public final class PrisonContent {
     public static final RegistryObject<EntityType<PrisonRealmEntity>> REALM=Content.ENTITIES.register("prison_realm",()->EntityType.Builder.<PrisonRealmEntity>of(PrisonRealmEntity::new,MobCategory.MISC).sized(1,1.25f).fireImmune().clientTrackingRange(16).updateInterval(1).build("jujutsu_kaisen_cursed_paths:prison_realm"));
@@ -33,9 +33,9 @@ public final class PrisonContent {
             }
             return InteractionResultHolder.sidedSuccess(stack,level.isClientSide);
         }
-        @Override public void initializeClient(java.util.function.Consumer<net.minecraftforge.client.extensions.common.IClientItemExtensions> consumer){PrisonClient.item(consumer);}
+        @Override public void initializeClient(java.util.function.Consumer<net.neoforged.neoforge.client.extensions.common.IClientItemExtensions> consumer){PrisonClient.item(consumer);}
         @Override public void appendHoverText(ItemStack s,Level l,java.util.List<Component> lines,TooltipFlag f){lines.add(Component.literal("右键向准星释放6秒圣光；半径5格，持续光伤害"));lines.add(Component.literal("结束时破坏范围内的狱门僵，释放被封印者并归还物品"));}
     });
-    public static void init(){MinecraftForge.EVENT_BUS.register(PrisonSystem.class);}
+    public static void init(){NeoForge.EVENT_BUS.register(PrisonSystem.class);}
     private PrisonContent(){}
 }

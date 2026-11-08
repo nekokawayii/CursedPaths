@@ -23,13 +23,13 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.ChestBlockEntity;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.common.util.FakePlayer;
-import net.minecraftforge.event.TickEvent;
-import net.minecraftforge.event.entity.living.LivingDeathEvent;
-import net.minecraftforge.event.entity.living.LivingHurtEvent;
-import net.minecraftforge.eventbus.api.EventPriority;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.server.ServerLifecycleHooks;
+import net.neoforged.neoforge.common.util.FakePlayer;
+import net.neoforged.neoforge.event.TickEvent;
+import net.neoforged.neoforge.event.entity.living.LivingDeathEvent;
+import net.neoforged.neoforge.event.entity.living.LivingHurtEvent;
+import net.neoforged.bus.api.EventPriority;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.neoforge.server.ServerLifecycleHooks;
 
 /**
  * 死灭洄游规则卡池与结算（r218）。
@@ -496,7 +496,7 @@ public final class CullingRules {
             BlockPos at=level.getBlockState(base).isAir()?base:base.above();
             level.setBlockAndUpdate(at,Blocks.CHEST.defaultBlockState());
             if(level.getBlockEntity(at) instanceof ChestBlockEntity chest)
-                chest.setLootTable(new ResourceLocation("jujutsu_kaisen_cursed_paths","chests/hidden_rich"),rnd.nextLong());
+                chest.setLootTable(ResourceLocation.fromNamespaceAndPath("jujutsu_kaisen_cursed_paths", "chests/hidden_rich"),rnd.nextLong());
             for(ServerPlayer viewer:level.players())
                 if(viewer.distanceToSqr(Vec3.atCenterOf(at))<96*96)
                     viewer.displayClientMessage(Component.literal("资源互换：终极宝箱出现在 ("+x+", "+at.getY()+", "+z+")").withStyle(ChatFormatting.GOLD),false);

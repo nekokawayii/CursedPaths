@@ -8,10 +8,10 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.event.TickEvent;
-import net.minecraftforge.event.entity.living.LivingHurtEvent;
-import net.minecraftforge.eventbus.api.EventPriority;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.neoforged.neoforge.event.TickEvent;
+import net.neoforged.neoforge.event.entity.living.LivingHurtEvent;
+import net.neoforged.bus.api.EventPriority;
+import net.neoforged.bus.api.SubscribeEvent;
 
 /** 五条悟分支六式的服务端结算（r302）。 */
 public final class GojoBranchCombat {
@@ -143,7 +143,7 @@ public final class GojoBranchCombat {
             default -> ok[0] = false;
         }
         if (ok[0]) Curse.data(p).putLong(key, now + GojoBranches.cooldown(skill));
-        Network.CHANNEL.send(net.minecraftforge.network.PacketDistributor.PLAYER.with(() -> p),
+        Network.CHANNEL.send(net.neoforged.neoforge.network.PacketDistributor.PLAYER.with(() -> p),
             new Network.Effect(GojoBranches.FX_METEOR + 50, p.getId(), Vec3.ZERO, Vec3.ZERO, 0f, 0, 0));
     }
 

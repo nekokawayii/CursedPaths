@@ -7,8 +7,8 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.sounds.*;
 import net.minecraft.core.Holder;
 import net.minecraft.network.protocol.game.ClientboundSoundPacket;
-import net.minecraftforge.registries.*;
-import net.minecraftforge.eventbus.api.IEventBus;
+import net.neoforged.neoforge.registries.*;
+import net.neoforged.bus.api.IEventBus;
 
 /** 每种招式独立音频槽位；客户端资源包可覆盖同名 Vorbis ogg。 */
 public final class SkillSounds {
@@ -35,7 +35,7 @@ public final class SkillSounds {
     }
     private static void register(String id){
         if(SOUNDS.containsKey(id))return;
-        SOUNDS.put(id,REGISTRY.register(id,()->SoundEvent.createVariableRangeEvent(new ResourceLocation("jujutsu_kaisen_cursed_paths",id))));
+        SOUNDS.put(id,REGISTRY.register(id,()->SoundEvent.createVariableRangeEvent(ResourceLocation.fromNamespaceAndPath("jujutsu_kaisen_cursed_paths", id))));
     }
     public static void init(IEventBus bus){REGISTRY.register(bus);}
     public static void play(Entity entity,String id){

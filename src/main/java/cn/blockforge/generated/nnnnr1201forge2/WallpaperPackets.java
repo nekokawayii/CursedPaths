@@ -3,7 +3,7 @@ package cn.blockforge.generated.nnnnr1201forge2;
 import java.util.UUID;
 import java.util.function.Consumer;
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraftforge.network.NetworkDirection;
+import net.neoforged.neoforge.network.NetworkDirection;
 
 public final class WallpaperPackets {
     public static Consumer<Download> receiver=p->{};

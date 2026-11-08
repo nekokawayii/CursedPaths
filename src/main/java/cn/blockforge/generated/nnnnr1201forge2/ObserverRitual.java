@@ -11,11 +11,11 @@ import net.minecraft.sounds.*;
 import net.minecraft.world.effect.*;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.event.TickEvent;
-import net.minecraftforge.event.entity.player.PlayerEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.network.PacketDistributor;
+import net.neoforged.neoforge.event.TickEvent;
+import net.neoforged.neoforge.event.entity.player.PlayerEvent;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.Mod;
+import net.neoforged.neoforge.network.PacketDistributor;
 
 /** 高位战服务端：入口、权威战斗状态、断线恢复与胜负结算。 */
 @Mod.EventBusSubscriber(modid="jujutsu_kaisen_cursed_paths")
@@ -159,7 +159,7 @@ public final class ObserverRitual {
         if(s==null||s.battle.phase!=ObserverBattleRules.SHATTER)return;
         finish(s,true,true);
     }
-    @SubscribeEvent public static void commands(net.minecraftforge.event.RegisterCommandsEvent e){
+    @SubscribeEvent public static void commands(net.neoforged.neoforge.event.RegisterCommandsEvent e){
         e.getDispatcher().register(net.minecraft.commands.Commands.literal("jujutsu_kaisen_cursed_paths").then(net.minecraft.commands.Commands.literal("reset").requires(source->source.getEntity() instanceof ServerPlayer player&&active(player)).executes(c->{reset(c.getSource().getPlayerOrException());return 1;})));
         // 已通关但「权限」确实丢了（掉进虚空缝隙等）时的补救，不重复发放。
         e.getDispatcher().register(net.minecraft.commands.Commands.literal("jujutsu_kaisen_cursed_paths").then(net.minecraft.commands.Commands.literal("permission").executes(c->{Authority.restoreReward(c.getSource().getPlayerOrException());return 1;})));
@@ -174,7 +174,7 @@ public final class ObserverRitual {
         // 保留 Running 标记：下次登录恢复原属性并回主世界；只有真正击碎后退出才通关。
         Curse.data(p).putBoolean("ObserverShattered",s.battle.phase==ObserverBattleRules.SHATTER);
     }
-    @SubscribeEvent public static void stop(net.minecraftforge.event.server.ServerStoppedEvent e){sessions.clear();}
+    @SubscribeEvent public static void stop(net.neoforged.neoforge.event.server.ServerStoppedEvent e){sessions.clear();}
     private static void sound(ServerPlayer p,SoundEvent sound,float volume,float pitch){p.playNotifySound(sound,SoundSource.MASTER,volume,pitch);}
     private static void fire(ServerPlayer p,int kind,int value){Network.CHANNEL.send(PacketDistributor.PLAYER.with(()->p),new Network.Effect(kind,p.getId(),p.position(),Vec3.ZERO,0,value,value));}
     private ObserverRitual(){}

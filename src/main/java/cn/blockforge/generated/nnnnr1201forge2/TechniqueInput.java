@@ -3,8 +3,8 @@ package cn.blockforge.generated.nnnnr1201forge2;
 import java.util.*;
 import net.minecraft.server.level.*;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraftforge.event.TickEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.neoforged.neoforge.event.TickEvent;
+import net.neoforged.bus.api.SubscribeEvent;
 
 /** 按住状态按玩家隔离；心跳只续租，不重复施法。菜单、失焦与断线取消而非松手释放。 */
 public final class TechniqueInput {

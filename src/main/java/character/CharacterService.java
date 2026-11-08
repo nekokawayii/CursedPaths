@@ -9,9 +9,9 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.monster.Enemy;
 import net.minecraft.world.damagesource.DamageTypes;
-import net.minecraftforge.event.entity.living.LivingDeathEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.common.util.FakePlayer;
+import net.neoforged.neoforge.event.entity.living.LivingDeathEvent;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.neoforge.common.util.FakePlayer;
 
 /** 服务端角色入口：模板授权、分角色存档、个人线推进；旧存档没有角色编号时不改变原玩法。 */
 public final class CharacterService {
@@ -166,7 +166,7 @@ public final class CharacterService {
             p.sendSystemMessage(Component.literal((i<rank?"✓ ":"○ ")+chapter.title()+"："+chapter.goal()+"（累计"+chapter.kills()+"） → "+d.rewards(i)));
         }
     }
-    @SubscribeEvent(priority=net.minecraftforge.eventbus.api.EventPriority.LOWEST) public static void death(LivingDeathEvent e) {
+    @SubscribeEvent(priority=net.neoforged.bus.api.EventPriority.LOWEST) public static void death(LivingDeathEvent e) {
         if(e.isCanceled())return;
         ServerPlayer p=CombatSettings.caster(e.getSource());if(p==null||!active(p)||family(p,CharacterDefinition.Family.SHRINE))return;
         // 不刷家畜；玩家必须在敌友菜单中明确标敌，且由服务端允许PvP。

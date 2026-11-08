@@ -8,16 +8,16 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.*;
 import net.minecraft.world.level.GameRules;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.event.*;
-import net.minecraftforge.event.level.BlockEvent;
-import net.minecraftforge.event.server.ServerStoppedEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.neoforged.neoforge.common.NeoForge;
+import net.neoforged.neoforge.event.*;
+import net.neoforged.neoforge.event.level.BlockEvent;
+import net.neoforged.neoforge.event.server.ServerStoppedEvent;
+import net.neoforged.bus.api.SubscribeEvent;
 
 /** 默认不破坏地形；所有攻击共用开关、领地事件和当刻去重破坏。 */
 public final class SkillDestruction {
     public static final GameRules.Key<GameRules.BooleanValue> RULE=GameRules.register("sukunaDesblock",GameRules.Category.MISC,GameRules.BooleanValue.create(false));
-    public static void init(){MinecraftForge.EVENT_BUS.register(SkillDestruction.class);}
+    public static void init(){NeoForge.EVENT_BUS.register(SkillDestruction.class);}
     public static boolean enabled(ServerLevel level){return level.getServer().overworld().getGameRules().getBoolean(RULE);}
     public static void set(net.minecraft.server.MinecraftServer server,boolean on){server.overworld().getGameRules().getRule(RULE).set(on,server);if(!on)visitedNow.clear();}
     public static void line(ServerPlayer p,Vec3 from,Vec3 to,double radius){
@@ -26,8 +26,8 @@ public final class SkillDestruction {
     private static final Map<ServerLevel,Set<net.minecraft.world.level.ChunkPos>> loaded=new HashMap<>();
     private static final Map<UUID,Set<BlockPos>> visitedNow=new HashMap<>();
     private static long visitedTick=Long.MIN_VALUE;
-    @SubscribeEvent public static void load(net.minecraftforge.event.level.ChunkEvent.Load e){if(e.getLevel() instanceof ServerLevel l)loaded.computeIfAbsent(l,k->new HashSet<>()).add(e.getChunk().getPos());}
-    @SubscribeEvent public static void unload(net.minecraftforge.event.level.ChunkEvent.Unload e){if(e.getLevel() instanceof ServerLevel l){Set<net.minecraft.world.level.ChunkPos> set=loaded.get(l);if(set!=null)set.remove(e.getChunk().getPos());}}
+    @SubscribeEvent public static void load(net.neoforged.neoforge.event.level.ChunkEvent.Load e){if(e.getLevel() instanceof ServerLevel l)loaded.computeIfAbsent(l,k->new HashSet<>()).add(e.getChunk().getPos());}
+    @SubscribeEvent public static void unload(net.neoforged.neoforge.event.level.ChunkEvent.Unload e){if(e.getLevel() instanceof ServerLevel l){Set<net.minecraft.world.level.ChunkPos> set=loaded.get(l);if(set!=null)set.remove(e.getChunk().getPos());}}
     /** 当刻直接破坏；不排队、不延后追着特效补破坏。仍保留原有地形开关和领地保护。 */
     public static void immediate(ServerPlayer p,Vec3 from,Vec3 to,double radius){
         ServerLevel l=p.serverLevel();if(!enabled(l)||!p.isAlive()||DomainClash.active(p)||EternalLove.settling(MaidBridge.body(p))||!Double.isFinite(from.lengthSqr()+to.lengthSqr()))return;
@@ -39,7 +39,7 @@ public final class SkillDestruction {
                 if(Vec3.atCenterOf(pos).distanceToSqr(point)>(radius+0.8)*(radius+0.8)||!visited.add(pos.immutable())||!l.hasChunkAt(pos)||!l.getWorldBorder().isWithinBounds(pos))continue;
                 var state=l.getBlockState(pos);if(state.isAir()||state.getDestroySpeed(l,pos)<0||state.hasBlockEntity()||SoulJourney.protectedBlock(l,pos))continue;
                 ServerPlayer authority=p instanceof MaidBridge.Actor a?MaidBridge.owner(a):p;if(authority==null||!l.mayInteract(authority,pos))continue;
-                if(MinecraftForge.EVENT_BUS.post(new BlockEvent.BreakEvent(l,pos.immutable(),state,authority))||!ForgeEventFactory.onEntityDestroyBlock(MaidBridge.body(p),pos,state))continue;
+                if(NeoForge.EVENT_BUS.post(new BlockEvent.BreakEvent(l,pos.immutable(),state,authority))||!ForgeEventFactory.onEntityDestroyBlock(MaidBridge.body(p),pos,state))continue;
                 l.destroyBlock(pos,false,MaidBridge.body(p));
             }
         }
@@ -49,7 +49,7 @@ public final class SkillDestruction {
         ServerLevel l=p.serverLevel();if(!enabled(l)||!p.isAlive()||DomainClash.active(p)||!l.hasChunkAt(pos)||!l.getWorldBorder().isWithinBounds(pos))return false;
         var state=l.getBlockState(pos);if(state.isAir()||state.getDestroySpeed(l,pos)<0||state.hasBlockEntity()||SoulJourney.protectedBlock(l,pos))return false;
         ServerPlayer authority=p instanceof MaidBridge.Actor a?MaidBridge.owner(a):p;
-        return authority!=null&&l.mayInteract(authority,pos)&&!MinecraftForge.EVENT_BUS.post(new BlockEvent.BreakEvent(l,pos,state,authority))&&ForgeEventFactory.onEntityDestroyBlock(MaidBridge.body(p),pos,state);
+        return authority!=null&&l.mayInteract(authority,pos)&&!NeoForge.EVENT_BUS.post(new BlockEvent.BreakEvent(l,pos,state,authority))&&ForgeEventFactory.onEntityDestroyBlock(MaidBridge.body(p),pos,state);
     }
     /**
      * 只移动、不破坏方块时的准入（东堂葵的方块换位用）：
@@ -61,7 +61,7 @@ public final class SkillDestruction {
         var state=l.getBlockState(pos);
         if(state.isAir()||state.getDestroySpeed(l,pos)<0||state.hasBlockEntity()||SoulJourney.protectedBlock(l,pos))return false;
         ServerPlayer authority=p instanceof MaidBridge.Actor a?MaidBridge.owner(a):p;
-        return authority!=null&&l.mayInteract(authority,pos)&&!MinecraftForge.EVENT_BUS.post(new BlockEvent.BreakEvent(l,pos,state,authority))
+        return authority!=null&&l.mayInteract(authority,pos)&&!NeoForge.EVENT_BUS.post(new BlockEvent.BreakEvent(l,pos,state,authority))
             &&ForgeEventFactory.onEntityDestroyBlock(MaidBridge.body(p),pos,state);
     }
     public static boolean canChange(ServerPlayer p,BlockPos pos){return mayChange(p,pos);}

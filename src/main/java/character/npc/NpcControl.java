@@ -2,8 +2,8 @@ package character.npc;
 
 import cn.blockforge.generated.nnnnr1201forge2.NpcBridge;
 import net.minecraft.world.entity.Mob;
-import net.minecraftforge.event.entity.living.LivingEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.neoforged.neoforge.event.entity.living.LivingEvent;
+import net.neoforged.bus.api.SubscribeEvent;
 
 /** 有截止时间的硬直租约；保留原 NoAI 和目标，存档/卸载后也能自行解除。 */
 public final class NpcControl {

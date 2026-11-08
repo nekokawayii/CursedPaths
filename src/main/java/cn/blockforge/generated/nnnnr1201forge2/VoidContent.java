@@ -15,9 +15,9 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.registries.*;
-import net.minecraftforge.eventbus.api.IEventBus;
-import net.minecraftforge.event.entity.EntityAttributeCreationEvent;
+import net.neoforged.neoforge.registries.*;
+import net.neoforged.bus.api.IEventBus;
+import net.neoforged.neoforge.event.entity.EntityAttributeCreationEvent;
 
 public final class VoidContent {
     private static final DeferredRegister<Codec<? extends ChunkGenerator>> GENERATORS=DeferredRegister.create(Registries.CHUNK_GENERATOR,"jujutsu_kaisen_cursed_paths");
@@ -124,12 +124,12 @@ public final class VoidContent {
                 +BalanceRules.number(Shinbuke.DAMAGE_PER_STEP*100)+"%，且本体近战永久 +"+BalanceRules.number(Shinbuke.MELEE_PERMANENT_PER_STEP*100)+"%").withStyle(ChatFormatting.DARK_PURPLE));
         }
     });
-    public static final RegistryObject<Item> EGG=Content.ITEMS.register("gojo_spawn_egg",()->new net.minecraftforge.common.ForgeSpawnEggItem(GOJO,0x0b0b12,0x8fd0ff,new Item.Properties()));
-    public static final RegistryObject<Item> MAHORAGA_EGG=Content.ITEMS.register("mahoraga_spawn_egg",()->new net.minecraftforge.common.ForgeSpawnEggItem(MAHORAGA,0x2b2118,0xffd24a,new Item.Properties()));
+    public static final RegistryObject<Item> EGG=Content.ITEMS.register("gojo_spawn_egg",()->new net.neoforged.neoforge.common.ForgeSpawnEggItem(GOJO,0x0b0b12,0x8fd0ff,new Item.Properties()));
+    public static final RegistryObject<Item> MAHORAGA_EGG=Content.ITEMS.register("mahoraga_spawn_egg",()->new net.neoforged.neoforge.common.ForgeSpawnEggItem(MAHORAGA,0x2b2118,0xffd24a,new Item.Properties()));
     public static final RegistryObject<Item> CONTROLLER=Content.ITEMS.register("void_controller",()->new Item(new Item.Properties().stacksTo(1).rarity(Rarity.EPIC).fireResistant()){
-        @Override public InteractionResultHolder<ItemStack> use(Level l,Player p,InteractionHand h){if(l.isClientSide)net.minecraftforge.fml.DistExecutor.unsafeRunWhenOn(net.minecraftforge.api.distmarker.Dist.CLIENT,()->()->net.minecraft.client.Minecraft.getInstance().setScreen(new VoidControllerScreen()));else if(p instanceof ServerPlayer sp)Network.sendController(sp);return InteractionResultHolder.sidedSuccess(p.getItemInHand(h),l.isClientSide);}
+        @Override public InteractionResultHolder<ItemStack> use(Level l,Player p,InteractionHand h){if(l.isClientSide)net.neoforged.fml.DistExecutor.unsafeRunWhenOn(net.neoforged.api.distmarker.Dist.CLIENT,()->()->net.minecraft.client.Minecraft.getInstance().setScreen(new VoidControllerScreen()));else if(p instanceof ServerPlayer sp)Network.sendController(sp);return InteractionResultHolder.sidedSuccess(p.getItemInHand(h),l.isClientSide);}
     });
     public static void init(IEventBus bus){GENERATORS.register(bus);bus.addListener(VoidContent::attributes);}
     private static void attributes(EntityAttributeCreationEvent e){GojoEntity.attributes(e);MahoragaEntity.attributes(e);}
-    private static void tabs(net.minecraftforge.event.BuildCreativeModeTabContentsEvent e){if(e.getTabKey()==CreativeModeTabs.COMBAT){e.accept(KEY.get());e.accept(CONTROLLER.get());e.accept(EGG.get());e.accept(FRAGMENT.get());e.accept(RITUAL.get());e.accept(MAHORAGA_WHEEL.get());e.accept(MAHORAGA_WHEEL_RECALL.get());e.accept(MAHORAGA_EGG.get());e.accept(SHINBUKE.get());e.accept(HITEN.get());}}
+    private static void tabs(net.neoforged.neoforge.event.BuildCreativeModeTabContentsEvent e){if(e.getTabKey()==CreativeModeTabs.COMBAT){e.accept(KEY.get());e.accept(CONTROLLER.get());e.accept(EGG.get());e.accept(FRAGMENT.get());e.accept(RITUAL.get());e.accept(MAHORAGA_WHEEL.get());e.accept(MAHORAGA_WHEEL_RECALL.get());e.accept(MAHORAGA_EGG.get());e.accept(SHINBUKE.get());e.accept(HITEN.get());}}
 }

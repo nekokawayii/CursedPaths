@@ -8,10 +8,10 @@ import net.minecraft.world.level.Level;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.*;
-import net.minecraftforge.registries.*;
-import net.minecraftforge.eventbus.api.IEventBus;
-import net.minecraftforge.event.entity.EntityAttributeCreationEvent;
-import net.minecraftforge.event.BuildCreativeModeTabContentsEvent;
+import net.neoforged.neoforge.registries.*;
+import net.neoforged.bus.api.IEventBus;
+import net.neoforged.neoforge.event.entity.EntityAttributeCreationEvent;
+import net.neoforged.neoforge.event.BuildCreativeModeTabContentsEvent;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.phys.Vec3;
@@ -58,52 +58,52 @@ public final class Content {
     public static final RegistryObject<EntityType<JogoNpcEntity>> JOGO_NPC = ENTITIES.register("jogo_npc",
         () -> EntityType.Builder.of(JogoNpcEntity::new, MobCategory.MONSTER).sized(1.0f, 3.0f).fireImmune().clientTrackingRange(16).updateInterval(1).build("jujutsu_kaisen_cursed_paths:jogo_npc"));
     public static final RegistryObject<Item> JOGO_NPC_EGG = ITEMS.register("jogo_npc_spawn_egg",
-        () -> new net.minecraftforge.common.ForgeSpawnEggItem(JOGO_NPC, 0xE6400A, 0x2A1410, new Item.Properties()));
+        () -> new net.neoforged.neoforge.common.ForgeSpawnEggItem(JOGO_NPC, 0xE6400A, 0x2A1410, new Item.Properties()));
     /** 里梅（NPC）：敌对，玩家模型 + 冰凝咒法。 */
     public static final RegistryObject<EntityType<UraumeNpcEntity>> URAUME_NPC = ENTITIES.register("uraume_npc",
         () -> EntityType.Builder.of(UraumeNpcEntity::new, MobCategory.MONSTER).sized(0.6f, 1.8f).clientTrackingRange(16).updateInterval(1).build("jujutsu_kaisen_cursed_paths:uraume_npc"));
     public static final RegistryObject<Item> URAUME_NPC_EGG = ITEMS.register("uraume_npc_spawn_egg",
-        () -> new net.minecraftforge.common.ForgeSpawnEggItem(URAUME_NPC, 0xE8EEF2, 0x6FA8C8, new Item.Properties()));
+        () -> new net.neoforged.neoforge.common.ForgeSpawnEggItem(URAUME_NPC, 0xE8EEF2, 0x6FA8C8, new Item.Properties()));
     /** 胀相：中立角色，会赤血操术。 */
     public static final RegistryObject<EntityType<ChosoEntity>> CHOSO=ENTITIES.register("choso",
         ()->EntityType.Builder.of(ChosoEntity::new,MobCategory.CREATURE).sized(0.6f,1.8f).clientTrackingRange(16).updateInterval(1).build("jujutsu_kaisen_cursed_paths:choso"));
     public static final RegistryObject<Item> CHOSO_EGG=ITEMS.register("choso_spawn_egg",
-        ()->new net.minecraftforge.common.ForgeSpawnEggItem(CHOSO,0x2A1030,0x8C1E3A,new Item.Properties()));
+        ()->new net.neoforged.neoforge.common.ForgeSpawnEggItem(CHOSO,0x2A1030,0x8C1E3A,new Item.Properties()));
     /** 东堂葵：玩家模型 NPC，用「不义游戏」（注入咒力 + 换位）。皮肤等用户给图，先用默认 Steve。 */
     public static final RegistryObject<EntityType<TodoNpcEntity>> TODO_NPC=ENTITIES.register("todo_npc",
         ()->EntityType.Builder.of(TodoNpcEntity::new,MobCategory.CREATURE).sized(0.6f,1.8f).clientTrackingRange(16).updateInterval(1).build("jujutsu_kaisen_cursed_paths:todo_npc"));
     public static final RegistryObject<Item> TODO_NPC_EGG=ITEMS.register("todo_npc_spawn_egg",
-        ()->new net.minecraftforge.common.ForgeSpawnEggItem(TODO_NPC,0x2A2038,0xB58CFF,new Item.Properties()));
+        ()->new net.neoforged.neoforge.common.ForgeSpawnEggItem(TODO_NPC,0x2A2038,0xB58CFF,new Item.Properties()));
     /** 石流龙：玩家模型 NPC，用「咒力强化/放出」（光炮 / 追踪弹 / 喷涌 / 甜品）。皮肤等用户给图，先用默认 Steve。 */
     public static final RegistryObject<EntityType<RyuNpcEntity>> RYU_NPC=ENTITIES.register("ryu_npc",
         ()->EntityType.Builder.of(RyuNpcEntity::new,MobCategory.CREATURE).sized(0.6f,1.8f).clientTrackingRange(16).updateInterval(1).build("jujutsu_kaisen_cursed_paths:ryu_npc"));
     public static final RegistryObject<Item> RYU_NPC_EGG=ITEMS.register("ryu_npc_spawn_egg",
-        ()->new net.minecraftforge.common.ForgeSpawnEggItem(RYU_NPC,0x0A1016,0x9FDFFF,new Item.Properties()));
+        ()->new net.neoforged.neoforge.common.ForgeSpawnEggItem(RYU_NPC,0x0A1016,0x9FDFFF,new Item.Properties()));
     public static final RegistryObject<EntityType<HakariNpcEntity>> HAKARI_NPC=ENTITIES.register("hakari_npc",
         ()->EntityType.Builder.of(HakariNpcEntity::new,net.minecraft.world.entity.MobCategory.CREATURE)
             .sized(0.6f,1.8f).clientTrackingRange(10).build("hakari_npc"));
     public static final RegistryObject<Item> HAKARI_NPC_EGG=ITEMS.register("hakari_npc_spawn_egg",
-        ()->new net.minecraftforge.common.ForgeSpawnEggItem(HAKARI_NPC,0x7A1B0F,0x35E06A,new Item.Properties()));
+        ()->new net.neoforged.neoforge.common.ForgeSpawnEggItem(HAKARI_NPC,0x7A1B0F,0x35E06A,new Item.Properties()));
     public static final RegistryObject<EntityType<NaoyaNpcEntity>> NAOYA_NPC=ENTITIES.register("naoya_npc",
         ()->EntityType.Builder.of(NaoyaNpcEntity::new,net.minecraft.world.entity.MobCategory.CREATURE)
             .sized(0.6f,1.8f).clientTrackingRange(10).build("naoya_npc"));
     public static final RegistryObject<Item> NAOYA_NPC_EGG=ITEMS.register("naoya_npc_spawn_egg",
-        ()->new net.minecraftforge.common.ForgeSpawnEggItem(NAOYA_NPC,0x2A2F3A,0x7FD8FF,new Item.Properties()));
+        ()->new net.neoforged.neoforge.common.ForgeSpawnEggItem(NAOYA_NPC,0x2A2F3A,0x7FD8FF,new Item.Properties()));
     public static final RegistryObject<EntityType<HigurumaNpcEntity>> HIGURUMA_NPC=ENTITIES.register("higuruma_npc",
         ()->EntityType.Builder.of(HigurumaNpcEntity::new,net.minecraft.world.entity.MobCategory.CREATURE)
             .sized(0.6f,1.8f).clientTrackingRange(10).build("higuruma_npc"));
     public static final RegistryObject<Item> HIGURUMA_NPC_EGG=ITEMS.register("higuruma_npc_spawn_egg",
-        ()->new net.minecraftforge.common.ForgeSpawnEggItem(HIGURUMA_NPC,0x1B2340,0xC9A227,new Item.Properties()));
+        ()->new net.neoforged.neoforge.common.ForgeSpawnEggItem(HIGURUMA_NPC,0x1B2340,0xC9A227,new Item.Properties()));
     public static final RegistryObject<EntityType<SukunaNpcEntity>> SUKUNA_NPC=ENTITIES.register("sukuna_npc",
         ()->EntityType.Builder.of(SukunaNpcEntity::new,net.minecraft.world.entity.MobCategory.CREATURE)
             .sized(0.6f,1.8f).clientTrackingRange(12).build("sukuna_npc"));
     public static final RegistryObject<Item> SUKUNA_NPC_EGG=ITEMS.register("sukuna_npc_spawn_egg",
-        ()->new net.minecraftforge.common.ForgeSpawnEggItem(SUKUNA_NPC,0x1A0E12,0xE34D65,new Item.Properties()));
+        ()->new net.neoforged.neoforge.common.ForgeSpawnEggItem(SUKUNA_NPC,0x1A0E12,0xE34D65,new Item.Properties()));
     public static final RegistryObject<EntityType<KashimoNpcEntity>> KASHIMO_NPC=ENTITIES.register("kashimo_npc",
         ()->EntityType.Builder.of(KashimoNpcEntity::new,net.minecraft.world.entity.MobCategory.CREATURE)
             .sized(0.6f,1.8f).clientTrackingRange(10).build("kashimo_npc"));
     public static final RegistryObject<Item> KASHIMO_NPC_EGG=ITEMS.register("kashimo_npc_spawn_egg",
-        ()->new net.minecraftforge.common.ForgeSpawnEggItem(KASHIMO_NPC,0xFFE9F0,0x7FD8FF,new Item.Properties()));
+        ()->new net.neoforged.neoforge.common.ForgeSpawnEggItem(KASHIMO_NPC,0xFFE9F0,0x7FD8FF,new Item.Properties()));
     public static final RegistryObject<EntityType<SorcererNpcEntity>> NANAMI_NPC=sorcerer("nanami");
     public static final RegistryObject<EntityType<SorcererNpcEntity>> YUTA_NPC=sorcerer("yuta");
     public static final RegistryObject<EntityType<SorcererNpcEntity>> YUKI_NPC=sorcerer("yuki");
@@ -120,7 +120,7 @@ public final class Content {
             .sized(role.equals("mahito")?1f:.6f,role.equals("mahito")?3f:1.8f).clientTrackingRange(12).updateInterval(2).build("jujutsu_kaisen_cursed_paths:"+role+"_npc"));
     }
     private static RegistryObject<Item> sorcererEgg(String role,RegistryObject<EntityType<SorcererNpcEntity>> type,int a,int b){
-        return ITEMS.register(role+"_npc_spawn_egg",()->new net.minecraftforge.common.ForgeSpawnEggItem(type,a,b,new Item.Properties()));
+        return ITEMS.register(role+"_npc_spawn_egg",()->new net.neoforged.neoforge.common.ForgeSpawnEggItem(type,a,b,new Item.Properties()));
     }
     /** 不义游戏：纯客户端特效被注入的一瞬间就地生成的锚点实体（不渲染、不可攻击）。 */
     public static final RegistryObject<EntityType<TodoAnchorEntity>> TODO_ANCHOR=ENTITIES.register("todo_anchor",
@@ -157,7 +157,7 @@ public final class Content {
     public static final RegistryObject<Item> SLAUGHTER_DEMON=ITEMS.register("slaughter_demon",()->new net.minecraft.world.item.SwordItem(
             net.minecraft.world.item.Tiers.IRON,2,-2.4f,new Item.Properties().stacksTo(1).rarity(Rarity.RARE)));
     /** 屠坐魔：手持此剑攻击亡灵时伤害翻倍。 */
-    @net.minecraftforge.eventbus.api.SubscribeEvent public static void slaughterDemonUndead(net.minecraftforge.event.entity.living.LivingDamageEvent e){
+    @net.neoforged.bus.api.SubscribeEvent public static void slaughterDemonUndead(net.neoforged.neoforge.event.entity.living.LivingDamageEvent e){
         if(!(e.getSource().getEntity() instanceof net.minecraft.server.level.ServerPlayer p))return;
         if(!(p.getMainHandItem().is(SLAUGHTER_DEMON.get())))return;
         if(e.getEntity().getMobType()!=net.minecraft.world.entity.MobType.UNDEAD)return;
@@ -209,8 +209,8 @@ public final class Content {
         ()->new character.mahito.TransfiguredItem(new Item.Properties().stacksTo(1).rarity(Rarity.EPIC)){
             @Override public net.minecraft.world.InteractionResultHolder<ItemStack> use(net.minecraft.world.level.Level level,
                     net.minecraft.world.entity.player.Player p, net.minecraft.world.InteractionHand hand){
-                if(level.isClientSide) net.minecraftforge.fml.DistExecutor.unsafeRunWhenOn(
-                    net.minecraftforge.api.distmarker.Dist.CLIENT, ()->()->character.mahito.TransfigureScreen.open(1));
+                if(level.isClientSide) net.neoforged.fml.DistExecutor.unsafeRunWhenOn(
+                    net.neoforged.api.distmarker.Dist.CLIENT, ()->()->character.mahito.TransfigureScreen.open(1));
                 return net.minecraft.world.InteractionResultHolder.success(p.getItemInHand(hand));
             }
         });
@@ -308,14 +308,14 @@ public final class Content {
             Vec3 forward=new Vec3(p.getLookAngle().x,0,p.getLookAngle().z).normalize();if(forward.lengthSqr()<0.1)forward=new Vec3(0,0,1);Vec3 q=p.position().add(forward.scale(8));BuddhaEntity boss=BUDDHA.get().create(level);if(boss!=null){boss.moveTo(q.x,q.y,q.z,p.getYRot()+180,0);if(!level.noCollision(boss)){p.displayClientMessage(Component.literal("前方8格需要留出空地"),true);return InteractionResultHolder.fail(stack);}level.addFreshEntity(boss);boss.setTarget(p);if(!p.isCreative())stack.shrink(1);p.getCooldowns().addCooldown(this,100);}}
             return InteractionResultHolder.sidedSuccess(stack,level.isClientSide);}
     });
-    public static final RegistryObject<Item> EGG=ITEMS.register("buddha_spawn_egg",()->new net.minecraftforge.common.ForgeSpawnEggItem(BUDDHA,0x493d2b,0x9a47b6,new Item.Properties()));
+    public static final RegistryObject<Item> EGG=ITEMS.register("buddha_spawn_egg",()->new net.neoforged.neoforge.common.ForgeSpawnEggItem(BUDDHA,0x493d2b,0x9a47b6,new Item.Properties()));
     /** 咒灵操术之符：右键召唤夏油杰（正常游玩入口）。 */
     public static final RegistryObject<Item> SUMMON_TALISMAN=ITEMS.register("curse_summon_talisman",
         ()->new SummonTalismanItem(new Item.Properties().stacksTo(16).rarity(Rarity.RARE)));
 
     /** 领域内的坟头（插着鬼妖村正，右键拔出）。 */
-    public static final net.minecraftforge.registries.DeferredRegister<net.minecraft.world.level.block.Block> YUTA_BLOCKS=
-        net.minecraftforge.registries.DeferredRegister.create(net.minecraftforge.registries.ForgeRegistries.BLOCKS,"jujutsu_kaisen_cursed_paths");
+    public static final net.neoforged.neoforge.registries.DeferredRegister<net.minecraft.world.level.block.Block> YUTA_BLOCKS=
+        net.neoforged.neoforge.registries.DeferredRegister.create(net.neoforged.neoforge.registries.ForgeRegistries.BLOCKS,"jujutsu_kaisen_cursed_paths");
     public static final RegistryObject<net.minecraft.world.level.block.Block> YUTA_GRAVE=YUTA_BLOCKS.register("yuta_grave",
         ()->new character.yuta.YutaGraveBlock(net.minecraft.world.level.block.state.BlockBehaviour.Properties.of()
             .noCollission().strength(0.4f).noOcclusion().lightLevel(st->7)));
@@ -324,8 +324,8 @@ public final class Content {
         ()->new DomainMaskBlock(net.minecraft.world.level.block.state.BlockBehaviour.Properties.of()
             .strength(-1f,3600000f).lightLevel(st->15)));
 
-    public static final net.minecraftforge.registries.DeferredRegister<net.minecraft.world.level.block.entity.BlockEntityType<?>> YUTA_BES=
-        net.minecraftforge.registries.DeferredRegister.create(net.minecraftforge.registries.ForgeRegistries.BLOCK_ENTITY_TYPES,"jujutsu_kaisen_cursed_paths");
+    public static final net.neoforged.neoforge.registries.DeferredRegister<net.minecraft.world.level.block.entity.BlockEntityType<?>> YUTA_BES=
+        net.neoforged.neoforge.registries.DeferredRegister.create(net.neoforged.neoforge.registries.ForgeRegistries.BLOCK_ENTITY_TYPES,"jujutsu_kaisen_cursed_paths");
     public static final RegistryObject<net.minecraft.world.level.block.entity.BlockEntityType<character.yuta.YutaGraveBlockEntity>> YUTA_GRAVE_BE=
         YUTA_BES.register("yuta_grave",()->net.minecraft.world.level.block.entity.BlockEntityType.Builder
             .of(character.yuta.YutaGraveBlockEntity::new,YUTA_GRAVE.get()).build(null));
@@ -374,8 +374,8 @@ public final class Content {
 
     /** 鬼妖村正：领域内从坟头拔出的刀（左键 20 无视护甲，右键放复制术式×3 后报废）。 */
     public static final RegistryObject<Item> YUTA_KATANA=ITEMS.register("yuta_katana",()->new character.yuta.YutaKatanaItem(new Item.Properties().stacksTo(1).rarity(Rarity.RARE)));
-    public static final RegistryObject<Item> GETO_EGG=ITEMS.register("geto_spawn_egg",()->new net.minecraftforge.common.ForgeSpawnEggItem(GETO,0x2b2b3d,0x6b7fd7,new Item.Properties()));
-    public static final RegistryObject<Item> LOW_CURSE_EGG=ITEMS.register("low_curse_spawn_egg",()->new net.minecraftforge.common.ForgeSpawnEggItem(LOW_CURSE,0x141414,0x4a4a55,new Item.Properties()));
+    public static final RegistryObject<Item> GETO_EGG=ITEMS.register("geto_spawn_egg",()->new net.neoforged.neoforge.common.ForgeSpawnEggItem(GETO,0x2b2b3d,0x6b7fd7,new Item.Properties()));
+    public static final RegistryObject<Item> LOW_CURSE_EGG=ITEMS.register("low_curse_spawn_egg",()->new net.neoforged.neoforge.common.ForgeSpawnEggItem(LOW_CURSE,0x141414,0x4a4a55,new Item.Properties()));
     public static void init(IEventBus bus){ITEMS.register(bus);ENTITIES.register(bus);YUTA_BLOCKS.register(bus);YUTA_BES.register(bus);bus.addListener(Content::attributes);}
     private static void attributes(EntityAttributeCreationEvent e){e.put(CULLING_GETO.get(),character.culling.CullingGetoEntity.createAttributes().build());e.put(NANAMI_NPC.get(),SorcererNpcEntity.attributes("nanami").build());e.put(YUTA_NPC.get(),SorcererNpcEntity.attributes("yuta").build());e.put(YUKI_NPC.get(),SorcererNpcEntity.attributes("yuki").build());e.put(TOJI_NPC.get(),SorcererNpcEntity.attributes("toji").build());e.put(MAHITO_NPC.get(),SorcererNpcEntity.attributes("mahito").build());e.put(DAITIAN.get(),Monster.createMonsterAttributes().add(Attributes.MAX_HEALTH,200).add(Attributes.MOVEMENT_SPEED,0.26).add(Attributes.ATTACK_DAMAGE,5).add(Attributes.FOLLOW_RANGE,32).add(Attributes.KNOCKBACK_RESISTANCE,0.4).build());e.put(BUDDHA.get(),Monster.createMonsterAttributes().add(Attributes.MAX_HEALTH,5000).add(Attributes.MOVEMENT_SPEED,0.24).add(Attributes.ATTACK_DAMAGE,10).add(Attributes.FOLLOW_RANGE,64).add(Attributes.KNOCKBACK_RESISTANCE,0.9).build());e.put(PARASITE.get(),Monster.createMonsterAttributes().add(Attributes.MAX_HEALTH,12).add(Attributes.MOVEMENT_SPEED,0.32).add(Attributes.ATTACK_DAMAGE,2).add(Attributes.FOLLOW_RANGE,48).build());e.put(MOTHER.get(),Monster.createMonsterAttributes().add(Attributes.MAX_HEALTH,160).add(Attributes.MOVEMENT_SPEED,0.23).add(Attributes.ATTACK_DAMAGE,12).add(Attributes.FOLLOW_RANGE,48).add(Attributes.KNOCKBACK_RESISTANCE,0.8).build());e.put(BROKEN_MAHITO.get(),Monster.createMonsterAttributes().add(Attributes.MAX_HEALTH,20000).add(Attributes.MOVEMENT_SPEED,0.34).add(Attributes.ATTACK_DAMAGE,40).add(Attributes.FOLLOW_RANGE,64).add(Attributes.ARMOR,20).add(Attributes.KNOCKBACK_RESISTANCE,0.55).build());e.put(MAHITO_LIMB.get(),MahitoLimbEntity.createAttributes());e.put(CHOSO.get(),ChosoEntity.createAttributes().build());e.put(TODO_NPC.get(),TodoNpcEntity.createAttributes().build());e.put(RYU_NPC.get(),RyuNpcEntity.createAttributes().build());e.put(HAKARI_NPC.get(),HakariNpcEntity.createAttributes().build());e.put(NAOYA_NPC.get(),NaoyaNpcEntity.createAttributes().build());e.put(HIGURUMA_NPC.get(),HigurumaNpcEntity.createAttributes().build());e.put(SUKUNA_NPC.get(),SukunaNpcEntity.createAttributes().build());e.put(KASHIMO_NPC.get(),KashimoNpcEntity.createAttributes().build());e.put(URAUME_NPC.get(),UraumeNpcEntity.createAttributes().build());e.put(JOGO_NPC.get(),JogoNpcEntity.createAttributes().build());e.put(MAHITO_CLONE.get(),character.mahito.MahitoCloneEntity.createAttributes().build());e.put(HIGURUMA_JUDGE.get(),character.higuruma.HigurumaJudgeEntity.createAttributes().build());e.put(YIDUI.get(),YiduiShouEntity.createAttributes().build());e.put(GETO.get(),GetoEntity.createAttributes().build());e.put(LOW_CURSE.get(),LowCurseEntity.createAttributes().build());e.put(RIKA.get(),RikaEntity.createAttributes().build());e.put(OBSERVER.get(),Monster.createMonsterAttributes().add(Attributes.MAX_HEALTH,1).add(Attributes.MOVEMENT_SPEED,0).add(Attributes.FOLLOW_RANGE,64).add(Attributes.KNOCKBACK_RESISTANCE,1).build());}
     private static void tabs(BuildCreativeModeTabContentsEvent e){

@@ -7,12 +7,12 @@ import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.tags.DamageTypeTags;
-import net.minecraftforge.event.TickEvent;
-import net.minecraftforge.event.entity.living.*;
-import net.minecraftforge.event.entity.player.PlayerEvent;
-import net.minecraftforge.event.server.ServerStoppedEvent;
-import net.minecraftforge.eventbus.api.*;
-import net.minecraftforge.network.PacketDistributor;
+import net.neoforged.neoforge.event.TickEvent;
+import net.neoforged.neoforge.event.entity.living.*;
+import net.neoforged.neoforge.event.entity.player.PlayerEvent;
+import net.neoforged.neoforge.event.server.ServerStoppedEvent;
+import net.neoforged.bus.api.*;
+import net.neoforged.neoforge.network.PacketDistributor;
 
 /** 一对一、服务端裁决；客户端只上报按下/松开，不能提交分数或胜负。 */
 public final class DomainClash {
@@ -70,7 +70,7 @@ public final class DomainClash {
     public static boolean stunned(LivingEntity entity){return entity.getPersistentData().getLong("DomainClashStunUntil")>entity.level().getGameTime();}
     public static boolean penalized(Player p){return Curse.active(p,"DomainClashPenaltyUntil");}
     public static int penaltyTicks(Player p){return (int)Math.max(0,Math.min(DomainClashRules.BURNOUT_TICKS,Curse.data(p).getLong("DomainClashPenaltyUntil")-p.level().getGameTime()));}
-    public static boolean player(LivingEntity e){return e instanceof ServerPlayer&&!(e instanceof net.minecraftforge.common.util.FakePlayer);}
+    public static boolean player(LivingEntity e){return e instanceof ServerPlayer&&!(e instanceof net.neoforged.neoforge.common.util.FakePlayer);}
     public static void opened(LivingEntity owner,Vec3 center,double radius){opened(owner,center,radius,null);}
     /** 先建立领域状态，再登记；必须从服务端调用。对拼过程中领域伤害应检查 active(owner)。 */
     public static void opened(LivingEntity owner,Vec3 center,double radius,Lifecycle lifecycle){
@@ -360,7 +360,7 @@ public final class DomainClash {
     static void testReset(ServerPlayer p){Match m=matches.get(p.getUUID());if(m!=null)finish(m,0);fields.remove(p.getUUID());restoreGravity(p);}
     private static void restoreGravity(LivingEntity e){e=body(e);var saved=e.getPersistentData();if(saved.contains("ClashPreviousGravity")){e.setNoGravity(saved.getBoolean("ClashPreviousGravity"));saved.remove("ClashPreviousGravity");}}
     @SubscribeEvent public static void recoverGravity(LivingEvent.LivingTickEvent event){LivingEntity e=event.getEntity();if(!e.level().isClientSide&&!active(e))restoreGravity(e);}
-    @SubscribeEvent public static void stopping(net.minecraftforge.event.server.ServerStoppingEvent event){for(Match m:new HashSet<>(matches.values()))finish(m,0);}
+    @SubscribeEvent public static void stopping(net.neoforged.neoforge.event.server.ServerStoppingEvent event){for(Match m:new HashSet<>(matches.values()))finish(m,0);}
     @SubscribeEvent public static void stop(ServerStoppedEvent event){for(Match m:new HashSet<>(matches.values())){restoreGravity(m.a.field.owner);restoreGravity(m.b.field.owner);}matches.clear();fields.clear();}
     private DomainClash(){}
 }

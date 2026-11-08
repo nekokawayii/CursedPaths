@@ -12,12 +12,12 @@ import java.util.List;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.client.event.RenderLevelStageEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.neoforge.client.event.RenderLevelStageEvent;
+import net.neoforged.bus.api.SubscribeEvent;
 
 /** 里梅冰系六招的自绘特效（r293）：纯顶点通路，白色/冰蓝为主。 */
-@net.minecraftforge.fml.common.Mod.EventBusSubscriber(modid = "jujutsu_kaisen_cursed_paths", value = Dist.CLIENT)
+@net.neoforged.fml.common.Mod.EventBusSubscriber(modid = "jujutsu_kaisen_cursed_paths", value = Dist.CLIENT)
 public final class UraumeVisuals {
     private record Visual(Network.Effect e, long born) { }
     private static final List<Visual> VISUALS = new ArrayList<>();

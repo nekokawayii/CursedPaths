@@ -10,8 +10,8 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.event.TickEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.neoforged.neoforge.event.TickEvent;
+import net.neoforged.bus.api.SubscribeEvent;
 
 /**
  * 里梅「冰凝咒法」扩展包（r287）：霜寒叠层、千手冰牢、急冻风暴、冰龙、大冰河时代。
@@ -110,7 +110,7 @@ public final class UraumeIce {
 
     /** 被冻成冰雕的目标，如果这段时间内被重击（≥20 伤害）就直接碎掉（普通生物即死，Boss 额外高伤）。 */
     @SubscribeEvent
-    public static void statueShatter(net.minecraftforge.event.entity.living.LivingDamageEvent e) {
+    public static void statueShatter(net.neoforged.neoforge.event.entity.living.LivingDamageEvent e) {
         LivingEntity victim = e.getEntity();
         if (victim.level().isClientSide || !victim.getPersistentData().getBoolean("IceStatue")) return;
         if (e.getAmount() < 20f) return;

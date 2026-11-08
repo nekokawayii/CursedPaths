@@ -10,9 +10,9 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.LightBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraftforge.event.TickEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.event.server.ServerStoppedEvent;
+import net.neoforged.neoforge.event.TickEvent;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.neoforge.event.server.ServerStoppedEvent;
 
 import java.util.*;
 
@@ -191,7 +191,7 @@ public final class SelfEmbryoDomain {
     }
 
     /** 关服兜底：未收起的领域全部还原，避免方块永久留在存档。 */
-    @SubscribeEvent public static void stop(net.minecraftforge.event.server.ServerStoppingEvent event) {
+    @SubscribeEvent public static void stop(net.neoforged.neoforge.event.server.ServerStoppingEvent event) {
         for (Build build : ACTIVE.values()) restore(build);
         ACTIVE.clear();
     }

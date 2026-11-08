@@ -55,7 +55,7 @@ public final class BlackFlashFx {
     private static void spawn(String name,int delay,Vec3 pos){
         if(MISSING.contains(name))return;
         try{
-            Object fx=call(type("fx.FXHelper"),"getFX",new ResourceLocation("jujutsu_kaisen_cursed_paths",name));
+            Object fx=call(type("fx.FXHelper"),"getFX",ResourceLocation.fromNamespaceAndPath("jujutsu_kaisen_cursed_paths", name));
             BlockPos bp=BlockPos.containing(pos);
             Object effect=type("fx.BlockEffect").getConstructor(type("fx.FX"),Level.class,BlockPos.class).newInstance(fx,Minecraft.getInstance().level,bp);
             if(delay>0)call(effect,"setDelay",delay);
