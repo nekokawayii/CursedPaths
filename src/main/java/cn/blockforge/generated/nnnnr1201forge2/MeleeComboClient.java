@@ -118,7 +118,7 @@ public final class MeleeComboClient {
     /** 第一人称保留原版攻击，只额外画出左右拳交替；踢击段显示前踢的腿。 */
     @SubscribeEvent(priority=EventPriority.HIGHEST) public static void hand(RenderHandEvent e){
         var mc=Minecraft.getInstance();if(mc.player==null||CastHands.sealing())return;
-        boolean slim="slim".equals(mc.player.getModelName());var hands=slim?slimHands:normalHands;if(hands==null)return;
+        boolean slim=mc.player.getSkin().model()==net.minecraft.client.resources.PlayerSkin.Model.SLIM;var hands=slim?slimHands:normalHands;if(hands==null)return;
         Clip c=current(mc.player.getId());if(c==null)return;
         double age=clock-c.start()+e.getPartialTick(),power=MeleeComboRules.drive(c.stage(),age);
         var pose=pose(mc.player.getId(),e.getPartialTick());

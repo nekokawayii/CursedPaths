@@ -32,7 +32,7 @@ public final class MahoragaGuiPreview {
             float k=heightPx/HEIGHT; // 每格模型高度对应的 GUI 像素
             // 与原版界面实体预览同一套位姿链：平移→缩放(翻转z)→绕Z转180°（把向下的y轴翻正）→绕Y转向
             ps.translate(cx,baseY,50.0);
-            ps.mulPoseMatrix(new Matrix4f().scaling(k,k,-k));
+            ps.mulPose(new Matrix4f().scaling(k,k,-k));
             ps.mulPose(Axis.ZP.rotationDegrees(180.0F));
             ps.mulPose(Axis.YP.rotationDegrees(180.0F-spin));
             BODY.render(ps,g.bufferSource(),15728880,"idle",seconds,1,1,1,1);

@@ -119,7 +119,7 @@ public final class Curse {
         character.toji.TojiCombat.attributes(p);
         if(p.getHealth()>p.getMaxHealth())p.setHealth(p.getMaxHealth());
     }
-    private static void modifier(AttributeInstance a,UUID id,double amount){if(a==null)return;var old=a.getModifier(CompatAttr.id(id));if(old!=null&&old.getOperation()==AttributeModifier.Operation.ADD_VALUE&&Math.abs(old.amount()-amount)<0.00001)return;a.removeModifier(CompatAttr.id(id));if(amount!=0)a.addTransientModifier(new AttributeModifier(CompatAttr.id(id), amount, AttributeModifier.Operation.ADD_VALUE));}
+    private static void modifier(AttributeInstance a,UUID id,double amount){if(a==null)return;var old=a.getModifier(CompatAttr.id(id));if(old!=null&&old.operation()==AttributeModifier.Operation.ADD_VALUE&&Math.abs(old.amount()-amount)<0.00001)return;a.removeModifier(CompatAttr.id(id));if(amount!=0)a.addTransientModifier(new AttributeModifier(CompatAttr.id(id), amount, AttributeModifier.Operation.ADD_VALUE));}
     public static void consume(ServerPlayer p,boolean body){
         int old=tier(p);float health=p.getMaxHealth();
         if(body){data(p).putBoolean("Awakened",true);data(p).putBoolean("BuddhaDefeated",true);}else data(p).putInt("Fingers",fingers(p)+1);
