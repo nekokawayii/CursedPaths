@@ -49,8 +49,8 @@ public final class DeathStarClient {
     }
     private static boolean photon(){return net.neoforged.fml.ModList.get().isLoaded("photon");}
     @SubscribeEvent public static void tick(ClientTickEvent.Post event){if(false)return;var mc=Minecraft.getInstance();if(world!=mc.level){clear();world=mc.level;}long now=time();visuals.values().removeIf(v->v.end<=now);emitters.entrySet().removeIf(e->{if(e.getValue().end>now&&visuals.containsKey(e.getKey()))return false;PhotonFx.stop(e.getValue().handle);return true;});bursts.removeIf(p->{if(p.end>now)return false;PhotonFx.stop(p.handle);return true;});}
-    @SubscribeEvent public static void hud(RenderGuiOverlayEvent.Post event){
-        var mc=Minecraft.getInstance();if(mc.player==null||mc.level==null||!event.getOverlay().id().toString().equals("minecraft:hotbar"))return;
+    @SubscribeEvent public static void hud(RenderGuiLayerEvent.Post event){
+        var mc=Minecraft.getInstance();if(mc.player==null||mc.level==null||!event.getName().toString().equals("minecraft:hotbar"))return;
         var g=event.getGuiGraphics();int w=mc.getWindow().getGuiScaledWidth(),h=mc.getWindow().getGuiScaledHeight();long age=time()-flashAt;
         if(age>=0&&age<16){int a=(int)(215*Math.pow(1-age/16.0,2));g.fill(0,0,w,h,(a<<24)|0xFF163A);}
         if(anemic())g.drawCenteredString(mc.font,"严重贫血 "+((anemiaEnd-time()+19)/20)+"秒 · 禁止回血与赤血操术 · 移速/伤害减半",w/2,h-62,0xFFFF6B85);

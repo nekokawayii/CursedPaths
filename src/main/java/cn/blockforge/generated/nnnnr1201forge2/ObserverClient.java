@@ -89,7 +89,7 @@ public final class ObserverClient {
         Client.quad(b,ps,new Vec3(-r,-r,-r),new Vec3(-r,-r,r),new Vec3(r,-r,r),new Vec3(r,-r,-r),c);
         BufferUploader.drawWithShader(b.buildOrThrow());RenderSystem.depthMask(true);RenderSystem.enableCull();RenderSystem.disableBlend();ps.popPose();
     }
-    @SubscribeEvent public static void overlays(RenderGuiOverlayEvent.Pre e){if(active)e.setCanceled(true);}
+    @SubscribeEvent public static void overlays(RenderGuiLayerEvent.Pre e){if(active)e.setCanceled(true);}
     @SubscribeEvent public static void input(MovementInputUpdateEvent e){
         if(!active||e.getEntity()!=Minecraft.getInstance().player)return;var i=e.getInput();i.forwardImpulse=i.leftImpulse=0;i.up=i.down=i.left=i.right=i.jumping=i.shiftKeyDown=false;
     }

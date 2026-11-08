@@ -2,7 +2,7 @@ package cn.blockforge.generated.nnnnr1201forge2;
 
 import net.minecraft.client.Minecraft;
 import net.neoforged.api.distmarker.Dist;
-import net.neoforged.neoforge.client.event.RenderGuiOverlayEvent;
+import net.neoforged.neoforge.client.event.RenderGuiLayerEvent;
 import net.neoforged.neoforge.client.gui.overlay.VanillaGuiOverlay;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.Mod;
@@ -19,8 +19,8 @@ public final class CompactHealthBar {
     private static final float THRESHOLD = 40f;
 
     @SubscribeEvent
-    public static void onRender(RenderGuiOverlayEvent.Pre event) {
-        if (!event.getOverlay().id().equals(VanillaGuiOverlay.PLAYER_HEALTH.id())) return;
+    public static void onRender(RenderGuiLayerEvent.Pre event) {
+        if (!event.getName().equals(net.minecraft.resources.ResourceLocation.fromNamespaceAndPath("minecraft", "PLAYER_HEALTH".toLowerCase(java.util.Locale.ROOT)))) return;
         var mc = Minecraft.getInstance();
         var player = mc.player;
         if (player == null || mc.options.hideGui || player.isSpectator()) return;

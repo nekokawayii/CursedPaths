@@ -15,9 +15,9 @@ public final class AimAssistClient {
     public static void receive(Network.AimState value){state=value;}
     public static void clear(){state=new Network.AimState(true,AimRules.DEFAULT_ANGLE,AimRules.DEFAULT_RANGE,false);fov=70;}
     @SubscribeEvent(priority=EventPriority.LOWEST) public static void fov(ViewportEvent.ComputeFov event){if(event.usedConfiguredFov())fov=event.getFOV();}
-    @SubscribeEvent public static void overlay(RenderGuiOverlayEvent.Post event){
+    @SubscribeEvent public static void overlay(RenderGuiLayerEvent.Post event){
         var mc=Minecraft.getInstance();
-        if(!event.getOverlay().id().equals(VanillaGuiOverlay.CROSSHAIR.id())||mc.player==null||mc.screen!=null||mc.options.hideGui||mc.player.isSpectator()||!mc.options.getCameraType().isFirstPerson()||!Client.progress.unlocked()||!state.enabled()||!state.circle()||mc.player.isScoping())return;
+        if(!event.getName().equals(net.minecraft.resources.ResourceLocation.fromNamespaceAndPath("minecraft", "CROSSHAIR".toLowerCase(java.util.Locale.ROOT)))||mc.player==null||mc.screen!=null||mc.options.hideGui||mc.player.isSpectator()||!mc.options.getCameraType().isFirstPerson()||!Client.progress.unlocked()||!state.enabled()||!state.circle()||mc.player.isScoping())return;
         int w=mc.getWindow().getGuiScaledWidth(),h=mc.getWindow().getGuiScaledHeight();
         // 用当前视野角和界面缩放计算真实圆锥投影，默认3度只有准星附近一小圈。
         double radius=AimRules.radius(AimRules.angle(state.angle()),fov,h);if(!Double.isFinite(radius)||radius<1)return;

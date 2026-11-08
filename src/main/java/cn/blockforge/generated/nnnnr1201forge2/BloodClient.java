@@ -64,8 +64,8 @@ public final class BloodClient {
     private static Visual containing(Vec3 at){return domains.values().stream().filter(v->BloodRules.inside(at.distanceToSqr(v.e.position()))).min(Comparator.comparingDouble(v->at.distanceToSqr(v.e.position()))).orElse(null);}
     @SubscribeEvent public static void fog(ViewportEvent.ComputeFogColor event){if(containing(event.getCamera().getPosition())!=null){event.setRed(.18f);event.setGreen(.008f);event.setBlue(.025f);}}
     @SubscribeEvent public static void fogDistance(ViewportEvent.RenderFog event){if(containing(event.getCamera().getPosition())!=null){event.setNearPlaneDistance(55);event.setFarPlaneDistance(115);event.setCanceled(true);}}
-    @SubscribeEvent public static void hud(RenderGuiOverlayEvent.Post event){
-        var mc=Minecraft.getInstance();if(mc.player==null||mc.level==null||!event.getOverlay().id().toString().equals("minecraft:hotbar"))return;
+    @SubscribeEvent public static void hud(RenderGuiLayerEvent.Post event){
+        var mc=Minecraft.getInstance();if(mc.player==null||mc.level==null||!event.getName().toString().equals("minecraft:hotbar"))return;
         boolean vision=visuals.stream().anyMatch(v->v.e.kind()==BloodArts.FX+4&&v.e.owner()==mc.player.getId()&&v.e.seed()==1);
         var charge=visuals.stream().filter(v->v.e.kind()==BloodArts.FX+2&&v.e.owner()==mc.player.getId()).findFirst().orElse(null);
         if(charge!=null){var g=event.getGuiGraphics();int x=mc.getWindow().getGuiScaledWidth()/2,y=mc.getWindow().getGuiScaledHeight()/2+30;g.fill(x-60,y,x+60,y+5,0xAA22040B);g.fill(x-60,y,x-60+(int)(120*Math.min(1,charge.e.size())),y+5,0xFFD22B4A);g.drawCenteredString(mc.font,charge.e.size()>=1?"百敛完成 松开储存":"百敛蓄力中",x,y+8,0xFFFFB4C3);}
