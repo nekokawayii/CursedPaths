@@ -22,7 +22,10 @@
       "model": "jujutsu_kaisen_cursed_paths:block/domain_screen_6"
     },
     "image=7": {
-      "model": "jujutsu_kaisen_cursed_paths:block/domain_screen_7"
+      "model": "jujutsu_kaisen_cursed_paths:block/domain_screen_8"
+    },
+    "image=8": {
+      "model": "jujutsu_kaisen_cursed_paths:block/domain_screen_8"
     }
   }
 }
