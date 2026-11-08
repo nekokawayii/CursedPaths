@@ -20,12 +20,12 @@ public final class ObserverPortrait {
         if(broken||!ObserverWindow.desktopAllowed()||!ObserverDesktop.available()||age==lastAge[slot]||!boss&&age%2!=0)return;lastAge[slot]=age;
         var mc=Minecraft.getInstance();g.flush();
         Matrix4f projection=new Matrix4f(RenderSystem.getProjectionMatrix());VertexSorting sorting=RenderSystem.getVertexSorting();
-        var model=RenderSystem.getModelViewStack();model.pushPose();
+        var model=new com.mojang.blaze3d.vertex.PoseStack();model.pushPose();
         try{
             if(target==null)target=new TextureTarget(160,200,true,Minecraft.ON_OSX);
             target.setClearColor(0,0,0,0);target.clear(Minecraft.ON_OSX);target.bindWrite(true);
             RenderSystem.setProjectionMatrix(new Matrix4f().setOrtho(0,160,200,0,1000,21000),VertexSorting.ORTHOGRAPHIC_Z);
-            model.setIdentity();model.translate(0,0,-11000);RenderSystem.applyModelViewMatrix();
+            model.last().pose().identity();model.translate(0,0,-11000);
             GuiGraphics portrait=new GuiGraphics(mc,mc.renderBuffers().bufferSource());
             InventoryScreen.renderEntityInInventoryFollowsMouse(portrait,80,184,76,12,0,entity);portrait.flush();
             // Screenshot.takeScreenshot 使用 RGB，会丢失透明通道，不能用于桌面角色。
@@ -37,7 +37,7 @@ public final class ObserverPortrait {
                 ObserverDesktop.portrait(out,boss);
             }
         }catch(RuntimeException|LinkageError ex){broken=true;com.mojang.logging.LogUtils.getLogger().warn("高位桌面角色绘制失败：{}",ex.toString());}
-        finally{model.popPose();RenderSystem.applyModelViewMatrix();RenderSystem.setProjectionMatrix(projection,sorting);mc.getMainRenderTarget().bindWrite(true);}
+        finally{model.popPose();RenderSystem.setProjectionMatrix(projection,sorting);mc.getMainRenderTarget().bindWrite(true);}
     }
     public static void clear(){if(target!=null){target.destroyBuffers();target=null;}java.util.Arrays.fill(lastAge,-1);ObserverDesktop.portrait(null,false);ObserverDesktop.portrait(null,true);}
     private ObserverPortrait(){}
