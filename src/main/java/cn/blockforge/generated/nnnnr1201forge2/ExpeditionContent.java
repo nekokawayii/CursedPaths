@@ -21,12 +21,12 @@ import net.minecraft.world.effect.MobEffect;
 
 /** 生存探索物品统一登记；旧版可食用残秽不改用途，新燃料独立分级。 */
 public final class ExpeditionContent {
-    public static final DeferredRegister<net.minecraft.world.item.enchantment.Enchantment> ENCHANTMENTS=DeferredRegister.create(BuiltInRegistries.ENCHANTMENTS,"jujutsu_kaisen_cursed_paths");
+    public static final DeferredRegister<net.minecraft.world.item.enchantment.Enchantment> ENCHANTMENTS=DeferredRegister.create(net.minecraft.core.registries.Registries.ENCHANTMENT,"jujutsu_kaisen_cursed_paths");
     public static final DeferredHolder<net.minecraft.world.item.enchantment.Enchantment, net.minecraft.world.item.enchantment.Enchantment> SOUL_EDGE=ENCHANTMENTS.register("soul_edge",()->
         new net.minecraft.world.item.enchantment.Enchantment(
             net.minecraft.network.chat.Component.literal("魂刃"),
             new net.minecraft.world.item.enchantment.Enchantment.EnchantmentDefinition(
-                BuiltInRegistries.ITEM.getTag(net.minecraft.tags.ItemTags.SWORDS).orElse(net.minecraft.core.HolderSet.empty()),
+                BuiltInRegistries.ITEM.getTag(net.minecraft.tags.ItemTags.SWORDS).<net.minecraft.core.HolderSet<net.minecraft.world.item.Item>>map(h->h).orElseGet(net.minecraft.core.HolderSet::empty),
                 java.util.Optional.empty(), 1, 1,
                 new net.minecraft.world.item.enchantment.Enchantment.Cost(25,0),
                 new net.minecraft.world.item.enchantment.Enchantment.Cost(75,0),

@@ -378,7 +378,7 @@ public final class CullingRules {
         put(p,Attributes.JUMP_STRENGTH,JUMP,jump*.08);
         if(p.getHealth()>p.getMaxHealth())p.setHealth(p.getMaxHealth());
     }
-    private static final Holder<Attribute>[] ATTRS={Attributes.MAX_HEALTH,Attributes.ATTACK_DAMAGE,Attributes.MOVEMENT_SPEED,Attributes.ATTACK_SPEED,Attributes.JUMP_STRENGTH,Attributes.ARMOR};
+    private static final java.util.List<Holder<Attribute>> ATTRS=java.util.List.of(Attributes.MAX_HEALTH,Attributes.ATTACK_DAMAGE,Attributes.MOVEMENT_SPEED,Attributes.ATTACK_SPEED,Attributes.JUMP_STRENGTH,Attributes.ARMOR);
     private static void put(ServerPlayer p,Holder<Attribute> attr,UUID id,double amount){
         AttributeInstance a=p.getAttribute(attr);if(a==null)return;
         var old=a.getModifier(CompatAttr.id(id));
@@ -499,7 +499,7 @@ public final class CullingRules {
             BlockPos at=level.getBlockState(base).isAir()?base:base.above();
             level.setBlockAndUpdate(at,Blocks.CHEST.defaultBlockState());
             if(level.getBlockEntity(at) instanceof ChestBlockEntity chest)
-                chest.setLootTable(ResourceLocation.fromNamespaceAndPath("jujutsu_kaisen_cursed_paths", "chests/hidden_rich"),rnd.nextLong());
+                chest.setLootTable(net.minecraft.resources.ResourceKey.create(net.minecraft.core.registries.Registries.LOOT_TABLE,ResourceLocation.fromNamespaceAndPath("jujutsu_kaisen_cursed_paths", "chests/hidden_rich")),rnd.nextLong());
             for(ServerPlayer viewer:level.players())
                 if(viewer.distanceToSqr(Vec3.atCenterOf(at))<96*96)
                     viewer.displayClientMessage(Component.literal("资源互换：终极宝箱出现在 ("+x+", "+at.getY()+", "+z+")").withStyle(ChatFormatting.GOLD),false);
