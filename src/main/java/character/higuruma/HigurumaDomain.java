@@ -162,7 +162,7 @@ public final class HigurumaDomain {
                 if (ent instanceof net.minecraft.world.entity.Mob mob) character.npc.NpcControl.release(mob,"higuruma_judgment");
                 if (ent instanceof LivingEntity le) {
                     var atk2 = le.getAttribute(net.minecraft.world.entity.ai.attributes.Attributes.ATTACK_DAMAGE);
-                    if (atk2 != null) atk2.removeModifier(UUID.nameUUIDFromBytes(("higuruma_confiscate:" + le.getUUID()).getBytes()));
+                    if (atk2 != null) atk2.removeModifier(cn.blockforge.generated.nnnnr1201forge2.CompatAttr.id(UUID.nameUUIDFromBytes(("higuruma_confiscate:" + le.getUUID()).getBytes())));
                 }
                 ci.remove();
             }
@@ -293,7 +293,7 @@ public final class HigurumaDomain {
             if (ent instanceof net.minecraft.world.entity.Mob mob) character.npc.NpcControl.release(mob,"higuruma_judgment");
             if (ent instanceof LivingEntity le) {
                 var atk = le.getAttribute(net.minecraft.world.entity.ai.attributes.Attributes.ATTACK_DAMAGE);
-                if (atk != null) atk.removeModifier(UUID.nameUUIDFromBytes(("higuruma_confiscate:" + le.getUUID()).getBytes()));
+                if (atk != null) atk.removeModifier(cn.blockforge.generated.nnnnr1201forge2.CompatAttr.id(UUID.nameUUIDFromBytes(("higuruma_confiscate:" + le.getUUID()).getBytes())));
             }
         }
         b.confiscated.clear();

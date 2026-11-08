@@ -117,6 +117,6 @@ public final class RitualBlockEntity extends BlockEntity {
     private void changed(){setChanged();if(level!=null)level.sendBlockUpdated(worldPosition,getBlockState(),getBlockState(),3);}
     @Override protected void saveAdditional(CompoundTag n, net.minecraft.core.HolderLookup.Provider provider){super.saveAdditional(n);n.putBoolean("VolcanicFurnace",volcanicFurnace);n.putString("Recipe",recipeId);n.putInt("Elapsed",elapsed);n.putInt("Selection",selection);n.putInt("Strikes",strikes);if(owner!=null)n.putUUID("Owner",owner);n.put("Output",CompatItem.save(output));}
     @Override public void load(CompoundTag n){super.load(n);volcanicFurnace=n.getBoolean("VolcanicFurnace");recipeId=n.getString("Recipe");elapsed=n.getInt("Elapsed");selection=n.getInt("Selection");strikes=n.getInt("Strikes");owner=n.hasUUID("Owner")?n.getUUID("Owner"):null;output=CompatItem.load(n.getCompound("Output"));}
-    @Override public CompoundTag getUpdateTag(){return saveWithoutMetadata();}
+    @Override public CompoundTag getUpdateTag(net.minecraft.core.HolderLookup.Provider provider){return saveWithoutMetadata(provider);}
     @Override public ClientboundBlockEntityDataPacket getUpdatePacket(){return ClientboundBlockEntityDataPacket.create(this);}
 }
