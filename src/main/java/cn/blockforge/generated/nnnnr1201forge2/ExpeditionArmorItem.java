@@ -17,8 +17,4 @@ public final class ExpeditionArmorItem extends ArmorItem {
         this.texture = "jujutsu_kaisen_cursed_paths:textures/models/armor/" + id + "_layer_1.png";
     }
 
-    @Override
-    public String getArmorTexture(ItemStack stack, Entity entity, EquipmentSlot slot, String type) {
-        return texture;
-    }
 }

@@ -74,9 +74,6 @@ public final class VoidContent {
         /** 返回一张**真实存在**的全透明防具贴图，避免日志里那条
          *  {@code Failed to load texture: jujutsu_kaisen_cursed_paths:mahoraga_wheel}（材质名被当贴图路径去查了）。
          *  法轮的外形完全由 {@link MahoragaWheelRenderer} 画，原版防具层画不出东西。 */
-        @Override public String getArmorTexture(ItemStack stack,net.minecraft.world.entity.Entity entity,net.minecraft.world.entity.EquipmentSlot slot,String type){
-            return "jujutsu_kaisen_cursed_paths:textures/models/armor/mahoraga_wheel_layer_"+(slot==net.minecraft.world.entity.EquipmentSlot.LEGS?2:1)+".png";
-        }
     });
     /** 法轮 · 收回：召唤出友方魔虚罗后，手里的法轮会变成它；再右键就把那只召回来并变回法轮。 */
     public static final DeferredHolder<Item, Item> MAHORAGA_WHEEL_RECALL=Content.ITEMS.register("mahoraga_wheel_recall",() -> new Item(new Item.Properties().stacksTo(1).rarity(Rarity.EPIC).fireResistant()){
