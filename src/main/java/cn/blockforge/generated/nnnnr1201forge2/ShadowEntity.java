@@ -73,7 +73,7 @@ public final class ShadowEntity extends PathfinderMob {
         }
     }
     public void dissolve(){if(isRemoved()||action()==DISSOLVE)return;action(DISSOLVE,20);navigation.stop();setTarget(null);ShadowBindings.release(this);if(owner() instanceof MegumiEntity m)m.forgetGuard(this);if(owner() instanceof ServerPlayer p&&!ritual())ShadowSystem.forget(p,this);if(level() instanceof ServerLevel l)ShadowSystem.fx(l,0,position(),position(),Math.max(.65f,getBbWidth()),35);}
-    @Override public EntityDimensions getDimensions(Pose pose){
+    @Override protected EntityDimensions getDefaultDimensions(Pose pose){
         int k=entityData==null||!entityData.hasItem(KIND)?0:kind();return switch(k){case 2->EntityDimensions.scalable(1.1f,1.65f);case 3->EntityDimensions.scalable(1.5f,.9f);case 4->EntityDimensions.scalable(1.1f,.85f);case 5->EntityDimensions.scalable(2.2f,2.3f);case 6->EntityDimensions.scalable(2.5f,2.8f);case 7->EntityDimensions.scalable(.38f,.45f);case 8->EntityDimensions.scalable(1.2f,2.6f);case 9->EntityDimensions.scalable(1.7f,2.1f);case 10->EntityDimensions.scalable(1.4f,1.8f);default->EntityDimensions.scalable(.8f,1.25f);};
     }
     @Override public void onSyncedDataUpdated(EntityDataAccessor<?> key){super.onSyncedDataUpdated(key);if(KIND.equals(key))refreshDimensions();}
@@ -99,7 +99,7 @@ public final class ShadowEntity extends PathfinderMob {
         if(!validTarget(target)||!hasLineOfSight(target))return false;
         float damage=(float)(getAttributeValue(Attributes.ATTACK_DAMAGE)*multiplier);
         DamageSource source=damageSources().mobAttack(this);
-        if(kind()==TenShadowRules.TOTALITY){damage=CombatRules.getDamageAfterAbsorb(damage,target.getArmorValue()*.35f,(float)target.getAttributeValue(Attributes.ARMOR_TOUGHNESS)*.35f);source=new DamageSource(level().registryAccess().registryOrThrow(Registries.DAMAGE_TYPE).getHolderOrThrow(PIERCE),this);}
+        if(kind()==TenShadowRules.TOTALITY){damage=CombatRules.getDamageAfterAbsorb(target,damage,source,target.getArmorValue()*.35f,(float)target.getAttributeValue(Attributes.ARMOR_TOUGHNESS)*.35f);source=new DamageSource(level().registryAccess().registryOrThrow(Registries.DAMAGE_TYPE).getHolderOrThrow(PIERCE),this);}
         boolean accepted;try{AttackTypes.mark(AttackTypes.TEN_SHADOWS);accepted=owner() instanceof ServerPlayer p&&!ritual()?CombatSafety.hurt(p,target,source,damage):target.hurt(source,damage);}finally{AttackTypes.clear();}
         if(accepted){setLastHurtMob(target);if(owner() instanceof ServerPlayer p&&!ritual())target.setLastHurtByPlayer(p);}
         return accepted;

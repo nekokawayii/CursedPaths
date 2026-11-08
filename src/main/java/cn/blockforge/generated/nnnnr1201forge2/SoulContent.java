@@ -31,12 +31,12 @@ public final class SoulContent {
         @Override public void entityInside(net.minecraft.world.level.block.state.BlockState state,net.minecraft.world.level.Level level,net.minecraft.core.BlockPos pos,Entity entity){
             if(entity instanceof ServerPlayer p&&level.getGameTime()>=p.getPersistentData().getLong("SukunaGateCooldown")){p.getPersistentData().putLong("SukunaGateCooldown",level.getGameTime()+80);SoulJourney.enter(p);}
         }
-        @Override public net.minecraft.world.ItemInteractionResult useItemOn(net.minecraft.world.item.ItemStack stack, net.minecraft.world.level.block.state.BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit){
+        @Override public net.minecraft.world.ItemInteractionResult useItemOn(net.minecraft.world.item.ItemStack heldStack, net.minecraft.world.level.block.state.BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit){
             if(player instanceof ServerPlayer p)SoulJourney.enter(p);return net.minecraft.world.ItemInteractionResult.sidedSuccess(level.isClientSide);
         }
     });
     public static final DeferredHolder<Block, Block> PASSAGE=ProgressionContent.BLOCKS.register("soul_passage",()->new Block(BlockBehaviour.Properties.ofFullCopy(Blocks.OBSIDIAN).strength(-1,3600000).lightLevel(s->8)){
-        @Override public net.minecraft.world.ItemInteractionResult useItemOn(net.minecraft.world.item.ItemStack stack, net.minecraft.world.level.block.state.BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit){if(player instanceof ServerPlayer p)SoulJourney.passage(p,pos);return net.minecraft.world.ItemInteractionResult.sidedSuccess(level.isClientSide);}
+        @Override public net.minecraft.world.ItemInteractionResult useItemOn(net.minecraft.world.item.ItemStack heldStack, net.minecraft.world.level.block.state.BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit){if(player instanceof ServerPlayer p)SoulJourney.passage(p,pos);return net.minecraft.world.ItemInteractionResult.sidedSuccess(level.isClientSide);}
     });
     public static final DeferredHolder<Block, Block> RICE=ProgressionContent.BLOCKS.register("iwate_rice",()->new Block(BlockBehaviour.Properties.ofFullCopy(Blocks.SHORT_GRASS).noCollission().noOcclusion().strength(0)));
     public static final DeferredHolder<Block, Block> THREAD=ProgressionContent.BLOCKS.register("soul_thread",()->new Block(BlockBehaviour.Properties.ofFullCopy(Blocks.COBWEB).noCollission().strength(0.2f).lightLevel(s->3)){
@@ -45,7 +45,7 @@ public final class SoulContent {
         }
     });
     public static final DeferredHolder<Block, Block> PHOTO_SLOT=ProgressionContent.BLOCKS.register("yuji_photo_slot",()->new Block(BlockBehaviour.Properties.ofFullCopy(Blocks.POLISHED_DEEPSLATE).strength(-1,3600000).lightLevel(s->5)){
-        @Override public net.minecraft.world.ItemInteractionResult useItemOn(net.minecraft.world.item.ItemStack stack, net.minecraft.world.level.block.state.BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit){
+        @Override public net.minecraft.world.ItemInteractionResult useItemOn(net.minecraft.world.item.ItemStack heldStack, net.minecraft.world.level.block.state.BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit){
             ItemStack stack=player.getItemInHand(hand);if(!(player instanceof ServerPlayer p))return net.minecraft.world.ItemInteractionResult.SUCCESS;
             if(!stack.is(Content.YUJI_FAMILY_PHOTO.get())){p.displayClientMessage(net.minecraft.network.chat.Component.literal("照片槽需要放入“虎杖家双人合照”"),true);return net.minecraft.world.ItemInteractionResult.CONSUME;}
             if(level.getDifficulty()==net.minecraft.world.Difficulty.PEACEFUL){p.displayClientMessage(net.minecraft.network.chat.Component.literal("请先把难度改为简单、普通或困难"),true);return net.minecraft.world.ItemInteractionResult.CONSUME;}
