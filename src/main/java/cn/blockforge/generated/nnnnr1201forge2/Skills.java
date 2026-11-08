@@ -186,7 +186,7 @@ public final class Skills {
         var attr=MaidBridge.body(p).getAttribute(net.minecraft.world.entity.ai.attributes.Attributes.MOVEMENT_SPEED);
         if(attr==null)return;
         attr.removeModifier(CompatAttr.id(SEAL_SLOW));
-        attr.addTransientModifier(new net.minecraft.world.entity.ai.attributes.AttributeModifier(SEAL_SLOW,"sukuna_domain_seal",-1,net.minecraft.world.entity.ai.attributes.AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL));
+        attr.addTransientModifier(new AttributeModifier(CompatAttr.id(SEAL_SLOW), -1, net.minecraft.world.entity.ai.attributes.AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL));
     }
     private static void unfreeze(ServerPlayer p){
         var attr=MaidBridge.body(p).getAttribute(net.minecraft.world.entity.ai.attributes.Attributes.MOVEMENT_SPEED);

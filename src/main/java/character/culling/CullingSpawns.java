@@ -370,8 +370,7 @@ public final class CullingSpawns {
         if (a == null) return;
         if (Math.abs(amount) < 1e-6) { if (a.getModifier(CompatAttr.id(id)) != null) a.removeModifier(CompatAttr.id(id)); return; }
         if (a.getModifier(CompatAttr.id(id)) != null) a.removeModifier(CompatAttr.id(id));
-        a.addTransientModifier(new net.minecraft.world.entity.ai.attributes.AttributeModifier(
-            id, "死灭NPC规则", amount, net.minecraft.world.entity.ai.attributes.AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL));
+        a.addTransientModifier(new AttributeModifier(CompatAttr.id(id), amount, net.minecraft.world.entity.ai.attributes.AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL));
     }
 
     /** 怪物打人的伤害倍率（来自 NPC 制定的规则）。 */

@@ -248,8 +248,7 @@ public final class HigurumaDomain {
         if (atk != null) {
             var id = UUID.nameUUIDFromBytes(("higuruma_confiscate:" + living.getUUID()).getBytes());
             if (atk.getModifier(CompatAttr.id(id)) == null)
-                atk.addPermanentModifier(new net.minecraft.world.entity.ai.attributes.AttributeModifier(
-                    id, "higuruma_confiscate", -0.5, net.minecraft.world.entity.ai.attributes.AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL));
+                atk.addPermanentModifier(new AttributeModifier(CompatAttr.id(id), -0.5, net.minecraft.world.entity.ai.attributes.AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL));
         }
         b.confiscated.put(living.getUUID(), b.level.getGameTime() + 100);
     }
