@@ -96,7 +96,7 @@ public final class Authority {
         Journey.give(p,new ItemStack(CURSE.get()));Journey.give(p,new ItemStack(BANNER.get()));upgradeFragment(p);settleMarker(p);
         if(!p.getInventory().contains(new ItemStack(EDITOR.get())))Journey.give(p,new ItemStack(EDITOR.get()));
         var advancement=p.server.getAdvancements().get(ResourceLocation.fromNamespaceAndPath("jujutsu_kaisen_cursed_paths", "transgressor"));
-        if(advancement!=null)for(String criterion:advancement.getCriteria().keySet())p.getAdvancements().award(advancement,criterion);
+        if(advancement!=null)for(String criterion:advancement.value().criteria().keySet())p.getAdvancements().award(advancement,criterion);
         Curse.sync(p);AuthorityPackets.sync(p);
     }
     private static void upgradeFragment(ServerPlayer p){for(int i=0;i<p.getInventory().getContainerSize();i++)if(p.getInventory().getItem(i).is(Content.BEYOND_FRAGMENT.get()))p.getInventory().setItem(i,new ItemStack(EDITOR.get()));}

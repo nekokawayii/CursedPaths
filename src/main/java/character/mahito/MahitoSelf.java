@@ -332,7 +332,9 @@ public final class MahitoSelf {
 
     private static void shootArrow(ServerPlayer p, float power) {
         if (!(p.level() instanceof net.minecraft.server.level.ServerLevel level)) return;
-        net.minecraft.world.entity.projectile.Arrow arrow = new net.minecraft.world.entity.projectile.Arrow(level, p);
+        net.minecraft.world.entity.projectile.Arrow arrow = net.minecraft.world.entity.EntityType.ARROW.create(level);
+        if (arrow == null) return;
+        arrow.setOwner(p);
         arrow.setPos(p.getX(), p.getEyeY() - 0.1, p.getZ());
         arrow.shootFromRotation(p, p.getXRot(), p.getYRot(), 0f, power * 3f, 1f);
         arrow.setBaseDamage(2.0 * power + 1.0);
