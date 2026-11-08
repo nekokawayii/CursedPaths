@@ -8,6 +8,7 @@ import net.minecraft.world.level.block.state.BlockState;
 
 /** 实体球壳蒙版：方块本身负责碰撞和遮挡，图像按视线投影到可见表面。 */
 public class DomainMaskBlock extends BaseEntityBlock {
+    @Override protected com.mojang.serialization.MapCodec<? extends BaseEntityBlock> codec(){return com.mojang.serialization.MapCodec.unit(this);}
     public DomainMaskBlock(Properties properties){super(properties);}
     @Override public BlockEntity newBlockEntity(BlockPos pos,BlockState state){return new DomainMaskBlockEntity(pos,state);}
     @Override public RenderShape getRenderShape(BlockState state){return RenderShape.ENTITYBLOCK_ANIMATED;}

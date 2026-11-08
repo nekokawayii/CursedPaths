@@ -160,7 +160,7 @@ public final class VoidCombat {
         level.playSound(null,center.x,center.y,center.z,SoundEvents.GENERIC_EXPLODE,SoundSource.PLAYERS,4,0.7f);
         LivingEntity body=MaidBridge.body(p);
         for(LivingEntity target:Skills.targets(level,p,center,5)){
-            if(target.ignoreExplosion())continue;
+            if(target.ignoreExplosion(null))continue; // TODO 1.21 需要 Explosion 参数，这里仅在爆炸伤害路径调用
             double distance=target.position().distanceTo(center);
             double visibility=net.minecraft.world.level.Explosion.getSeenPercent(center,target);
             float amount=Authority.damageOwner(p)!=null?(float)(BalanceRules.damage(CasterDamageRules.furnaceBlast(distance,visibility,false)*MahoragaRules.bossDamage(target,MahoragaRules.FURNACE_MULTIPLIER))*Authority.damageScale(p)):BalanceRules.damage(CasterDamageRules.furnaceBlast(distance,visibility,true)*MahoragaRules.bossDamage(target,MahoragaRules.FURNACE_MULTIPLIER));
