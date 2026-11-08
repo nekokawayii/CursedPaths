@@ -40,7 +40,7 @@ public final class AimOptionsScreen extends Screen {
     @Override public void onClose(){minecraft.setScreen(parent);}
     @Override public void tick(){angle.tick();range.tick();}
     @Override public void render(GuiGraphics g,int mx,int my,float partial){
-        renderBackground(g);int x=width/2-140,y=Math.max(30,(height-190)/2);
+        renderBackground(g, 0, 0, 0);int x=width/2-140,y=Math.max(30,(height-190)/2);
         g.drawCenteredString(font,title,width/2,y+5,0xFFFFD8E8);
         g.drawString(font,"准星范围半角（度）",x,y+60,0xFFE7D7EA);g.drawString(font,"自动索敌距离（格）",x,y+88,0xFFE7D7EA);
         g.drawCenteredString(font,message,width/2,y+138,0xFFAED7ED);

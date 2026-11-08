@@ -24,7 +24,7 @@ public final class WallpaperConsentScreen extends Screen {
     @Override public void removed(){if(!decided){decided=true;WallpaperClient.choose(false,false);}}
     @Override public boolean isPauseScreen(){return false;}
     @Override public void render(GuiGraphics g,int mouseX,int mouseY,float partial){
-        renderBackground(g);int panel=Math.min(420,width-24),x=(width-panel)/2,y=12;
+        renderBackground(g, 0, 0, 0);int panel=Math.min(420,width-24),x=(width-panel)/2,y=12;
         g.drawCenteredString(font,title,width/2,y,0xFFFFD68A);y+=20;
         g.drawWordWrap(font,Component.literal(QUESTION),x,y,panel,0xFFFFFFFF);y+=font.split(Component.literal(QUESTION),panel).size()*9+8;
         g.drawWordWrap(font,Component.literal(NOTICE),x,y,panel,0xFFD8E5F1);y+=font.split(Component.literal(NOTICE),panel).size()*9+8;

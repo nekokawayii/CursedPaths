@@ -30,7 +30,7 @@ public final class CullingRuleScreen extends Screen {
     }
 
     @Override public void render(GuiGraphics g, int mouseX, int mouseY, float partial) {
-        renderBackground(g);
+        renderBackground(g, 0, 0, 0);
         var font = Minecraft.getInstance().font;
         int width = Math.min(720, this.width - 30);
         int height = 150;

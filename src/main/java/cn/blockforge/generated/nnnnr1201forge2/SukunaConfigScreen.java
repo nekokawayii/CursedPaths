@@ -231,7 +231,7 @@ public final class SukunaConfigScreen extends Screen {
     }
     @Override
     public void render(GuiGraphics g, int mouseX, int mouseY, float partialTick) {
-        renderBackground(g);
+        renderBackground(g, 0, 0, 0);
         int left = left(), w = panelWidth(), fieldWidth = Math.min(115, w / 3);
         g.fill(left - 6, 5, left + w + 6, height - 5, 0xDA17131D);
         g.drawCenteredString(font, title, width / 2, 12, 0xFFFFD8E4);

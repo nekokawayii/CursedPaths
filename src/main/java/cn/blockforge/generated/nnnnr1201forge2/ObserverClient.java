@@ -95,7 +95,7 @@ public final class ObserverClient {
     private static final class VictoryScreen extends net.minecraft.client.gui.screens.Screen {
         VictoryScreen(){super(net.minecraft.network.chat.Component.literal("高位 · 控制权已收回"));}
         @Override public void render(net.minecraft.client.gui.GuiGraphics g,int x,int y,float partial){
-            renderBackground(g);ObserverDialog.frame(g,Math.max(8,width/2-140),height/2-45,Math.min(280,width-16),90,"连接已恢复","连接已恢复。");
+            renderBackground(g, 0, 0, 0);ObserverDialog.frame(g,Math.max(8,width/2-140),height/2-45,Math.min(280,width-16),90,"连接已恢复","连接已恢复。");
         }
     }
     private ObserverClient(){}

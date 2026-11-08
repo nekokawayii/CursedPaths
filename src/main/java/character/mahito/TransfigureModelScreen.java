@@ -48,7 +48,7 @@ public final class TransfigureModelScreen extends Screen {
     }
 
     @Override public void render(GuiGraphics g, int mouseX, int mouseY, float partial) {
-        renderBackground(g);
+        renderBackground(g, 0, 0, 0);
         int cx = width / 2;
         g.drawCenteredString(font, "无为转变 · 改变（类建模）", cx, height / 2 - 60, 0xFF9FD7E8);
         g.drawCenteredString(font, "身高：" + String.format("%.1f", height_) + "  宽度：" + String.format("%.1f", width_),

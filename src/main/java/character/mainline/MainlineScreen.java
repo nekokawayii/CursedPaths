@@ -11,7 +11,7 @@ public final class MainlineScreen extends Screen {
     public MainlineScreen() { super(Component.literal("共同主线")); }
 
     @Override public void render(GuiGraphics g, int mouseX, int mouseY, float partial) {
-        renderBackground(g);
+        renderBackground(g, 0, 0, 0);
         var font = Minecraft.getInstance().font;
         int boxWidth = Math.min(430, width - 40);
         int rows = Mainline.TRAIN_FIRST;                       // 上面 7 个主成就，下面是训练分支

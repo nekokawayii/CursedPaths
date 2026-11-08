@@ -28,7 +28,7 @@ public final class CullingStartScreen extends Screen {
     public static void open() { Minecraft.getInstance().setScreen(new CullingStartScreen()); }
 
     @Override public void render(GuiGraphics g, int mouseX, int mouseY, float partial) {
-        renderBackground(g);
+        renderBackground(g, 0, 0, 0);
         var font = Minecraft.getInstance().font;
         int total = 3 * CARD_W + 2 * GAP;
         int startX = (this.width - total) / 2, top = this.height / 2 - CARD_H / 2;

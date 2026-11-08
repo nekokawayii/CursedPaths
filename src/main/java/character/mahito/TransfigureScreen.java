@@ -89,7 +89,7 @@ public final class TransfigureScreen extends Screen {
     }
 
     @Override public void render(GuiGraphics g, int mouseX, int mouseY, float partial) {
-        renderBackground(g);
+        renderBackground(g, 0, 0, 0);
         int cx = width / 2, cy = height / 2;
         g.fill(cx - 34, cy - 34, cx + 34, cy + 34, 0xCC14171C);
         g.drawCenteredString(font, page == 4 ? "具象化" : "无为转变", cx, cy - 6, 0xFF9FD7E8);

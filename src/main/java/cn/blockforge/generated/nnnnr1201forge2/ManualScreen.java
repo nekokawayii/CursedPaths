@@ -13,7 +13,7 @@ public class ManualScreen extends Screen {
     public ManualScreen() { super(Component.literal("咒术公开玩法手册")); }
 
     @Override public void render(GuiGraphics g, int mouseX, int mouseY, float partial) {
-        renderBackground(g);
+        renderBackground(g, 0, 0, 0);
         var font = Minecraft.getInstance().font;
         int w = Math.min(360, width - 40), h = Math.min(240, height - 40);
         int x = (width - w) / 2, y = (height - h) / 2;

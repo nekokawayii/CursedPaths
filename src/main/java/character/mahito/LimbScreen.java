@@ -28,7 +28,7 @@ public final class LimbScreen extends Screen {
     }
 
     @Override public void render(GuiGraphics g, int mouseX, int mouseY, float partial) {
-        renderBackground(g);
+        renderBackground(g, 0, 0, 0);
         int cx = width / 2;
         g.drawCenteredString(font, "无为转变 · 肢体", cx, height / 2 - 60, 0xFF9FD7E8);
         g.drawCenteredString(font, "手臂数量：" + arms + " / 4", cx, height / 2 - 30, 0xFFE8F0F5);
