@@ -6,7 +6,7 @@ import net.minecraft.server.level.ServerPlayer;
 public final class CharacterBridge {
     public static void stop(ServerPlayer p) {
         AuthoritySkills.cancel(p);MeleeCombo.cancel(p);FreehandDrawing.cancel(p);
-        Network.CHANNEL.send(net.neoforged.neoforge.network.SimpleChannel.Target.player(p),new Network.TestReset());
+        Network.CHANNEL.send(cn.blockforge.generated.nnnnr1201forge2.SimpleChannel.Target.player(p),new Network.TestReset());
         GuardianPlayerSkills.testReset(p);DeathStar.cancel(p);Shinbuke.cancelCharge(p);
         ShadowSystem.recall(p,-1);
         MahoragaAdaptStore.recallAll(p);

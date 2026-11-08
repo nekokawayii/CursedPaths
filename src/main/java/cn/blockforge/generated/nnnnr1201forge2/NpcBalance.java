@@ -51,7 +51,7 @@ public final class NpcBalance {
 
     @SubscribeEvent public static void join(EntityJoinLevelEvent e) {
         if (e.getLevel().isClientSide() || !(e.getEntity() instanceof LivingEntity living)) return;
-        String id = net.neoforged.neoforge.registries.BuiltInRegistries.ENTITY_TYPES.getKey(living.getType()).toString();
+        String id = net.minecraft.core.registries.BuiltInRegistries.ENTITY_TYPES.getKey(living.getType()).toString();
         Double base = BASE.get(id);
         if (base == null) return;
         var attribute = living.getAttribute(Attributes.MAX_HEALTH);

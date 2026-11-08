@@ -36,7 +36,7 @@ public final class Legion {
             if(exists||stored.size()>=AuthorityRules.MAX_MEMBERS)continue;
             var actor=MaidBridge.caster(mob);if(actor!=null)AuthoritySkills.cancel(actor);
             var versions=army.getCompound("Versions");int rev=Math.max(versions.getInt(mob.getStringUUID()),mob.getPersistentData().getInt("AuthorityRevision"))+1;mob.getPersistentData().putInt("AuthorityRevision",rev);versions.putInt(mob.getStringUUID(),rev);army.put("Versions",versions);
-            CompoundTag saved=mob.saveWithoutId(new CompoundTag());saved.putString("id",net.neoforged.neoforge.registries.BuiltInRegistries.ENTITY_TYPES.getKey(mob.getType()).toString());saved.remove("Passengers");stored.add(saved);army.put("Stored",stored);state.setDirty();
+            CompoundTag saved=mob.saveWithoutId(new CompoundTag());saved.putString("id",net.minecraft.core.registries.BuiltInRegistries.ENTITY_TYPES.getKey(mob.getType()).toString());saved.remove("Passengers");stored.add(saved);army.put("Stored",stored);state.setDirty();
             ServerPlayer p=owner(mob);if(p!=null&&p.isAlive()&&!p.hasDisconnected()&&!army.getBoolean("RecallPending"))releaseAll(p);
         }
     }
