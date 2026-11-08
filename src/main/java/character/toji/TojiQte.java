@@ -308,8 +308,7 @@ public final class TojiQte {
         if (d.getLong("TojiSpeedClear") == 0 || n < d.getLong("TojiSpeedClear")) return;
         d.remove("TojiSpeedClear");
         var attribute = p.getAttribute(Attributes.MOVEMENT_SPEED);
-        if (attribute != null) attribute.removeModifier(
-            java.util.UUID.fromString("480bb88f-333a-45aa-8bbb-001100220010"));
+        if (attribute != null) attribute.removeModifier(cn.blockforge.generated.nnnnr1201forge2.CompatAttr.id(java.util.UUID.fromString("480bb88f-333a-45aa-8bbb-001100220010")));
     }
 
     private static void equipWeapon(ServerPlayer p, boolean yuyun) {

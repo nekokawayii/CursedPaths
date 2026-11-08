@@ -99,12 +99,12 @@ public final class VoidJourney {
     }
     @SubscribeEvent public static void livingTick(net.neoforged.neoforge.event.tick.EntityTickEvent.Post e){
         var p=e.getEntity();if(p.level().isClientSide)return;
-        if(p.getPersistentData().contains("VoidEyeUntil")&&p.getPersistentData().getLong("VoidEyeUntil")<=p.level().getGameTime()){p.getPersistentData().remove("VoidEyeUntil");var speed=p.getAttribute(net.minecraft.world.entity.ai.attributes.Attributes.MOVEMENT_SPEED);if(speed!=null)speed.removeModifier(java.util.UUID.fromString("731c3ef0-7dc0-422e-b4cd-0fae77215392"));}
+        if(p.getPersistentData().contains("VoidEyeUntil")&&p.getPersistentData().getLong("VoidEyeUntil")<=p.level().getGameTime()){p.getPersistentData().remove("VoidEyeUntil");var speed=p.getAttribute(net.minecraft.world.entity.ai.attributes.Attributes.MOVEMENT_SPEED);if(speed!=null)speed.removeModifier(cn.blockforge.generated.nnnnr1201forge2.CompatAttr.id(java.util.UUID.fromString("731c3ef0-7dc0-422e-b4cd-0fae77215392")));}
         if(p.getPersistentData().contains("VoidCaptured")&&p.getPersistentData().getLong("VoidCaptured")<=p.level().getGameTime()){p.getPersistentData().remove("VoidCaptured");p.setInvisible(false);}
     }
     @SubscribeEvent public static void capturedDamage(LivingIncomingDamageEvent e){var p=e.getEntity();if(p.getPersistentData().getLong("VoidCaptured")>p.level().getGameTime()&&!e.getSource().is(net.minecraft.tags.DamageTypeTags.BYPASSES_INVULNERABILITY))e.setCanceled(true);}
     @SubscribeEvent public static void heal(LivingHealEvent e){if(e.getEntity().getPersistentData().getLong("VoidNoHeal")>e.getEntity().level().getGameTime())e.setCanceled(true);}
-    static void clear(Player p){p.getPersistentData().remove("VoidNoHeal");p.getPersistentData().remove("VoidEyeUntil");if(p.getPersistentData().contains("VoidCaptured")){p.getPersistentData().remove("VoidCaptured");p.setInvisible(false);}var a=p.getAttribute(net.minecraft.world.entity.ai.attributes.Attributes.MOVEMENT_SPEED);if(a!=null)a.removeModifier(java.util.UUID.fromString("731c3ef0-7dc0-422e-b4cd-0fae77215392"));}
+    static void clear(Player p){p.getPersistentData().remove("VoidNoHeal");p.getPersistentData().remove("VoidEyeUntil");if(p.getPersistentData().contains("VoidCaptured")){p.getPersistentData().remove("VoidCaptured");p.setInvisible(false);}var a=p.getAttribute(net.minecraft.world.entity.ai.attributes.Attributes.MOVEMENT_SPEED);if(a!=null)a.removeModifier(cn.blockforge.generated.nnnnr1201forge2.CompatAttr.id(java.util.UUID.fromString("731c3ef0-7dc0-422e-b4cd-0fae77215392")));}
     @SubscribeEvent public static void logout(PlayerEvent.PlayerLoggedOutEvent e){clear(e.getEntity());}
     @SubscribeEvent public static void dimension(PlayerEvent.PlayerChangedDimensionEvent e){clear(e.getEntity());}
     @SubscribeEvent public static void respawn(PlayerEvent.PlayerRespawnEvent e){clear(e.getEntity());}

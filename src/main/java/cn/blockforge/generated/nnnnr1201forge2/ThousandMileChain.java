@@ -390,7 +390,7 @@ public final class ThousandMileChain {
         if(e.getEntity().level().isClientSide)return;
         Session s=CAPTIVES.get(e.getEntity().getUUID());
         if(s!=null&&s.phase==BOUND)hold(s);
-        else if(s==null&&e.getEntity().getPersistentData().contains(GRAVITY))restore(e.getEntity());
+        else if(s==null&&e.getEntity() instanceof net.minecraft.world.entity.LivingEntity le&&le.getPersistentData().contains(GRAVITY))restore(le);
         // 不取消整次生物tick，保留受伤无敌时间、药水和死亡计时的正常推进。
     }
     @SubscribeEvent(priority=EventPriority.HIGHEST) public static void teleport(EntityTeleportEvent e){if(bound(e.getEntity()))e.setCanceled(true);}
