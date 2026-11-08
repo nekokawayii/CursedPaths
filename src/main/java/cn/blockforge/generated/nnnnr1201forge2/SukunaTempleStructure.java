@@ -46,7 +46,7 @@ public final class SukunaTempleStructure extends Structure {
 
     private SukunaTempleStructure(StructureSettings settings,Holder<StructureTemplatePool> pool,Optional<ResourceLocation> jigsawName,int size,HeightProvider height,boolean expansion,Optional<Heightmap.Types> heightmap,int distance){
         super(settings);this.pool=pool;this.jigsawName=jigsawName;this.size=size;this.height=height;this.expansion=expansion;this.heightmap=heightmap;this.distance=distance;
-        template=new JigsawStructure(settings,pool,jigsawName,size,height,expansion,heightmap,distance,java.util.List.of(),net.minecraft.world.level.levelgen.structure.pools.DimensionPadding.NONE,net.minecraft.world.level.levelgen.structure.templatesystem.LiquidSettings.IGNORE_WATERLOGGING);
+        template=new JigsawStructure(settings,pool,jigsawName,size,height,expansion,heightmap,distance,java.util.List.of(),net.minecraft.world.level.levelgen.structure.pools.DimensionPadding.ZERO,net.minecraft.world.level.levelgen.structure.templatesystem.LiquidSettings.IGNORE_WATERLOGGING);
     }
     @Override public Optional<GenerationStub> findGenerationPoint(GenerationContext context){
         if(context.chunkGenerator()!=overworldGenerator)return Optional.empty();

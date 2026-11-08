@@ -143,7 +143,7 @@ public final class Uraume {
     }
     public static void protect(ServerPlayer owner,UUID target){Frozen f=frozen.get(target);if(f!=null&&f.owner==owner){frozen.remove(target,f);release(f);}}
     public static void cancel(ServerPlayer p){breaths.removeIf(b->b.owner==p);pillars.removeIf(q->q.owner==p);for(Frozen f:List.copyOf(frozen.values()))if(f.owner==p||f.target.getUUID().equals(p.getUUID())){frozen.remove(f.target.getUUID(),f);release(f);}}
-    @SubscribeEvent(priority=EventPriority.HIGHEST) public static void frozenTick(net.neoforged.neoforge.event.tick.EntityTickEvent.Post e){if(e.getEntity().level().isClientSide||!locked(e.getEntity()))return;hold(frozen.get(e.getEntity().getUUID()));if(!(e.getEntity() instanceof Player))cn.blockforge.generated.nnnnr1201forge2.CompatEvents.cancel(e);}
+    @SubscribeEvent(priority=EventPriority.HIGHEST) public static void frozenTick(net.neoforged.neoforge.event.tick.EntityTickEvent.Post e){if(!(e.getEntity() instanceof net.minecraft.world.entity.LivingEntity le))return;if(le.level().isClientSide||!locked(le))return;hold(frozen.get(e.getEntity().getUUID()));if(!(e.getEntity() instanceof Player))cn.blockforge.generated.nnnnr1201forge2.CompatEvents.cancel(e);}
     @SubscribeEvent(priority=EventPriority.HIGHEST) public static void attack(AttackEntityEvent e){if(locked(e.getEntity()))e.setCanceled(true);}
     @SubscribeEvent(priority=EventPriority.HIGHEST) public static void interact(PlayerInteractEvent e){if(true&&locked(e.getEntity()))cn.blockforge.generated.nnnnr1201forge2.CompatEvents.cancel(e);}
     @SubscribeEvent(priority=EventPriority.HIGHEST) public static void outgoing(LivingIncomingDamageEvent e){if(e.getSource().getEntity() instanceof LivingEntity t&&locked(t))e.setCanceled(true);}
