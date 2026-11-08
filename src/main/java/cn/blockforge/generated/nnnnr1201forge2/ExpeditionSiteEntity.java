@@ -14,5 +14,5 @@ public final class ExpeditionSiteEntity extends BlockEntity {
         for(int tries=0;tries<10&&b.spawned<b.count;tries++){BlockPos at=p.offset(sl.random.nextInt(9)-4,1,sl.random.nextInt(9)-4);if(sl.getBlockState(at.below()).isAir())continue;var mob=ExpeditionMobs.spawn(sl,at,b.role,sp);if(mob!=null){b.spawned++;b.setChanged();}}
     }
     @Override protected void saveAdditional(CompoundTag n, net.minecraft.core.HolderLookup.Provider provider){super.saveAdditional(n, provider);n.putString("Role",role);n.putInt("Count",count);n.putInt("Spawned",spawned);}
-    @Override public void load(CompoundTag n){super.load(n);role=n.getString("Role");count=Math.max(1,Math.min(12,n.getInt("Count")));spawned=n.getInt("Spawned");}
+    @Override public void loadAdditional(CompoundTag n, net.minecraft.core.HolderLookup.Provider provider){super.loadAdditional(n, provider);role=n.getString("Role");count=Math.max(1,Math.min(12,n.getInt("Count")));spawned=n.getInt("Spawned");}
 }

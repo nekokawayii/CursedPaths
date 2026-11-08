@@ -38,7 +38,7 @@ public final class SkillWheel extends Screen {
     }
     private String modeText(){return "解："+(Client.progress.dismantleQi()?"剑气":"斩击")+"模式 · 点击切换";}
     private void changePage(int direction){if(!pages())return;int[] available=unlockedPages();int at=0;for(int i=0;i<available.length;i++)if(available[i]==page)at=i;page=available[Math.floorMod(at+direction,available.length)];Client.wheelPage=page;current=global(0);branchHover=-1;}
-    @Override public boolean mouseScrolled(double x,double y,double delta){if(delta!=0&&pages()){changePage(delta>0?-1:1);return true;}return super.mouseScrolled(x,y,delta);}
+    @Override public boolean mouseScrolled(double x,double y,double scrollX,double delta){if(delta!=0&&pages()){changePage(delta>0?-1:1);return true;}return super.mouseScrolled(x,y,scrollX,delta);}
     @Override public boolean keyPressed(int key,int scan,int mods){if((key==GLFW.GLFW_KEY_LEFT||key==GLFW.GLFW_KEY_RIGHT||key==GLFW.GLFW_KEY_PAGE_UP||key==GLFW.GLFW_KEY_PAGE_DOWN)&&pages()){changePage(key==GLFW.GLFW_KEY_LEFT||key==GLFW.GLFW_KEY_PAGE_UP?-1:1);return true;}return super.keyPressed(key,scan,mods);}
     @Override public boolean isPauseScreen(){return false;}
     private int outerRadius(){return WheelSideSlots.radius(width,height,ice(),gojo());}

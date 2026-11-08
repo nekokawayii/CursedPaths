@@ -49,7 +49,7 @@ public class DomainScreenItem extends BlockItem {
         return super.use(level, player, hand);
     }
 
-    @Override public void appendHoverText(ItemStack stack, Level level, java.util.List<Component> lines,
+    @Override public void appendHoverText(ItemStack stack, net.minecraft.world.item.Item.TooltipContext level, java.util.List<Component> lines,
                                           net.minecraft.world.item.TooltipFlag flag) {
         lines.add(Component.literal("领域内壳材料：六个面显示同一张图").withStyle(ChatFormatting.GRAY));
         lines.add(Component.literal("石流龙领域固定使用落日晚霞").withStyle(ChatFormatting.DARK_AQUA));

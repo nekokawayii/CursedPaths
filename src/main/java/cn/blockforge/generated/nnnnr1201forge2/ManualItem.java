@@ -35,7 +35,7 @@ public class ManualItem extends Item {
         return InteractionResultHolder.sidedSuccess(stack, true);
     }
 
-    @Override public void appendHoverText(ItemStack stack, Level level, java.util.List<net.minecraft.network.chat.Component> lines,
+    @Override public void appendHoverText(ItemStack stack, net.minecraft.world.item.Item.TooltipContext level, java.util.List<net.minecraft.network.chat.Component> lines,
                                           TooltipFlag flag) {
         lines.add(net.minecraft.network.chat.Component.literal("右键打开玩法手册（帕秋莉已装则用帕秋莉版）")
             .withStyle(net.minecraft.ChatFormatting.GRAY));

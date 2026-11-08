@@ -53,7 +53,7 @@ public class ManualScreen extends Screen {
 
     private int scroll;
 
-    @Override public boolean mouseScrolled(double mx, double my, double delta) {
+    @Override public boolean mouseScrolled(double mx,double my,double scrollX,double delta) {
         if (mx < width / 2 - 80) {   // 左侧：切分类
             if (delta > 0) index = Math.max(0, index - 1);
             else index = Math.min(ManualContent.SECTIONS.size() - 1, index + 1);

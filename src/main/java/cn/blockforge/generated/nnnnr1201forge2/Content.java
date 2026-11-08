@@ -289,7 +289,7 @@ public final class Content {
     public static final DeferredHolder<Item, Item> SOUL_SEPARATION_NEEDLE=ITEMS.register("soul_separation_needle",()->new cn.blockforge.generated.nnnnr1201forge2.CompatToolItems.Pickaxe(Tiers.NETHERITE,1,-2.4f,new Item.Properties().rarity(Rarity.EPIC).fireResistant().durability(2031)){
         @Override public boolean canAttackBlock(net.minecraft.world.level.block.state.BlockState state,Level level,net.minecraft.core.BlockPos pos,Player player){return state.is(ProgressionContent.TRANSFIGURED_FLESH.get());}
         @Override public float getDestroySpeed(ItemStack stack,net.minecraft.world.level.block.state.BlockState state){return state.is(ProgressionContent.TRANSFIGURED_FLESH.get())?18:0;}
-        @Override public boolean isCorrectToolForDrops(net.minecraft.world.level.block.state.BlockState state){return state.is(ProgressionContent.TRANSFIGURED_FLESH.get());}
+        @Override public boolean isCorrectToolForDrops(ItemStack stack, net.minecraft.world.level.block.state.BlockState state){return state.is(ProgressionContent.TRANSFIGURED_FLESH.get());}
     });
     public static final DeferredHolder<Item, Item> FINGER=ITEMS.register("sukuna_finger",()->new GrowthFood(false));
     public static final DeferredHolder<Item, Item> BODY=ITEMS.register("buddha_body",()->new GrowthFood(true));
