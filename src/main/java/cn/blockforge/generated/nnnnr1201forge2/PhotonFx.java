@@ -47,6 +47,17 @@ public final class PhotonFx {
         com.mojang.logging.LogUtils.getLogger().warn("五条悟特效参数 " + what + " 设置失败（已跳过该参数，特效继续构建）",t);
     }
     private static long lastNote;
+    /** Photon 2.x：材质从 config.material 移到 config.renderer.materials 列表（MaterialSetting）。 */
+    @SuppressWarnings("unchecked")
+    private static Object material(Object config)throws Exception{
+        Object renderer=field(config,"renderer");
+        java.util.List<Object> list=new java.util.ArrayList<>((java.util.List<Object>)call(renderer,"getMaterials"));
+        if(list.isEmpty()){
+            list.add(type("gameobject.emitter.data.MaterialSetting").getConstructor().newInstance());
+            call(renderer,"setMaterials",list);
+        }
+        return list.get(0);
+    }
     private static Object num(Number n)throws Exception{return call(type("gameobject.emitter.data.number.NumberFunction"),"constant",n);}
     private static Object colorNum(int argb)throws Exception{return call(type("gameobject.emitter.data.number.NumberFunction"),"color",argb);}
     private static Object nf3(Object x,Object y,Object z)throws Exception{return type("gameobject.emitter.data.number.NumberFunction3").getConstructor(Number.class,Number.class,Number.class).newInstance(x,y,z);}
@@ -71,7 +82,7 @@ public final class PhotonFx {
         tryCall(config,"setStartRotation",nums(0,0,0));
         tryCall(config,"setSimulationSpace",enumOf(ROOT+"gameobject.emitter.particle.ParticleConfig$Space","Local"));
         tryCall(field(config,"physics"),"setHasCollision",false);
-        Object material=field(config,"material");
+        Object material=material(config);
         tryCall(material,"setCull",false);tryCall(material,"setDepthTest",true);
         return new Emitter(e,config);
     }
@@ -121,8 +132,8 @@ public final class PhotonFx {
     /** additive=false 走正常 alpha 混合，黑色才会真正压暗背景（黑洞核心用）。 */
     private static void render(Object config,int mode,String texture,int bloom,boolean additive)throws Exception{
         if(mode==MODE_VERTICAL)tryCall(field(config,"renderer"),"setRenderMode",enumOf(ROOT+"gameobject.emitter.data.RendererSetting$Particle$Mode","Vertical"));
-        if(bloom!=0){Object r=field(config,"renderer");tryCall(r,"setBloomEffect",true);tryCall(r,"setBloomColor",bloom);}
-        Object material=field(config,"material");
+        // Photon 2.x 已把 bloom 移入渲染管线配置，旧 setBloomEffect/setBloomColor 不存在；此处跳过（光晕由材质/管线决定）。
+        Object material=material(config);
         tryCall(material,"setMaterial",type("gameobject.emitter.data.material.TextureMaterial").getConstructor(ResourceLocation.class).newInstance(ResourceLocation.fromNamespaceAndPath("jujutsu_kaisen_cursed_paths", texture)));
         Object blend=call(material,"getBlendMode");
         tryCall(blend,"setEnableBlend",true);
@@ -152,13 +163,17 @@ public final class PhotonFx {
 
     // ------------------------------------------------------------ 运行时装配
     private static Object effectProxy()throws Exception{
-        Class<?> iface=type("fx.IEffect");
-        return Proxy.newProxyInstance(PhotonFx.class.getClassLoader(),new Class<?>[]{iface},(proxy,method,args)->switch(method.getName()){
-            case "getLevel"->Minecraft.getInstance().level;
-            case "toString"->"jujutsu_kaisen_cursed_paths:photon_fx";
-            case "hashCode"->System.identityHashCode(proxy);
-            case "equals"->proxy==args[0];
-            default->null;
+        Class<?> iface=type("fx.IEffectExecutor");
+        var lookup=java.lang.invoke.MethodHandles.privateLookupIn(iface,java.lang.invoke.MethodHandles.lookup());
+        return Proxy.newProxyInstance(PhotonFx.class.getClassLoader(),new Class<?>[]{iface},(proxy,method,args)->{
+            if(method.getName().equals("getLevel"))return Minecraft.getInstance().level;
+            if(method.isDefault())return lookup.unreflectSpecial(method,iface).bindTo(proxy).invokeWithArguments(args==null?new Object[0]:args);
+            return switch(method.getName()){
+                case "toString"->"jujutsu_kaisen_cursed_paths:photon_fx";
+                case "hashCode"->System.identityHashCode(proxy);
+                case "equals"->Proxy.isProxyClass(args[0]==null?Object.class:args[0].getClass())||proxy==args[0];
+                default->null;
+            };
         });
     }
     private static Handle start(List<Placement> placements,Vec3 pos){
@@ -166,8 +181,11 @@ public final class PhotonFx {
         try{
             Object fx=type("fx.FX").getConstructor().newInstance();
             call(fx,"setFxLocation",ResourceLocation.fromNamespaceAndPath("jujutsu_kaisen_cursed_paths", "gojo_fx"));
-            @SuppressWarnings("unchecked") List<Object> objects=(List<Object>)call(call(fx,"getMainFX"),"objects");
+            // Photon 2.x：不再有 getMainFX()，FX 内部持有 final FXData；用 FXData(list) 构造后反射替换。
+            java.util.List<Object> objects=new java.util.ArrayList<>();
             for(Placement p:placements)objects.add(p.emitter().object());
+            var fxField=type("fx.FX").getDeclaredField("fxData");fxField.setAccessible(true);
+            fxField.set(fx,type("fx.FXData").getConstructor(java.util.List.class).newInstance(objects));
             // 用内部 runtime（不拷贝对象）：这样每个发射器的独立位置/朝向才真的生效，
             // 一个句柄里就能放下"银河 + 星空 + 白墨 + 彩线 + 吸积盘"整块画布，每刻只需移动一个 root。
             Object runtime=call(fx,"createInternalRuntime");
