@@ -37,6 +37,6 @@ public final class YujiRenderer extends MobRenderer<YujiEntity,YujiRenderer.Mode
             }
             hat.copyFrom(head);
         }
-        @Override public void renderToBuffer(PoseStack poses, VertexConsumer buffer, int light, int overlay, int color){super.renderToBuffer(poses,buffer,light,overlay,red,green,blue,opacity*alpha);}
+        @Override public void renderToBuffer(PoseStack poses, VertexConsumer buffer, int light, int overlay, int color){super.renderToBuffer(poses,buffer,light,overlay,color);}
     }
 }
