@@ -163,7 +163,7 @@ public final class FistFlameClient {
     @EventBusSubscriber(modid="jujutsu_kaisen_cursed_paths",value=Dist.CLIENT,bus=EventBusSubscriber.Bus.MOD)
     public static final class Registration {
         @SubscribeEvent public static void layers(EntityRenderersEvent.AddLayers e){
-            for(String skin:e.getSkins()){PlayerRenderer renderer=e.getSkin(skin);if(renderer!=null)renderer.addLayer(new Punch(renderer));}
+            for(var skin:e.getSkins()){PlayerRenderer renderer=e.getSkin(skin);if(renderer!=null)renderer.addLayer(new Punch(renderer));}
         }
     }
 
