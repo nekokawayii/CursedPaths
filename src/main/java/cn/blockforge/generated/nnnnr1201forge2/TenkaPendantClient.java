@@ -59,7 +59,7 @@ public final class TenkaPendantClient {
     }
 
     public static void layers(EntityRenderersEvent.AddLayers event) {
-        for (String skin : event.getSkins()) {
+        for (var skin : event.getSkins()) {
             PlayerRenderer renderer = event.getSkin(skin);
             if (renderer != null) renderer.addLayer(new Pendant(renderer));
         }

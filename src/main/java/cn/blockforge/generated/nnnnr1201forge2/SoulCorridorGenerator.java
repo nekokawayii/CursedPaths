@@ -24,7 +24,7 @@ public final class SoulCorridorGenerator extends FlatLevelSource {
         return super.fillFromNoise(blender, random, structures, chunk).thenApply(c->{generate(c,false);return c;});
     }
     public static void rebuild(LevelChunk chunk){generate(chunk,true);if(chunk.getLevel() instanceof net.minecraft.server.level.ServerLevel level)IwateStructures.place(level,chunk);chunk.setUnsaved(true);chunk.initializeLightSources();}
-    @Override public CompletableFuture<ChunkAccess> createBiomes(Executor executor,RandomState random,Blender blender,StructureManager structures,ChunkAccess chunk){
+    @Override public CompletableFuture<ChunkAccess> createBiomes(RandomState random,Blender blender,StructureManager structures,ChunkAccess chunk){
         var registry=structures.registryAccess().registryOrThrow(net.minecraft.core.registries.Registries.BIOME);
         var corridor=registry.getHolderOrThrow(net.minecraft.resources.ResourceKey.create(net.minecraft.core.registries.Registries.BIOME,net.minecraft.resources.ResourceLocation.fromNamespaceAndPath("jujutsu_kaisen_cursed_paths","soul_corridor")));
         var forest=registry.getHolderOrThrow(net.minecraft.resources.ResourceKey.create(net.minecraft.core.registries.Registries.BIOME,net.minecraft.resources.ResourceLocation.fromNamespaceAndPath("jujutsu_kaisen_cursed_paths","iwate_forest")));
