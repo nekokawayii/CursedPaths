@@ -257,7 +257,7 @@ public final class GuardianEntity extends Monster {
     @Override protected net.minecraft.world.InteractionResult mobInteract(Player player,net.minecraft.world.InteractionHand hand){
         if(!friendly()||!dialogueFinished())return super.mobInteract(player,hand);
         var stack=player.getItemInHand(hand);if(stack.isEmpty())return net.minecraft.world.InteractionResult.PASS;
-        if(!level().isClientSide){if(gifts.size()>=1024){player.sendSystemMessage(Component.literal("虎天帝：东西够多了，先留着吧"));return net.minecraft.world.InteractionResult.SUCCESS;}var gift=stack.copy();gift.setCount(1);CompatItem.save(gifts.add(gift));stack.shrink(1);player.sendSystemMessage(Component.literal("虎天帝：谢了"));}
+        if(!level().isClientSide){if(gifts.size()>=1024){player.sendSystemMessage(Component.literal("虎天帝：东西够多了，先留着吧"));return net.minecraft.world.InteractionResult.SUCCESS;}var gift=stack.copy();gift.setCount(1);gifts.add(CompatItem.save(gift));stack.shrink(1);player.sendSystemMessage(Component.literal("虎天帝：谢了"));}
         return net.minecraft.world.InteractionResult.sidedSuccess(level().isClientSide);
     }
     private void tickFriend(){
