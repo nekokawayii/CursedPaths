@@ -58,7 +58,7 @@ public final class DomainPresentation {
         Network.CHANNEL.send(SimpleChannel.Target.player(player),new Snapshot(player.level().dimension().location(),List.copyOf(frames)));
     }
     public static void registerPackets(){
-        Network.CHANNEL.messageBuilder(Snapshot.class,46,SimpleChannel.NetworkDirection.PLAY_TO_CLIENT)
+        Network.CHANNEL.messageBuilder(Snapshot.class,46,cn.blockforge.generated.nnnnr1201forge2.SimpleChannel.NetworkDirection.PLAY_TO_CLIENT)
             .encoder(DomainPresentation::write).decoder(DomainPresentation::read)
             .consumerMainThread((s,c)->{receiver.accept(s);c.get().setPacketHandled(true);}).add();
     }

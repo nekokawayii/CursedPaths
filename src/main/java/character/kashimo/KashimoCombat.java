@@ -718,7 +718,7 @@ public final class KashimoCombat {
         }
         if (current != null && Math.abs(current.amount() - amount) < 1e-6) return;
         if (current != null) instance.removeModifier(CompatAttr.id(id));
-        instance.addPermanentModifier(new AttributeModifier(id, name, amount, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL));
+        instance.addPermanentModifier(new AttributeModifier(cn.blockforge.generated.nnnnr1201forge2.CompatAttr.id(id), amount, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL));
     }
 
     /** 技能条件不满足时把刚扣掉的咒力与冷却退回去。 */

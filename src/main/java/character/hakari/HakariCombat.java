@@ -148,7 +148,7 @@ public final class HakariCombat {
     private static void clearSpeed(ServerPlayer p) {
         var attribute = p.getAttribute(Attributes.MOVEMENT_SPEED);
         if (attribute != null) attribute.removeModifier(
-            java.util.UUID.fromString("7a1c5f10-1111-4a2b-9c00-0000aaaabbbb"));
+            cn.blockforge.generated.nnnnr1201forge2.CompatAttr.id(java.util.UUID.fromString("7a1c5f10-1111-4a2b-9c00-0000aaaabbbb")));
     }
 
     private static void highlight(ServerPlayer p) {

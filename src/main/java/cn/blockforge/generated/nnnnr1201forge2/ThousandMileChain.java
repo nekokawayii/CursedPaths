@@ -82,7 +82,7 @@ public final class ThousandMileChain {
     public static void register() {
         Network.CHANNEL.messageBuilder(Press.class,50,SimpleChannel.NetworkDirection.PLAY_TO_SERVER).encoder(Press::write).decoder(Press::read)
             .consumerMainThread((m,c)->{var p=c.get().getSender();if(p!=null)press(p,m);c.get().setPacketHandled(true);}).add();
-        Network.CHANNEL.messageBuilder(Snapshot.class,51,SimpleChannel.NetworkDirection.PLAY_TO_CLIENT).encoder(Snapshot::write).decoder(Snapshot::read)
+        Network.CHANNEL.messageBuilder(Snapshot.class,51,cn.blockforge.generated.nnnnr1201forge2.SimpleChannel.NetworkDirection.PLAY_TO_CLIENT).encoder(Snapshot::write).decoder(Snapshot::read)
             .consumerMainThread((m,c)->{receiver.accept(m);c.get().setPacketHandled(true);}).add();
         Network.CHANNEL.messageBuilder(Configure.class,52,SimpleChannel.NetworkDirection.PLAY_TO_SERVER).encoder((m,b)->{}).decoder(b->new Configure())
             .consumerMainThread((m,c)->{var p=c.get().getSender();if(p!=null)ThousandMileChainItem.configure(p);c.get().setPacketHandled(true);}).add();

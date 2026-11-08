@@ -10,7 +10,7 @@ public final class MainlinePackets {
     /** r217：多带一个「累计击杀咒灵数」，给咒力总量训练的进度用。 */
     public record State(int mask,int simple,int domain,int kills) { }
     public static void register(){
-        Network.CHANNEL.messageBuilder(State.class,45,SimpleChannel.NetworkDirection.PLAY_TO_CLIENT)
+        Network.CHANNEL.messageBuilder(State.class,45,cn.blockforge.generated.nnnnr1201forge2.SimpleChannel.NetworkDirection.PLAY_TO_CLIENT)
             .encoder((m,b)->{b.writeVarInt(m.mask());b.writeVarInt(m.simple());b.writeVarInt(m.domain());b.writeVarInt(m.kills());})
             .decoder(b->new State(b.readVarInt(),b.readVarInt(),b.readVarInt(),b.readVarInt()))
             .consumerMainThread((m,c)->{MainlineState.mask=m.mask();MainlineState.simple=m.simple();MainlineState.domain=m.domain();MainlineState.kills=m.kills();c.get().setPacketHandled(true);}).add();

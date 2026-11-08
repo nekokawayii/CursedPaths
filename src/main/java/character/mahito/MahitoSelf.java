@@ -119,7 +119,7 @@ public final class MahitoSelf {
                               UUID id, double amount, String name) {
         AttributeInstance inst = p.getAttribute(attr);
         if (inst == null || inst.getModifier(CompatAttr.id(id)) != null) return;
-        inst.addPermanentModifier(new AttributeModifier(id, name, amount, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL));
+        inst.addPermanentModifier(new AttributeModifier(cn.blockforge.generated.nnnnr1201forge2.CompatAttr.id(id), amount, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL));
     }
 
     /** 肢体：增加一只手臂（最多 4），并把当前数量同步给客户端用于打开肢体菜单。 */

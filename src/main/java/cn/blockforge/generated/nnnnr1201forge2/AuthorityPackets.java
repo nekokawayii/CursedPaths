@@ -34,8 +34,8 @@ public final class AuthorityPackets {
         }
     }
     public static void register(){
-        Network.CHANNEL.messageBuilder(State.class,29,SimpleChannel.NetworkDirection.PLAY_TO_CLIENT).encoder((m,b)->{b.writeBoolean(m.enabled);b.writeVarInt(m.members);b.writeVarInt(m.stored);array(b,m.targets);array(b,m.skills);}).decoder(b->new State(b.readBoolean(),b.readVarInt(),b.readVarInt(),array(b,32),array(b,128))).consumerMainThread((m,c)->{receiver.accept(m);c.get().setPacketHandled(true);}).add();
-        Network.CHANNEL.messageBuilder(Open.class,30,SimpleChannel.NetworkDirection.PLAY_TO_CLIENT).encoder((m,b)->{}).decoder(b->new Open()).consumerMainThread((m,c)->{openReceiver.run();c.get().setPacketHandled(true);}).add();
+        Network.CHANNEL.messageBuilder(State.class,29,cn.blockforge.generated.nnnnr1201forge2.SimpleChannel.NetworkDirection.PLAY_TO_CLIENT).encoder((m,b)->{b.writeBoolean(m.enabled);b.writeVarInt(m.members);b.writeVarInt(m.stored);array(b,m.targets);array(b,m.skills);}).decoder(b->new State(b.readBoolean(),b.readVarInt(),b.readVarInt(),array(b,32),array(b,128))).consumerMainThread((m,c)->{receiver.accept(m);c.get().setPacketHandled(true);}).add();
+        Network.CHANNEL.messageBuilder(Open.class,30,cn.blockforge.generated.nnnnr1201forge2.SimpleChannel.NetworkDirection.PLAY_TO_CLIENT).encoder((m,b)->{}).decoder(b->new Open()).consumerMainThread((m,c)->{openReceiver.run();c.get().setPacketHandled(true);}).add();
         Network.CHANNEL.messageBuilder(Action.class,31,SimpleChannel.NetworkDirection.PLAY_TO_SERVER).encoder((m,b)->{b.writeVarInt(m.operation);b.writeVarInt(m.value);b.writeVarInt(m.extra);}).decoder(b->new Action(b.readVarInt(),b.readVarInt(),b.readVarInt())).consumerMainThread((m,c)->{handle(c.get().getSender(),m);c.get().setPacketHandled(true);}).add();
     }
     private AuthorityPackets(){}

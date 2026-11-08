@@ -28,7 +28,7 @@ public final class MeleeCombo {
         Network.CHANNEL.messageBuilder(Press.class,36,SimpleChannel.NetworkDirection.PLAY_TO_SERVER)
             .encoder((m,b)->b.writeBoolean(m.cancel())).decoder(b->new Press(b.readBoolean()))
             .consumerMainThread((m,c)->{var p=c.get().getSender();if(p!=null){if(m.cancel())cancel(p);else press(p);}c.get().setPacketHandled(true);}).add();
-        Network.CHANNEL.messageBuilder(State.class,37,SimpleChannel.NetworkDirection.PLAY_TO_CLIENT)
+        Network.CHANNEL.messageBuilder(State.class,37,cn.blockforge.generated.nnnnr1201forge2.SimpleChannel.NetworkDirection.PLAY_TO_CLIENT)
             .encoder((m,b)->{b.writeVarInt(m.owner());b.writeUUID(m.player());b.writeVarInt(m.stage());b.writeVarInt(m.delay());})
             .decoder(b->new State(b.readVarInt(),b.readUUID(),b.readVarInt(),b.readVarInt()))
             .consumerMainThread((m,c)->{receiver.accept(m);c.get().setPacketHandled(true);}).add();
