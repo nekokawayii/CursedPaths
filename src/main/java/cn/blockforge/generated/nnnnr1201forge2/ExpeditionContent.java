@@ -81,8 +81,8 @@ public final class ExpeditionContent {
         if(id.equals("soul_splitter"))return new SoulDevourerItem();
         if(id.equals("thousand_mile_chain"))return new ThousandMileChainItem();
         if(id.equals("blood_blade")||id.equals("alloy_sword"))return new CompatSwordItem(Tiers.DIAMOND,id.equals("blood_blade")?6:4,-2.4f,new Item.Properties());
-        if(id.equals("frame_boots"))return new ExpeditionArmorItem(id,ArmorMaterials.DIAMOND,ArmorItem.Type.BOOTS,new Item.Properties());
-        if(id.equals("blood_armor")||id.equals("alloy_chestplate")||id.equals("forbidden_armor"))return new ExpeditionArmorItem(id,ArmorMaterials.NETHERITE,ArmorItem.Type.CHESTPLATE,new Item.Properties().fireResistant());
+        if(id.equals("frame_boots"))return new ExpeditionArmorItem(id,armorMaterial(id,ArmorMaterials.DIAMOND),ArmorItem.Type.BOOTS,new Item.Properties().durability(ArmorItem.Type.BOOTS.getDurability(33)));
+        if(id.equals("blood_armor")||id.equals("alloy_chestplate")||id.equals("forbidden_armor"))return new ExpeditionArmorItem(id,armorMaterial(id,ArmorMaterials.NETHERITE),ArmorItem.Type.CHESTPLATE,new Item.Properties().fireResistant().durability(ArmorItem.Type.CHESTPLATE.getDurability(37)));
         return new ExpeditionItem(id);
     }
     private static void block(String id,java.util.function.Supplier<Block> factory){var b=ProgressionContent.BLOCKS.register(id,factory);BLOCKS.put(id,b);ITEMS.put(id,Content.ITEMS.register(id,()->new BlockItem(b.get(),new Item.Properties()){ @Override public void appendHoverText(ItemStack s, net.minecraft.world.item.Item.TooltipContext context, List<Component> lines, TooltipFlag f){if(id.equals("refining_altar")||id.equals("gu_vat")||id.equals("tengen_core"))lines.add(Component.literal("潜行右键切换配方，普通右键检查阵型并投入背包材料；成品留在台上右键领取。"));} }));}
@@ -93,4 +93,14 @@ public final class ExpeditionContent {
         ExpeditionEffect(int color){super(net.minecraft.world.effect.MobEffectCategory.HARMFUL,color);}
     }
     private ExpeditionContent(){}
+
+    /** 1.21：自定义护甲贴图走 ArmorMaterial.Layer；耐久要由 Item.Properties 提供。 */
+    private static net.minecraft.core.Holder<net.minecraft.world.item.ArmorMaterial> armorMaterial(String id,net.minecraft.core.Holder<net.minecraft.world.item.ArmorMaterial> base){
+        var b=base.value();
+        return net.minecraft.core.Holder.direct(new net.minecraft.world.item.ArmorMaterial(
+            b.defense(),b.enchantmentValue(),b.equipSound(),b.repairIngredient(),
+            java.util.List.of(new net.minecraft.world.item.ArmorMaterial.Layer(
+                net.minecraft.resources.ResourceLocation.fromNamespaceAndPath(GeneratedMod.MOD_ID,id))),
+            b.toughness(),b.knockbackResistance()));
+    }
 }
