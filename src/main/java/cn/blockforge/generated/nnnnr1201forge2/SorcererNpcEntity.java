@@ -34,7 +34,6 @@ public final class SorcererNpcEntity extends PathfinderMob implements character.
     @Override protected void registerGoals(){
         goalSelector.addGoal(0,new FloatGoal(this));
         goalSelector.addGoal(2,new MeleeAttackGoal(this,1.15,true){
-            @Override protected double getAttackReachSqr(LivingEntity target){return "mahito".equals(role)?Math.pow(getBbWidth()+target.getBbWidth()/2+3,2):super.getAttackReachSqr(target);}
         });
         goalSelector.addGoal(7,new WaterAvoidingRandomStrollGoal(this,.8));
         goalSelector.addGoal(8,new LookAtPlayerGoal(this,Player.class,12));

@@ -52,16 +52,11 @@ public final class PrisonRealmItem extends Item {
         if(carried||!player.getAbilities().instabuild)stack.shrink(1);
         player.sendSystemMessage(Component.literal(store.occupied(realm.getUUID())?"狱门僵已放置 · 原封印与内部生物保持不变，可用邪去悔天梯解封":"狱门僵已放置 · 在附近聊天输入：狱门僵，开门"));return InteractionResult.CONSUME;
     }
-    @Override public CompoundTag getShareTag(ItemStack stack){
-        CompoundTag source=CompatNbt.read(stack);if(source==null)return null;CompoundTag shared=source.copy();
-        if(shared.contains(SEAL))shared.getCompound(SEAL).remove("Snapshot");return shared;
-    }
     @Override public void inventoryTick(ItemStack stack,Level level,net.minecraft.world.entity.Entity holder,int slot,boolean selected){
         if(level.isClientSide||holder.getServer()==null||holder.tickCount%100!=0)return;CompoundTag seal=seal(stack);
         if(!seal.hasUUID("Realm")||!seal.hasUUID("Token"))return;PrisonStore store=PrisonStore.get(holder.getServer());
         if(store.canPlace(seal.getUUID("Realm"),seal.getUUID("Token"))){CompoundTag snapshot=store.portableSnapshot(seal.getUUID("Realm"));if(snapshot!=null){seal.put("Snapshot",snapshot);seal.putInt("Count",snapshot.getList("Prisoners",Tag.TAG_COMPOUND).size());}}
     }
-    @Override public boolean canFitInsideContainerItems(){return false;}
     @Override public boolean canBeHurtBy(DamageSource source){return false;}
     @Override public boolean onEntityItemUpdate(ItemStack stack,ItemEntity entity){
         if(!entity.level().isClientSide){entity.setUnlimitedLifetime();entity.setInvulnerable(true);if(entity.getY()<entity.level().getMinBuildHeight()){entity.setPos(entity.getX(),entity.level().getMinBuildHeight()+4,entity.getZ());entity.setNoGravity(true);entity.setDeltaMovement(net.minecraft.world.phys.Vec3.ZERO);}}return false;
