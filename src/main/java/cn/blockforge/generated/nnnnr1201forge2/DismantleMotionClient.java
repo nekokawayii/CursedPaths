@@ -33,7 +33,7 @@ public final class DismantleMotionClient {
             try{var context=EntityRendererRegistry.context(Minecraft.getInstance());normal=new MotionRenderer(context,false);slim=new MotionRenderer(context,true);}
             catch(RuntimeException|LinkageError ex){retryAfter=clock+40;report("模型恢复",ex);}
         }
-        return "slim".equals(player.getModelName())?slim:normal;
+        return (player.getSkin().model()==net.minecraft.client.resources.PlayerSkin.Model.SLIM)?slim:normal;
     }
     private static void report(String key,Throwable ex){if(failures.add(key))com.mojang.logging.LogUtils.getLogger().warn("[动作兜底] {}，保留可用绘制并稍后重试",key,ex);}
     private static boolean visible(AbstractClientPlayer player){

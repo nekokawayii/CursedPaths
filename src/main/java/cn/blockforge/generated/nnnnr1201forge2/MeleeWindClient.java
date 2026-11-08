@@ -28,7 +28,7 @@ public final class MeleeWindClient {
             var mc=Minecraft.getInstance();
             if(player==mc.getCameraEntity()&&mc.options.getCameraType().isFirstPerson())return;
             var frame=MeleeComboClient.windFrame(player.getId(),partial);if(frame==null)return;
-            PlayerModel<AbstractClientPlayer> model=getParentModel();boolean slim="slim".equals(player.getModelName());
+            PlayerModel<AbstractClientPlayer> model=getParentModel();boolean slim=(player.getSkin().model()==net.minecraft.client.resources.PlayerSkin.Model.SLIM);
             if(MeleeComboRules.kick(frame.stage())){
                 ModelPart leg=frame.stage()==5?model.leftLeg:model.rightLeg;
                 limb(ps,buffers,leg,"knee",0,.375,frame.stage(),frame.age(),false);
