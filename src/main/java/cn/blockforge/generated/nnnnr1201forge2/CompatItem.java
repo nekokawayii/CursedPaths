@@ -9,7 +9,7 @@ public final class CompatItem {
     public static CompoundTag save(ItemStack stack) {
         return stack.save(RegistryAccess.EMPTY);
     }
-    /** 1.21：ItemStack.of(CompoundTag) 已移除，改用 parseOptional(Provider, tag)。 */
+    /** 1.21：CompatItem.load(CompoundTag) 已移除，改用 parseOptional(Provider, tag)。 */
     public static ItemStack load(CompoundTag tag) {
         return ItemStack.parseOptional(RegistryAccess.EMPTY, tag);
     }

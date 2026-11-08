@@ -19,5 +19,10 @@ public final class CompatNbt {
     public static void update(ItemStack stack, java.util.function.Consumer<CompoundTag> action) {
         CustomData.update(DataComponents.CUSTOM_DATA, stack, action);
     }
+    /** 1.21：getTagElement(String) 已移除，改为从 CUSTOM_DATA 取子 tag。 */
+    public static CompoundTag getElement(ItemStack stack, String key) {
+        CompoundTag tag = read(stack);
+        return tag != null && tag.contains(key, 10) ? tag.getCompound(key) : null;
+    }
     private CompatNbt() { }
 }

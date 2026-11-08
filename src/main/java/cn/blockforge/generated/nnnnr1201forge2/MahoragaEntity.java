@@ -39,7 +39,7 @@ import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.event.entity.EntityAttributeCreationEvent;
 import net.neoforged.neoforge.event.entity.living.LivingHealEvent;
 import net.neoforged.bus.api.SubscribeEvent;
-import net.neoforged.neoforge.registries.ForgeRegistries;
+
 import net.minecraft.core.registries.BuiltInRegistries;
 
 public final class MahoragaEntity extends Monster {

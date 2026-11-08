@@ -3,7 +3,7 @@ package cn.blockforge.generated.nnnnr1201forge2;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.neoforge.event.entity.player.ItemTooltipEvent;
 import net.neoforged.bus.api.SubscribeEvent;
-import net.neoforged.neoforge.registries.ForgeRegistries;
+
 import net.minecraft.network.chat.Component;
 import net.minecraft.ChatFormatting;
 import net.neoforged.fml.common.EventBusSubscriber;

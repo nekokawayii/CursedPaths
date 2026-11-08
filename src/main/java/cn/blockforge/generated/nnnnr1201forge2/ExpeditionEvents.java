@@ -17,7 +17,7 @@ import net.neoforged.neoforge.event.entity.living.*;
 import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
 import net.neoforged.neoforge.event.level.BlockEvent;
 import net.neoforged.bus.api.*;
-import net.neoforged.neoforge.registries.ForgeRegistries;
+
 import net.neoforged.neoforge.event.tick.PlayerTickEvent;
 import net.minecraft.core.registries.BuiltInRegistries;
 import cn.blockforge.generated.nnnnr1201forge2.CompatNbt;

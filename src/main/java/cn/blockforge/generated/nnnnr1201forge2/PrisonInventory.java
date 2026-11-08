@@ -51,7 +51,7 @@ public final class PrisonInventory {
         p.getInventory().load(record.getList("Inventory",Tag.TAG_COMPOUND));p.getInventory().selected=record.getInt("Selected");
         p.getEnderChestInventory().fromTag(record.getList("EnderItems",Tag.TAG_COMPOUND));
         p.setExperienceLevels(record.getInt("XpLevel"));p.experienceProgress=record.getFloat("XpProgress");p.totalExperience=record.getInt("XpTotal");
-        for(Tag t:record.getList("Extras",Tag.TAG_COMPOUND))p.getInventory().placeItemBackInInventory(ItemStack.of((CompoundTag)t));
+        for(Tag t:record.getList("Extras",Tag.TAG_COMPOUND))p.getInventory().placeItemBackInInventory(CompatItem.load((CompoundTag)t));
         PrisonCurios.restore(p,record);
         p.connection.send(new net.minecraft.network.protocol.game.ClientboundSetExperiencePacket(p.experienceProgress,p.totalExperience,p.experienceLevel));sync(p);
     }

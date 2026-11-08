@@ -249,7 +249,7 @@ public final class MahitoSelf {
         CompoundTag data = cn.blockforge.generated.nnnnr1201forge2.Curse.data(p);
         net.minecraft.nbt.ListTag list = data.getList(LIMB_ITEMS, 10);
         if (list.isEmpty()) { p.sendSystemMessage(Component.literal("肢体：手里没有东西").withStyle(ChatFormatting.GRAY)); return; }
-        ItemStack stack = ItemStack.of(list.getCompound(0));
+        ItemStack stack = CompatItem.load(list.getCompound(0));
         list.remove(0);
         data.put(LIMB_ITEMS, list);
         var result = stack.use(p.level(), p, net.minecraft.world.InteractionHand.MAIN_HAND);
@@ -270,7 +270,7 @@ public final class MahitoSelf {
             new cn.blockforge.generated.nnnnr1201forge2.Network.Effect(307, p.getId(), p.position(), Vec3.ZERO, 0f, 0, 0));
         net.minecraft.nbt.ListTag list = cn.blockforge.generated.nnnnr1201forge2.Curse.data(p).getList(LIMB_ITEMS, 10);
         for (int i = 0; i < list.size(); i++) {
-            ItemStack st = ItemStack.of(list.getCompound(i));
+            ItemStack st = CompatItem.load(list.getCompound(i));
             if (st.isEmpty()) continue;
             cn.blockforge.generated.nnnnr1201forge2.Network.send(level,
                 new cn.blockforge.generated.nnnnr1201forge2.Network.Effect(306, p.getId(), p.position(), Vec3.ZERO,
@@ -284,7 +284,7 @@ public final class MahitoSelf {
         net.minecraft.nbt.ListTag list = data.getList(LIMB_ITEMS, 10).copy();
         java.util.List<Integer> bows = new java.util.ArrayList<>();
         for (int i = 0; i < list.size(); i++) {
-            if (ItemStack.of(list.getCompound(i)).getItem() instanceof net.minecraft.world.item.BowItem) bows.add(i);
+            if (CompatItem.load(list.getCompound(i)).getItem() instanceof net.minecraft.world.item.BowItem) bows.add(i);
         }
         if (!bows.isEmpty()) {
             long start = data.getLong("MahitoBowStart");
@@ -299,7 +299,7 @@ public final class MahitoSelf {
             int fired = 0;
             net.minecraft.nbt.ListTag rest = new net.minecraft.nbt.ListTag();
             for (int i = 0; i < list.size(); i++) {
-                ItemStack st = ItemStack.of(list.getCompound(i));
+                ItemStack st = CompatItem.load(list.getCompound(i));
                 if (st.getItem() instanceof net.minecraft.world.item.BowItem) {
                     shootArrow(p, power);
                     fired++;
@@ -314,7 +314,7 @@ public final class MahitoSelf {
         int thrown = 0;
         net.minecraft.nbt.ListTag rest = new net.minecraft.nbt.ListTag();
         for (int i = 0; i < list.size(); i++) {
-            ItemStack st = ItemStack.of(list.getCompound(i));
+            ItemStack st = CompatItem.load(list.getCompound(i));
             if (st.getItem() instanceof net.minecraft.world.item.SplashPotionItem
                 || st.getItem() instanceof net.minecraft.world.item.LingeringPotionItem) {
                 net.minecraft.world.entity.projectile.ThrownPotion potion =
@@ -373,7 +373,7 @@ public final class MahitoSelf {
     }
 
     private static void useFromList(ServerPlayer p, net.minecraft.nbt.ListTag list, int index, CompoundTag data) {
-        ItemStack stack = ItemStack.of(list.getCompound(index));
+        ItemStack stack = CompatItem.load(list.getCompound(index));
         list.remove(index);
         data.put(LIMB_ITEMS, list);
         var result = stack.use(p.level(), p, net.minecraft.world.InteractionHand.MAIN_HAND);

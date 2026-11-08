@@ -18,7 +18,7 @@ import net.neoforged.neoforge.client.event.EntityRenderersEvent;
 import net.neoforged.neoforge.client.event.RenderLevelStageEvent;
 
 import net.neoforged.neoforge.event.entity.EntityJoinLevelEvent;
-import net.neoforged.neoforge.registries.ForgeRegistries;
+
 import org.slf4j.Logger;
 import net.neoforged.neoforge.client.event.RenderFrameEvent;
 import net.minecraft.core.registries.BuiltInRegistries;

@@ -51,7 +51,7 @@ public final class PrisonCurios {
         Map<String,IItemHandlerModifiable> handlers;
         try{handlers=handlers(player);}catch(ReflectiveOperationException|RuntimeException ex){handlers=Map.of();}
         for(Tag value:record.getList("Curios",Tag.TAG_COMPOUND)){
-            CompoundTag item=(CompoundTag)value;ItemStack stack=ItemStack.of(item.getCompound("Stack"));IItemHandlerModifiable h=handlers.get(item.getString("Handler"));int slot=item.getInt("Slot");
+            CompoundTag item=(CompoundTag)value;ItemStack stack=CompatItem.load(item.getCompound("Stack"));IItemHandlerModifiable h=handlers.get(item.getString("Handler"));int slot=item.getInt("Slot");
             if(h!=null&&slot>=0&&slot<h.getSlots()&&h.getStackInSlot(slot).isEmpty())h.setStackInSlot(slot,stack);else player.getInventory().placeItemBackInInventory(stack);
         }
     }

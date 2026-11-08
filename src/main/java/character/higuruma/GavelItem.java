@@ -27,7 +27,7 @@ public class GavelItem extends SwordItem {
     @Override public boolean canBeDepleted() { return false; }
 
     @Override public void appendHoverText(ItemStack stack, net.minecraft.world.item.Item.TooltipContext context, java.util.List<Component> lines, TooltipFlag flag) {
-        CompoundTag tag = stack.getTagElement(SEAL);
+        CompoundTag tag = CompatNbt.getElement(stack, SEAL);
         lines.add(Component.literal("不可丢弃 · 无限耐久").withStyle(ChatFormatting.DARK_GRAY));
         if (tag == null || tag.isEmpty()) {
             lines.add(Component.literal("刻印：无（副手持武器后用「刻印」）").withStyle(ChatFormatting.GRAY));

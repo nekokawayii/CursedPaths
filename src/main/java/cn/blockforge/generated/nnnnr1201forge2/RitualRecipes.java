@@ -4,7 +4,7 @@ import java.util.*;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.*;
-import net.neoforged.neoforge.registries.ForgeRegistries;
+
 import net.minecraft.core.registries.BuiltInRegistries;
 
 /** 消耗先校验再扣除，输出只在仪式完成时产生。后续祭坛配方只需登记一行。 */

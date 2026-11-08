@@ -81,7 +81,7 @@ public final class MahitoTransfigure {
         if (e.getAmount() <= 0) return;
         ItemStack held = p.getMainHandItem();
         if (!(held.getItem() instanceof TransfiguredSwordItem)) return;
-        CompoundTag tag = held.getTagElement(BASE_TAG);
+        CompoundTag tag = CompatNbt.getElement(held, BASE_TAG);
         if (tag == null || !tag.contains("attack")) return;
         e.setAmount(Math.max(0.5f, tag.getFloat("attack")));
     }
@@ -291,7 +291,7 @@ public final class MahitoTransfigure {
 
     private static void transform(ServerPlayer p, int form) {
         ItemStack held = p.getMainHandItem();
-        CompoundTag base = held.getTagElement(BASE_TAG);
+        CompoundTag base = CompatNbt.getElement(held, BASE_TAG);
         if (base == null) return;
         int tier = tierIndex(base.getFloat("maxHealth"));
         ItemStack out;
@@ -308,7 +308,7 @@ public final class MahitoTransfigure {
 
     private static void transformCursed(ServerPlayer p, int index) {
         ItemStack held = p.getMainHandItem();
-        if (held.getTagElement(BASE_TAG) == null || index < 0 || index > 4) return;
+        if (CompatNbt.getElement(held, BASE_TAG) == null || index < 0 || index > 4) return;
         ItemStack out = switch (index) {
             case 0 -> new ItemStack(cn.blockforge.generated.nnnnr1201forge2.Content.BLACK_ROPE.get());
             case 1 -> new ItemStack(cn.blockforge.generated.nnnnr1201forge2.Content.SLAUGHTER_DEMON.get());
@@ -320,7 +320,7 @@ public final class MahitoTransfigure {
     }
 
     private static void finish(ServerPlayer p, ItemStack held, ItemStack out, String label, boolean cursed) {
-        CompoundTag base = held.getTagElement(BASE_TAG);
+        CompoundTag base = CompatNbt.getElement(held, BASE_TAG);
         if (base == null) return;
         CompatNbt.update(out, t -> t.put(BASE_TAG, base.copy()));
         out.setHoverName(Component.literal(label + "·" + base.getString("name")).withStyle(ChatFormatting.AQUA));
