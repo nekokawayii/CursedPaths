@@ -54,7 +54,7 @@ public final class GuideBook {
             return stack;
         }
         ItemStack stack = new ItemStack(Content.MANUAL.get());
-        CompoundTag tag = stack.getOrCreateTag();
+        CompoundTag tag = new CompoundTag();
         tag.putString("title", "游玩方法手册");
         tag.putString("author", "宿傩 · 伏魔御厨子");
         ListTag pages = new ListTag();
@@ -64,6 +64,7 @@ public final class GuideBook {
                 .replace("\"", "\\\"") + "\"}"));
         }
         tag.put("pages", pages);
+        CompatItem.setTag(stack, tag);
         return stack;
     }
 

@@ -165,13 +165,14 @@ public final class BeyondRift {
     /** 那封信：书与笔，只有一页。 */
     private static ItemStack letter(){
         ItemStack book=new ItemStack(Items.WRITTEN_BOOK);
-        CompoundTag tag=book.getOrCreateTag();
+        CompoundTag tag=new CompoundTag();
         tag.putBoolean("SukunaBeyondNote",true);
         tag.putString("title","观测者的低语");
         tag.putString("author","Itadori_Yūji.pl?a!y@er");
         ListTag pages=new ListTag();
         pages.add(StringTag.valueOf("{\"text\":\"你切开过「世界」，\\n但你有没有想过——\\n世界外面是什么？\"}"));
         tag.put("pages",pages);
+        cn.blockforge.generated.nnnnr1201forge2.CompatItem.setTag(book, tag);
         return book;
     }
 
