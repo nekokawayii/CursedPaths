@@ -365,7 +365,7 @@ public final class CullingSpawns {
         mod(mob, net.minecraft.world.entity.ai.attributes.Attributes.ATTACK_SPEED, NPC_ASP, asp - 1);
     }
 
-    private static void mod(Mob mob, net.minecraft.world.entity.ai.attributes.Holder<Attribute> attr, java.util.UUID id, double amount) {
+    private static void mod(Mob mob, net.minecraft.core.Holder<net.minecraft.world.entity.ai.attributes.Attribute> attr, java.util.UUID id, double amount) {
         var a = mob.getAttribute(attr);
         if (a == null) return;
         if (Math.abs(amount) < 1e-6) { if (a.getModifier(CompatAttr.id(id)) != null) a.removeModifier(CompatAttr.id(id)); return; }

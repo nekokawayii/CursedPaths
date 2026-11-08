@@ -39,7 +39,7 @@ public final class BossControl extends SavedData {
     /** 原版固定值首领：生命不随控制器原值变化，关闭模式也要有按新基数的关闭值。 */
     private static boolean fixed(LivingEntity boss){return boss instanceof GojoEntity||boss instanceof MahoragaEntity;}
     private static final java.util.UUID ATTACK_SCALE=java.util.UUID.fromString("ee670b21-4d44-4c54-84a8-b6eab9696401");
-    private static void attribute(LivingEntity boss,net.minecraft.world.entity.ai.attributes.Holder<Attribute> key,double raw){
+    private static void attribute(LivingEntity boss,net.minecraft.core.Holder<net.minecraft.world.entity.ai.attributes.Attribute> key,double raw){
         var a=boss.getAttribute(key);if(a==null)return;
         if(key==Attributes.ATTACK_DAMAGE){
             // 放在总倍率末端，戴天的力量药水加伤也只缩放一次。

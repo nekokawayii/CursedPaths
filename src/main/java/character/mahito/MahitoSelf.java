@@ -115,7 +115,7 @@ public final class MahitoSelf {
             .withStyle(ChatFormatting.DARK_PURPLE));
     }
 
-    private static void apply(ServerPlayer p, net.minecraft.world.entity.ai.attributes.Holder<Attribute> attr,
+    private static void apply(ServerPlayer p, net.minecraft.core.Holder<net.minecraft.world.entity.ai.attributes.Attribute> attr,
                               UUID id, double amount, String name) {
         AttributeInstance inst = p.getAttribute(attr);
         if (inst == null || inst.getModifier(CompatAttr.id(id)) != null) return;
