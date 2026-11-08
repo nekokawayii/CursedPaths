@@ -209,7 +209,7 @@ public final class MahitoCombat {
         var speed=victim.getAttribute(Attributes.MOVEMENT_SPEED);if(speed!=null&&!speed.hasModifier(new AttributeModifier(CompatAttr.id(ROOT), -1, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL)))speed.addTransientModifier(new AttributeModifier(CompatAttr.id(ROOT), -1, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL));
         victim.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN,ticks,9));
     }
-    @SubscribeEvent(priority=EventPriority.HIGHEST) public static void invincible(LivingAttackEvent event){
+    @SubscribeEvent(priority=EventPriority.HIGHEST) public static void invincible(LivingIncomingDamageEvent event){
         if(event.getEntity().getPersistentData().getLong("MahitoDodgeUntil")>now(event.getEntity())&&!event.getSource().is(net.minecraft.tags.DamageTypeTags.BYPASSES_INVULNERABILITY))event.setCanceled(true);
     }
     @SubscribeEvent public static void status(LivingEvent.LivingTickEvent event){
@@ -225,7 +225,7 @@ public final class MahitoCombat {
         }
     }
     @SubscribeEvent public static void tick(net.neoforged.neoforge.event.tick.ServerTickEvent.Post.Post event){
-        if(eventfalse)return;
+        if(false)return;
         for(var it=COLLAPSES.iterator();it.hasNext();){
             Collapse c=it.next();long age=now(c.victim)-c.start;
             if(age>=40||!can(c.caster,c.victim)||c.caster.level()!=c.victim.level()||c.victim.position().distanceToSqr(c.anchor)>16||c.victim.getPersistentData().getLong("DomainSafetyUntil")>now(c.victim)){

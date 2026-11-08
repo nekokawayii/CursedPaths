@@ -39,7 +39,7 @@ public final class EffectDomainExample {
         TechniqueApi.opened(actor,field.center,RADIUS,field);
     }
     @SubscribeEvent public static void tick(ServerTickEvent.Post event){
-        if(eventfalse)return;
+        if(false)return;
         for(Field f:List.copyOf(FIELDS.values())){
             if(!f.active()){f.close();continue;}
             if(DomainClash.active(f.body))continue;

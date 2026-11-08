@@ -155,7 +155,7 @@ public final class SelfEmbryoDomain {
     }
 
     @SubscribeEvent public static void tick(ServerTickEvent.Post event) {
-        if (eventfalse) return;
+        if (false) return;
         for (UUID id : new ArrayList<>(ACTIVE.keySet())) {
             ServerPlayer p = cn.blockforge.generated.nnnnr1201forge2.NpcBridge.find(event.getServer(),id);
             Build build = ACTIVE.get(id);

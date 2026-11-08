@@ -25,7 +25,7 @@ import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.damagesource.DamageTypes;
 import net.neoforged.neoforge.event.entity.EntityTravelToDimensionEvent;
-import net.neoforged.neoforge.event.entity.living.LivingAttackEvent;
+import net.neoforged.neoforge.event.entity.living.LivingIncomingDamageEvent;
 import net.neoforged.neoforge.event.entity.player.*;
 import net.neoforged.neoforge.event.server.ServerStoppedEvent;
 import net.neoforged.bus.api.*;
@@ -383,7 +383,7 @@ public final class ThousandMileChain {
     private static void tell(ServerPlayer p,String text){p.displayClientMessage(Component.literal(text),true);}
     @SubscribeEvent(priority=EventPriority.HIGHEST) public static void attack(AttackEntityEvent e){if(bound(e.getEntity())||ThousandMileChainItem.isChain(e.getEntity().getMainHandItem()))e.setCanceled(true);}
     @SubscribeEvent(priority=EventPriority.HIGHEST) public static void mine(PlayerInteractEvent.LeftClickBlock e){if(bound(e.getEntity())||ThousandMileChainItem.isChain(e.getEntity().getMainHandItem()))e.setCanceled(true);}
-    @SubscribeEvent(priority=EventPriority.HIGHEST) public static void melee(LivingAttackEvent e){if(e.getSource().getDirectEntity() instanceof LivingEntity attacker&&bound(attacker)&&(e.getSource().is(DamageTypes.MOB_ATTACK)||e.getSource().is(DamageTypes.MOB_ATTACK_NO_AGGRO)||e.getSource().is(DamageTypes.PLAYER_ATTACK)))e.setCanceled(true);}
+    @SubscribeEvent(priority=EventPriority.HIGHEST) public static void melee(LivingIncomingDamageEvent e){if(e.getSource().getDirectEntity() instanceof LivingEntity attacker&&bound(attacker)&&(e.getSource().is(DamageTypes.MOB_ATTACK)||e.getSource().is(DamageTypes.MOB_ATTACK_NO_AGGRO)||e.getSource().is(DamageTypes.PLAYER_ATTACK)))e.setCanceled(true);}
     @SubscribeEvent public static void joined(EntityJoinLevelEvent e){if(!e.getLevel().isClientSide&&e.getEntity() instanceof LivingEntity living&&!bound(living))restore(living);}
     @SubscribeEvent(priority=EventPriority.LOWEST) public static void living(LivingEvent.LivingTickEvent e){
         if(e.getEntity().level().isClientSide)return;

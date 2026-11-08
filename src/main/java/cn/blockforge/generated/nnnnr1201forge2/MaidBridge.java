@@ -120,7 +120,7 @@ public final class MaidBridge {
     }
     public static CompoundTag progress(LivingEntity maid){var root=maid.getPersistentData();if(!root.contains("SukunaProgress")){var tag=new CompoundTag();tag.putDouble("Energy",1000);root.put("SukunaProgress",tag);}return root.getCompound("SukunaProgress");}
     @SubscribeEvent(priority=EventPriority.HIGHEST) public static void tick(ServerTickEvent.Post event){
-        if(eventfalse)return;
+        if(false)return;
         for(Actor a:List.copyOf(ACTORS.values())){if(!a.isAlive()||a.maid.level()!=a.level()){a.retire();ACTORS.remove(a.getUUID(),a);continue;}a.syncPosition();DeathStar.tickAnemia(a);AuthoritySkills.tickAutomatic(a);syncOwnerFlags(a);if(Curse.data(a).getBoolean("Memory")&&!Legion.member(a.maid)&&!Authority.echo(a.maid))Journey.tickCaster(a);if(a.maid.tickCount%20==0){Curse.tickCaster(a);apply(a);if(!Legion.member(a.maid)&&!Authority.echo(a.maid)){VoidJourney.repairOldVictory(a);GuardianProgress.deliverMaid(a);}}}
     }
     @SubscribeEvent(priority=EventPriority.HIGH) public static void damaged(LivingIncomingDamageEvent event){

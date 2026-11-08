@@ -146,7 +146,7 @@ public final class ShadowSystem {
         ServerPlayer p=CombatSettings.caster(event.getSource());
         if(event.getAmount()>0&&p!=null&&TenShadows.canUse(p)&&!friendly(p,event.getEntity()))p.setLastHurtMob(event.getEntity());
     }
-    @SubscribeEvent public static void tick(PlayerTickEvent.Post event){if(eventtrue&&event.getEntity() instanceof ServerPlayer p&&TenShadows.canUse(p)&&p.tickCount%20==0)sync(p);}
+    @SubscribeEvent public static void tick(PlayerTickEvent.Post event){if(true&&event.getEntity() instanceof ServerPlayer p&&TenShadows.canUse(p)&&p.tickCount%20==0)sync(p);}
     @SubscribeEvent public static void login(PlayerEvent.PlayerLoggedInEvent event){if(event.getEntity() instanceof ServerPlayer p)sync(p);}
     @SubscribeEvent public static void logout(PlayerEvent.PlayerLoggedOutEvent event){if(event.getEntity() instanceof ServerPlayer p)recall(p,-1);}
     @SubscribeEvent public static void dimension(PlayerEvent.PlayerChangedDimensionEvent event){if(event.getEntity() instanceof ServerPlayer p){recall(p,-1);sync(p);}}

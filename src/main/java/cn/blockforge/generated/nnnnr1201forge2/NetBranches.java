@@ -117,7 +117,7 @@ public final class NetBranches {
     }
     private static void qiEffect(Qi q){Network.send(q.level,new Network.Effect(NetBranchRules.FX_QI,q.owner.getId(),q.position,q.direction,(float)NetBranchRules.QI_RADIUS,Math.min(10,NetBranchRules.QI_LIFE-q.age),q.id));}
     @SubscribeEvent public static void tick(ServerTickEvent.Post event){
-        if(eventfalse)return;
+        if(false)return;
         for(AirCross c:List.copyOf(airCrosses)){
             int age=(int)(c.level.getGameTime()-c.born);if(!valid(c.p,c.level)||DomainClash.active(c.p)||age>NetBranchRules.CROSS_TICKS){airCrosses.remove(c);continue;}
             for(int wave=0;wave<NetBranchRules.WAVES;wave++){
@@ -165,7 +165,7 @@ public final class NetBranches {
     @SubscribeEvent(priority=EventPriority.HIGHEST) public static void freeze(LivingEvent.LivingTickEvent event){LivingEntity t=event.getEntity();if(t.level().isClientSide||!locked(t))return;hold(crosses.get(t.getUUID()));if(!(t instanceof net.minecraft.world.entity.player.Player))event.setCanceled(true);}
     @SubscribeEvent(priority=EventPriority.HIGHEST) public static void attack(AttackEntityEvent event){if(locked(event.getEntity()))event.setCanceled(true);}
     @SubscribeEvent(priority=EventPriority.HIGHEST) public static void interact(PlayerInteractEvent event){if(event.isCancelable()&&locked(event.getEntity()))event.setCanceled(true);}
-    @SubscribeEvent(priority=EventPriority.HIGHEST) public static void outgoing(LivingAttackEvent event){if(event.getSource().getEntity() instanceof LivingEntity living&&locked(living))event.setCanceled(true);}
+    @SubscribeEvent(priority=EventPriority.HIGHEST) public static void outgoing(LivingIncomingDamageEvent event){if(event.getSource().getEntity() instanceof LivingEntity living&&locked(living))event.setCanceled(true);}
     @SubscribeEvent(priority=EventPriority.HIGHEST) public static void breakSpeed(PlayerEvent.BreakSpeed event){if(locked(event.getEntity()))event.setCanceled(true);}
     @SubscribeEvent(priority=EventPriority.HIGHEST) public static void teleport(net.neoforged.neoforge.event.entity.EntityTeleportEvent event){if(event.isCancelable()&&event.getEntity() instanceof LivingEntity living&&locked(living))event.setCanceled(true);}
     @SubscribeEvent public static void logout(PlayerEvent.PlayerLoggedOutEvent event){if(event.getEntity() instanceof ServerPlayer p)cancel(p);}

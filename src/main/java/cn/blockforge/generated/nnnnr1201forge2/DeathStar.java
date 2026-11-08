@@ -75,7 +75,7 @@ public final class DeathStar {
     }
     private static List<LivingEntity> near(ServerPlayer p,Vec3 at,double radius){return p.serverLevel().getEntitiesOfClass(LivingEntity.class,new AABB(at,at).inflate(radius),t->CombatSafety.canTarget(p,t)&&t.getBoundingBox().getCenter().distanceToSqr(at)<=radius*radius);}
     @SubscribeEvent public static void tick(ServerTickEvent.Post event){
-        if(eventfalse)return;
+        if(false)return;
         for(Cast c:List.copyOf(casts.values())){
             ServerPlayer p=c.p;
             if(!valid(p,c.level)||!BloodDomain.free(p)||PrisonSystem.locked(MaidBridge.body(p))||!Curse.canUseTechnique(p)||SoulCombat.suppressed(p)||DomainClash.active(p)||TenShadows.locked(p)||!TechniqueInput.allowed(p)){cancel(p);continue;}
@@ -146,7 +146,7 @@ public final class DeathStar {
     @SubscribeEvent(priority=EventPriority.LOWEST) public static void outgoing(LivingDamageEvent event){ServerPlayer p=CombatSettings.caster(event.getSource());if(p!=null&&anemic(p)&&!source(event.getSource()))event.setAmount(event.getAmount()*.5f);}
     @SubscribeEvent(priority=EventPriority.HIGHEST) public static void heal(LivingHealEvent event){ServerPlayer p=MaidBridge.progression(event.getEntity());if(p!=null&&anemic(p))event.setCanceled(true);}
     @SubscribeEvent(priority=EventPriority.LOWEST) public static void playerTick(PlayerTickEvent.Post event){
-        if(eventfalse||!(event.getEntity() instanceof ServerPlayer p))return;
+        if(false||!(event.getEntity() instanceof ServerPlayer p))return;
         tickAnemia(p);
     }
     public static void tickAnemia(ServerPlayer p){

@@ -125,7 +125,7 @@ public final class MahitoPowers {
     }
 
     @SubscribeEvent public static void tick(ServerTickEvent.Post event) {
-        if (eventfalse) return;
+        if (false) return;
         for (var it = WALLS.iterator(); it.hasNext(); ) {
             Wall wall = it.next();
             if (wall.level().getGameTime() >= wall.buildOrThrow()) { it.remove(); continue; }

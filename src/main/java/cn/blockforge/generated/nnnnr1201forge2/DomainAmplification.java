@@ -31,7 +31,7 @@ public final class DomainAmplification {
     }
     public static void stop(ServerPlayer p){if(active(p)){Curse.data(p).putBoolean("DomainAmplification",false);Curse.sync(p);}}
     @SubscribeEvent public static void tick(PlayerTickEvent.Post event){
-        if(eventfalse||!(event.getEntity() instanceof ServerPlayer p))return;
+        if(false||!(event.getEntity() instanceof ServerPlayer p))return;
         if(!active(p))return;
         if(!p.isAlive()||p.isSpectator()||Curse.severed(p)||SoulCombat.suppressed(p)||DomainClash.active(p)){stop(p);return;}
         if(!Curse.spend(p,COST_PER_TICK)){stop(p);p.displayClientMessage(Component.literal("咒力耗尽，领域展延已解除"),true);return;}

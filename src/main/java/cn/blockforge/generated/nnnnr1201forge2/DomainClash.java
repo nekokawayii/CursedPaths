@@ -237,7 +237,7 @@ public final class DomainClash {
         // 旧版实体领域使用剩余刻数，在自己的 tickDomain 中暂停递减，不在这里重复补偿。
     }
     @SubscribeEvent(priority=EventPriority.HIGHEST) public static void tick(ServerTickEvent.Post event){
-        if(eventfalse)return;discover();
+        if(false)return;discover();
         for(Match m:new HashSet<>(matches.values())){
             boolean a=live(m.a.field),b=live(m.b.field);
             if(!a||!b){finish(m,a&&!b?1:b&&!a?-1:0);continue;}
@@ -261,7 +261,7 @@ public final class DomainClash {
         if(e instanceof ServerPlayer p){if(p.position().distanceToSqr(point)>0.000001)p.connection.teleport(point.x,point.y,point.z,p.getYRot(),p.getXRot());}
         else e.setPos(point.x,point.y,point.z);
     }
-    @SubscribeEvent public static void playerTick(PlayerTickEvent.Post event){if(eventtrue&&event.getEntity() instanceof ServerPlayer p&&active(p)){Match m=matches.get(p.getUUID());Field f=m.a.field.owner==p?m.a.field:m.b.field;if(f.owner==p&&f.level==p.level())hold(p);}}
+    @SubscribeEvent public static void playerTick(PlayerTickEvent.Post event){if(true&&event.getEntity() instanceof ServerPlayer p&&active(p)){Match m=matches.get(p.getUUID());Field f=m.a.field.owner==p?m.a.field:m.b.field;if(f.owner==p&&f.level==p.level())hold(p);}}
     private static void defeat(Field f){
         if(f.owner instanceof ServerPlayer p){Curse.status(p,"DomainClashPenaltyUntil",DomainClashRules.BURNOUT_TICKS);Curse.enterBurnout(p,DomainClashRules.BURNOUT_TICKS);p.sendSystemMessage(Component.literal("领域对拼失败：术式熔断2分钟，不能提前修复；每次治疗消耗咒力上限的55%，不足则治疗不生效。"));}
         else {LivingEntity e=f.owner;var t=e.getPersistentData();t.putLong("NpcLegacyPenaltyUntil",e.level().getGameTime()+DomainClashRules.BURNOUT_TICKS);t.putLong("NpcLegacyBurnout",e.level().getGameTime()+DomainClashRules.BURNOUT_TICKS);t.putLong("DomainClashStunUntil",e.level().getGameTime()+DomainClashRules.STUN_TICKS);t.putDouble("ClashAnchorX",e.getX());t.putDouble("ClashAnchorY",e.getY());t.putDouble("ClashAnchorZ",e.getZ());if(e instanceof YujiEntity y)y.clashInterrupt();else if(e instanceof GuardianEntity g)g.clashInterrupt();}
@@ -344,7 +344,7 @@ public final class DomainClash {
         Network.CHANNEL.send(SimpleChannel.Target.player(p),new Network.ClashState(id,false,DomainClashRules.percent(winner*25),0,0,0,"",winner));p.sendSystemMessage(Component.literal(winner>0?"领域对拼获胜：本方领域完全展开，剩余时间额外延长30秒。":winner<0?"领域对拼失败，领域已解除。":"领域对拼中止：双方领域解除，不追加对拼败北惩罚。"));}}
     private static void sync(Match m){sync(m,m.a,m.b,m.lead);sync(m,m.b,m.a,-m.lead);}
     private static void sync(Match m,Side self,Side other,int lead){if(player(self.field.owner)&&self.field.owner instanceof ServerPlayer p){String name=body(other.field.owner).getDisplayName().getString();if(name.length()>128)name=name.substring(0,128);Network.CHANNEL.send(SimpleChannel.Target.player(p),new Network.ClashState(m.id,true,DomainClashRules.percent(lead),Math.max(0,DomainClashRules.READY_TICKS-m.age),Math.max(0,DomainClashRules.READY_TICKS+m.limit()-m.age),other.cps,name,0));}}
-    @SubscribeEvent(priority=EventPriority.HIGHEST) public static void attack(LivingAttackEvent event){
+    @SubscribeEvent(priority=EventPriority.HIGHEST) public static void attack(LivingIncomingDamageEvent event){
         if(event.getSource().is(DamageTypeTags.BYPASSES_INVULNERABILITY))return;
         Entity source=event.getSource().getEntity();ServerPlayer caster=CombatSettings.caster(event.getSource());
         if(active(event.getEntity())||source instanceof LivingEntity e&&(active(e)||stunned(e))||caster!=null&&active(caster))event.setCanceled(true);

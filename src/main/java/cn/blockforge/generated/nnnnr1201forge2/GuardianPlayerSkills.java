@@ -148,7 +148,7 @@ public final class GuardianPlayerSkills {
         }
     }
     @SubscribeEvent public static void tick(ServerTickEvent.Post event){
-        if(eventfalse)return;
+        if(false)return;
         for(Iterator<State> it=states.values().iterator();it.hasNext();){State s=it.next();if(!valid(s)){cleanup(s);it.remove();continue;}long now=s.level.getGameTime();
             if(DomainClash.active(s.p))continue;
             if(SoulCombat.suppressed(s.p)||Curse.burnout(s.p)){s.casting=-1;s.guardUntil=0;if(s.boostUntil>0){s.boostUntil=0;boost(s,false);}closeDomain(s);continue;}

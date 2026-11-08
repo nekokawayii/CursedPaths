@@ -122,7 +122,7 @@ public final class CombatExpansion {
     private static void releaseRain(Rain r){rains.remove(r.target.getUUID(),r);holdEffect(r,0);r.target.setDeltaMovement(Vec3.ZERO);r.target.fallDistance=0;}
     private static void holdRain(Rain r){LivingEntity t=r.target;t.stopRiding();t.stopUsingItem();t.setDeltaMovement(Vec3.ZERO);t.fallDistance=0;t.hurtMarked=true;if(t instanceof Mob m)m.getNavigation().stop();if(t instanceof ServerPlayer sp)sp.connection.teleport(r.anchor.x,r.anchor.y,r.anchor.z,t.getYRot(),t.getXRot());else t.teleportTo(r.anchor.x,r.anchor.y,r.anchor.z);}
     @SubscribeEvent(priority=EventPriority.HIGHEST) public static void controlledTick(LivingEvent.LivingTickEvent e){Rain r=rains.get(e.getEntity().getUUID());if(r!=null&&!e.getEntity().level().isClientSide){if(!valid(r.p,r.level)||r.target.level()!=r.level||!r.target.isAlive()||!CombatSettings.canHit(r.p,r.target)||DomainClash.active(r.p)||DomainClash.active(r.target)){releaseRain(r);return;}holdRain(r);if(!(e.getEntity() instanceof net.minecraft.world.entity.player.Player))e.setCanceled(true);}}
-    @SubscribeEvent(priority=EventPriority.HIGHEST) public static void attack(LivingAttackEvent e){
+    @SubscribeEvent(priority=EventPriority.HIGHEST) public static void attack(LivingIncomingDamageEvent e){
         if(e.getSource().getEntity() instanceof LivingEntity attacker&&controlled(attacker)){e.setCanceled(true);return;}
         if(DismantleMotion.active(e.getEntity())&&!e.getSource().is(net.minecraft.world.damagesource.DamageTypes.FELL_OUT_OF_WORLD)&&!e.getSource().is(net.minecraft.world.damagesource.DamageTypes.GENERIC_KILL))e.setCanceled(true);
     }

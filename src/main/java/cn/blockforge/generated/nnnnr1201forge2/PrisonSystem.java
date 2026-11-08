@@ -147,7 +147,7 @@ public final class PrisonSystem {
         }
     }
     @SubscribeEvent public static void tick(ServerTickEvent.Post event){
-        if(eventfalse)return;MinecraftServer server=event.getServer();PrisonStore store=PrisonStore.get(server);if(store.prisoners.isEmpty())return;
+        if(false)return;MinecraftServer server=event.getServer();PrisonStore store=PrisonStore.get(server);if(store.prisoners.isEmpty())return;
         ServerLevel prison=server.getLevel(DIMENSION);if(prison==null)return;
         Set<UUID> tickets=new HashSet<>();
         for(CompoundTag record:List.copyOf(store.prisoners.values())){
@@ -182,7 +182,7 @@ public final class PrisonSystem {
     @SubscribeEvent(priority=EventPriority.HIGHEST) public static void travel(EntityTravelToDimensionEvent e){if(!TRANSFERRING.contains(e.getEntity().getUUID())&&locked(e.getEntity()))e.setCanceled(true);}
     @SubscribeEvent(priority=EventPriority.HIGHEST) public static void teleport(EntityTeleportEvent e){if(!TRANSFERRING.contains(e.getEntity().getUUID())&&locked(e.getEntity())&&e.isCancelable())e.setCanceled(true);}
     @SubscribeEvent(priority=EventPriority.HIGHEST) public static void command(CommandEvent e){Entity sender=e.getParseResults().getContext().getSource().getEntity();if(locked(sender)){e.setCanceled(true);if(sender instanceof ServerPlayer p)tell(p,"封印中不能执行指令或小地图传送");}}
-    @SubscribeEvent(priority=EventPriority.HIGHEST) public static void damage(LivingAttackEvent e){if(locked(e.getEntity())||locked(e.getSource().getEntity()))e.setCanceled(true);}
+    @SubscribeEvent(priority=EventPriority.HIGHEST) public static void damage(LivingIncomingDamageEvent e){if(locked(e.getEntity())||locked(e.getSource().getEntity()))e.setCanceled(true);}
     @SubscribeEvent(priority=EventPriority.HIGHEST) public static void death(LivingDeathEvent e){if(locked(e.getEntity())){e.setCanceled(true);e.getEntity().setHealth(Math.max(1,e.getEntity().getHealth()));}}
     @SubscribeEvent(priority=EventPriority.HIGHEST) public static void use(PlayerInteractEvent e){if(locked(e.getEntity())&&e.isCancelable())e.setCanceled(true);}
     @SubscribeEvent(priority=EventPriority.HIGHEST) public static void attack(AttackEntityEvent e){if(locked(e.getEntity()))e.setCanceled(true);}

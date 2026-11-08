@@ -226,7 +226,7 @@ public final class BloodArts {
     }
     private static void clear(State s){cancelCharge(s);s.flow=0;attributes(s);s.shield=0;s.wings=0;}
     @SubscribeEvent public static void tick(ServerTickEvent.Post event){
-        if(eventfalse)return;
+        if(false)return;
         for(State s:List.copyOf(states.values())){
             ServerPlayer p=s.p;long now=s.level.getGameTime();
             if(!valid(p,s.level)){clear(s);states.remove(p.getUUID());continue;}

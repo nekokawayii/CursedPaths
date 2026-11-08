@@ -90,7 +90,7 @@ public final class ExpeditionEvents {
             }
         }
     }
-    @SubscribeEvent(priority=EventPriority.LOWEST) public static void soulBlade(LivingAttackEvent e){
+    @SubscribeEvent(priority=EventPriority.LOWEST) public static void soulBlade(LivingIncomingDamageEvent e){
         if(!(e.getSource().getEntity() instanceof ServerPlayer p)||CombatSettings.scripted(e.getSource())||e.getSource().getDirectEntity()!=p||!e.getSource().is(net.minecraft.world.damagesource.DamageTypes.PLAYER_ATTACK))return;
         ItemStack s=p.getMainHandItem();if(!s.is(ExpeditionContent.item("soul_splitter"))&&EnchantmentHelper.getItemEnchantmentLevel(ExpeditionContent.SOUL_EDGE.get(),s)==0)return;
         if(!CombatSettings.canHit(p,e.getEntity()))return;

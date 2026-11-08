@@ -23,7 +23,7 @@ public final class ShadowBindings {
     public static void release(ShadowEntity frog){holds.remove(frog.getUUID());}
     private static void pin(LivingEntity e,Vec3 at){e.setDeltaMovement(Vec3.ZERO);e.fallDistance=0;if(e instanceof Mob mob)mob.getNavigation().stop();if(e.position().distanceToSqr(at)>.001){if(e instanceof ServerPlayer p)p.connection.teleport(at.x,at.y,at.z,p.getYRot(),p.getXRot());else e.teleportTo(at.x,at.y,at.z);}e.hurtMarked=true;}
     @SubscribeEvent public static void tick(ServerTickEvent.Post event){
-        if(eventfalse)return;
+        if(false)return;
         for(var it=holds.values().iterator();it.hasNext();){Hold h=it.next();if(!h.frog.isAlive()||h.frog.isRemoved()||!h.target.isAlive()||h.frog.level()!=h.target.level()||h.frog.level().getGameTime()>=h.end||!h.frog.validTarget(h.target)||h.frog.distanceToSqr(h.target)>16*16){it.remove();continue;}pin(h.frog,h.frogAt);pin(h.target,h.targetAt);}
     }
     @SubscribeEvent public static void teleport(EntityTeleportEvent event){if(event.isCancelable())for(Hold h:holds.values())if(event.getEntity()==h.target||event.getEntity()==h.frog){event.setCanceled(true);return;}}

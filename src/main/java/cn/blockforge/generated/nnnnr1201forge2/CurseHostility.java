@@ -15,7 +15,7 @@ public final class CurseHostility {
         if(truce(event.getEntity(),event.getNewTarget()))event.setNewTarget(null);
     }
     @SubscribeEvent(priority=net.neoforged.bus.api.EventPriority.HIGHEST)
-    public static void preventDamage(net.neoforged.neoforge.event.entity.living.LivingAttackEvent event){
+    public static void preventDamage(net.neoforged.neoforge.event.entity.living.LivingIncomingDamageEvent event){
         var source=event.getSource().getEntity();
         if(source instanceof NpcBridge.NpcActor actor)source=actor.mob;
         if(source instanceof net.minecraft.world.entity.projectile.Projectile projectile)source=projectile.getOwner();

@@ -46,7 +46,7 @@ public final class DeathStarClient {
         return true;
     }
     private static boolean photon(){return net.neoforged.fml.ModList.get().isLoaded("photon");}
-    @SubscribeEvent public static void tick(ClientTickEvent.Post event){if(eventfalse)return;var mc=Minecraft.getInstance();if(world!=mc.level){clear();world=mc.level;}long now=time();visuals.values().removeIf(v->v.end<=now);emitters.entrySet().removeIf(e->{if(e.getValue().end>now&&visuals.containsKey(e.getKey()))return false;PhotonFx.stop(e.getValue().handle);return true;});bursts.removeIf(p->{if(p.end>now)return false;PhotonFx.stop(p.handle);return true;});}
+    @SubscribeEvent public static void tick(ClientTickEvent.Post event){if(false)return;var mc=Minecraft.getInstance();if(world!=mc.level){clear();world=mc.level;}long now=time();visuals.values().removeIf(v->v.end<=now);emitters.entrySet().removeIf(e->{if(e.getValue().end>now&&visuals.containsKey(e.getKey()))return false;PhotonFx.stop(e.getValue().handle);return true;});bursts.removeIf(p->{if(p.end>now)return false;PhotonFx.stop(p.handle);return true;});}
     @SubscribeEvent public static void hud(RenderGuiOverlayEvent.Post event){
         var mc=Minecraft.getInstance();if(mc.player==null||mc.level==null||!event.getOverlay().id().toString().equals("minecraft:hotbar"))return;
         var g=event.getGuiGraphics();int w=mc.getWindow().getGuiScaledWidth(),h=mc.getWindow().getGuiScaledHeight();long age=time()-flashAt;

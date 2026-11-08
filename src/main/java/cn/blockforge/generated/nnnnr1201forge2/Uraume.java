@@ -146,7 +146,7 @@ public final class Uraume {
     @SubscribeEvent(priority=EventPriority.HIGHEST) public static void frozenTick(LivingEvent.LivingTickEvent e){if(e.getEntity().level().isClientSide||!locked(e.getEntity()))return;hold(frozen.get(e.getEntity().getUUID()));if(!(e.getEntity() instanceof Player))e.setCanceled(true);}
     @SubscribeEvent(priority=EventPriority.HIGHEST) public static void attack(AttackEntityEvent e){if(locked(e.getEntity()))e.setCanceled(true);}
     @SubscribeEvent(priority=EventPriority.HIGHEST) public static void interact(PlayerInteractEvent e){if(e.isCancelable()&&locked(e.getEntity()))e.setCanceled(true);}
-    @SubscribeEvent(priority=EventPriority.HIGHEST) public static void outgoing(LivingAttackEvent e){if(e.getSource().getEntity() instanceof LivingEntity t&&locked(t))e.setCanceled(true);}
+    @SubscribeEvent(priority=EventPriority.HIGHEST) public static void outgoing(LivingIncomingDamageEvent e){if(e.getSource().getEntity() instanceof LivingEntity t&&locked(t))e.setCanceled(true);}
     @SubscribeEvent(priority=EventPriority.HIGHEST) public static void breakSpeed(PlayerEvent.BreakSpeed e){if(locked(e.getEntity()))e.setCanceled(true);}
     @SubscribeEvent(priority=EventPriority.HIGHEST) public static void teleport(net.neoforged.neoforge.event.entity.EntityTeleportEvent e){if(e.isCancelable()&&e.getEntity() instanceof LivingEntity t&&locked(t))e.setCanceled(true);}
     @SubscribeEvent public static void logout(PlayerEvent.PlayerLoggedOutEvent e){if(e.getEntity() instanceof ServerPlayer p)cancel(p);}

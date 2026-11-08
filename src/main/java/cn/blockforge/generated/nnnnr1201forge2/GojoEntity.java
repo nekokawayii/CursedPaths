@@ -53,7 +53,7 @@ public final class GojoEntity extends Monster {
     private void fx(int kind,Vec3 p,Vec3 q,float size,int life,long seed){Network.send(server(),new Network.Effect(kind,getId(),p,q,size,life,seed));}
     // ------------------------------------------------------------ 无下限
     /** 除世界斩、领域展延与自身无限制茈反噬外，一切伤害都被无下限挡下。 */
-    @SubscribeEvent public static void infinity(LivingAttackEvent event){
+    @SubscribeEvent public static void infinity(LivingIncomingDamageEvent event){
         // 客户端命中也会触发本事件，必须只在服务端判定，否则 (ServerLevel)level() 会崩。
         if(event.getEntity().level().isClientSide)return;
         if(!(event.getEntity() instanceof GojoEntity gojo)||gojo.isRemoved())return;

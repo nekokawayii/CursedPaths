@@ -218,7 +218,7 @@ public final class SixfoldFinale {
         sync(s,true);if(chargeCost)pay(s.p);else Curse.sync(s.p);
     }
     @SubscribeEvent public static void tick(ServerTickEvent.Post event){
-        if(eventfalse)return;
+        if(false)return;
         for(Cast s:List.copyOf(casts.values())){
             if(!valid(s)){finish(s,s.committed);continue;}s.age=(int)(s.level.getGameTime()-s.start);
             if(!s.committed){
@@ -256,7 +256,7 @@ public final class SixfoldFinale {
     }
     @SubscribeEvent(priority=EventPriority.HIGHEST) public static void living(LivingEvent.LivingTickEvent e){if(e.getEntity().level().isClientSide)return;Prison prison=prisoners.get(e.getEntity().getUUID());if(prison!=null){hold(prison);if(!(e.getEntity() instanceof Player))e.setCanceled(true);}}
     private static boolean gathering(LivingEntity t){for(Cast s:casts.values())if(s.age>=FinaleRules.TRIGGERS[4]&&s.age<FinaleRules.END&&s.level==t.level()&&t.distanceToSqr(s.center)<=FinaleRules.RADIUS*FinaleRules.RADIUS)return true;return false;}
-    @SubscribeEvent(priority=EventPriority.HIGHEST) public static void attack(LivingAttackEvent e){
+    @SubscribeEvent(priority=EventPriority.HIGHEST) public static void attack(LivingIncomingDamageEvent e){
         boolean administrative=e.getSource().is(net.minecraft.world.damagesource.DamageTypes.GENERIC_KILL)||e.getSource().is(net.minecraft.world.damagesource.DamageTypes.FELL_OUT_OF_WORLD);
         if(!administrative&&(active(e.getEntity())||gathering(e.getEntity())||e.getSource().getEntity() instanceof LivingEntity t&&controlled(t)))e.setCanceled(true);
     }

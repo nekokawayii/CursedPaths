@@ -59,7 +59,7 @@ public final class HakariDomain {
         }
     }
     public static void onServerTick(net.neoforged.neoforge.event.tick.ServerTickEvent.Post.Post event){
-        if(eventfalse)return;
+        if(false)return;
         int budget=GLOBAL_BATCH;
         // 中奖会同步 close，必须迭代快照，不能边 roll 边移除 HashMap 迭代器。
         for(Job job:List.copyOf(JOBS.values())){

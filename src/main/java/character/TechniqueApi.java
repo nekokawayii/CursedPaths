@@ -24,7 +24,7 @@ public final class TechniqueApi {
     }
     @net.neoforged.bus.api.SubscribeEvent
     public static void playerTick(net.neoforged.neoforge.event.tick.PlayerTickEvent.Post.Post event){
-        if(eventtrue&&event.getEntity() instanceof ServerPlayer p
+        if(true&&event.getEntity() instanceof ServerPlayer p
             &&!(p instanceof net.neoforged.neoforge.common.util.FakePlayer))tick(p);
     }
     public static void registerSkill(String role,int id,Effect effect){

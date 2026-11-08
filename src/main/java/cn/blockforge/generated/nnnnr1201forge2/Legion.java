@@ -133,7 +133,7 @@ public final class Legion {
         for(int n=0;n<skills.size();n++){int index=(start+n)%skills.size(),skill=skills.get(index);if(!AuthoritySkills.ready(actor,skill))continue;NEXT.put(mob.getUUID(),index+1);AuthoritySkills.cast(actor,skill);break;}
     }
     @SubscribeEvent(priority=EventPriority.HIGHEST) public static void targetChange(LivingChangeTargetEvent e){if(!member(e.getEntity()))return;ServerPlayer p=owner(e.getEntity());if(e.getEntity() instanceof Mob mob)e.setNewTarget(p==null?null:target(p,mob));}
-    @SubscribeEvent(priority=EventPriority.HIGHEST) public static void hurt(LivingAttackEvent e){
+    @SubscribeEvent(priority=EventPriority.HIGHEST) public static void hurt(LivingIncomingDamageEvent e){
         Entity source=e.getSource().getEntity();ServerPlayer p=source instanceof ServerPlayer s?s:owner(source);
         UUID commander=source instanceof Player player?player.getUUID():ownerId(source);
         if(commander!=null&&(commander.equals(ownerId(e.getEntity()))||member(source)&&commander.equals(e.getEntity().getUUID()))){e.setCanceled(true);return;}
