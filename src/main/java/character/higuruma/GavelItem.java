@@ -24,7 +24,6 @@ public class GavelItem extends SwordItem {
     @Override public boolean onDroppedByPlayer(ItemStack item, Player player) { return false; }
     @Override public boolean isDamageable(ItemStack stack) { return false; }
     @Override public boolean isBarVisible(ItemStack stack) { return false; }
-    @Override public boolean canBeDepleted() { return false; }
 
     @Override public void appendHoverText(ItemStack stack, net.minecraft.world.item.Item.TooltipContext context, java.util.List<Component> lines, TooltipFlag flag) {
         CompoundTag tag = CompatNbt.getElement(stack, SEAL);

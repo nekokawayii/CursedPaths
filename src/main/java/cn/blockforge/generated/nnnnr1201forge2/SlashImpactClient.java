@@ -57,6 +57,7 @@ public final class SlashImpactClient {
         for(V b:in){double db=distance(b,normal,height)*sign;if((da>=0)!=(db>=0))out.add(a.mix(b,da/(da-db)));if(db>=0)out.add(b);a=b;da=db;}return out;
     }
     private static final class Capture implements VertexConsumer {
+        @Override public VertexConsumer setNormal(float x,float y,float z){return this;}
         final RenderType type;final Piece[] pieces;final Vec3 normal;final double height;
         final List<V> quad=new ArrayList<>(4);int count;Vec3 p=Vec3.ZERO,n=new Vec3(0,1,0);float r=1,g=1,b=1,a=1,u,v;int overlay,light;
         Capture(RenderType type,Piece[] pieces,Vec3 normal,double height){this.type=type;this.pieces=pieces;this.normal=normal;this.height=height;}

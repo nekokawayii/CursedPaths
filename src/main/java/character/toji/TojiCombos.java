@@ -435,7 +435,7 @@ public final class TojiCombos {
         if (attribute == null) return;
         var id = java.util.UUID.nameUUIDFromBytes(("TojiArmorBreak" + target.getUUID()).getBytes());
         attribute.removeModifier(CompatAttr.id(id));
-        attribute.addTransientModifier(new AttributeModifier(id, "破甲",
+        attribute.addTransientModifier(new AttributeModifier(CompatAttr.id(id),
             -Math.max(0, attribute.getValue()) * fraction, AttributeModifier.Operation.ADD_VALUE));
     }
 

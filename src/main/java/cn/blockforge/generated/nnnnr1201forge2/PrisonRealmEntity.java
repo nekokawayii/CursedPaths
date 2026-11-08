@@ -23,7 +23,7 @@ public final class PrisonRealmEntity extends Entity {
     public boolean open(){return entityData.get(OPEN);}
     public int frame(){return entityData.get(FRAME);}
     public void open(boolean value){entityData.set(OPEN,value);}
-    @Override protected void defineSynchedData(net.minecraft.network.syncher.SynchedEntityData.Builder builder){builder.define(OPEN,false);entityData.define(FRAME,0);}
+    @Override protected void defineSynchedData(net.minecraft.network.syncher.SynchedEntityData.Builder builder){builder.define(OPEN,false);builder.define(FRAME,0);}
     @Override public void tick(){super.tick();if(!level().isClientSide){int frame=frame();entityData.set(FRAME,open()?Math.min(PrisonRules.OPEN_TICKS,frame+1):Math.max(0,frame-2));if(tickCount==1)PrisonSystem.registerRealm(this);}}
     @Override public boolean isPickable(){return true;}
     @Override public boolean canBeCollidedWith(){return true;}
