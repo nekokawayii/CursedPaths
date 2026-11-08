@@ -105,8 +105,7 @@ public final class MaidBridge {
         public void syncPosition(){setPos(maid.getX(),maid.getY(),maid.getZ());setYRot(maid.getYRot());setXRot(maid.getXRot());tickCount=maid.tickCount;if(aim!=null){Vec3 d=aim.getEyePosition().subtract(maid.getEyePosition());setYRot((float)(Math.toDegrees(Math.atan2(d.z,d.x))-90));setXRot((float)-Math.toDegrees(Math.atan2(d.y,Math.sqrt(d.x*d.x+d.z*d.z))));}}
         @Override public CompoundTag getPersistentData(){return maid==null?super.getPersistentData():maid.getPersistentData();}
         @Override public float getAttackStrengthScale(float partial){return 1;}
-        @Override public float getStandingEyeHeight(Pose pose,EntityDimensions dimensions){return maid==null?super.getStandingEyeHeight(pose,dimensions):Authority.echo(maid)?1.62f:maid.getEyeHeight();}
-        @Override public Iterable<ItemStack> getArmorSlots(){return maid==null?super.getArmorSlots():maid.getArmorSlots();}
+                @Override public Iterable<ItemStack> getArmorSlots(){return maid==null?super.getArmorSlots():maid.getArmorSlots();}
         @Override public ItemStack getItemBySlot(EquipmentSlot slot){return maid==null?super.getItemBySlot(slot):maid.getItemBySlot(slot);}
         @Override public boolean isAlive(){if(maid==null)return super.isAlive();if(Legion.member(maid)||Authority.echo(maid)){ServerPlayer owner=Authority.owner(this);if(owner==null||!owner.isAlive()||owner.hasDisconnected()||owner.level()!=maid.level())return false;}return !isRemoved()&&maid.isAlive()&&!maid.isRemoved();}
         @Override public float getHealth(){return maid==null?super.getHealth():maid.getHealth();}
