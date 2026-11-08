@@ -5,7 +5,6 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.Container;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.item.ItemStack;
-import net.neoforged.neoforge.common.capabilities.ForgeCapabilities;
 import net.neoforged.neoforge.items.IItemHandler;
 import net.neoforged.neoforge.items.IItemHandlerModifiable;
 
@@ -17,7 +16,7 @@ public final class PrisonInventory {
         var craft=p.inventoryMenu.getCraftSlots();for(int i=0;i<craft.getContainerSize();i++){stash(cursor,craft.getItem(i));craft.setItem(i,ItemStack.EMPTY);}record.put("Extras",cursor);
         p.closeContainer();
         record.put("Inventory",p.getInventory().save(new ListTag()));record.putInt("Selected",p.getInventory().selected);
-        record.put("EnderItems",p.getEnderChestInventory().createTag());
+        record.put("EnderItems",p.getEnderChestInventory().createTag(p.level().registryAccess()));
         record.putInt("XpLevel",p.experienceLevel);record.putInt("XpTotal",p.totalExperience);record.putFloat("XpProgress",p.experienceProgress);
         p.getInventory().clearContent();p.getEnderChestInventory().clearContent();p.setExperienceLevels(0);p.setExperiencePoints(0);p.totalExperience=0;
         confiscate(p,record);sync(p);
@@ -35,7 +34,7 @@ public final class PrisonInventory {
             if(entity instanceof Container container)container.clearContent();
             if(entity instanceof net.minecraft.world.entity.npc.InventoryCarrier carrier)carrier.getInventory().clearContent();
         }
-        entity.getCapability(ForgeCapabilities.ITEM_HANDLER).ifPresent(handler->clear(handler,entity instanceof ServerPlayer?extras:null));
+        var itemHandler=entity.getCapability(net.neoforged.neoforge.capabilities.Capabilities.ItemHandler.ENTITY);if(itemHandler!=null)clear(itemHandler,entity instanceof ServerPlayer?extras:null);
         record.put("Extras",extras);PrisonCurios.take(entity,record);
     }
     private static void clear(IItemHandler h,ListTag extras){
@@ -49,7 +48,7 @@ public final class PrisonInventory {
     public static void restore(ServerPlayer p,CompoundTag record){
         p.closeContainer();confiscate(p,record);
         p.getInventory().load(record.getList("Inventory",Tag.TAG_COMPOUND));p.getInventory().selected=record.getInt("Selected");
-        p.getEnderChestInventory().fromTag(record.getList("EnderItems",Tag.TAG_COMPOUND));
+        p.getEnderChestInventory().fromTag(record.getList("EnderItems",Tag.TAG_COMPOUND),p.level().registryAccess());
         p.setExperienceLevels(record.getInt("XpLevel"));p.experienceProgress=record.getFloat("XpProgress");p.totalExperience=record.getInt("XpTotal");
         for(Tag t:record.getList("Extras",Tag.TAG_COMPOUND))p.getInventory().placeItemBackInInventory(CompatItem.load((CompoundTag)t));
         PrisonCurios.restore(p,record);
