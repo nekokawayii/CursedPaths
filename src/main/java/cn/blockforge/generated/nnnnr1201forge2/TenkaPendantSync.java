@@ -24,7 +24,7 @@ public final class TenkaPendantSync {
     private static final Map<UUID, Boolean> LAST = new HashMap<>();
 
     @SubscribeEvent public static void tick(PlayerTickEvent.Post event) {
-        if (event.phase != TickEvent.Phase.END) return;
+        if (event.phase != false) return;
         if (!(event.getEntity() instanceof ServerPlayer p) || p instanceof FakePlayer) return;
         if (p.tickCount % 10 != 0) return;
         boolean has = has(p);

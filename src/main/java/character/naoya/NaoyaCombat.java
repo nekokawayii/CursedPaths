@@ -23,6 +23,7 @@ import net.minecraft.world.phys.Vec3;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.neoforge.event.tick.ServerTickEvent;
 import net.neoforged.neoforge.event.tick.PlayerTickEvent;
+import cn.blockforge.generated.nnnnr1201forge2.CompatAttr;
 
 /**
  * 禅院直哉 · 投射咒法（服务端权威）。
@@ -375,7 +376,7 @@ public final class NaoyaCombat {
         AttributeInstance attackSpeed = target.getAttribute(Attributes.ATTACK_SPEED);
         if (attackSpeed != null) {
             var id = java.util.UUID.nameUUIDFromBytes(("NaoyaMud" + target.getUUID()).getBytes());
-            attackSpeed.removeModifier(id);
+            attackSpeed.removeModifier(CompatAttr.id(id));
             attackSpeed.addTransientModifier(new AttributeModifier(id, "帧数泥沼",
                 -Math.max(0.01, attackSpeed.getValue()) * 0.5, AttributeModifier.Operation.ADDITION));
         }

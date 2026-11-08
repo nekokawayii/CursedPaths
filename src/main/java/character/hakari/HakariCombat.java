@@ -23,6 +23,7 @@ import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.event.entity.living.LivingHurtEvent;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.neoforge.event.tick.PlayerTickEvent;
+import cn.blockforge.generated.nnnnr1201forge2.CompatAttr;
 
 /**
  * 秤金次 · 坐杀博徒（r371 大改，用户逐条规格）。
@@ -140,9 +141,8 @@ public final class HakariCombat {
         var attribute = p.getAttribute(Attributes.MOVEMENT_SPEED);
         if (attribute == null) return;
         var id = java.util.UUID.fromString("7a1c5f10-1111-4a2b-9c00-0000aaaabbbb");
-        attribute.removeModifier(id);
-        attribute.addTransientModifier(new AttributeModifier(id, "赌徒的嗅觉",
-            attribute.getBaseValue() * 0.2, AttributeModifier.Operation.ADDITION));
+        attribute.removeModifier(CompatAttr.id(id));
+        attribute.addTransientModifier(new AttributeModifier(CompatAttr.id(id), attribute.getBaseValue() * 0.2, AttributeModifier.Operation.ADDITION));
     }
 
     private static void clearSpeed(ServerPlayer p) {

@@ -15,6 +15,7 @@ import net.minecraft.world.phys.Vec3;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.neoforge.event.tick.ServerTickEvent;
 import net.minecraft.core.Holder;
+import cn.blockforge.generated.nnnnr1201forge2.CompatAttr;
 
 /**
  * 死灭洄游结界内的刷新与敌对（r218）。
@@ -367,8 +368,8 @@ public final class CullingSpawns {
     private static void mod(Mob mob, net.minecraft.world.entity.ai.attributes.Holder<Attribute> attr, java.util.UUID id, double amount) {
         var a = mob.getAttribute(attr);
         if (a == null) return;
-        if (Math.abs(amount) < 1e-6) { if (a.getModifier(id) != null) a.removeModifier(id); return; }
-        if (a.getModifier(id) != null) a.removeModifier(id);
+        if (Math.abs(amount) < 1e-6) { if (a.getModifier(CompatAttr.id(id)) != null) a.removeModifier(CompatAttr.id(id)); return; }
+        if (a.getModifier(CompatAttr.id(id)) != null) a.removeModifier(CompatAttr.id(id));
         a.addTransientModifier(new net.minecraft.world.entity.ai.attributes.AttributeModifier(
             id, "死灭NPC规则", amount, net.minecraft.world.entity.ai.attributes.AttributeModifier.Operation.MULTIPLY_TOTAL));
     }

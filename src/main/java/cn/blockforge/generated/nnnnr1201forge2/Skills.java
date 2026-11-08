@@ -11,6 +11,7 @@ import net.neoforged.neoforge.event.server.ServerStoppedEvent;
 import net.neoforged.bus.api.SubscribeEvent;
 import java.util.*;
 import net.neoforged.neoforge.event.tick.ServerTickEvent;
+import cn.blockforge.generated.nnnnr1201forge2.CompatAttr;
 
 public final class Skills {
     public static final String[] NAMES={"解 · 远程斩击","解 · 八方罗网","捌 · 必断斩击","开 · 炎弓","灶 · 粉尘爆炸","领域展开 · 伏魔御厨子","灵魂剥离"};
@@ -184,12 +185,12 @@ public final class Skills {
     private static void freeze(ServerPlayer p){
         var attr=MaidBridge.body(p).getAttribute(net.minecraft.world.entity.ai.attributes.Attributes.MOVEMENT_SPEED);
         if(attr==null)return;
-        attr.removeModifier(SEAL_SLOW);
+        attr.removeModifier(CompatAttr.id(SEAL_SLOW));
         attr.addTransientModifier(new net.minecraft.world.entity.ai.attributes.AttributeModifier(SEAL_SLOW,"sukuna_domain_seal",-1,net.minecraft.world.entity.ai.attributes.AttributeModifier.Operation.MULTIPLY_TOTAL));
     }
     private static void unfreeze(ServerPlayer p){
         var attr=MaidBridge.body(p).getAttribute(net.minecraft.world.entity.ai.attributes.Attributes.MOVEMENT_SPEED);
-        if(attr!=null&&attr.getModifier(SEAL_SLOW)!=null)attr.removeModifier(SEAL_SLOW);
+        if(attr!=null&&attr.getModifier(CompatAttr.id(SEAL_SLOW))!=null)attr.removeModifier(CompatAttr.id(SEAL_SLOW));
     }
     /** 释放键（技能5）循环：①结印 ②再按=放下(伤害50%) ③**放下后再按一次=收起领域**。 */
     private static void domainPress(ServerPlayer p){
@@ -693,7 +694,7 @@ public final class Skills {
     private static boolean scaledDamage(ServerLevel l,ServerPlayer p,LivingEntity e,float n,boolean world,boolean slash,boolean soulSlash,double fraction){if(DomainClash.active(p)||DomainClash.active(e)||!canHit(p,e))return false;soulSlash=soulSlash||SoulJourney.evolved(p)&&slash;AttackTypes.markPendingDefault(soulSlash?AttackTypes.SOUL:(world||slash?AttackTypes.SLASH:AttackTypes.MAGIC));if(soulSlash){n+=Curse.soulSlashBonus(p);e.getPersistentData().putUUID("SukunaSoulSlashOwner",p.getUUID());e.getPersistentData().putBoolean("SukunaNoHeal",true);}n=(float)(CombatSettings.spellDamage(p,n)*fraction);float before=e.getHealth()+e.getAbsorptionAmount();e.invulnerableTime=0;boolean accepted=CombatSettings.hurt(p,e,world?l.damageSources().sonicBoom(p):l.damageSources().indirectMagic(p,p),n);if(accepted&&e instanceof BuddhaEntity boss&&world)boss.interruptSiphon();boolean hurt=accepted&&e.getHealth()+e.getAbsorptionAmount()<before;if(hurt&&slash&&Journey.nine(p)&&e.isAlive())joint(p,e);if(hurt&&soulSlash)SoulCombat.soulHit(p,e);return hurt;}
     private static boolean hitDamage(ServerLevel l,ServerPlayer p,LivingEntity e,float n,boolean world){return damage(l,p,e,n*(float)Curse.power(p),world);}
     @SubscribeEvent public static void tick(ServerTickEvent.Post event){
-        if(event.phase!=TickEvent.Phase.END)return;
+        if(event.phase!=false)return;
         tickFistAura();
         VoidCombat.tick();
         tickSeals();

@@ -75,7 +75,7 @@ public final class TerrainDomainExample {
             DomainPresentation.Style.image("jujutsu_kaisen_cursed_paths:textures/block/yuki_star_shell.png",0x77BBFF));
     }
     @SubscribeEvent public static void tick(ServerTickEvent.Post event){
-        if(event.phase==TickEvent.Phase.END)for(var field:List.copyOf(FIELDS.values()))field.tick();
+        if(event.phase==false)for(var field:List.copyOf(FIELDS.values()))field.tick();
     }
     @SubscribeEvent public static void stop(ServerStoppingEvent event){for(var field:List.copyOf(FIELDS.values()))field.close();}
     private TerrainDomainExample(){ }

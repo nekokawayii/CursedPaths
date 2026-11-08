@@ -25,6 +25,7 @@ import net.neoforged.neoforge.event.entity.player.PlayerEvent;
 import net.neoforged.bus.api.*;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.neoforge.event.tick.ServerTickEvent;
+import cn.blockforge.generated.nnnnr1201forge2.CompatAttr;
 
 /** 真人共用战斗规则。延迟命中重查敌友；临时属性均使用独立修饰符，不改基础存档数值。 */
 @Mod.EventBusSubscriber(modid="jujutsu_kaisen_cursed_paths")
@@ -136,7 +137,7 @@ public final class MahitoCombat {
             LivingEntity victim=aimed(p,10);if(victim==null)return;
             pose(p,3,40);COLLAPSES.removeIf(c->c.victim==victim);
             COLLAPSES.add(new Collapse(p,victim,victim.position(),now(p)));root(victim,40);
-            var armor=victim.getAttribute(Attributes.ARMOR);if(armor!=null){armor.removeModifier(ARMOR_ZERO);armor.addTransientModifier(new AttributeModifier(ARMOR_ZERO,"肉体崩坏",-1,AttributeModifier.Operation.MULTIPLY_TOTAL));}
+            var armor=victim.getAttribute(Attributes.ARMOR);if(armor!=null){armor.removeModifier(CompatAttr.id(ARMOR_ZERO));armor.addTransientModifier(new AttributeModifier(CompatAttr.id(ARMOR_ZERO), -1, AttributeModifier.Operation.MULTIPLY_TOTAL));}
             victim.getPersistentData().putLong("MahitoArmorUntil",now(p)+40);
             fx(p,THREADS,caster.getEyePosition(),victim.getBoundingBox().getCenter(),victim.getId(),40);
         }else if(id==MahitoSkills.ARMS){
@@ -190,21 +191,21 @@ public final class MahitoCombat {
         var data=victim.getPersistentData();
         // 多领域交叠时仍只持有一份标记，离开其所属领域即恢复。
         if(data.hasUUID("MahitoSoulOwner")&&!data.getUUID("MahitoSoulOwner").equals(p.getUUID()))restoreSoul(victim);
-        double before=attribute.getValue();attribute.removeModifier(SOUL_LOSS);
+        double before=attribute.getValue();attribute.removeModifier(CompatAttr.id(SOUL_LOSS));
         // ADDITION 还会受其它生命倍率修饰：测出倍率，保证最终上限每次恰好少2点。
         double original=attribute.getValue();
-        attribute.addTransientModifier(new AttributeModifier(SOUL_LOSS,"无为转变·测算",-1,AttributeModifier.Operation.ADDITION));
-        double scale=Math.max(.0001,original-attribute.getValue());attribute.removeModifier(SOUL_LOSS);
+        attribute.addTransientModifier(new AttributeModifier(CompatAttr.id(SOUL_LOSS), -1, AttributeModifier.Operation.ADDITION));
+        double scale=Math.max(.0001,original-attribute.getValue());attribute.removeModifier(CompatAttr.id(SOUL_LOSS));
         double lost=Math.max(0,(original-Math.max(2,before-2))/scale);
-        attribute.addTransientModifier(new AttributeModifier(SOUL_LOSS,"无为转变·灵魂削减",-lost,AttributeModifier.Operation.ADDITION));
+        attribute.addTransientModifier(new AttributeModifier(CompatAttr.id(SOUL_LOSS), -lost, AttributeModifier.Operation.ADDITION));
         victim.setHealth(Math.min(victim.getHealth(),victim.getMaxHealth()));data.putUUID("MahitoSoulOwner",p.getUUID());
         MARKED.computeIfAbsent(p.getUUID(),k->new HashSet<>()).add(victim.getUUID());
         if(victim instanceof ServerPlayer player)player.displayClientMessage(Component.literal("灵魂被改造：最大生命减少一颗心，离开领域或击败真人后恢复"),true);
     }
-    private static void restoreSoul(LivingEntity entity){var attribute=entity.getAttribute(Attributes.MAX_HEALTH);if(attribute!=null)attribute.removeModifier(SOUL_LOSS);entity.getPersistentData().remove("MahitoSoulOwner");}
+    private static void restoreSoul(LivingEntity entity){var attribute=entity.getAttribute(Attributes.MAX_HEALTH);if(attribute!=null)attribute.removeModifier(CompatAttr.id(SOUL_LOSS));entity.getPersistentData().remove("MahitoSoulOwner");}
     public static void root(LivingEntity victim,int ticks){
         victim.getPersistentData().putLong("MahitoRootUntil",Math.max(now(victim)+ticks,victim.getPersistentData().getLong("MahitoRootUntil")));
-        var speed=victim.getAttribute(Attributes.MOVEMENT_SPEED);if(speed!=null&&!speed.hasModifier(new AttributeModifier(ROOT,"灵魂定身",-1,AttributeModifier.Operation.MULTIPLY_TOTAL)))speed.addTransientModifier(new AttributeModifier(ROOT,"灵魂定身",-1,AttributeModifier.Operation.MULTIPLY_TOTAL));
+        var speed=victim.getAttribute(Attributes.MOVEMENT_SPEED);if(speed!=null&&!speed.hasModifier(new AttributeModifier(CompatAttr.id(ROOT), -1, AttributeModifier.Operation.MULTIPLY_TOTAL)))speed.addTransientModifier(new AttributeModifier(CompatAttr.id(ROOT), -1, AttributeModifier.Operation.MULTIPLY_TOTAL));
         victim.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN,ticks,9));
     }
     @SubscribeEvent(priority=EventPriority.HIGHEST) public static void invincible(LivingAttackEvent event){
@@ -214,10 +215,10 @@ public final class MahitoCombat {
         LivingEntity e=event.getEntity();if(e.level().isClientSide)return;var data=e.getPersistentData();long now=now(e);
         if(data.contains("MahitoRootUntil")){
             var speed=e.getAttribute(Attributes.MOVEMENT_SPEED);
-            if(now>=data.getLong("MahitoRootUntil")){if(speed!=null)speed.removeModifier(ROOT);data.remove("MahitoRootUntil");}
+            if(now>=data.getLong("MahitoRootUntil")){if(speed!=null)speed.removeModifier(CompatAttr.id(ROOT));data.remove("MahitoRootUntil");}
             else{if(e instanceof Mob mob)mob.getNavigation().stop();if(data.getLong("MahitoLaunchedUntil")<=now)e.setDeltaMovement(0,Math.min(0,e.getDeltaMovement().y),0);e.hurtMarked=true;}
         }
-        if(data.contains("MahitoArmorUntil")&&now>=data.getLong("MahitoArmorUntil")){var a=e.getAttribute(Attributes.ARMOR);if(a!=null)a.removeModifier(ARMOR_ZERO);data.remove("MahitoArmorUntil");}
+        if(data.contains("MahitoArmorUntil")&&now>=data.getLong("MahitoArmorUntil")){var a=e.getAttribute(Attributes.ARMOR);if(a!=null)a.removeModifier(CompatAttr.id(ARMOR_ZERO));data.remove("MahitoArmorUntil");}
         if(data.hasUUID("MahitoSoulOwner")){
             Realm r=REALMS.get(data.getUUID("MahitoSoulOwner"));if(r==null||!r.caster.isAlive()||!inRealm(r.caster,e))restoreSoul(e);
         }
@@ -227,7 +228,7 @@ public final class MahitoCombat {
         for(var it=COLLAPSES.iterator();it.hasNext();){
             Collapse c=it.next();long age=now(c.victim)-c.start;
             if(age>=40||!can(c.caster,c.victim)||c.caster.level()!=c.victim.level()||c.victim.position().distanceToSqr(c.anchor)>16||c.victim.getPersistentData().getLong("DomainSafetyUntil")>now(c.victim)){
-                var armor=c.victim.getAttribute(Attributes.ARMOR);if(armor!=null)armor.removeModifier(ARMOR_ZERO);
+                var armor=c.victim.getAttribute(Attributes.ARMOR);if(armor!=null)armor.removeModifier(CompatAttr.id(ARMOR_ZERO));
                 c.victim.getPersistentData().putLong("MahitoRootUntil",now(c.victim));it.remove();continue;
             }
             if(age==0||age==20)soulDamage(c.caster,c.victim,6);

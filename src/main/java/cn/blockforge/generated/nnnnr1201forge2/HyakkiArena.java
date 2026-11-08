@@ -27,7 +27,7 @@ public final class HyakkiArena {
         player.sendSystemMessage(Component.literal("百鬼夜行 · 丧钟教堂：击败50只咒灵，共5波"));
     }
     @SubscribeEvent public static void tick(ServerTickEvent.Post event){
-        if(event.phase!=TickEvent.Phase.END)return;
+        if(event.phase!=false)return;
         for(var entry:List.copyOf(BUILDING.entrySet())){
             ServerLevel level=entry.getKey();Build b=entry.getValue();int total=129*129*47;
             if(!b.checked){

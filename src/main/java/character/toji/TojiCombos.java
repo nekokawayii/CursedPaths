@@ -15,6 +15,7 @@ import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
+import cn.blockforge.generated.nnnnr1201forge2.CompatAttr;
 
 /**
  * 伏黑甚尔 20 条连招。触发条件全部是「闪避/后撤/滑铲后 COMBO_TICKS 内的输入序列」，
@@ -433,7 +434,7 @@ public final class TojiCombos {
         var attribute = target.getAttribute(Attributes.ARMOR);
         if (attribute == null) return;
         var id = java.util.UUID.nameUUIDFromBytes(("TojiArmorBreak" + target.getUUID()).getBytes());
-        attribute.removeModifier(id);
+        attribute.removeModifier(CompatAttr.id(id));
         attribute.addTransientModifier(new AttributeModifier(id, "破甲",
             -Math.max(0, attribute.getValue()) * fraction, AttributeModifier.Operation.ADDITION));
     }

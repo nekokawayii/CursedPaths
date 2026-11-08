@@ -16,6 +16,7 @@ import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.event.entity.living.LivingHurtEvent;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.neoforge.event.tick.ServerTickEvent;
+import cn.blockforge.generated.nnnnr1201forge2.CompatAttr;
 
 /** 开 的终盘分支「**灶 · 最大功率 · 开**」（技能号 44）。
  *
@@ -147,13 +148,12 @@ public final class FurnaceMax {
     private static void freeze(LivingEntity body){
         AttributeInstance attr=body.getAttribute(Attributes.MOVEMENT_SPEED);
         if(attr==null)return;
-        attr.removeModifier(FREEZE_ID);
-        attr.addTransientModifier(new AttributeModifier(FREEZE_ID,"sukuna_furnace_max_charge",-1.0,
-            AttributeModifier.Operation.MULTIPLY_TOTAL));
+        attr.removeModifier(CompatAttr.id(FREEZE_ID));
+        attr.addTransientModifier(new AttributeModifier(CompatAttr.id(FREEZE_ID), -1.0, AttributeModifier.Operation.MULTIPLY_TOTAL));
     }
     private static void unfreeze(LivingEntity body){
         AttributeInstance attr=body.getAttribute(Attributes.MOVEMENT_SPEED);
-        if(attr!=null&&attr.getModifier(FREEZE_ID)!=null)attr.removeModifier(FREEZE_ID);
+        if(attr!=null&&attr.getModifier(CompatAttr.id(FREEZE_ID))!=null)attr.removeModifier(CompatAttr.id(FREEZE_ID));
     }
 
     // ------------------------------------------------------------------ 打出

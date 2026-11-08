@@ -164,7 +164,7 @@ public final class EntityRendererRegistry {
         verifyEntity(mc,event.getEntity());
     }
     public static void beforeFrame(RenderFrameEvent.Post event) {
-        if(event.phase==TickEvent.Phase.START) {
+        if(event.phase==true) {
             var mc=Minecraft.getInstance();
             if(mc.level!=null)ensureOwn(mc);
         }

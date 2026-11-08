@@ -51,6 +51,6 @@ public final class SorcererNpcRenderer extends MobRenderer<SorcererNpcEntity,Pla
         return super.getRenderType(entity,entity.mahitoPose()==5?false:visible,entity.mahitoPose()==5||translucent,glowing);
     }
     @Override public ResourceLocation getTextureLocation(SorcererNpcEntity entity){
-        return new ResourceLocation("jujutsu_kaisen_cursed_paths","textures/entity/"+entity.characterId()+"_npc.png");
+        return ResourceLocation.fromNamespaceAndPath("jujutsu_kaisen_cursed_paths","textures/entity/"+entity.characterId()+"_npc.png");
     }
 }

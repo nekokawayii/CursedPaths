@@ -126,7 +126,7 @@ public final class HigurumaCombat {
     private static final java.util.List<Return> RETURNS=new java.util.ArrayList<>();
     public static boolean returning(ServerPlayer p){return RETURNS.stream().anyMatch(r->r.owner==p);}
     @SubscribeEvent public static void returns(ServerTickEvent.Post event){
-        if(event.phase!=TickEvent.Phase.END)return;
+        if(event.phase!=false)return;
         for(var it=RETURNS.iterator();it.hasNext();){var r=it.next();if(r.owner.isAlive()&&r.projectile.level().getGameTime()<r.at)continue;
             r.projectile.discard();if(r.owner.isAlive()&&r.owner.getMainHandItem().isEmpty())r.owner.setItemSlot(EquipmentSlot.MAINHAND,r.item);it.remove();}
     }

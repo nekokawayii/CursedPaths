@@ -76,7 +76,7 @@ public final class Journey {
         return "阶段4 · 残秽凝练 "+residuePercent(p)+"/100%；食用残秽每个永久伤害+3%，击杀0.1%掉落";
     }
     public static void rotate(ServerPlayer p){if(!Curse.canUseTechnique(p)){p.displayClientMessage(Component.literal("术式熔断中：无法使用九相轮转"),true);return;}if(!nine(p)||!p.isAlive()||p.isSpectator())return;if(Curse.active(p,"RotationCooldown")){p.displayClientMessage(Component.literal("九相轮转尚未冷却"),true);return;}SkillSounds.play(p,"nine_rotation");Curse.status(p,"Rotation",300);Curse.status(p,"RotationCooldown",(int)Math.ceil(1200*SoulCombat.cooldown(p)));Network.send(p.serverLevel(),new Network.Effect(54,p.getId(),p.position(),net.minecraft.world.phys.Vec3.ZERO,9,300,0));p.sendSystemMessage(Component.literal("九相轮转 · 15秒内斩击每游戏刻判定伤害（每秒20次）"));Curse.sync(p);}
-    @SubscribeEvent public static void tick(PlayerTickEvent.Post event){if(event.phase==TickEvent.Phase.END&&event.getEntity() instanceof ServerPlayer p)tickCaster(p);}
+    @SubscribeEvent public static void tick(PlayerTickEvent.Post event){if(event.phase==false&&event.getEntity() instanceof ServerPlayer p)tickCaster(p);}
     public static void tickCaster(ServerPlayer p){
         if(!p.isAlive()){positions.remove(p.getUUID());return;}
         var d=Curse.data(p);

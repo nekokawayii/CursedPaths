@@ -231,13 +231,13 @@ public final class DomainClash {
     }
     /** 在世界推进和各角色的到期检查之前暂停绝对截止时间，不能等 END 判活之后才补时。 */
     @SubscribeEvent(priority=EventPriority.HIGHEST) public static void pauseTimers(ServerTickEvent.Post event){
-        if(event.phase!=TickEvent.Phase.START)return;
+        if(event.phase!=true)return;
         for(Match m:new HashSet<>(matches.values()))for(Side side:List.of(m.a,m.b))
             if(side.field.lifecycle!=null||side.field.owner instanceof ServerPlayer)extend(side.field,1);
         // 旧版实体领域使用剩余刻数，在自己的 tickDomain 中暂停递减，不在这里重复补偿。
     }
     @SubscribeEvent(priority=EventPriority.HIGHEST) public static void tick(ServerTickEvent.Post event){
-        if(event.phase!=TickEvent.Phase.END)return;discover();
+        if(event.phase!=false)return;discover();
         for(Match m:new HashSet<>(matches.values())){
             boolean a=live(m.a.field),b=live(m.b.field);
             if(!a||!b){finish(m,a&&!b?1:b&&!a?-1:0);continue;}
@@ -261,7 +261,7 @@ public final class DomainClash {
         if(e instanceof ServerPlayer p){if(p.position().distanceToSqr(point)>0.000001)p.connection.teleport(point.x,point.y,point.z,p.getYRot(),p.getXRot());}
         else e.setPos(point.x,point.y,point.z);
     }
-    @SubscribeEvent public static void playerTick(PlayerTickEvent.Post event){if(event.phase==TickEvent.Phase.END&&event.getEntity() instanceof ServerPlayer p&&active(p)){Match m=matches.get(p.getUUID());Field f=m.a.field.owner==p?m.a.field:m.b.field;if(f.owner==p&&f.level==p.level())hold(p);}}
+    @SubscribeEvent public static void playerTick(PlayerTickEvent.Post event){if(event.phase==false&&event.getEntity() instanceof ServerPlayer p&&active(p)){Match m=matches.get(p.getUUID());Field f=m.a.field.owner==p?m.a.field:m.b.field;if(f.owner==p&&f.level==p.level())hold(p);}}
     private static void defeat(Field f){
         if(f.owner instanceof ServerPlayer p){Curse.status(p,"DomainClashPenaltyUntil",DomainClashRules.BURNOUT_TICKS);Curse.enterBurnout(p,DomainClashRules.BURNOUT_TICKS);p.sendSystemMessage(Component.literal("领域对拼失败：术式熔断2分钟，不能提前修复；每次治疗消耗咒力上限的55%，不足则治疗不生效。"));}
         else {LivingEntity e=f.owner;var t=e.getPersistentData();t.putLong("NpcLegacyPenaltyUntil",e.level().getGameTime()+DomainClashRules.BURNOUT_TICKS);t.putLong("NpcLegacyBurnout",e.level().getGameTime()+DomainClashRules.BURNOUT_TICKS);t.putLong("DomainClashStunUntil",e.level().getGameTime()+DomainClashRules.STUN_TICKS);t.putDouble("ClashAnchorX",e.getX());t.putDouble("ClashAnchorY",e.getY());t.putDouble("ClashAnchorZ",e.getZ());if(e instanceof YujiEntity y)y.clashInterrupt();else if(e instanceof GuardianEntity g)g.clashInterrupt();}

@@ -117,7 +117,7 @@ public final class NetBranches {
     }
     private static void qiEffect(Qi q){Network.send(q.level,new Network.Effect(NetBranchRules.FX_QI,q.owner.getId(),q.position,q.direction,(float)NetBranchRules.QI_RADIUS,Math.min(10,NetBranchRules.QI_LIFE-q.age),q.id));}
     @SubscribeEvent public static void tick(ServerTickEvent.Post event){
-        if(event.phase!=TickEvent.Phase.END)return;
+        if(event.phase!=false)return;
         for(AirCross c:List.copyOf(airCrosses)){
             int age=(int)(c.level.getGameTime()-c.born);if(!valid(c.p,c.level)||DomainClash.active(c.p)||age>NetBranchRules.CROSS_TICKS){airCrosses.remove(c);continue;}
             for(int wave=0;wave<NetBranchRules.WAVES;wave++){

@@ -11,6 +11,7 @@ import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
+import cn.blockforge.generated.nnnnr1201forge2.CompatAttr;
 
 /**
  * 十划咒法的 7:3 弱点：把目标的高度等分为十段，第 7 段（60%~70%）是金色区，
@@ -203,9 +204,8 @@ public final class NanamiRatio {
         if (armor == null) return;
         double cut = armor.getValue() * ARMOR_IGNORE;
         if (cut <= 0) return;
-        armor.removeModifier(STRIP_ID);
-        armor.addTransientModifier(new AttributeModifier(STRIP_ID, "NanamiRatioStrip", -cut,
-            AttributeModifier.Operation.ADDITION));
+        armor.removeModifier(CompatAttr.id(STRIP_ID));
+        armor.addTransientModifier(new AttributeModifier(CompatAttr.id(STRIP_ID), -cut, AttributeModifier.Operation.ADDITION));
         STRIPPED.put(target.getUUID(), new Strip(target, now(target) + 2));
     }
 
@@ -217,7 +217,7 @@ public final class NanamiRatio {
             var entry = it.next();
             if (entry.getValue().until() > now) continue;
             AttributeInstance armor = entry.getValue().target().getAttribute(Attributes.ARMOR);
-            if (armor != null) armor.removeModifier(STRIP_ID);
+            if (armor != null) armor.removeModifier(CompatAttr.id(STRIP_ID));
             it.remove();
         }
     }

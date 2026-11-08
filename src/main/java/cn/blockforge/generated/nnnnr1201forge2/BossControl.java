@@ -9,6 +9,7 @@ import net.minecraft.world.level.saveddata.SavedData;
 import net.neoforged.neoforge.event.entity.EntityJoinLevelEvent;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.minecraft.core.Holder;
+import cn.blockforge.generated.nnnnr1201forge2.CompatAttr;
 
 /** 存档保存控制器原值，生效时按模式换算；重载不会重复缩放。 */
 public final class BossControl extends SavedData {
@@ -42,9 +43,9 @@ public final class BossControl extends SavedData {
         var a=boss.getAttribute(key);if(a==null)return;
         if(key==Attributes.ATTACK_DAMAGE){
             // 放在总倍率末端，戴天的力量药水加伤也只缩放一次。
-            a.setBaseValue(raw);var previous=a.getModifier(ATTACK_SCALE);double amount=BalanceRules.factor(BalanceRules.modpackMode(),BalanceRules.Category.BOSS_ATTACK)-1;
+            a.setBaseValue(raw);var previous=a.getModifier(CompatAttr.id(ATTACK_SCALE));double amount=BalanceRules.factor(BalanceRules.modpackMode(),BalanceRules.Category.BOSS_ATTACK)-1;
             if(previous!=null&&previous.getAmount()==amount)return;
-            a.removeModifier(ATTACK_SCALE);if(amount!=0)a.addTransientModifier(new net.minecraft.world.entity.ai.attributes.AttributeModifier(ATTACK_SCALE,"整合包模式攻击缩放",amount,net.minecraft.world.entity.ai.attributes.AttributeModifier.Operation.MULTIPLY_TOTAL));
+            a.removeModifier(CompatAttr.id(ATTACK_SCALE));if(amount!=0)a.addTransientModifier(new net.minecraft.world.entity.ai.attributes.AttributeModifier(ATTACK_SCALE,"整合包模式攻击缩放",amount,net.minecraft.world.entity.ai.attributes.AttributeModifier.Operation.MULTIPLY_TOTAL));
         }else if(a.getBaseValue()!=BalanceRules.strength(raw,key==Attributes.ARMOR?BalanceRules.Category.BOSS_ARMOR:BalanceRules.Category.BOSS))a.setBaseValue(BalanceRules.strength(raw,key==Attributes.ARMOR?BalanceRules.Category.BOSS_ARMOR:BalanceRules.Category.BOSS));
     }
     private static void stats(LivingEntity boss,boolean fill){

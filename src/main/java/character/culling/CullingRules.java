@@ -32,6 +32,7 @@ import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.neoforge.server.ServerLifecycleHooks;
 import net.neoforged.neoforge.event.tick.PlayerTickEvent;
 import net.minecraft.core.Holder;
+import cn.blockforge.generated.nnnnr1201forge2.CompatAttr;
 
 /**
  * 死灭洄游规则卡池与结算（r218）。
@@ -380,15 +381,15 @@ public final class CullingRules {
     private static final Holder<Attribute>[] ATTRS={Attributes.MAX_HEALTH,Attributes.ATTACK_DAMAGE,Attributes.MOVEMENT_SPEED,Attributes.ATTACK_SPEED,Attributes.JUMP_STRENGTH,Attributes.ARMOR};
     private static void put(ServerPlayer p,Holder<Attribute> attr,UUID id,double amount){
         AttributeInstance a=p.getAttribute(attr);if(a==null)return;
-        var old=a.getModifier(id);
-        if(Math.abs(amount)<1e-6){if(old!=null)a.removeModifier(id);return;}
+        var old=a.getModifier(CompatAttr.id(id));
+        if(Math.abs(amount)<1e-6){if(old!=null)a.removeModifier(CompatAttr.id(id));return;}
         if(old!=null&&Math.abs(old.getAmount()-amount)<1e-6)return;
-        if(old!=null)a.removeModifier(id);
-        a.addTransientModifier(new AttributeModifier(id,"死灭规则",amount,AttributeModifier.Operation.MULTIPLY_TOTAL));
+        if(old!=null)a.removeModifier(CompatAttr.id(id));
+        a.addTransientModifier(new AttributeModifier(CompatAttr.id(id), amount, AttributeModifier.Operation.MULTIPLY_TOTAL));
     }
     public static void clear(ServerPlayer p){
         for(UUID id:new UUID[]{HEALTH,ATTACK,SPEED,ATK_SPEED,JUMP,ARMOR}){
-            for(Holder<Attribute> attr:ATTRS){AttributeInstance a=p.getAttribute(attr);if(a!=null&&a.getModifier(id)!=null)a.removeModifier(id);}
+            for(Holder<Attribute> attr:ATTRS){AttributeInstance a=p.getAttribute(attr);if(a!=null&&a.getModifier(CompatAttr.id(id))!=null)a.removeModifier(CompatAttr.id(id));}
         }
     }
     public static void onLeave(ServerPlayer p){
@@ -430,8 +431,8 @@ public final class CullingRules {
             if(special(vp,"steal_attack")&&attacker instanceof LivingEntity living){
                 var a=living.getAttribute(Attributes.ATTACK_DAMAGE);
                 if(a!=null&&a.getValue()>1){
-                    a.removeModifier(STOLEN);
-                    a.addTransientModifier(new AttributeModifier(STOLEN,"被偷攻击",-1,AttributeModifier.Operation.ADDITION));
+                    a.removeModifier(CompatAttr.id(STOLEN));
+                    a.addTransientModifier(new AttributeModifier(CompatAttr.id(STOLEN), -1, AttributeModifier.Operation.ADDITION));
                 }
             }
             if(special(vp,"assimilation")||special(vp,"assimilation2")){

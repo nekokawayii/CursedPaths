@@ -22,6 +22,7 @@ import cn.blockforge.generated.nnnnr1201forge2.Curse;
 import cn.blockforge.generated.nnnnr1201forge2.Network;
 import cn.blockforge.generated.nnnnr1201forge2.YujiFx;
 import net.neoforged.neoforge.event.tick.ServerTickEvent;
+import cn.blockforge.generated.nnnnr1201forge2.CompatAttr;
 
 /** 虎杖重做（r316）：连击狂热 / 黑闪的才能 / 14 式体术。 */
 public final class YujiRebuild {
@@ -43,13 +44,13 @@ public final class YujiRebuild {
         d.putLong("YujiComboAt", p.level().getGameTime());
         var atk = p.getAttribute(Attributes.ATTACK_SPEED);
         var mv = p.getAttribute(Attributes.MOVEMENT_SPEED);
-        if (atk != null) { atk.removeModifier(ATK_SPEED_ID); atk.addTransientModifier(new AttributeModifier(ATK_SPEED_ID, "yuji_combo_atk", n * 0.10, AttributeModifier.Operation.MULTIPLY_TOTAL)); }
-        if (mv != null) { mv.removeModifier(MOVE_ID); mv.addTransientModifier(new AttributeModifier(MOVE_ID, "yuji_combo_move", n * 0.05, AttributeModifier.Operation.MULTIPLY_TOTAL)); }
+        if (atk != null) { atk.removeModifier(CompatAttr.id(ATK_SPEED_ID)); atk.addTransientModifier(new AttributeModifier(CompatAttr.id(ATK_SPEED_ID), n * 0.10, AttributeModifier.Operation.MULTIPLY_TOTAL)); }
+        if (mv != null) { mv.removeModifier(CompatAttr.id(MOVE_ID)); mv.addTransientModifier(new AttributeModifier(CompatAttr.id(MOVE_ID), n * 0.05, AttributeModifier.Operation.MULTIPLY_TOTAL)); }
     }
     private static void clearCombo(ServerPlayer p) {
         var d = Curse.data(p); d.putInt("YujiCombo", 0);
-        var atk = p.getAttribute(Attributes.ATTACK_SPEED); if (atk != null) atk.removeModifier(ATK_SPEED_ID);
-        var mv = p.getAttribute(Attributes.MOVEMENT_SPEED); if (mv != null) mv.removeModifier(MOVE_ID);
+        var atk = p.getAttribute(Attributes.ATTACK_SPEED); if (atk != null) atk.removeModifier(CompatAttr.id(ATK_SPEED_ID));
+        var mv = p.getAttribute(Attributes.MOVEMENT_SPEED); if (mv != null) mv.removeModifier(CompatAttr.id(MOVE_ID));
     }
 
     // ===== 被动：黑闪的才能 =====

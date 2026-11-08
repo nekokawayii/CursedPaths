@@ -32,6 +32,7 @@ import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.neoforge.event.tick.ServerTickEvent;
 import net.neoforged.neoforge.event.tick.PlayerTickEvent;
 import net.minecraft.core.Holder;
+import cn.blockforge.generated.nnnnr1201forge2.CompatAttr;
 
 /**
  * 七海建人 · 十划咒法。
@@ -271,13 +272,13 @@ public final class NanamiCombat {
     private static void setModifier(ServerPlayer p, Holder<Attribute> attribute, UUID id, String name, double amount) {
         AttributeInstance instance = p.getAttribute(attribute);
         if (instance == null) return;
-        AttributeModifier current = instance.getModifier(id);
+        AttributeModifier current = instance.getModifier(CompatAttr.id(id));
         if (amount == 0) {
-            if (current != null) instance.removeModifier(id);
+            if (current != null) instance.removeModifier(CompatAttr.id(id));
             return;
         }
         if (current != null && Math.abs(current.getAmount() - amount) < 1e-6) return;
-        if (current != null) instance.removeModifier(id);
+        if (current != null) instance.removeModifier(CompatAttr.id(id));
         instance.addPermanentModifier(new AttributeModifier(id, name, amount, AttributeModifier.Operation.MULTIPLY_TOTAL));
     }
 

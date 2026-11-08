@@ -14,6 +14,7 @@ import net.minecraft.world.entity.monster.Monster;
 import net.neoforged.neoforge.event.entity.living.LivingDeathEvent;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.neoforge.event.tick.ServerTickEvent;
+import cn.blockforge.generated.nnnnr1201forge2.CompatAttr;
 
 /**
  * 死灭洄游的「入场」逻辑（r250）：
@@ -44,9 +45,8 @@ public final class CullingEntry {
         switch (index) {
             case 0 -> {
                 var atk = p.getAttribute(Attributes.ATTACK_DAMAGE);
-                if (atk != null && atk.getModifier(ATK_UUID) == null)
-                    atk.addPermanentModifier(new AttributeModifier(ATK_UUID, "死灭开局·暴力",
-                        0.2, AttributeModifier.Operation.MULTIPLY_TOTAL));
+                if (atk != null && atk.getModifier(CompatAttr.id(ATK_UUID)) == null)
+                    atk.addPermanentModifier(new AttributeModifier(CompatAttr.id(ATK_UUID), 0.2, AttributeModifier.Operation.MULTIPLY_TOTAL));
                 p.sendSystemMessage(Component.literal("【开局祝福】伤害 +20%。").withStyle(ChatFormatting.LIGHT_PURPLE));
             }
             case 1 -> {
@@ -107,9 +107,8 @@ public final class CullingEntry {
         if (d.getInt("CullingStartBuff") != 0) return;   // 0 = 暴力
         if (!d.getBoolean("CullingRegistered")) return;
         var atk = p.getAttribute(Attributes.ATTACK_DAMAGE);
-        if (atk != null && atk.getModifier(ATK_UUID) == null)
-            atk.addPermanentModifier(new AttributeModifier(ATK_UUID, "死灭开局·暴力",
-                0.2, AttributeModifier.Operation.MULTIPLY_TOTAL));
+        if (atk != null && atk.getModifier(CompatAttr.id(ATK_UUID)) == null)
+            atk.addPermanentModifier(new AttributeModifier(CompatAttr.id(ATK_UUID), 0.2, AttributeModifier.Operation.MULTIPLY_TOTAL));
     }
 
     // ===== 邀请函：原地展开黑色立方体，40 刻后把附近玩家吸进去（r257） =====

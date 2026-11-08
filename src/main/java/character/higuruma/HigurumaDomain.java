@@ -19,6 +19,7 @@ import net.minecraft.world.item.ItemStack;
 
 import java.util.*;
 import net.neoforged.neoforge.event.tick.ServerTickEvent;
+import cn.blockforge.generated.nnnnr1201forge2.CompatAttr;
 
 /**
  * 诛伏赐死领域：几何由代码逐块生成（布局烘焙在 {@link HigurumaLayout}，取自用户调好的 48³ 法庭结构），
@@ -246,7 +247,7 @@ public final class HigurumaDomain {
         var atk = living.getAttribute(net.minecraft.world.entity.ai.attributes.Attributes.ATTACK_DAMAGE);
         if (atk != null) {
             var id = UUID.nameUUIDFromBytes(("higuruma_confiscate:" + living.getUUID()).getBytes());
-            if (atk.getModifier(id) == null)
+            if (atk.getModifier(CompatAttr.id(id)) == null)
                 atk.addPermanentModifier(new net.minecraft.world.entity.ai.attributes.AttributeModifier(
                     id, "higuruma_confiscate", -0.5, net.minecraft.world.entity.ai.attributes.AttributeModifier.Operation.MULTIPLY_TOTAL));
         }

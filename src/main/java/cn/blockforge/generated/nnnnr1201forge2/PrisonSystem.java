@@ -146,7 +146,7 @@ public final class PrisonSystem {
         }
     }
     @SubscribeEvent public static void tick(ServerTickEvent.Post event){
-        if(event.phase!=TickEvent.Phase.END)return;MinecraftServer server=event.getServer();PrisonStore store=PrisonStore.get(server);if(store.prisoners.isEmpty())return;
+        if(event.phase!=false)return;MinecraftServer server=event.getServer();PrisonStore store=PrisonStore.get(server);if(store.prisoners.isEmpty())return;
         ServerLevel prison=server.getLevel(DIMENSION);if(prison==null)return;
         Set<UUID> tickets=new HashSet<>();
         for(CompoundTag record:List.copyOf(store.prisoners.values())){

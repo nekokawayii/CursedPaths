@@ -12,6 +12,7 @@ import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.neoforge.network.PacketDistributor;
 import net.neoforged.neoforge.event.tick.PlayerTickEvent;
 import net.neoforged.neoforge.event.tick.LevelTickEvent;
+import cn.blockforge.generated.nnnnr1201forge2.CompatAttr;
 
 /** 所有成长和消耗由服务端决定；持久数据随存档及死亡重生保留。 */
 public final class Curse {
@@ -117,7 +118,7 @@ public final class Curse {
         character.toji.TojiCombat.attributes(p);
         if(p.getHealth()>p.getMaxHealth())p.setHealth(p.getMaxHealth());
     }
-    private static void modifier(AttributeInstance a,UUID id,double amount){if(a==null)return;var old=a.getModifier(id);if(old!=null&&old.getOperation()==AttributeModifier.Operation.ADDITION&&Math.abs(old.getAmount()-amount)<0.00001)return;a.removeModifier(id);if(amount!=0)a.addTransientModifier(new AttributeModifier(id,"宿傩成长",amount,AttributeModifier.Operation.ADDITION));}
+    private static void modifier(AttributeInstance a,UUID id,double amount){if(a==null)return;var old=a.getModifier(CompatAttr.id(id));if(old!=null&&old.getOperation()==AttributeModifier.Operation.ADDITION&&Math.abs(old.getAmount()-amount)<0.00001)return;a.removeModifier(CompatAttr.id(id));if(amount!=0)a.addTransientModifier(new AttributeModifier(CompatAttr.id(id), amount, AttributeModifier.Operation.ADDITION));}
     public static void consume(ServerPlayer p,boolean body){
         int old=tier(p);float health=p.getMaxHealth();
         if(body){data(p).putBoolean("Awakened",true);data(p).putBoolean("BuddhaDefeated",true);}else data(p).putInt("Fingers",fingers(p)+1);

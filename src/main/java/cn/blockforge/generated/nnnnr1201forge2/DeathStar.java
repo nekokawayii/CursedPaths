@@ -21,6 +21,7 @@ import net.neoforged.neoforge.event.server.ServerStoppedEvent;
 import net.neoforged.bus.api.*;
 import net.neoforged.neoforge.event.tick.ServerTickEvent;
 import net.neoforged.neoforge.event.tick.PlayerTickEvent;
+import cn.blockforge.generated.nnnnr1201forge2.CompatAttr;
 
 /** 极之番服务端：单次扣费、40刻蓄力、扫掠碰撞、每次命中重新核验敌友。 */
 public final class DeathStar {
@@ -64,7 +65,7 @@ public final class DeathStar {
         p.serverLevel().playSound(null,p.blockPosition(),SoundEvents.WARDEN_HEARTBEAT,SoundSource.PLAYERS,2,.5f);
         tell(p,"极之番·死胎星：蓄力2秒，生命与咒力已献祭，中断不返还");
     }
-    private static void slow(ServerPlayer p,boolean on){var a=MaidBridge.body(p).getAttribute(Attributes.MOVEMENT_SPEED);if(a==null)return;if(!on)a.removeModifier(SLOW);else if(a.getModifier(SLOW)==null)a.addTransientModifier(new AttributeModifier(SLOW,"严重贫血",-.5,AttributeModifier.Operation.MULTIPLY_TOTAL));}
+    private static void slow(ServerPlayer p,boolean on){var a=MaidBridge.body(p).getAttribute(Attributes.MOVEMENT_SPEED);if(a==null)return;if(!on)a.removeModifier(CompatAttr.id(SLOW));else if(a.getModifier(CompatAttr.id(SLOW))==null)a.addTransientModifier(new AttributeModifier(CompatAttr.id(SLOW), -.5, AttributeModifier.Operation.MULTIPLY_TOTAL));}
     private static void syncAnemia(ServerPlayer p){if(p instanceof net.neoforged.neoforge.common.util.FakePlayer)return;int ticks=(int)Math.max(0,Curse.data(p).getLong(UNTIL)-now(p));Network.CHANNEL.send(net.neoforged.neoforge.network.PacketDistributor.PLAYER.with(()->p),new Network.Effect(FX_ANEMIA,p.getId(),p.position(),Vec3.ZERO,0,ticks,0));}
     public static void cancel(ServerPlayer p){Cast c=casts.remove(p.getUUID());if(c!=null){pose(p,0);fx(p,FX_STOP,hand(p),Vec3.ZERO,0,0,c.id);}}
     private static boolean boss(LivingEntity t){
@@ -74,7 +75,7 @@ public final class DeathStar {
     }
     private static List<LivingEntity> near(ServerPlayer p,Vec3 at,double radius){return p.serverLevel().getEntitiesOfClass(LivingEntity.class,new AABB(at,at).inflate(radius),t->CombatSafety.canTarget(p,t)&&t.getBoundingBox().getCenter().distanceToSqr(at)<=radius*radius);}
     @SubscribeEvent public static void tick(ServerTickEvent.Post event){
-        if(event.phase!=TickEvent.Phase.END)return;
+        if(event.phase!=false)return;
         for(Cast c:List.copyOf(casts.values())){
             ServerPlayer p=c.p;
             if(!valid(p,c.level)||!BloodDomain.free(p)||PrisonSystem.locked(MaidBridge.body(p))||!Curse.canUseTechnique(p)||SoulCombat.suppressed(p)||DomainClash.active(p)||TenShadows.locked(p)||!TechniqueInput.allowed(p)){cancel(p);continue;}
@@ -145,7 +146,7 @@ public final class DeathStar {
     @SubscribeEvent(priority=EventPriority.LOWEST) public static void outgoing(LivingDamageEvent event){ServerPlayer p=CombatSettings.caster(event.getSource());if(p!=null&&anemic(p)&&!source(event.getSource()))event.setAmount(event.getAmount()*.5f);}
     @SubscribeEvent(priority=EventPriority.HIGHEST) public static void heal(LivingHealEvent event){ServerPlayer p=MaidBridge.progression(event.getEntity());if(p!=null&&anemic(p))event.setCanceled(true);}
     @SubscribeEvent(priority=EventPriority.LOWEST) public static void playerTick(PlayerTickEvent.Post event){
-        if(event.phase!=TickEvent.Phase.END||!(event.getEntity() instanceof ServerPlayer p))return;
+        if(event.phase!=false||!(event.getEntity() instanceof ServerPlayer p))return;
         tickAnemia(p);
     }
     public static void tickAnemia(ServerPlayer p){

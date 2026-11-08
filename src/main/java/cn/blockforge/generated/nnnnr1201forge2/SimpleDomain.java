@@ -12,6 +12,7 @@ import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.event.tick.ServerTickEvent;
+import cn.blockforge.generated.nnnnr1201forge2.CompatAttr;
 
 /** 捌的分支「**简易领域 · 捌**」：**长按释放**的贴身简易领域。
  *
@@ -154,14 +155,13 @@ public final class SimpleDomain {
     private static void applySlow(LivingEntity body){
         AttributeInstance attr=body.getAttribute(Attributes.MOVEMENT_SPEED);
         if(attr==null)return;
-        attr.removeModifier(SLOW_ID);
-        attr.addTransientModifier(new AttributeModifier(SLOW_ID,"sukuna_simple_domain_slow",-SLOW_SHARE,
-            AttributeModifier.Operation.MULTIPLY_TOTAL));
+        attr.removeModifier(CompatAttr.id(SLOW_ID));
+        attr.addTransientModifier(new AttributeModifier(CompatAttr.id(SLOW_ID), -SLOW_SHARE, AttributeModifier.Operation.MULTIPLY_TOTAL));
     }
     /** 摘掉减速：只在确实挂着时才动属性，避免每刻对无关玩家做无意义的属性重算。 */
     private static void clearSlow(LivingEntity body){
         AttributeInstance attr=body.getAttribute(Attributes.MOVEMENT_SPEED);
-        if(attr!=null&&attr.getModifier(SLOW_ID)!=null)attr.removeModifier(SLOW_ID);
+        if(attr!=null&&attr.getModifier(CompatAttr.id(SLOW_ID))!=null)attr.removeModifier(CompatAttr.id(SLOW_ID));
     }
 
     /** 松手收招：结算冷却（= 本次释放时间 ×70%），清掉减速与领域。 */

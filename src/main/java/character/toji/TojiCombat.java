@@ -20,6 +20,7 @@ import net.neoforged.neoforge.event.entity.living.LivingFallEvent;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.neoforge.event.tick.PlayerTickEvent;
 import net.minecraft.core.Holder;
+import cn.blockforge.generated.nnnnr1201forge2.CompatAttr;
 
 /** 纯肉体技能：独立体术余额，不借用咒力，不触发咒术伤害；敌友仍走统一结算。 */
 public final class TojiCombat {
@@ -27,9 +28,9 @@ public final class TojiCombat {
     public static double maximum(Player p) { return TojiRules.maximum(CharacterService.rank(p)); }
     public static double stamina(Player p) { var d=Curse.data(p);return TojiRules.current(d.contains("TojiStamina")?d.getDouble("TojiStamina"):maximum(p),CharacterService.rank(p)); }
     private static void modifier(Player p,Holder<Attribute> attribute,UUID id,double value) {
-        var a=p.getAttribute(attribute);if(a==null)return;var old=a.getModifier(id);
+        var a=p.getAttribute(attribute);if(a==null)return;var old=a.getModifier(CompatAttr.id(id));
         if(old!=null&&Math.abs(old.getAmount()-value)<0.000001)return;
-        a.removeModifier(id);if(value!=0)a.addTransientModifier(new AttributeModifier(id,"天宇暴君肉体",value,AttributeModifier.Operation.ADDITION));
+        a.removeModifier(CompatAttr.id(id));if(value!=0)a.addTransientModifier(new AttributeModifier(CompatAttr.id(id), value, AttributeModifier.Operation.ADDITION));
     }
     /** 每刻维护：闪身速度加成到期清理。 */
     public static void tickBuffs(ServerPlayer p) {

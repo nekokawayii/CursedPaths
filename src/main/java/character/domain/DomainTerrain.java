@@ -121,7 +121,7 @@ public final class DomainTerrain extends SavedData {
         }
     }
     @SubscribeEvent public static void tick(ServerTickEvent.Post event){
-        if(event.phase==TickEvent.Phase.END)for(var level:event.getServer().getAllLevels())get(level).flush(level,BUDGET);
+        if(event.phase==false)for(var level:event.getServer().getAllLevels())get(level).flush(level,BUDGET);
     }
     @SubscribeEvent public static void stop(ServerStoppingEvent event){
         for(var level:event.getServer().getAllLevels()){

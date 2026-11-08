@@ -96,7 +96,7 @@ public final class NpcBridge {
             DeathStar.tickAnemia(a);
             if(a.characterId.equals("higuruma")&&a.mob.getMainHandItem().isEmpty()&&!character.higuruma.HigurumaCombat.returning(a))character.higuruma.HigurumaCombat.giveGavel(a);
             // 仅驱动战斗维护，不把假玩家送进登录、成就、物品奖励等真人事件。
-            var event = new PlayerTickEvent.Post(TickEvent.Phase.END, a);
+            var event = new PlayerTickEvent.Post(false, a);
             switch (a.characterId) {
                 case "hakari" -> character.hakari.HakariCombat.tick(event);
                 case "ryu" -> character.ryu.RyuCombat.tick(event);

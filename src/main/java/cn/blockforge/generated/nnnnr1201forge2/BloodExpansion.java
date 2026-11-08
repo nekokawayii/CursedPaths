@@ -11,6 +11,7 @@ import net.minecraft.world.phys.*;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.neoforge.event.server.ServerStoppedEvent;
 import net.neoforged.neoforge.event.tick.ServerTickEvent;
+import cn.blockforge.generated.nnnnr1201forge2.CompatAttr;
 
 /** 有界弹幕队列与逻辑血海：不放置方块、不强载区块，每格最多一次自动索敌。 */
 @net.neoforged.fml.common.Mod.EventBusSubscriber(modid="jujutsu_kaisen_cursed_paths")
@@ -51,12 +52,12 @@ public final class BloodExpansion {
     public static boolean canOcean(ServerPlayer p){return oceans.size()<8&&oceans.stream().noneMatch(o->o.p==p);}
     public static void ocean(ServerPlayer p,Vec3 at){if(!canOcean(p))return;Ocean o=new Ocean(p,at);oceans.add(o);sync(o);}
     private static void sync(Ocean o){BloodArts.fx(o.p,FX_OCEAN,o.center,new Vec3(o.start,o.cursor,0),100,500,o.id);}
-    private static void slow(ServerPlayer p,LivingEntity t,long until){if(!CombatSafety.canAffect(p,t))return;var a=t.getAttribute(Attributes.MOVEMENT_SPEED);if(a!=null&&a.getModifier(SLOW)==null)a.addTransientModifier(new AttributeModifier(SLOW,"毒血·血洋减速",-.35,AttributeModifier.Operation.MULTIPLY_TOTAL));slows.put(t.getUUID(),new Slow(t,p,until));}
+    private static void slow(ServerPlayer p,LivingEntity t,long until){if(!CombatSafety.canAffect(p,t))return;var a=t.getAttribute(Attributes.MOVEMENT_SPEED);if(a!=null&&a.getModifier(CompatAttr.id(SLOW))==null)a.addTransientModifier(new AttributeModifier(CompatAttr.id(SLOW), -.35, AttributeModifier.Operation.MULTIPLY_TOTAL));slows.put(t.getUUID(),new Slow(t,p,until));}
     public static boolean slowed(LivingEntity target){Slow s=slows.get(target.getUUID());return s!=null&&s.until>target.level().getGameTime()&&CombatSafety.canAffect(s.p,target);}
-    private static void clearSlow(Slow s){var a=s.target.getAttribute(Attributes.MOVEMENT_SPEED);if(a!=null)a.removeModifier(SLOW);}
+    private static void clearSlow(Slow s){var a=s.target.getAttribute(Attributes.MOVEMENT_SPEED);if(a!=null)a.removeModifier(CompatAttr.id(SLOW));}
     public static void protect(ServerPlayer p,UUID id){Slow s=slows.get(id);if(s!=null&&s.p==p){clearSlow(s);slows.remove(id);}for(Trap t:traps)if(t.p==p)t.dwell.remove(id);}
     public static void exit(ServerPlayer p){shots.removeIf(s->s.p==p);traps.removeIf(t->t.p==p);bursts.removeIf(b->b.p==p);for(Ocean o:List.copyOf(oceans))if(o.p==p){BloodArts.fx(p,FX_OCEAN_CLOSE,o.center,Vec3.ZERO,0,1,o.id);oceans.remove(o);}for(Slow s:List.copyOf(slows.values()))if(s.p==p){clearSlow(s);slows.remove(s.target.getUUID());}}
-    @SubscribeEvent public static void tick(ServerTickEvent.Post event){if(event.phase!=TickEvent.Phase.END)return;tickShots();tickTraps();tickOceans();for(Burst b:List.copyOf(bursts)){if(!valid(b.p,b.level)){bursts.remove(b);continue;}if(b.level.getGameTime()>=b.due){bursts.remove(b);BloodArts.nova(b.p,b.at,b.empowered);}}for(Slow s:List.copyOf(slows.values()))if(!s.target.isAlive()||!valid(s.p,s.p.serverLevel())||s.target.level().getGameTime()>=s.until||!CombatSafety.canAffect(s.p,s.target)){clearSlow(s);slows.remove(s.target.getUUID());}}
+    @SubscribeEvent public static void tick(ServerTickEvent.Post event){if(event.phase!=false)return;tickShots();tickTraps();tickOceans();for(Burst b:List.copyOf(bursts)){if(!valid(b.p,b.level)){bursts.remove(b);continue;}if(b.level.getGameTime()>=b.due){bursts.remove(b);BloodArts.nova(b.p,b.at,b.empowered);}}for(Slow s:List.copyOf(slows.values()))if(!s.target.isAlive()||!valid(s.p,s.p.serverLevel())||s.target.level().getGameTime()>=s.until||!CombatSafety.canAffect(s.p,s.target)){clearSlow(s);slows.remove(s.target.getUUID());}}
     private static void tickShots(){for(Shot s:List.copyOf(shots)){
         if(!valid(s.p,s.level)||s.age>(s.meteor?24:6+BloodArts.rank(s.p))){shots.remove(s);continue;}if(s.delay-->0)continue;s.age++;
         Vec3 next=s.at.add(s.direction.scale(s.meteor?1.3:2.6));if(!s.level.hasChunkAt(BlockPos.containing(next))){shots.remove(s);continue;}var wall=s.level.clip(new ClipContext(s.at,next,ClipContext.Block.COLLIDER,ClipContext.Fluid.NONE,MaidBridge.body(s.p)));boolean blocked=wall.getType()!=HitResult.Type.MISS;if(blocked)next=wall.getLocation();Vec3 end=next;

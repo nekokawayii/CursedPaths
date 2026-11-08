@@ -18,6 +18,7 @@ import net.neoforged.bus.api.*;
 import net.neoforged.neoforge.registries.ForgeRegistries;
 import net.neoforged.neoforge.event.tick.ServerTickEvent;
 import net.minecraft.core.Holder;
+import cn.blockforge.generated.nnnnr1201forge2.CompatAttr;
 
 /** 不引用女仆类；可选联动为每个实体提供独立施术上下文，共用玩家技能队列。 */
 public final class MaidBridge {
@@ -86,7 +87,7 @@ public final class MaidBridge {
         if(maid instanceof Mob mob&&(target==mob.getTarget()||target==mob.getLastHurtByMob()))return true;
         return target instanceof net.minecraft.world.entity.monster.Enemy;
     }
-    private static void modifier(LivingEntity maid,Holder<Attribute> attribute,UUID id,double amount){var a=maid.getAttribute(attribute);if(a==null)return;var old=a.getModifier(id);if(old!=null&&Math.abs(old.getAmount()-amount)<0.00001)return;a.removeModifier(id);if(amount!=0)a.addTransientModifier(new AttributeModifier(id,"御厨子成长",amount,AttributeModifier.Operation.ADDITION));}
+    private static void modifier(LivingEntity maid,Holder<Attribute> attribute,UUID id,double amount){var a=maid.getAttribute(attribute);if(a==null)return;var old=a.getModifier(CompatAttr.id(id));if(old!=null&&Math.abs(old.getAmount()-amount)<0.00001)return;a.removeModifier(CompatAttr.id(id));if(amount!=0)a.addTransientModifier(new AttributeModifier(CompatAttr.id(id), amount, AttributeModifier.Operation.ADDITION));}
     public static void apply(Actor a){
         if(Legion.member(a.maid)||Authority.echo(a.maid))return;
         modifier(a.maid,Attributes.MAX_HEALTH,HEALTH,Curse.healthBonus(a));modifier(a.maid,Attributes.ATTACK_DAMAGE,ATTACK,Curse.attackBonus(a));
@@ -118,7 +119,7 @@ public final class MaidBridge {
     }
     public static CompoundTag progress(LivingEntity maid){var root=maid.getPersistentData();if(!root.contains("SukunaProgress")){var tag=new CompoundTag();tag.putDouble("Energy",1000);root.put("SukunaProgress",tag);}return root.getCompound("SukunaProgress");}
     @SubscribeEvent(priority=EventPriority.HIGHEST) public static void tick(ServerTickEvent.Post event){
-        if(event.phase!=TickEvent.Phase.END)return;
+        if(event.phase!=false)return;
         for(Actor a:List.copyOf(ACTORS.values())){if(!a.isAlive()||a.maid.level()!=a.level()){a.retire();ACTORS.remove(a.getUUID(),a);continue;}a.syncPosition();DeathStar.tickAnemia(a);AuthoritySkills.tickAutomatic(a);syncOwnerFlags(a);if(Curse.data(a).getBoolean("Memory")&&!Legion.member(a.maid)&&!Authority.echo(a.maid))Journey.tickCaster(a);if(a.maid.tickCount%20==0){Curse.tickCaster(a);apply(a);if(!Legion.member(a.maid)&&!Authority.echo(a.maid)){VoidJourney.repairOldVictory(a);GuardianProgress.deliverMaid(a);}}}
     }
     @SubscribeEvent(priority=EventPriority.HIGH) public static void damaged(LivingHurtEvent event){

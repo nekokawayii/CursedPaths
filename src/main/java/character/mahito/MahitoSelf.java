@@ -18,6 +18,7 @@ import java.util.Comparator;
 import java.util.UUID;
 import net.neoforged.neoforge.event.tick.ServerTickEvent;
 import net.minecraft.core.Holder;
+import cn.blockforge.generated.nnnnr1201forge2.CompatAttr;
 
 /** 无为转变的「自我改变」与贮存轮盘的辅助功能：治疗 / 爆裂 / 遍杀即灵体 / 肢体。 */
 public final class MahitoSelf {
@@ -115,7 +116,7 @@ public final class MahitoSelf {
     private static void apply(ServerPlayer p, net.minecraft.world.entity.ai.attributes.Holder<Attribute> attr,
                               UUID id, double amount, String name) {
         AttributeInstance inst = p.getAttribute(attr);
-        if (inst == null || inst.getModifier(id) != null) return;
+        if (inst == null || inst.getModifier(CompatAttr.id(id)) != null) return;
         inst.addPermanentModifier(new AttributeModifier(id, name, amount, AttributeModifier.Operation.MULTIPLY_TOTAL));
     }
 
@@ -155,8 +156,8 @@ public final class MahitoSelf {
                 clone.setItemSlot(slot, p.getItemBySlot(slot).copy());
         }
         AttributeInstance max = p.getAttribute(Attributes.MAX_HEALTH);
-        if (max != null && max.getModifier(CLONE_HEALTH) == null)
-            max.addPermanentModifier(new AttributeModifier(CLONE_HEALTH, "MahitoClone", -0.5, AttributeModifier.Operation.MULTIPLY_TOTAL));
+        if (max != null && max.getModifier(CompatAttr.id(CLONE_HEALTH)) == null)
+            max.addPermanentModifier(new AttributeModifier(CompatAttr.id(CLONE_HEALTH), -0.5, AttributeModifier.Operation.MULTIPLY_TOTAL));
         cn.blockforge.generated.nnnnr1201forge2.Curse.data(p).putUUID(CLONE_ID, clone.getUUID());
         p.setHealth(Math.min(p.getHealth(), half));
         p.sendSystemMessage(Component.literal("无为转变·分身：血量对半（当前 " + (int) p.getHealth() + "）").withStyle(ChatFormatting.AQUA));
@@ -189,7 +190,7 @@ public final class MahitoSelf {
 
     public static void restoreHealth(ServerPlayer p) {
         AttributeInstance max = p.getAttribute(Attributes.MAX_HEALTH);
-        if (max != null) max.removeModifier(CLONE_HEALTH);
+        if (max != null) max.removeModifier(CompatAttr.id(CLONE_HEALTH));
         // 上限恢复、当前生命不回复（只做上限裁剪）
         p.setHealth(Math.min(p.getHealth(), p.getMaxHealth()));
     }
@@ -204,14 +205,14 @@ public final class MahitoSelf {
                 data.putBoolean(SPIRIT_FLAG, false);
                 AttributeInstance max = p.getAttribute(Attributes.MAX_HEALTH);
                 for (UUID id : new UUID[]{SPIRIT_HEALTH, SPIRIT_ATTACK, SPIRIT_ARMOR, SPIRIT_SPEED}) {
-                    if (max != null) max.removeModifier(id);
+                    if (max != null) max.removeModifier(CompatAttr.id(id));
                     AttributeInstance inst = switch (id.equals(SPIRIT_ATTACK) ? 1 : id.equals(SPIRIT_ARMOR) ? 2 : id.equals(SPIRIT_SPEED) ? 3 : 0) {
                         case 1 -> p.getAttribute(Attributes.ATTACK_DAMAGE);
                         case 2 -> p.getAttribute(Attributes.ARMOR);
                         case 3 -> p.getAttribute(Attributes.MOVEMENT_SPEED);
                         default -> null;
                     };
-                    if (inst != null) inst.removeModifier(id);
+                    if (inst != null) inst.removeModifier(CompatAttr.id(id));
                 }
                 removeExisting(p, TAIL_ID);
                 p.sendSystemMessage(Component.literal("遍杀即灵体：已恢复原形").withStyle(ChatFormatting.GRAY));

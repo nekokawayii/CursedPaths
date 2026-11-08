@@ -12,6 +12,7 @@ import net.neoforged.neoforge.event.entity.player.PlayerEvent;
 import net.neoforged.bus.api.*;
 import net.neoforged.neoforge.event.tick.ServerTickEvent;
 import net.neoforged.neoforge.event.tick.PlayerTickEvent;
+import cn.blockforge.generated.nnnnr1201forge2.CompatAttr;
 
 /** 所有控制、层数和治疗限制均在服务端执行。 */
 public final class SoulCombat {
@@ -25,8 +26,8 @@ public final class SoulCombat {
     public static void peelTarget(ServerPlayer owner,net.minecraft.world.entity.LivingEntity target){
         if(target==owner||!CombatSettings.canHit(owner,target))return;
         long until=target.level().getGameTime()+100;target.getPersistentData().putLong("SukunaSoulPeelUntil",until);target.getPersistentData().putUUID("SukunaSoulPeelOwner",owner.getUUID());target.getPersistentData().putBoolean("SukunaNoHeal",true);if(target instanceof Player player)Curse.data(player).putLong("SoulPeelUntil",until);
-        var speed=target.getAttribute(Attributes.MOVEMENT_SPEED);if(speed!=null){speed.removeModifier(PEEL_SLOW);speed.addTransientModifier(new AttributeModifier(PEEL_SLOW,"灵魂剥离移速",-0.30,AttributeModifier.Operation.MULTIPLY_TOTAL));}
-        var attack=target.getAttribute(Attributes.ATTACK_DAMAGE);if(attack!=null){attack.removeModifier(PEEL_ATTACK);attack.addTransientModifier(new AttributeModifier(PEEL_ATTACK,"灵魂剥离伤害",-0.30,AttributeModifier.Operation.MULTIPLY_TOTAL));}
+        var speed=target.getAttribute(Attributes.MOVEMENT_SPEED);if(speed!=null){speed.removeModifier(CompatAttr.id(PEEL_SLOW));speed.addTransientModifier(new AttributeModifier(CompatAttr.id(PEEL_SLOW), -0.30, AttributeModifier.Operation.MULTIPLY_TOTAL));}
+        var attack=target.getAttribute(Attributes.ATTACK_DAMAGE);if(attack!=null){attack.removeModifier(CompatAttr.id(PEEL_ATTACK));attack.addTransientModifier(new AttributeModifier(CompatAttr.id(PEEL_ATTACK), -0.30, AttributeModifier.Operation.MULTIPLY_TOTAL));}
         directTarget(owner,target,92,100);owner.sendSystemMessage(Component.literal("灵魂剥离 · 目标进入虚弱 5 秒，无法治疗与使用术式"));
     }
     private static void directTarget(ServerPlayer owner,net.minecraft.world.entity.LivingEntity target,int kind,int life){Network.send(owner.serverLevel(),new Network.Effect(kind,target.getId(),target.getBoundingBox().getCenter(),net.minecraft.world.phys.Vec3.ZERO,1,life,owner.getId()));}
@@ -43,7 +44,7 @@ public final class SoulCombat {
     public static void iwate(ServerPlayer p,int ticks){Curse.status(p,"Iwate",ticks);}
     private static void direct(ServerPlayer p,int kind,int life,long seed){if(p instanceof net.neoforged.neoforge.common.util.FakePlayer)return;Network.CHANNEL.send(net.neoforged.neoforge.network.PacketDistributor.PLAYER.with(()->p),new Network.Effect(kind,p.getId(),p.position(),net.minecraft.world.phys.Vec3.ZERO,layers(p),life,seed));}
     public static void sync(ServerPlayer p){direct(p,89,stacks(p),layers(p));}
-    private static void applySlow(ServerPlayer p){var a=MaidBridge.body(p).getAttribute(Attributes.MOVEMENT_SPEED);if(a==null)return;int n=stacks(p);var old=a.getModifier(SLOW);if(old!=null&&Math.abs(old.getAmount()+n*0.15)<0.001)return;a.removeModifier(SLOW);if(n>0)a.addTransientModifier(new AttributeModifier(SLOW,"灵魂僵直",-n*0.15,AttributeModifier.Operation.MULTIPLY_TOTAL));}
+    private static void applySlow(ServerPlayer p){var a=MaidBridge.body(p).getAttribute(Attributes.MOVEMENT_SPEED);if(a==null)return;int n=stacks(p);var old=a.getModifier(CompatAttr.id(SLOW));if(old!=null&&Math.abs(old.getAmount()+n*0.15)<0.001)return;a.removeModifier(CompatAttr.id(SLOW));if(n>0)a.addTransientModifier(new AttributeModifier(CompatAttr.id(SLOW), -n*0.15, AttributeModifier.Operation.MULTIPLY_TOTAL));}
     public static void clearOwnedEffects(ServerPlayer owner,net.minecraft.world.entity.LivingEntity target){
         Skills.protectAlly(owner,target.getUUID());protect(owner,target);
         var data=target.getPersistentData();
@@ -57,7 +58,7 @@ public final class SoulCombat {
     }
     private static void clearPeel(net.minecraft.world.entity.LivingEntity target){
         var data=target.getPersistentData();if(data.getLong("SukunaSoulPeelUntil")>target.level().getGameTime())return;
-        var speed=target.getAttribute(Attributes.MOVEMENT_SPEED);if(speed!=null)speed.removeModifier(PEEL_SLOW);var attack=target.getAttribute(Attributes.ATTACK_DAMAGE);if(attack!=null)attack.removeModifier(PEEL_ATTACK);
+        var speed=target.getAttribute(Attributes.MOVEMENT_SPEED);if(speed!=null)speed.removeModifier(CompatAttr.id(PEEL_SLOW));var attack=target.getAttribute(Attributes.ATTACK_DAMAGE);if(attack!=null)attack.removeModifier(CompatAttr.id(PEEL_ATTACK));
         data.remove("SukunaSoulPeelUntil");data.remove("SukunaSoulPeelOwner");
         if(!data.getBoolean("SukunaSoulFire")&&!data.hasUUID("SukunaSoulSlashOwner"))data.remove("SukunaNoHeal");
     }

@@ -31,6 +31,7 @@ import net.neoforged.neoforge.event.server.ServerStoppedEvent;
 import net.neoforged.bus.api.*;
 import net.neoforged.neoforge.network.*;
 import net.neoforged.neoforge.event.tick.ServerTickEvent;
+import cn.blockforge.generated.nnnnr1201forge2.CompatAttr;
 
 /** 每人仅一个会话、一个物理首端；延伸分段查询已加载区块，不生成成千上万的链节实体。 */
 public final class ThousandMileChain {
@@ -257,7 +258,7 @@ public final class ThousandMileChain {
     private static void immobilize(LivingEntity target) {
         for(var attribute:List.of(Attributes.MOVEMENT_SPEED,Attributes.FLYING_SPEED)){
             var value=target.getAttribute(attribute);
-            if(value!=null&&value.getModifier(ROOT)==null)value.addTransientModifier(new AttributeModifier(ROOT,"万里之锁缠绕",-1,AttributeModifier.Operation.MULTIPLY_TOTAL));
+            if(value!=null&&value.getModifier(CompatAttr.id(ROOT))==null)value.addTransientModifier(new AttributeModifier(CompatAttr.id(ROOT), -1, AttributeModifier.Operation.MULTIPLY_TOTAL));
         }
     }
     private static void restore(LivingEntity target) {
@@ -265,7 +266,7 @@ public final class ThousandMileChain {
             target.setNoGravity(target.getPersistentData().getBoolean(GRAVITY));target.getPersistentData().remove(GRAVITY);
         }
         for(var attribute:List.of(Attributes.MOVEMENT_SPEED,Attributes.FLYING_SPEED)){
-            var value=target.getAttribute(attribute);if(value!=null)value.removeModifier(ROOT);
+            var value=target.getAttribute(attribute);if(value!=null)value.removeModifier(CompatAttr.id(ROOT));
         }
     }
     private static void hold(Session s) {

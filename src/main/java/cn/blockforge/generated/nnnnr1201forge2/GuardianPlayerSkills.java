@@ -18,6 +18,7 @@ import net.neoforged.neoforge.event.server.ServerStoppedEvent;
 import net.neoforged.bus.api.*;
 import net.neoforged.neoforge.event.tick.ServerTickEvent;
 import net.minecraft.core.Holder;
+import cn.blockforge.generated.nnnnr1201forge2.CompatAttr;
 
 /** 通关后第二页的守护者同款招式：服务端校验资格、消耗、冷却、目标及敌友。 */
 public final class GuardianPlayerSkills {
@@ -118,7 +119,7 @@ public final class GuardianPlayerSkills {
         attribute(s.p,Attributes.ATTACK_DAMAGE,ATTACK,enabled?BalanceRules.strength(s.v("DamageMultiplier"),BalanceRules.Category.DAMAGE):0);
         attribute(s.p,Attributes.ATTACK_SPEED,ATTACK_SPEED,enabled?s.v("AttackSpeedMultiplier"):0);
     }
-    private static void attribute(ServerPlayer p,Holder<Attribute> key,UUID id,double value){var a=MaidBridge.body(p).getAttribute(key);if(a==null)return;a.removeModifier(id);if(value!=0)a.addTransientModifier(new AttributeModifier(id,"赤鳞跃动",value,AttributeModifier.Operation.ADDITION));}
+    private static void attribute(ServerPlayer p,Holder<Attribute> key,UUID id,double value){var a=MaidBridge.body(p).getAttribute(key);if(a==null)return;a.removeModifier(CompatAttr.id(id));if(value!=0)a.addTransientModifier(new AttributeModifier(CompatAttr.id(id), value, AttributeModifier.Operation.ADDITION));}
     private static void closeDomain(State s){closeDomain(s,false);}
     private static void closeDomain(State s,boolean voluntary){if(s.domainUntil!=0){boolean early=voluntary&&s.level.getGameTime()<s.domainUntil;fx(s,91,s.center,Vec3.ZERO,1,1,0);s.domainUntil=0;Curse.endDomain(s.p,early);}}
     private static void cleanup(State s){boost(s,false);closeDomain(s);s.casting=-1;s.guardUntil=s.boostUntil=0;}
@@ -147,7 +148,7 @@ public final class GuardianPlayerSkills {
         }
     }
     @SubscribeEvent public static void tick(ServerTickEvent.Post event){
-        if(event.phase!=TickEvent.Phase.END)return;
+        if(event.phase!=false)return;
         for(Iterator<State> it=states.values().iterator();it.hasNext();){State s=it.next();if(!valid(s)){cleanup(s);it.remove();continue;}long now=s.level.getGameTime();
             if(DomainClash.active(s.p))continue;
             if(SoulCombat.suppressed(s.p)||Curse.burnout(s.p)){s.casting=-1;s.guardUntil=0;if(s.boostUntil>0){s.boostUntil=0;boost(s,false);}closeDomain(s);continue;}

@@ -21,6 +21,7 @@ import net.neoforged.neoforge.event.server.ServerStoppedEvent;
 import net.neoforged.bus.api.*;
 import net.neoforged.neoforge.event.tick.ServerTickEvent;
 import net.minecraft.core.Holder;
+import cn.blockforge.generated.nnnnr1201forge2.CompatAttr;
 
 /** 赤血操术服务端。客户端只能提交按键，耗能、冷却、命中和状态均在这里核验。 */
 public final class BloodArts {
@@ -212,7 +213,7 @@ public final class BloodArts {
             if(p.level().clip(new ClipContext(at,t.getEyePosition(),ClipContext.Block.COLLIDER,ClipContext.Fluid.NONE,p)).getType()!=HitResult.Type.MISS)continue;rays[lane]++;
             if(hit(p,t,24,1,false,empowered?2:1)){dot(p,t,160,true);CombatSafety.push(p,t,d.normalize().scale(d.length()<8?1.3:.5).add(0,.2,0));}}
     }
-    private static void modifier(LivingEntity e,net.minecraft.world.entity.ai.attributes.Holder<Attribute> attr,UUID id,double value,boolean active){var instance=e.getAttribute(attr);if(instance==null)return;if(!active){instance.removeModifier(id);return;}if(instance.getModifier(id)==null)instance.addTransientModifier(new AttributeModifier(id,"赤血操术",value,AttributeModifier.Operation.MULTIPLY_TOTAL));}
+    private static void modifier(LivingEntity e,net.minecraft.world.entity.ai.attributes.Holder<Attribute> attr,UUID id,double value,boolean active){var instance=e.getAttribute(attr);if(instance==null)return;if(!active){instance.removeModifier(CompatAttr.id(id));return;}if(instance.getModifier(CompatAttr.id(id))==null)instance.addTransientModifier(new AttributeModifier(CompatAttr.id(id), value, AttributeModifier.Operation.MULTIPLY_TOTAL));}
     private static void attributes(State s){long now=s.level.getGameTime();modifier(MaidBridge.body(s.p),Attributes.MOVEMENT_SPEED,SPEED,.5+rank(s.p)*.05,s.flow>now);modifier(MaidBridge.body(s.p),Attributes.ATTACK_SPEED,ATTACK,.3+rank(s.p)*.03,s.flow>now);modifier(MaidBridge.body(s.p),Attributes.MOVEMENT_SPEED,SLOW,-.65,s.charge>=0);}
     private static void cancelCharge(State s){if(s.charge<0)return;s.charge=-1;s.automaticCharge=false;modifier(MaidBridge.body(s.p),Attributes.MOVEMENT_SPEED,SLOW,0,false);pose(s.p,BloodRules.COMPRESS,0);}
     public static void cancel(ServerPlayer p){State s=states.get(p.getUUID());if(s!=null)cancelCharge(s);}
@@ -225,7 +226,7 @@ public final class BloodArts {
     }
     private static void clear(State s){cancelCharge(s);s.flow=0;attributes(s);s.shield=0;s.wings=0;}
     @SubscribeEvent public static void tick(ServerTickEvent.Post event){
-        if(event.phase!=TickEvent.Phase.END)return;
+        if(event.phase!=false)return;
         for(State s:List.copyOf(states.values())){
             ServerPlayer p=s.p;long now=s.level.getGameTime();
             if(!valid(p,s.level)){clear(s);states.remove(p.getUUID());continue;}

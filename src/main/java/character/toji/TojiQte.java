@@ -25,6 +25,7 @@ import net.minecraft.world.phys.Vec3;
 
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.neoforge.event.tick.PlayerTickEvent;
+import cn.blockforge.generated.nnnnr1201forge2.CompatAttr;
 
 /**
  * 伏黑甚尔 · 纯 QTE 角色（天与暴君）。
@@ -296,9 +297,8 @@ public final class TojiQte {
         var attribute = p.getAttribute(Attributes.MOVEMENT_SPEED);
         if (attribute == null) return;
         var id = java.util.UUID.fromString("480bb88f-333a-45aa-8bbb-001100220010");
-        attribute.removeModifier(id);
-        attribute.addTransientModifier(new AttributeModifier(id, "天与暴君·闪身",
-            attribute.getBaseValue(), AttributeModifier.Operation.MULTIPLY_TOTAL));   // 等于当前速度 ×2
+        attribute.removeModifier(CompatAttr.id(id));
+        attribute.addTransientModifier(new AttributeModifier(CompatAttr.id(id), attribute.getBaseValue(), AttributeModifier.Operation.MULTIPLY_TOTAL));   // 等于当前速度 ×2
         Curse.data(p).putLong("TojiSpeedClear", n + PERFECT_TICKS);
     }
 

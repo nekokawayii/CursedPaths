@@ -141,7 +141,7 @@ public final class SlashForms {
         int n=Math.max(1,(int)Math.ceil(step.length()/0.4));for(int i=0;i<=n;i++){Vec3 move=step.scale(i/(double)n),from=a.add(move),to=b.add(move);if(box.contains(from)||box.contains(to)||box.clip(from,to).isPresent()){SlashImpact.plane(t,line.b.subtract(line.a),step.lengthSqr()>1e-8?step:new Vec3(0,0,1));return true;}}return false;
     }
     @SubscribeEvent public static void tick(ServerTickEvent.Post event){
-        if(event.phase!=TickEvent.Phase.END)return;
+        if(event.phase!=false)return;
         tickRings();
         for(Pending s:List.copyOf(pending)){if(!valid(s.owner,s.level)){pending.remove(s);continue;}if(s.level.getGameTime()<s.due)continue;pending.remove(s);
             if(s.moving)add(s.owner,List.of(s.line),s.dir,1,s.due,false,false);
