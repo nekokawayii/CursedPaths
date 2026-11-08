@@ -14,6 +14,7 @@ import net.neoforged.neoforge.registries.ForgeRegistries;
 import net.neoforged.neoforge.event.tick.ServerTickEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.minecraft.core.registries.BuiltInRegistries;
+import cn.blockforge.generated.nnnnr1201forge2.CompatNbt;
 
 /** 戴上「法轮」之后的**自身适应**：与魔虚罗同款的法轮机制，但直接以"整只生物"为单位。
  *
@@ -257,7 +258,7 @@ public final class MahoragaAdaptStore {
             var stack=owner.getItemInHand(hand);
             if(stack.is(VoidContent.MAHORAGA_WHEEL_RECALL.get())){
                 var next=new net.minecraft.world.item.ItemStack(VoidContent.MAHORAGA_WHEEL.get(),stack.getCount());
-                if(stack.getTag()!=null)next.setTag(stack.getTag().copy());
+                if(CompatNbt.read(stack)!=null)next.setTag(CompatNbt.read(stack).copy());
                 owner.setItemInHand(hand,next);done=true;
             }
         }
@@ -266,7 +267,7 @@ public final class MahoragaAdaptStore {
             var stack=inv.getItem(i);
             if(stack.is(VoidContent.MAHORAGA_WHEEL_RECALL.get())){
                 var next=new net.minecraft.world.item.ItemStack(VoidContent.MAHORAGA_WHEEL.get(),stack.getCount());
-                if(stack.getTag()!=null)next.setTag(stack.getTag().copy());
+                if(CompatNbt.read(stack)!=null)next.setTag(CompatNbt.read(stack).copy());
                 inv.setItem(i,next);done=true;
             }
         }
@@ -279,7 +280,7 @@ public final class MahoragaAdaptStore {
             var stack=owner.getItemInHand(hand);
             if(stack.is(VoidContent.MAHORAGA_WHEEL.get())||stack.is(VoidContent.MAHORAGA_WHEEL_RECALL.get())){
                 var next=new net.minecraft.world.item.ItemStack(to,stack.getCount());
-                if(stack.getTag()!=null)next.setTag(stack.getTag().copy());
+                if(CompatNbt.read(stack)!=null)next.setTag(CompatNbt.read(stack).copy());
                 owner.setItemInHand(hand,next);
                 done=true;
             }
@@ -289,7 +290,7 @@ public final class MahoragaAdaptStore {
             var stack=inv.getItem(i);
             if(stack.is(VoidContent.MAHORAGA_WHEEL.get())||stack.is(VoidContent.MAHORAGA_WHEEL_RECALL.get())){
                 var next=new net.minecraft.world.item.ItemStack(to,stack.getCount());
-                if(stack.getTag()!=null)next.setTag(stack.getTag().copy());
+                if(CompatNbt.read(stack)!=null)next.setTag(CompatNbt.read(stack).copy());
                 inv.setItem(i,next);
                 done=true;
             }

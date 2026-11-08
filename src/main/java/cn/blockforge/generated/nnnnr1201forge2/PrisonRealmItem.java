@@ -10,12 +10,13 @@ import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.item.*;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
+import cn.blockforge.generated.nnnnr1201forge2.CompatNbt;
 
 /** 封印物品携带完整囚徒快照；客户端只接收封印标识与数量，避免大量实体NBT导致网络包超限。 */
 public final class PrisonRealmItem extends Item {
     public static final String SEAL="PrisonSeal";
     public PrisonRealmItem(){super(new Properties().stacksTo(1).rarity(Rarity.EPIC).fireResistant());}
-    public static CompoundTag seal(ItemStack stack){return stack.getTag()==null?new CompoundTag():stack.getTag().getCompound(SEAL);}
+    public static CompoundTag seal(ItemStack stack){return CompatNbt.read(stack)==null?new CompoundTag():CompatNbt.read(stack).getCompound(SEAL);}
     public static ItemStack packed(CompoundTag snapshot){
         ItemStack stack=new ItemStack(PrisonContent.PRISON.get());CompoundTag room=snapshot.getCompound("Room"),seal=new CompoundTag();
         seal.putUUID("Realm",room.getUUID("Id"));seal.putUUID("Token",room.getUUID("PortableToken"));seal.putInt("Count",snapshot.getList("Prisoners",Tag.TAG_COMPOUND).size());seal.put("Snapshot",snapshot);
@@ -30,7 +31,7 @@ public final class PrisonRealmItem extends Item {
         if(c.getPlayer()==null||c.getClickedFace()!=Direction.UP||PrisonSystem.locked(c.getPlayer()))return InteractionResult.FAIL;
         if(c.getLevel().isClientSide)return InteractionResult.SUCCESS;
         if(!(c.getPlayer() instanceof ServerPlayer player))return InteractionResult.FAIL;
-        ItemStack stack=c.getItemInHand();CompoundTag seal=seal(stack);boolean carried=stack.getTag()!=null&&stack.getTag().contains(SEAL);
+        ItemStack stack=c.getItemInHand();CompoundTag seal=seal(stack);boolean carried=CompatNbt.read(stack)!=null&&CompatNbt.read(stack).contains(SEAL);
         PrisonStore store=PrisonStore.get(player.server);
         if(carried&&(!seal.hasUUID("Realm")||!seal.hasUUID("Token")||!store.canPlace(seal.getUUID("Realm"),seal.getUUID("Token")))){
             player.sendSystemMessage(Component.literal("该封印载体已放置或解封，或不属于此存档，不能重复释放囚徒"));return InteractionResult.FAIL;
@@ -52,7 +53,7 @@ public final class PrisonRealmItem extends Item {
         player.sendSystemMessage(Component.literal(store.occupied(realm.getUUID())?"狱门僵已放置 · 原封印与内部生物保持不变，可用邪去悔天梯解封":"狱门僵已放置 · 在附近聊天输入：狱门僵，开门"));return InteractionResult.CONSUME;
     }
     @Override public CompoundTag getShareTag(ItemStack stack){
-        CompoundTag source=stack.getTag();if(source==null)return null;CompoundTag shared=source.copy();
+        CompoundTag source=CompatNbt.read(stack);if(source==null)return null;CompoundTag shared=source.copy();
         if(shared.contains(SEAL))shared.getCompound(SEAL).remove("Snapshot");return shared;
     }
     @Override public void inventoryTick(ItemStack stack,Level level,net.minecraft.world.entity.Entity holder,int slot,boolean selected){
@@ -70,7 +71,7 @@ public final class PrisonRealmItem extends Item {
         lines.add(Component.literal("空载时右键低于15%血量的敌方生物，可直接封印；不适用于玩家"));
         lines.add(Component.literal("右键地面放置；聊天：狱门僵，开门／狱门僵，闭门"));
         lines.add(Component.literal("闭门后，放置者空手右键收起；封印与内部数据随物品保存"));
-        if(s.getTag()!=null&&s.getTag().contains(SEAL))lines.add(Component.literal("已封印："+seal(s).getInt("Count")+" 个生物 · 放下后以邪去悔天梯解封"));
+        if(CompatNbt.read(s)!=null&&CompatNbt.read(s).contains(SEAL))lines.add(Component.literal("已封印："+seal(s).getInt("Count")+" 个生物 · 放下后以邪去悔天梯解封"));
         lines.add(Component.literal("可放普通箱子；不能放潜影盒或收纳袋；封印绑定当前存档"));
     }
 }

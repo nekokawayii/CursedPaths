@@ -32,6 +32,7 @@ import net.neoforged.bus.api.*;
 import net.neoforged.neoforge.network.*;
 import net.neoforged.neoforge.event.tick.ServerTickEvent;
 import cn.blockforge.generated.nnnnr1201forge2.CompatAttr;
+import cn.blockforge.generated.nnnnr1201forge2.CompatNbt;
 
 /** 每人仅一个会话、一个物理首端；延伸分段查询已加载区块，不生成成千上万的链节实体。 */
 public final class ThousandMileChain {
@@ -176,8 +177,8 @@ public final class ThousandMileChain {
             &&!s.owner.hasDisconnected()&&!s.owner.isSpectator()&&!PrisonSystem.locked(s.owner);
         ItemStack stack=s.owner.getMainHandItem();
         return s.owner.level()==s.level&&s.owner.isAlive()&&!s.owner.isRemoved()&&!s.owner.hasDisconnected()&&!s.owner.isSpectator()
-            &&ThousandMileChainItem.isChain(stack)&&stack.getCount()==1&&stack.hasTag()&&stack.getTag().hasUUID("ThousandMileId")
-            &&s.itemId.equals(stack.getTag().getUUID("ThousandMileId"))&&!PrisonSystem.locked(s.owner);
+            &&ThousandMileChainItem.isChain(stack)&&stack.getCount()==1&&stack.hasTag()&&CompatNbt.read(stack).hasUUID("ThousandMileId")
+            &&s.itemId.equals(CompatNbt.read(stack).getUUID("ThousandMileId"))&&!PrisonSystem.locked(s.owner);
     }
     @SubscribeEvent public static void tick(ServerTickEvent.Post e) {
         if(false)return;

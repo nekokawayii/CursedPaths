@@ -20,6 +20,7 @@ import net.neoforged.neoforge.event.level.BlockEvent;
 import net.neoforged.bus.api.*;
 import net.neoforged.neoforge.event.tick.ServerTickEvent;
 import net.minecraft.core.registries.BuiltInRegistries;
+import cn.blockforge.generated.nnnnr1201forge2.CompatNbt;
 
 /** 所有封印、解封、库存和传送约束只由服务端裁决。 */
 public final class PrisonSystem {
@@ -57,7 +58,7 @@ public final class PrisonSystem {
     }
     /** 探索合成的空狱门疆可直接封印残血敌人；复用原本的持久化牢房，不删除目标快照。 */
     public static boolean captureWeakened(ServerPlayer p,LivingEntity target,net.minecraft.world.item.ItemStack stack){
-        if(!target.isAlive()||locked(target)||locked(p)||stack.hasTag()&&stack.getTag().contains(PrisonRealmItem.SEAL))return false;
+        if(!target.isAlive()||locked(target)||locked(p)||stack.hasTag()&&CompatNbt.read(stack).contains(PrisonRealmItem.SEAL))return false;
         ServerLevel prison=p.server.getLevel(DIMENSION);if(prison==null)return false;
         PrisonRealmEntity realm=PrisonContent.REALM.get().create(p.serverLevel());if(realm==null)return false;
         realm.moveTo(p.getX(),p.getY(),p.getZ(),p.getYRot(),0);realm.configure(p.getUUID());

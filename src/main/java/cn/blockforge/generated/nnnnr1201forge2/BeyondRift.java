@@ -21,6 +21,7 @@ import net.neoforged.bus.api.*;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.neoforge.event.tick.PlayerTickEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
+import cn.blockforge.generated.nnnnr1201forge2.CompatNbt;
 
 /**
  * 隐藏剧情「观测者」的服务端部分。
@@ -121,7 +122,7 @@ public final class BeyondRift {
         item.setTarget(p.getUUID());item.getPersistentData().putUUID(DROP_OWNER,p.getUUID());
     }
     private static boolean isNote(ItemStack stack){
-        CompoundTag tag=stack.getTag();
+        CompoundTag tag=CompatNbt.read(stack);
         return stack.is(Items.WRITTEN_BOOK)&&tag!=null&&(tag.getBoolean("SukunaBeyondNote")
             ||"观测者的低语".equals(tag.getString("title"))&&"Itadori_Yūji.pl?a!y@er".equals(tag.getString("author")));
     }

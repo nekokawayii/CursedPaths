@@ -18,6 +18,7 @@ import net.neoforged.fml.common.Mod;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.event.tick.PlayerTickEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
+import cn.blockforge.generated.nnnnr1201forge2.CompatNbt;
 
 /** 通关奖励与永久权限；不向未通关者泄露路线。 */
 @EventBusSubscriber(modid="jujutsu_kaisen_cursed_paths")
@@ -50,7 +51,7 @@ public final class Authority {
     public static ServerPlayer damageOwner(Player p){return p instanceof MaidBridge.Actor a?owner(a):null;}
     public static double damageScale(Player p){if(!(p instanceof MaidBridge.Actor a)||owner(a)==null)return 1;return a.maid.getPersistentData().hasUUID("AuthorityEchoOwner")?a.maid.getPersistentData().getDouble("AuthorityEchoScale"):AuthorityRules.LEGION_DAMAGE;}
     public static boolean echo(LivingEntity e){return e!=null&&e.getPersistentData().hasUUID("AuthorityEchoOwner");}
-    public static int medium(ItemStack stack){return stack.is(MEDIUM.get())&&stack.hasTag()&&stack.getTag().contains("AuthoritySkill")?stack.getTag().getInt("AuthoritySkill"):-1;}
+    public static int medium(ItemStack stack){return stack.is(MEDIUM.get())&&stack.hasTag()&&CompatNbt.read(stack).contains("AuthoritySkill")?CompatNbt.read(stack).getInt("AuthoritySkill"):-1;}
     public static boolean editorHeld(Player p){return p.getMainHandItem().is(EDITOR.get())||p.getOffhandItem().is(EDITOR.get());}
     /** 高位通关奖励：击碎当刻就放进背包；背包满则每秒重试，绝不把奖励丢在高位回廊。 */
     public static void reward(ServerPlayer p){

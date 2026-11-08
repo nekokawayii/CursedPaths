@@ -20,6 +20,7 @@ import net.neoforged.bus.api.SubscribeEvent;
 import static cn.blockforge.generated.nnnnr1201forge2.Content.GAVEL;
 import net.neoforged.neoforge.event.tick.ServerTickEvent;
 import net.neoforged.neoforge.event.tick.PlayerTickEvent;
+import cn.blockforge.generated.nnnnr1201forge2.CompatNbt;
 
 /** 诛伏赐死：法槌授予/回收、刻印、投掷回旋、领域展开。 */
 public final class HigurumaCombat {
@@ -62,7 +63,7 @@ public final class HigurumaCombat {
     private static void removeGavels(ServerPlayer p) {
         for (int i = 0; i < p.getInventory().getContainerSize(); i++) {
             ItemStack st = p.getInventory().getItem(i);
-            if (st.getItem() == GAVEL.get() && st.getTag() != null && st.getTag().getBoolean("GavelLock"))
+            if (st.getItem() == GAVEL.get() && CompatNbt.read(st) != null && CompatNbt.read(st).getBoolean("GavelLock"))
                 p.getInventory().setItem(i, ItemStack.EMPTY);
         }
     }
@@ -114,8 +115,8 @@ public final class HigurumaCombat {
         if(e.getSource().getDirectEntity()!=cn.blockforge.generated.nnnnr1201forge2.MaidBridge.body(p)&&e.getSource().getDirectEntity()!=p)return;
         ItemStack main = p.getMainHandItem();
         if(p instanceof cn.blockforge.generated.nnnnr1201forge2.NpcBridge.NpcActor&&main.is(cn.blockforge.generated.nnnnr1201forge2.Content.EXECUTIONER_SWORD.get())&&cn.blockforge.generated.nnnnr1201forge2.CombatSettings.canHit(p,e.getEntity())){e.setAmount(Math.max(e.getAmount(),e.getEntity().getMaxHealth()*100+1000));return;}
-        if (main.getItem() != GAVEL.get() || main.getTag() == null) return;
-        if (main.getTag().contains(GavelItem.SEAL_DAMAGE)) e.setAmount(main.getTag().getFloat(GavelItem.SEAL_DAMAGE));
+        if (main.getItem() != GAVEL.get() || CompatNbt.read(main) == null) return;
+        if (CompatNbt.read(main).contains(GavelItem.SEAL_DAMAGE)) e.setAmount(CompatNbt.read(main).getFloat(GavelItem.SEAL_DAMAGE));
     }
 
     @SubscribeEvent public static void executed(net.neoforged.neoforge.event.entity.living.LivingIncomingDamageEvent e){

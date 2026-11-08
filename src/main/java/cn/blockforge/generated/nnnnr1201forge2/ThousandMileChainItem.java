@@ -13,6 +13,7 @@ import net.minecraft.world.item.*;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
+import cn.blockforge.generated.nnnnr1201forge2.CompatNbt;
 
 /** 沿用旧物品编号和配方；附件完整保存在物品内，不复制、不吞掉原咒具的属性。 */
 public final class ThousandMileChainItem extends Item {
@@ -21,7 +22,7 @@ public final class ThousandMileChainItem extends Item {
     public ThousandMileChainItem() { super(new Properties().stacksTo(1).rarity(Rarity.EPIC).fireResistant()); }
     public static boolean isChain(ItemStack stack) { return stack.getItem() instanceof ThousandMileChainItem; }
     public static ItemStack attachment(ItemStack stack) {
-        return stack.hasTag() ? ItemStack.of(stack.getTag().getCompound(ATTACHMENT)) : ItemStack.EMPTY;
+        return stack.hasTag() ? ItemStack.of(CompatNbt.read(stack).getCompound(ATTACHMENT)) : ItemStack.EMPTY;
     }
     public static boolean armed(ItemStack stack) { return isSpear(attachment(stack)); }
     public static boolean isSpear(ItemStack stack) { return stack.is(Content.TENKA_SPEAR.get()); }
