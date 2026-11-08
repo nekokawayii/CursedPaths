@@ -66,7 +66,7 @@ public final class MahitoPowers {
     /** 具象化：把贮存体变成生物列表中的第 index 个生物，保留其血量与防御。 */
     public static void materialize(ServerPlayer p, int index) {
         ItemStack held = p.getMainHandItem();
-        CompoundTag base = held.getTagElement(MahitoTransfigure.BASE_TAG);
+        CompoundTag base = cn.blockforge.generated.nnnnr1201forge2.CompatNbt.getElement(held, MahitoTransfigure.BASE_TAG);
         if (base == null || !(p.level() instanceof ServerLevel level)) return;
         List<ResourceLocation> keys = entityKeys();
         if (index < 0 || index >= keys.size()) return;

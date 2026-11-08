@@ -25,7 +25,7 @@ import java.util.List;
 public class TransfiguredItem extends Item {
     public TransfiguredItem(Properties properties) { super(properties); }
 
-    public static CompoundTag stored(ItemStack stack) { return stack.getTagElement(MahitoTransfigure.BASE_TAG); }
+    public static CompoundTag stored(ItemStack stack) { return cn.blockforge.generated.nnnnr1201forge2.CompatNbt.getElement(stack, MahitoTransfigure.BASE_TAG); }
 
     @Override public int getMaxDamage(ItemStack stack) {
         CompoundTag tag = stored(stack);

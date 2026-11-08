@@ -335,7 +335,7 @@ public final class MahitoTransfigure {
     }
 
     @SubscribeEvent public static void rightClick(PlayerInteractEvent.RightClickItem e) {
-        if (!isTransfigured(e.getItemStack()) || e.getItemStack().getTagElement(BASE_TAG) == null) return;
+        if (!isTransfigured(e.getItemStack()) || e.cn.blockforge.generated.nnnnr1201forge2.CompatNbt.getElement(getItemStack(), BASE_TAG) == null) return;
         e.setCanceled(true);
         if (e.getLevel().isClientSide) {
             cn.blockforge.generated.nnnnr1201forge2.CompatClient.runWhenClient(()->TransfigureScreen.open(1));

@@ -95,7 +95,7 @@ public final class Authority {
         remember(p);Curse.data(p).putBoolean("WorldAuthority",true);Curse.add(p,Curse.maximum(p));
         Journey.give(p,new ItemStack(CURSE.get()));Journey.give(p,new ItemStack(BANNER.get()));upgradeFragment(p);settleMarker(p);
         if(!p.getInventory().contains(new ItemStack(EDITOR.get())))Journey.give(p,new ItemStack(EDITOR.get()));
-        var advancement=p.server.getAdvancements().getAdvancement(ResourceLocation.fromNamespaceAndPath("jujutsu_kaisen_cursed_paths", "transgressor"));
+        var advancement=p.server.getAdvancements().get(ResourceLocation.fromNamespaceAndPath("jujutsu_kaisen_cursed_paths", "transgressor"));
         if(advancement!=null)for(String criterion:advancement.getCriteria().keySet())p.getAdvancements().award(advancement,criterion);
         Curse.sync(p);AuthorityPackets.sync(p);
     }
