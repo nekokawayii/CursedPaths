@@ -129,7 +129,7 @@ public final class RatioVisuals {
         long now = now(mc);
         PoseStack ps = e.getPoseStack();
         Vec3 cam = e.getCamera().getPosition();
-        float partial = e.getPartialTick();
+        float partial = e.getPartialTick().getGameTimeDeltaPartialTick(true);
         ps.pushPose();
         ps.translate(-cam.x, -cam.y, -cam.z);
         RenderSystem.enableDepthTest();

@@ -520,7 +520,7 @@ public final class Client {
         for(Visual v:visuals)if(v.background)drawSlash(b,ps,v,cam,e.getPartialTick().getGameTimeDeltaPartialTick(true));
         for(DomainVisual d:domains.values())domain(b,ps,d,cam,e.getPartialTick().getGameTimeDeltaPartialTick(true));
         for(AuraVisual a:auras.values())aura(b,ps,a,cam,e.getPartialTick().getGameTimeDeltaPartialTick(true));
-        for(Visual v:visuals){if(v.background)continue;SlashAppearance.use(v.e);float age=tick-v.born+e.getPartialTick();SlashAppearance.age(age);int kind=v.e.kind();
+        for(Visual v:visuals){if(v.background)continue;SlashAppearance.use(v.e);float age=tick-v.born+e.getPartialTick().getGameTimeDeltaPartialTick(true);SlashAppearance.age(age);int kind=v.e.kind();
             if(v.e.size()==SlashReach.INFINITE&&(kind==96||kind==72||kind==123)){drawInfiniteCut(b,ps,v.e,cam,age);continue;}
             if(kind==96){Vec3 axis=slashAxis(v.e);SlashStyle.draw(b,ps,v.e.position().subtract(axis.scale(v.e.size()/2)),v.e.position().add(axis.scale(v.e.size()/2)),.12,Math.max(0,1-age/v.e.life()),cam);}
             if(kind==0||kind==12||kind==72||kind==123)drawSlash(b,ps,v,cam,e.getPartialTick().getGameTimeDeltaPartialTick(true));

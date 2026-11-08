@@ -144,7 +144,7 @@ public final class TenShadows {
     }
     @SubscribeEvent public static void secret(PlayerInteractEvent.RightClickBlock e){
         var at=e.getPos();if(!(e.getEntity() instanceof ServerPlayer p)||p.level().dimension()!=SoulJourney.CORRIDOR||!p.isShiftKeyDown()||at.getX()!=33||at.getY()<64||at.getY()>66||at.getZ()<18||at.getZ()>20)return;
-        ensureRoom(p.serverLevel());for(BlockPos pos:BlockPos.betweenClosed(33,64,18,34,66,20))p.serverLevel().setBlockAndUpdate(pos,Blocks.AIR.defaultBlockState());e.setCanceled(true);e.setCancellationResult(net.minecraft.world.InteractionResult.SUCCESS);
+        ensureRoom(p.serverLevel());for(BlockPos pos:BlockPos.betweenClosed(33,64,18,34,66,20))p.serverLevel().setBlockAndUpdate(pos,Blocks.AIR.defaultBlockState());e.setCanceled(true);
     }
     /** /sukuna soul room：补建侧室、破开幽布封印，并把玩家送到房间内肉身旁。 */
     public static void revealRoom(ServerPlayer p){

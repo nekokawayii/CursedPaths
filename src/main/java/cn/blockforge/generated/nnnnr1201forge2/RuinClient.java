@@ -35,7 +35,7 @@ public final class RuinClient {
     @SubscribeEvent public static void render(RenderLevelStageEvent e){
         if(!active())return;boolean sky=e.getStage()==RenderLevelStageEvent.Stage.AFTER_SKY;
         if(!sky&&e.getStage()!=RenderLevelStageEvent.Stage.AFTER_PARTICLES)return;
-        var mc=Minecraft.getInstance();PoseStack ps=e.getPoseStack();Vec3 cam=e.getCamera().getPosition();float t=mc.level.getGameTime()+e.getPartialTick();
+        var mc=Minecraft.getInstance();PoseStack ps=e.getPoseStack();Vec3 cam=e.getCamera().getPosition();float t=mc.level.getGameTime()+e.getPartialTick().getGameTimeDeltaPartialTick(true);
         ps.pushPose();RenderSystem.enableBlend();RenderSystem.defaultBlendFunc();RenderSystem.disableCull();RenderSystem.depthMask(false);RenderSystem.setShader(GameRenderer::getPositionColorShader);
         if(sky)RenderSystem.disableDepthTest();else {RenderSystem.enableDepthTest();ps.translate(-cam.x,-cam.y,-cam.z);}
         BufferBuilder b=Tesselator.getInstance().begin(VertexFormat.Mode.QUADS,DefaultVertexFormat.POSITION_COLOR);

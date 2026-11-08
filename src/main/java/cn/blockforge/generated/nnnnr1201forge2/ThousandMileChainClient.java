@@ -87,7 +87,7 @@ public final class ThousandMileChainClient {
     @SubscribeEvent public static void render(RenderLevelStageEvent e){
         if(e.getStage()!=RenderLevelStageEvent.Stage.AFTER_ENTITIES||VISUALS.isEmpty())return;
         var mc=Minecraft.getInstance();if(mc.level==null)return;
-        PoseStack pose=e.getPoseStack();Vec3 cam=e.getCamera().getPosition();float partial=e.getPartialTick();
+        PoseStack pose=e.getPoseStack();Vec3 cam=e.getCamera().getPosition();float partial=e.getPartialTick().getGameTimeDeltaPartialTick(true);
         var buffers=CHAIN_BUFFERS;budget=768;
         // 总绘制预算有上限，优先显示本地玩家与最近的锁链。
         List<Visual> order=new ArrayList<>(VISUALS.values());

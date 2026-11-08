@@ -42,7 +42,7 @@ public final class MahoragaWheelRenderer {
         if(e.getStage()!=RenderLevelStageEvent.Stage.AFTER_PARTICLES)return;
         var mc=Minecraft.getInstance();
         if(mc.level==null)return;
-        float age=mc.level.getGameTime()+e.getPartialTick();
+        float age=mc.level.getGameTime()+e.getPartialTick().getGameTimeDeltaPartialTick(true);
         var camera=e.getCamera().getPosition();
         PoseStack ps=e.getPoseStack();
         for(MahoragaWheelClient.Entry entry:MahoragaWheelClient.entries()){

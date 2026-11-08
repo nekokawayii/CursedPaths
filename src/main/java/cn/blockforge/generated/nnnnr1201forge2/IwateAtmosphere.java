@@ -23,7 +23,7 @@ public final class IwateAtmosphere {
     private static long scanned=-100;
     @SubscribeEvent public static void render(RenderLevelStageEvent e){
         var mc=Minecraft.getInstance();if(mc.level==null||mc.player==null||mc.level.dimension()!=SoulJourney.CORRIDOR||mc.player.getY()<1288||e.getStage()!=RenderLevelStageEvent.Stage.AFTER_TRIPWIRE_BLOCKS)return;
-        long tick=mc.level.getGameTime();Vec3 cam=e.getCamera().getPosition();float age=tick+e.getPartialTick();
+        long tick=mc.level.getGameTime();Vec3 cam=e.getCamera().getPosition();float age=tick+e.getPartialTick().getGameTimeDeltaPartialTick(true);
         if(tick-scanned>=12||tick<scanned){scanned=tick;rice.clear();BlockPos base=mc.player.blockPosition();for(BlockPos p:BlockPos.betweenClosed(base.offset(-9,-5,-9),base.offset(9,5,9)))if(mc.level.getBlockState(p).is(SoulContent.RICE.get()))rice.add(p.immutable());}
         PoseStack ps=e.getPoseStack();ps.pushPose();ps.translate(-cam.x,-cam.y,-cam.z);
         RenderSystem.enableDepthTest();RenderSystem.depthMask(false);RenderSystem.enableBlend();RenderSystem.defaultBlendFunc();RenderSystem.disableCull();RenderSystem.setShader(GameRenderer::getPositionColorShader);

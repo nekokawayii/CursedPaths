@@ -44,7 +44,7 @@ public final class GojoBeamClient {
         RenderSystem.setShaderColor(1,1,1,1);
         BufferBuilder b=Tesselator.getInstance().begin(VertexFormat.Mode.QUADS,DefaultVertexFormat.POSITION_COLOR);
         for(Beam bm:beams){
-            double age=(time-bm.born())+e.getPartialTick();
+            double age=(time-bm.born())+e.getPartialTick().getGameTimeDeltaPartialTick(true);
             double k=Math.max(0,1-age/bm.life());          // 整体渐隐
             if(k<=0.02)continue;
             Vec3 dir=bm.dir();

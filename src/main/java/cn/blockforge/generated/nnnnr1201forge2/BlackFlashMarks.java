@@ -179,7 +179,7 @@ public final class BlackFlashMarks {
         var mc=Minecraft.getInstance();if(mc.level==null)return;
         long now=mc.level.getGameTime();
         var cam=e.getCamera().getPosition();
-        float t=mc.level.getGameTime()+e.getPartialTick();
+        float t=mc.level.getGameTime()+e.getPartialTick().getGameTimeDeltaPartialTick(true);
         RenderSystem.disableDepthTest();RenderSystem.enableBlend();RenderSystem.defaultBlendFunc();RenderSystem.disableCull();
         RenderSystem.setShader(net.minecraft.client.renderer.GameRenderer::getPositionColorShader);
         BufferBuilder b=Tesselator.getInstance().begin(VertexFormat.Mode.QUADS,DefaultVertexFormat.POSITION_COLOR);

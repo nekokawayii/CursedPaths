@@ -43,7 +43,7 @@ public final class EternalLove {
     @SubscribeEvent(priority=EventPriority.HIGHEST) public static void interact(PlayerInteractEvent.EntityInteract event){
         if(!event.getItemStack().is(ITEM.get())||!(event.getTarget() instanceof LivingEntity target))return;
         if(event.getEntity() instanceof ServerPlayer p){if(p.isShiftKeyDown())clear(p,target);else mark(p,target);}
-        event.setCancellationResult(InteractionResult.sidedSuccess(event.getLevel().isClientSide));event.setCanceled(true);
+        event.setCanceled(true);
     }
     @SubscribeEvent(priority=EventPriority.HIGHEST) public static void prevent(LivingIncomingDamageEvent event){
         ServerPlayer p=CombatSettings.caster(event.getSource());if(p!=null&&protects(p,event.getEntity()))event.setCanceled(true);

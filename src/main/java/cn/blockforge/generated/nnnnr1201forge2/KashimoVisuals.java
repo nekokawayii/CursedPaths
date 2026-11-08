@@ -309,7 +309,7 @@ public final class KashimoVisuals {
         long now = now(mc);
         PoseStack ps = e.getPoseStack();
         Vec3 cam = e.getCamera().getPosition();
-        float partial = e.getPartialTick();
+        float partial = e.getPartialTick().getGameTimeDeltaPartialTick(true);
         projectOverheads(mc, e, cam, partial, now);
         if (bolts.isEmpty() && scorches.isEmpty() && trails.isEmpty() && shocks.isEmpty() && pulls.isEmpty()
             && fields.isEmpty() && warns.isEmpty() && orbs.isEmpty() && rings.isEmpty() && nets.isEmpty()) return;

@@ -130,8 +130,8 @@ public final class ExpeditionEvents {
     }
     @SubscribeEvent(priority=EventPriority.LOWEST) public static void interact(PlayerInteractEvent.RightClickBlock e){
         if(!(e.getEntity() instanceof ServerPlayer p)||e.isCanceled()||e.getFace()==null||!p.mayUseItemAt(e.getPos(),e.getFace(),e.getItemStack()))return;var state=p.level().getBlockState(e.getPos());var stack=e.getItemStack();
-        if(stack.is(Items.SHEARS)&&(state.is(ExpeditionContent.block("black_vines"))||state.is(ExpeditionContent.block("shimenawa")))){p.level().destroyBlock(e.getPos(),false);Journey.give(p,new ItemStack(ExpeditionContent.item("black_rope_fiber"),2));stack.hurtAndBreak(1,p,x->x.broadcastBreakEvent(e.getHand()));e.setCanceled(true);e.setCancellationResult(net.minecraft.world.InteractionResult.SUCCESS);}
-        if(stack.is(Items.GLASS_BOTTLE)&&state.is(ExpeditionContent.block("eternal_flame"))){if(!p.isCreative())stack.shrink(1);Journey.give(p,new ItemStack(ExpeditionContent.item("eternal_fire")));e.setCanceled(true);e.setCancellationResult(net.minecraft.world.InteractionResult.SUCCESS);}
+        if(stack.is(Items.SHEARS)&&(state.is(ExpeditionContent.block("black_vines"))||state.is(ExpeditionContent.block("shimenawa")))){p.level().destroyBlock(e.getPos(),false);Journey.give(p,new ItemStack(ExpeditionContent.item("black_rope_fiber"),2));stack.hurtAndBreak(1,p,x->x.broadcastBreakEvent(e.getHand()));e.setCanceled(true);}
+        if(stack.is(Items.GLASS_BOTTLE)&&state.is(ExpeditionContent.block("eternal_flame"))){if(!p.isCreative())stack.shrink(1);Journey.give(p,new ItemStack(ExpeditionContent.item("eternal_fire")));e.setCanceled(true);}
     }
     public static float techniqueBonus(ServerPlayer p,String type){
         var d=ExpeditionProgress.data(p);boolean fire=AttackTypes.FIRE.equals(type)||AttackTypes.MAGIC_FURNACE.equals(type);

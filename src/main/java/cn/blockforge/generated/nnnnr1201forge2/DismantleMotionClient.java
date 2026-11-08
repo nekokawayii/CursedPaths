@@ -54,7 +54,7 @@ public final class DismantleMotionClient {
             if(!visible(player)||!frames.missing(player.getUUID())||player.distanceToSqr(camera)>128*128
                 ||!e.getFrustum().isVisible(player.getBoundingBox().inflate(2)))continue;
             MotionRenderer renderer=renderer(player);if(renderer==null)continue;
-            float partial=e.getPartialTick();var ps=e.getPoseStack();ps.pushPose();rendering=true;
+            float partial=e.getPartialTick().getGameTimeDeltaPartialTick(true);var ps=e.getPoseStack();ps.pushPose();rendering=true;
             try{
                 ps.translate(net.minecraft.util.Mth.lerp(partial,player.xo,player.getX())-camera.x,
                     net.minecraft.util.Mth.lerp(partial,player.yo,player.getY())-camera.y,
@@ -135,7 +135,7 @@ public final class DismantleMotionClient {
         MotionRenderer renderer=renderer(player);if(renderer==null)return;
         rendering=true;var ps=e.getPoseStack();ps.pushPose();
         try{
-            renderer.render(player,player.getYRot(),e.getPartialTick(),ps,e.getMultiBufferSource(),e.getPackedLight());
+            renderer.render(player,player.getYRot(),e.getPartialTick().getGameTimeDeltaPartialTick(true),ps,e.getMultiBufferSource(),e.getPackedLight());
             frames.mark(player.getUUID());e.setCanceled(true);
         }catch(RuntimeException|LinkageError ex){report("玩家事件绘制",ex);}
         finally{ps.popPose();rendering=false;}
@@ -151,7 +151,7 @@ public final class DismantleMotionClient {
             if(!frames.missing(player.getUUID())){e.setCanceled(true);return;}
             MotionRenderer renderer=renderer(player);if(renderer==null)return;
             rendering=true;e.getPoseStack().pushPose();
-            try{renderer.render(player,player.getYRot(),e.getPartialTick(),e.getPoseStack(),e.getMultiBufferSource(),e.getPackedLight());frames.mark(player.getUUID());e.setCanceled(true);}
+            try{renderer.render(player,player.getYRot(),e.getPartialTick().getGameTimeDeltaPartialTick(true),e.getPoseStack(),e.getMultiBufferSource(),e.getPackedLight());frames.mark(player.getUUID());e.setCanceled(true);}
             catch(RuntimeException|LinkageError ex){report("生物事件绘制",ex);}
             finally{e.getPoseStack().popPose();rendering=false;}
             return;
@@ -162,7 +162,7 @@ public final class DismantleMotionClient {
             transform(entity,ps,e.getPartialTick().getGameTimeDeltaPartialTick(true));
             // YSM 的深层 renderer 不一定覆写原版 render；从实体原入口重入才能保留其 geoRender 分流。
             var motionRenderer=Minecraft.getInstance().getEntityRenderDispatcher().getRenderer(entity);
-            if(motionRenderer!=null)motionRenderer.render(entity,entity.getYRot(),e.getPartialTick(),ps,e.getMultiBufferSource(),e.getPackedLight());
+            if(motionRenderer!=null)motionRenderer.render(entity,entity.getYRot(),e.getPartialTick().getGameTimeDeltaPartialTick(true),ps,e.getMultiBufferSource(),e.getPackedLight());
         }
         finally{ps.popPose();rendering=false;}
     }

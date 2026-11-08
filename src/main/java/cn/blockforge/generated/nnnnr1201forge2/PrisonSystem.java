@@ -181,11 +181,11 @@ public final class PrisonSystem {
     @SubscribeEvent(priority=EventPriority.HIGHEST) public static void targeting(LivingChangeTargetEvent e){if(locked(e.getEntity())||locked(e.getNewTarget()))e.setNewTarget(null);}
     @SubscribeEvent(priority=EventPriority.HIGHEST) public static void explosion(net.neoforged.neoforge.event.level.ExplosionEvent.Detonate e){if(e.getLevel().dimension().equals(DIMENSION)){e.getAffectedBlocks().clear();e.getAffectedEntities().clear();}}
     @SubscribeEvent(priority=EventPriority.HIGHEST) public static void travel(EntityTravelToDimensionEvent e){if(!TRANSFERRING.contains(e.getEntity().getUUID())&&locked(e.getEntity()))e.setCanceled(true);}
-    @SubscribeEvent(priority=EventPriority.HIGHEST) public static void teleport(EntityTeleportEvent e){if(!TRANSFERRING.contains(e.getEntity().getUUID())&&locked(e.getEntity())&&e.isCancelable())e.setCanceled(true);}
+    @SubscribeEvent(priority=EventPriority.HIGHEST) public static void teleport(EntityTeleportEvent e){if(!TRANSFERRING.contains(e.getEntity().getUUID())&&locked(e.getEntity()))e.setCanceled(true);}
     @SubscribeEvent(priority=EventPriority.HIGHEST) public static void command(CommandEvent e){Entity sender=e.getParseResults().getContext().getSource().getEntity();if(locked(sender)){e.setCanceled(true);if(sender instanceof ServerPlayer p)tell(p,"封印中不能执行指令或小地图传送");}}
     @SubscribeEvent(priority=EventPriority.HIGHEST) public static void damage(LivingIncomingDamageEvent e){if(locked(e.getEntity())||locked(e.getSource().getEntity()))e.setCanceled(true);}
     @SubscribeEvent(priority=EventPriority.HIGHEST) public static void death(LivingDeathEvent e){if(locked(e.getEntity())){e.setCanceled(true);e.getEntity().setHealth(Math.max(1,e.getEntity().getHealth()));}}
-    @SubscribeEvent(priority=EventPriority.HIGHEST) public static void use(PlayerInteractEvent e){if(locked(e.getEntity())&&e.isCancelable())cn.blockforge.generated.nnnnr1201forge2.CompatEvents.cancel(e);}
+    @SubscribeEvent(priority=EventPriority.HIGHEST) public static void use(PlayerInteractEvent e){if(locked(e.getEntity()))cn.blockforge.generated.nnnnr1201forge2.CompatEvents.cancel(e);}
     @SubscribeEvent(priority=EventPriority.HIGHEST) public static void attack(AttackEntityEvent e){if(locked(e.getEntity()))e.setCanceled(true);}
     @SubscribeEvent(priority=EventPriority.HIGHEST) public static void pickup(EntityItemPickupEvent e){if(locked(e.getEntity()))e.setCanceled(true);}
     @SubscribeEvent(priority=EventPriority.HIGHEST) public static void breakBlock(BlockEvent.BreakEvent e){if(locked(e.getPlayer())||e.getLevel() instanceof ServerLevel l&&l.dimension().equals(DIMENSION))e.setCanceled(true);}

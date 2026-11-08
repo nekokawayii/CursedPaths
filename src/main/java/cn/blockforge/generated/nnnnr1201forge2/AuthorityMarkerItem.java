@@ -29,7 +29,7 @@ public final class AuthorityMarkerItem extends Item {
             ||event instanceof PlayerInteractEvent.EntityInteract||event instanceof PlayerInteractEvent.EntityInteractSpecific))return;
         if(!event.getItemStack().is(Authority.MARKER.get()))return;
         if(event.getEntity() instanceof ServerPlayer p)mark(p,event.getHand());
-        event.setCancellationResult(InteractionResult.SUCCESS);cn.blockforge.generated.nnnnr1201forge2.CompatEvents.cancel(event);
+        cn.blockforge.generated.nnnnr1201forge2.CompatEvents.cancel(event);
     }
 
     private static void mark(ServerPlayer p,InteractionHand hand){

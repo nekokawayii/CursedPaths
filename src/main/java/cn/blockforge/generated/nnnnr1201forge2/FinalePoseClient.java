@@ -27,7 +27,7 @@ public final class FinalePoseClient {
         if(rendering||!FinaleClient.active(e.getEntity().getId())||!(e.getEntity() instanceof AbstractClientPlayer player)||player.isInvisible())return;
         FinaleRenderer renderer=(player.getSkin().model()==net.minecraft.client.resources.PlayerSkin.Model.SLIM)?slim:normal;if(renderer==null)return;e.setCanceled(true);rendering=true;
         e.getPoseStack().pushPose();
-        try{renderer.render(player,player.getYRot(),e.getPartialTick(),e.getPoseStack(),e.getMultiBufferSource(),e.getPackedLight());}finally{e.getPoseStack().popPose();rendering=false;}
+        try{renderer.render(player,player.getYRot(),e.getPartialTick().getGameTimeDeltaPartialTick(true),e.getPoseStack(),e.getMultiBufferSource(),e.getPackedLight());}finally{e.getPoseStack().popPose();rendering=false;}
     }
     private static final class FinaleRenderer extends net.minecraft.client.renderer.entity.LivingEntityRenderer<AbstractClientPlayer,PlayerModel<AbstractClientPlayer>> {
         FinaleRenderer(EntityRendererProvider.Context context,boolean slim){

@@ -151,7 +151,7 @@ public final class BeyondRift {
             ||e instanceof PlayerInteractEvent.EntityInteract||e instanceof PlayerInteractEvent.EntityInteractSpecific))return;
         if(!e.getItemStack().is(Content.BEYOND_FRAGMENT.get()))return;
         if(e.getEntity() instanceof ServerPlayer p)activateFragment(p,e.getHand());
-        e.setCancellationResult(net.minecraft.world.InteractionResult.SUCCESS);cn.blockforge.generated.nnnnr1201forge2.CompatEvents.cancel(e);
+        cn.blockforge.generated.nnnnr1201forge2.CompatEvents.cancel(e);
     }
     public static void activateFragment(ServerPlayer p,net.minecraft.world.InteractionHand hand){
         if(!p.getItemInHand(hand).is(Content.BEYOND_FRAGMENT.get())||!p.isAlive()||p.isSpectator()||ObserverRitual.active(p))return;

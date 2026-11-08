@@ -49,7 +49,7 @@ public final class TenShadowsClient {
     @SubscribeEvent(priority=EventPriority.HIGHEST) public static void render(RenderPlayerEvent.Pre e){
         if(rendering||renderer==null||!(e.getEntity() instanceof AbstractClientPlayer p)||!has(p.getUUID()))return;
         if((DismantleMotionClient.posing(p.getId())||FinaleClient.active(p.getId()))&&!chanting(p.getUUID()))return;
-        e.setCanceled(true);rendering=true;try{renderer.render(p,p.getYRot(),e.getPartialTick(),e.getPoseStack(),e.getMultiBufferSource(),e.getPackedLight());}finally{rendering=false;}
+        e.setCanceled(true);rendering=true;try{renderer.render(p,p.getYRot(),e.getPartialTick().getGameTimeDeltaPartialTick(true),e.getPoseStack(),e.getMultiBufferSource(),e.getPackedLight());}finally{rendering=false;}
     }
     @SubscribeEvent(priority=EventPriority.LOWEST) public static void input(MovementInputUpdateEvent e){if(!locked())return;var input=e.getInput();input.forwardImpulse=input.leftImpulse=0;input.up=input.down=input.left=input.right=input.jumping=false;input.shiftKeyDown=true;e.getEntity().setDeltaMovement(net.minecraft.world.phys.Vec3.ZERO);}
     @SubscribeEvent public static void interaction(InputEvent.InteractionKeyMappingTriggered e){if(locked()){e.setCanceled(true);e.setSwingHand(false);}}

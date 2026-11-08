@@ -49,7 +49,7 @@ public final class ShadowClient {
         if(e.getStage()!=RenderLevelStageEvent.Stage.AFTER_PARTICLES)return;var mc=Minecraft.getInstance();if(mc.level==null||effects.isEmpty())return;
         PoseStack ps=e.getPoseStack();ps.pushPose();Vec3 camera=e.getCamera().getPosition();ps.translate(-camera.x,-camera.y,-camera.z);
         var buffers=mc.renderBuffers().bufferSource();VertexConsumer out=buffers.getBuffer(InkType.TYPE);
-        for(Effect effect:effects){var f=effect.fx;float age=mc.level.getGameTime()-effect.start+e.getPartialTick(),t=Math.min(1,age/f.ticks()),fade=(1-t);
+        for(Effect effect:effects){var f=effect.fx;float age=mc.level.getGameTime()-effect.start+e.getPartialTick().getGameTimeDeltaPartialTick(true),t=Math.min(1,age/f.ticks()),fade=(1-t);
             if(f.kind()==0){
                 float radius=f.radius()*(.45f+.55f*(float)Math.sin(Math.PI*t));Vec3 center=f.from().add(0,.035,0);
                 for(int i=0;i<48;i++){double a=i*Math.PI*2/48,b=(i+1)*Math.PI*2/48;double r0=radius*(1+.07*Math.sin(i*3+age*.3)),r1=radius*(1+.07*Math.sin((i+1)*3+age*.3));

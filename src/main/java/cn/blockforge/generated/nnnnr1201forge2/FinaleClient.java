@@ -100,7 +100,7 @@ public final class FinaleClient {
     }
     @SubscribeEvent public static void interaction(InputEvent.InteractionKeyMappingTriggered e){if(local()){e.setCanceled(true);e.setSwingHand(false);}}
     @SubscribeEvent(priority=EventPriority.LOWEST) public static void angles(ViewportEvent.ComputeCameraAngles e){
-        if(!local())return;var mc=Minecraft.getInstance();State s=states.get(mc.player.getId());float partial=(float)e.getPartialTick();camera(s,partial);
+        if(!local())return;var mc=Minecraft.getInstance();State s=states.get(mc.player.getId());float partial=(float)e.getPartialTick().getGameTimeDeltaPartialTick(true);camera(s,partial);
         double age=s.age+partial;var shot=FinaleCameraRules.shot(age);Vec3 at=mc.player.getPosition(partial);
         double yaw=Math.toRadians(age>=FinaleRules.TRIGGERS[1]&&age<FinaleRules.STARTS[2]?mc.player.yBodyRot:s.e.direction().x);
         Vec3 forward=new Vec3(-Math.sin(yaw),0,Math.cos(yaw)),side=new Vec3(Math.cos(yaw),0,Math.sin(yaw));
@@ -119,7 +119,7 @@ public final class FinaleClient {
         if(e.getStage()!=RenderLevelStageEvent.Stage.AFTER_ENTITIES)return;var mc=Minecraft.getInstance();if(mc.level==null)return;
         Vec3 cam=e.getCamera().getPosition();PoseStack ps=e.getPoseStack();MultiBufferSource.BufferSource buffers=mc.renderBuffers().bufferSource();
         for(State s:states.values())if(s.age>=FinaleRules.TRIGGERS[0]&&s.age<FinaleRules.TRIGGERS[0]+12){
-            float age=s.age+e.getPartialTick()-FinaleRules.TRIGGERS[0];double height=Math.max(0,36*(1-age/12));
+            float age=s.age+e.getPartialTick().getGameTimeDeltaPartialTick(true)-FinaleRules.TRIGGERS[0];double height=Math.max(0,36*(1-age/12));
             ps.pushPose();ps.translate(s.e.position().x-cam.x,s.e.position().y+height-cam.y,s.e.position().z-cam.z);ps.mulPose(Axis.YP.rotationDegrees((float)s.e.direction().x));ps.scale(2.5f,2.5f,2.5f);ShrineModel.render(ps,buffers,false,true,age);ps.popPose();
         }
         buffers.endBatch();

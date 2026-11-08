@@ -98,7 +98,7 @@ public final class MaidExtension implements ILittleMaid {
     }
     @SubscribeEvent(priority=EventPriority.HIGHEST) public void feed(PlayerInteractEvent.EntityInteract event){
         if(!(event.getTarget() instanceof EntityMaid maid)||!event.getEntity().isShiftKeyDown()||!maid.isOwnedBy(event.getEntity()))return;
-        event.setCanceled(true);event.setCancellationResult(InteractionResult.SUCCESS);
+        event.setCanceled(true);
         if(!(event.getEntity() instanceof ServerPlayer owner))return;
         ItemStack stack=event.getItemStack();MaidBridge.Actor actor=MaidBridge.actor(maid);
         owner.sendSystemMessage(Component.literal("女仆当前咒力："+(int)Curse.energy(actor)+"/"+(int)Curse.maximum(actor)+"；"+(MaidBridge.recovering(actor)?"肉搏恢复中，超过25%恢复施法":"施法就绪")+"；成长："+Journey.guide(actor)));

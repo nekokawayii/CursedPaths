@@ -20,7 +20,7 @@ public final class MegumiSeanceItem extends Item {
     // 村民交易先于 Item.interactLivingEntity，必须在实体交互事件拦截才能真正降灵。
     @SubscribeEvent public static void interact(PlayerInteractEvent.EntityInteract event){
         if(!(event.getTarget() instanceof Villager villager)||!event.getItemStack().is(ShadowContent.SEANCE.get()))return;
-        event.setCanceled(true);event.setCancellationResult(InteractionResult.SUCCESS);
+        event.setCanceled(true);
         if(!(event.getEntity() instanceof ServerPlayer p)||event.getHand()!=InteractionHand.MAIN_HAND)return;
         if(villager.isBaby()){p.displayClientMessage(Component.literal("请对成年村民使用降灵"),true);return;}
         if(p.level().getDifficulty()==net.minecraft.world.Difficulty.PEACEFUL){p.displayClientMessage(Component.literal("请先改为简单、普通或困难，再开始伏黑惠挑战"),true);return;}

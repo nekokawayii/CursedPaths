@@ -26,7 +26,7 @@ public final class ShadowBindings {
         if(false)return;
         for(var it=holds.values().iterator();it.hasNext();){Hold h=it.next();if(!h.frog.isAlive()||h.frog.isRemoved()||!h.target.isAlive()||h.frog.level()!=h.target.level()||h.frog.level().getGameTime()>=h.end||!h.frog.validTarget(h.target)||h.frog.distanceToSqr(h.target)>16*16){it.remove();continue;}pin(h.frog,h.frogAt);pin(h.target,h.targetAt);}
     }
-    @SubscribeEvent public static void teleport(EntityTeleportEvent event){if(event.isCancelable())for(Hold h:holds.values())if(event.getEntity()==h.target||event.getEntity()==h.frog){event.setCanceled(true);return;}}
+    @SubscribeEvent public static void teleport(EntityTeleportEvent event){if(true)for(Hold h:holds.values())if(event.getEntity()==h.target||event.getEntity()==h.frog){event.setCanceled(true);return;}}
     @SubscribeEvent public static void stop(ServerStoppedEvent event){holds.clear();}
     private ShadowBindings(){}
 }

@@ -114,7 +114,7 @@ public final class Legion {
         }
         army.put("Stored",remaining);state.setDirty();AuthorityPackets.sync(p);
     }
-    @SubscribeEvent(priority=EventPriority.HIGHEST) public static void interact(PlayerInteractEvent.EntityInteract e){if(e.getItemStack().is(Authority.CURSE.get())){e.setCanceled(true);e.setCancellationResult(InteractionResult.SUCCESS);if(e.getEntity() instanceof ServerPlayer p&&e.getTarget() instanceof LivingEntity living)recruit(p,living);}}
+    @SubscribeEvent(priority=EventPriority.HIGHEST) public static void interact(PlayerInteractEvent.EntityInteract e){if(e.getItemStack().is(Authority.CURSE.get())){e.setCanceled(true);if(e.getEntity() instanceof ServerPlayer p&&e.getTarget() instanceof LivingEntity living)recruit(p,living);}}
     @SubscribeEvent(priority=EventPriority.LOWEST) public static void tick(net.neoforged.neoforge.event.tick.EntityTickEvent.Post e){
         if(!(e.getEntity() instanceof Mob mob)||mob.level().isClientSide||!member(mob)||!mob.isAlive())return;
         ServerPlayer p=owner(mob);if(p==null||!Authority.unlocked(p)||!p.isAlive())return;

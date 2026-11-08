@@ -158,7 +158,7 @@ public final class YutaCopies {
         if (d == null || !"yuta".equals(d.id())) return;
 
         event.setCanceled(true);
-        event.setCancellationResult(net.minecraft.world.InteractionResult.SUCCESS);
+        
 
         int[] pool = poolFor(target);
         if (pool.length == 0) {
