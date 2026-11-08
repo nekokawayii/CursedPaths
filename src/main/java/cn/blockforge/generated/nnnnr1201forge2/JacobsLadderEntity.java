@@ -12,7 +12,6 @@ import net.minecraft.world.damagesource.*;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
-import net.neoforged.neoforge.network.NetworkHooks;
 
 public final class JacobsLadderEntity extends Entity {
     public static final ResourceKey<DamageType> HOLY=ResourceKey.create(Registries.DAMAGE_TYPE,ResourceLocation.fromNamespaceAndPath("jujutsu_kaisen_cursed_paths", "holy_light"));

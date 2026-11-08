@@ -262,9 +262,7 @@ public final class KashimoCombat {
         projectile.setDeltaMovement(back);
         projectile.hurtMarked = true;
         if (projectile instanceof AbstractHurtingProjectile fire) {
-            fire.xPower = -fire.xPower;
-            fire.yPower = -fire.yPower;
-            fire.zPower = -fire.zPower;
+            fire.setDeltaMovement(fire.getDeltaMovement().multiply(-1, -1, -1));
         }
         if (p.level() instanceof ServerLevel level) {
             Network.send(level, new Network.Effect(KashimoFx.REFLECT, p.getId(), p.position(), back,
