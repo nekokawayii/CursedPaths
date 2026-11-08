@@ -36,7 +36,7 @@ public final class VoidJourney {
     }
     public static void leave(ServerPlayer p){
         if(p.level().dimension()!=ARENA)return;var d=Curse.data(p);ServerLevel l=null;
-        try{l=p.server.getLevel(ResourceKey.create(Registries.DIMENSION,new ResourceLocation(d.getString("VoidReturnDimension"))));}catch(RuntimeException ignored){}
+        try{l=p.server.getLevel(ResourceKey.create(Registries.DIMENSION,ResourceLocation.parse(d.getString("VoidReturnDimension"))));}catch(RuntimeException ignored){}
         if(l==null)l=p.server.overworld();var spawn=l.getSharedSpawnPos();
         clear(p);Skills.closeDomain(p);Skills.cancelCharge(p);p.teleportTo(l,d.contains("VoidReturnX")?d.getDouble("VoidReturnX"):spawn.getX()+0.5,d.contains("VoidReturnY")?d.getDouble("VoidReturnY"):spawn.getY(),d.contains("VoidReturnZ")?d.getDouble("VoidReturnZ"):spawn.getZ()+0.5,p.getYRot(),0);
     }

@@ -17,6 +17,7 @@ import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.common.util.FakePlayer;
 import net.neoforged.neoforge.event.tick.PlayerTickEvent;
 import net.minecraft.core.Holder;
+import net.minecraft.world.effect.MobEffect;
 
 
 /** 每只 NPC 独立的施术上下文。技能队列、咒力、归属都绑定本体，不冒用附近玩家。 */
@@ -172,9 +173,9 @@ public final class NpcBridge {
         @Override public boolean addEffect(MobEffectInstance effect, Entity source) { return mob == null ? super.addEffect(effect, source) : mob.addEffect(effect, source); }
         @Override public void setDeltaMovement(Vec3 velocity) { if (mob == null) super.setDeltaMovement(velocity); else { mob.setDeltaMovement(velocity); mob.hurtMarked = true; } }
         @Override public void setDeltaMovement(double x,double y,double z){setDeltaMovement(new Vec3(x,y,z));}
-        @Override public boolean hasEffect(net.minecraft.world.effect.MobEffect effect){return mob==null?super.hasEffect(effect):mob.hasEffect(effect);}
-        @Override public MobEffectInstance getEffect(net.minecraft.world.effect.MobEffect effect){return mob==null?super.getEffect(effect):mob.getEffect(effect);}
-        @Override public boolean removeEffect(net.minecraft.world.effect.MobEffect effect){return mob==null?super.removeEffect(effect):mob.removeEffect(effect);}
+        @Override public boolean hasEffect(net.minecraft.world.effect.Holder<MobEffect> effect){return mob==null?super.hasEffect(effect):mob.hasEffect(effect);}
+        @Override public MobEffectInstance getEffect(net.minecraft.world.effect.Holder<MobEffect> effect){return mob==null?super.getEffect(effect):mob.getEffect(effect);}
+        @Override public boolean removeEffect(net.minecraft.world.effect.Holder<MobEffect> effect){return mob==null?super.removeEffect(effect):mob.removeEffect(effect);}
         @Override public void setNoGravity(boolean value){if(mob==null)super.setNoGravity(value);else mob.setNoGravity(value);}
         @Override public boolean isNoGravity(){return mob==null?super.isNoGravity():mob.isNoGravity();}
         @Override public Vec3 getDeltaMovement() { return mob == null ? super.getDeltaMovement() : mob.getDeltaMovement(); }

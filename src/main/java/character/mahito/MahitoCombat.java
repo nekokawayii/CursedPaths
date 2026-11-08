@@ -27,6 +27,8 @@ import net.neoforged.fml.common.Mod;
 import net.neoforged.neoforge.event.tick.ServerTickEvent;
 import cn.blockforge.generated.nnnnr1201forge2.CompatAttr;
 import net.neoforged.fml.common.EventBusSubscriber;
+import net.minecraft.core.Holder;
+import net.minecraft.world.effect.MobEffect;
 
 /** 真人共用战斗规则。延迟命中重查敌友；临时属性均使用独立修饰符，不改基础存档数值。 */
 @EventBusSubscriber(modid="jujutsu_kaisen_cursed_paths")
@@ -174,7 +176,7 @@ public final class MahitoCombat {
         friend.heal(friend.getMaxHealth()*.2f);fx(p,REFORGE,friend.position(),Vec3.ZERO,1,20);
         LivingEntity enemy=aimed(p,5);if(!(enemy instanceof Player))return;
         MobEffectInstance buff=enemy.getActiveEffects().stream().filter(e->e.getEffect().isBeneficial()).findFirst().orElse(null);if(buff==null)return;
-        MobEffect negative=buff.getEffect()==MobEffects.DAMAGE_BOOST?MobEffects.WEAKNESS:buff.getEffect()==MobEffects.MOVEMENT_SPEED?MobEffects.MOVEMENT_SLOWDOWN:buff.getEffect()==MobEffects.DIG_SPEED?MobEffects.DIG_SLOWDOWN:buff.getEffect()==MobEffects.REGENERATION?MobEffects.POISON:MobEffects.WITHER;
+        Holder<MobEffect> negative=buff.getEffect()==MobEffects.DAMAGE_BOOST?MobEffects.WEAKNESS:buff.getEffect()==MobEffects.MOVEMENT_SPEED?MobEffects.MOVEMENT_SLOWDOWN:buff.getEffect()==MobEffects.DIG_SPEED?MobEffects.DIG_SLOWDOWN:buff.getEffect()==MobEffects.REGENERATION?MobEffects.POISON:MobEffects.WITHER;
         enemy.removeEffect(buff.getEffect());enemy.addEffect(new MobEffectInstance(negative,Math.max(40,Math.min(200,buff.getDuration())),buff.getAmplifier()));
     }
     public static void openRealm(ServerPlayer p,Vec3 center,double radius){

@@ -63,7 +63,7 @@ public final class DomainWorldRenderer {
     }
     private static void sphere(PoseStack ps,DomainPresentation.Frame f,Vec3 camera,double time,boolean textured,int alpha){
         var b=Tesselator.getInstance().getBuilder();
-        if(textured){RenderSystem.setShader(GameRenderer::getPositionTexColorShader);RenderSystem.setShaderTexture(0,new ResourceLocation(f.style().texture()));}
+        if(textured){RenderSystem.setShader(GameRenderer::getPositionTexColorShader);RenderSystem.setShaderTexture(0,ResourceLocation.parse(f.style().texture()));}
         else RenderSystem.setShader(GameRenderer::getPositionColorShader);
         b.begin(VertexFormat.Mode.TRIANGLES,textured?DefaultVertexFormat.POSITION_TEX_COLOR:DefaultVertexFormat.POSITION_COLOR);
         // 内视图在实际方块壳内侧，外视图在外侧；同一切面驱动两面与边缘光环。
