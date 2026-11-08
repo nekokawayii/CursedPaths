@@ -153,7 +153,7 @@ public final class BloodArts {
             default -> {}
         }
     }
-    public static void fx(ServerPlayer p,int kind,Vec3 at,Vec3 direction,float size,int life,long seed){Network.CHANNEL.send(net.neoforged.neoforge.network.PacketDistributor.NEAR.with(()->new net.neoforged.neoforge.network.PacketDistributor.TargetPoint(at.x,at.y,at.z,192,p.level().dimension())),new Network.Effect(kind,p.getId(),at,direction,size,life,seed));}
+    public static void fx(ServerPlayer p,int kind,Vec3 at,Vec3 direction,float size,int life,long seed){Network.CHANNEL.send(cn.blockforge.generated.nnnnr1201forge2.SimpleChannel.Target.near(p.level().dimension(),at.x,at.y,at.z,192),new Network.Effect(kind,p.getId(),at,direction,size,life,seed));}
     private static void pose(ServerPlayer p,int skill,int ticks){Network.send(p.serverLevel(),new Network.Effect(70,p.getId(),p.position(),p.getLookAngle(),skill,ticks,0));}
     private static void tell(ServerPlayer p,String text){p.displayClientMessage(Component.literal(text),true);}
     private static Vec3 ground(ServerPlayer p,Vec3 origin){var hit=p.level().clip(new ClipContext(origin.add(0,2,0),origin.add(0,-8,0),ClipContext.Block.COLLIDER,ClipContext.Fluid.NONE,p));return hit.getType()==HitResult.Type.MISS?origin.subtract(0,p.getEyeHeight(),0):hit.getLocation().add(0,.03,0);}
@@ -276,7 +276,7 @@ public final class BloodArts {
             if(!(projectile.getOwner() instanceof LivingEntity shooter)||!CombatSafety.canAffect(s.p,shooter))continue;
             Vec3 delta=projectile.position().subtract(eye);if(delta.dot(look)<0||delta.subtract(look.scale(delta.dot(look))).lengthSqr()>3+rank(s.p))continue;
             Vec3 back=projectile.getDeltaMovement().scale(-1);projectile.setOwner(s.p);projectile.setDeltaMovement(back);projectile.hurtMarked=true;
-            if(projectile instanceof AbstractHurtingProjectile fire){fire.xPower=-fire.xPower;fire.yPower=-fire.yPower;fire.zPower=-fire.zPower;}
+            if(projectile instanceof net.minecraft.world.entity.projectile.AbstractHurtingProjectile fire){fire.setDeltaMovement(fire.getDeltaMovement().multiply(-1,-1,-1));}
             projectile.getPersistentData().putLong("BloodReflected",now+10);fx(s.p,FX+13,projectile.position(),look,1.4f,12,2);
         }
     }
