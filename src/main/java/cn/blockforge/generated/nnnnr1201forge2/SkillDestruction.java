@@ -39,7 +39,7 @@ public final class SkillDestruction {
                 if(Vec3.atCenterOf(pos).distanceToSqr(point)>(radius+0.8)*(radius+0.8)||!visited.add(pos.immutable())||!l.hasChunkAt(pos)||!l.getWorldBorder().isWithinBounds(pos))continue;
                 var state=l.getBlockState(pos);if(state.isAir()||state.getDestroySpeed(l,pos)<0||state.hasBlockEntity()||SoulJourney.protectedBlock(l,pos))continue;
                 ServerPlayer authority=p instanceof MaidBridge.Actor a?MaidBridge.owner(a):p;if(authority==null||!l.mayInteract(authority,pos))continue;
-                if(NeoForge.EVENT_BUS.post(new BlockEvent.BreakEvent(l,pos.immutable(),state,authority))||!ForgeEventFactory.onEntityDestroyBlock(MaidBridge.body(p),pos,state))continue;
+                if(NeoForge.EVENT_BUS.post(new BlockEvent.BreakEvent(l,pos.immutable(),state,authority))||!net.neoforged.neoforge.event.EventHooks.onEntityDestroyBlock(MaidBridge.body(p),pos,state))continue;
                 l.destroyBlock(pos,false,MaidBridge.body(p));
             }
         }
@@ -49,7 +49,7 @@ public final class SkillDestruction {
         ServerLevel l=p.serverLevel();if(!enabled(l)||!p.isAlive()||DomainClash.active(p)||!l.hasChunkAt(pos)||!l.getWorldBorder().isWithinBounds(pos))return false;
         var state=l.getBlockState(pos);if(state.isAir()||state.getDestroySpeed(l,pos)<0||state.hasBlockEntity()||SoulJourney.protectedBlock(l,pos))return false;
         ServerPlayer authority=p instanceof MaidBridge.Actor a?MaidBridge.owner(a):p;
-        return authority!=null&&l.mayInteract(authority,pos)&&!NeoForge.EVENT_BUS.post(new BlockEvent.BreakEvent(l,pos,state,authority))&&ForgeEventFactory.onEntityDestroyBlock(MaidBridge.body(p),pos,state);
+        return authority!=null&&l.mayInteract(authority,pos)&&!NeoForge.EVENT_BUS.post(new BlockEvent.BreakEvent(l,pos,state,authority))&&net.neoforged.neoforge.event.EventHooks.onEntityDestroyBlock(MaidBridge.body(p),pos,state);
     }
     /**
      * 只移动、不破坏方块时的准入（东堂葵的方块换位用）：
@@ -62,7 +62,7 @@ public final class SkillDestruction {
         if(state.isAir()||state.getDestroySpeed(l,pos)<0||state.hasBlockEntity()||SoulJourney.protectedBlock(l,pos))return false;
         ServerPlayer authority=p instanceof MaidBridge.Actor a?MaidBridge.owner(a):p;
         return authority!=null&&l.mayInteract(authority,pos)&&!NeoForge.EVENT_BUS.post(new BlockEvent.BreakEvent(l,pos,state,authority))
-            &&ForgeEventFactory.onEntityDestroyBlock(MaidBridge.body(p),pos,state);
+            &&net.neoforged.neoforge.event.EventHooks.onEntityDestroyBlock(MaidBridge.body(p),pos,state);
     }
     public static boolean canChange(ServerPlayer p,BlockPos pos){return mayChange(p,pos);}
     public static boolean eraseFluid(ServerPlayer p,BlockPos pos){

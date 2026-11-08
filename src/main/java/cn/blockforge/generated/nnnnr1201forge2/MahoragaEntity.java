@@ -101,14 +101,14 @@ public final class MahoragaEntity extends Monster {
    }
 
    protected void defineSynchedData(net.minecraft.network.syncher.SynchedEntityData.Builder builder){super.defineSynchedData(builder);
-      this.builder.define(ACTION, 0);
-      this.builder.define(AGE, 0);
-      this.builder.define(IMMUNE, 0);
-      this.builder.define(OWN_MASK, 0);
-      this.builder.define(ALLY, 0);
-      this.builder.define(WHEEL, -1);
-      this.builder.define(CELL, 0);
-      this.builder.define(RITUAL, 0);
+      builder.define(ACTION, 0);
+      builder.define(AGE, 0);
+      builder.define(IMMUNE, 0);
+      builder.define(OWN_MASK, 0);
+      builder.define(ALLY, 0);
+      builder.define(WHEEL, -1);
+      builder.define(CELL, 0);
+      builder.define(RITUAL, 0);
    }
 
    public int action() {

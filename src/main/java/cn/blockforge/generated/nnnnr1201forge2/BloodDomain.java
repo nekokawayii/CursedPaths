@@ -59,7 +59,7 @@ public final class BloodDomain {
         }
     }
     @SubscribeEvent public static void teleport(EntityTeleportEvent event){
-        if(!event.isCancelable()||event.getEntity().level().isClientSide)return;
+        if(event.getEntity().level().isClientSide)return;
         for(Domain d:domains)if(d.level==event.getEntity().level()&&d.captives.containsKey(event.getEntity().getUUID())&&event.getEntity() instanceof LivingEntity target&&!character.mainline.Mainline.simpleProtected(target)&&!DomainClash.active(d.owner)&&(target==MaidBridge.body(d.owner)||CombatSafety.canAffect(d.owner,target))&&!BloodRules.inside(event.getTarget().distanceToSqr(d.center))){event.setCanceled(true);return;}
     }
     @SubscribeEvent public static void dimension(EntityTravelToDimensionEvent event){

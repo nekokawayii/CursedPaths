@@ -49,7 +49,7 @@ public final class WallpaperSlash {
         boolean eye=SlashAppearance.desktop();
         double half=WorldSlashRules.HALF_WIDTH;if(eye)half=SlashEye.width(half,SlashAppearance.open());
         Vec3 mid=a.lerp(z,.5),side=across.normalize().scale(half);
-        var mc=Minecraft.getInstance();int opacity=(int)(255*Math.min(1,alpha))<<24;double time=mc.level==null?0:mc.level.getGameTime()+mc.getFrameTime();
+        var mc=Minecraft.getInstance();int opacity=(int)(255*Math.min(1,alpha))<<24;double time=mc.level==null?0:mc.level.getGameTime()+mc.getTimer().getGameTimeDeltaPartialTick(true);
         Client.quad(b,ps,a,mid.add(side),z,mid.subtract(side),opacity|(eye?SlashEye.RIM:SlashStyle.edge(time)));
         Vec3 toward=camera.subtract(mid).normalize().scale(.008);
         Vec3 p=a.lerp(z,SlashStyleRules.TIP_INSET).add(toward),q=mid.add(side.scale(SlashStyleRules.CORE)).add(toward),r=z.lerp(a,SlashStyleRules.TIP_INSET).add(toward),s=mid.subtract(side.scale(SlashStyleRules.CORE)).add(toward);

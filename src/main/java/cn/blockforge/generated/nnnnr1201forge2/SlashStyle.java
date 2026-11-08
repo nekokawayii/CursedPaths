@@ -16,7 +16,7 @@ public final class SlashStyle {
         boolean eye=SlashAppearance.desktop();
         double half=Math.max(.012,width);if(eye)half=SlashEye.width(half,SlashAppearance.open());
         side=side.normalize().scale(half);
-        var mc=Minecraft.getInstance();double time=mc.level==null?0:mc.level.getGameTime()+mc.getFrameTime();int opacity=(int)(255*alpha)<<24;
+        var mc=Minecraft.getInstance();double time=mc.level==null?0:mc.level.getGameTime()+mc.getTimer().getGameTimeDeltaPartialTick(true);int opacity=(int)(255*alpha)<<24;
         int rim=eye?SlashEye.RIM:edge(time);
         Client.quad(b,ps,a,mid.add(side),z,mid.subtract(side),opacity|rim);
         Vec3 toward=camera.subtract(mid).normalize().scale(.006);

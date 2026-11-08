@@ -48,7 +48,7 @@ public final class FinaleClient {
         if(e.kind()==FinaleRules.FX_STATE){
             State s=states.get(e.owner());if(e.life()<=0){if(s!=null&&s.e.seed()==e.seed())states.remove(e.owner());if(mc.player!=null&&e.owner()==mc.player.getId())restoreCamera();return;}
             if(s==null||s.e.seed()!=e.seed()){s=new State(e);states.put(e.owner(),s);}else{s.e=e;s.received=tick;s.age=Math.max(s.age,e.size());}
-            if(mc.player!=null&&e.owner()==mc.player.getId())camera(s,mc.getFrameTime());return;
+            if(mc.player!=null&&e.owner()==mc.player.getId())camera(s,mc.getTimer().getGameTimeDeltaPartialTick(true));return;
         }
         if(e.kind()==FinaleRules.FX_SCAR){scars.put(e.owner(),new Scar(e.seed(),tick+e.life(),e));return;}
         if(e.kind()==FinaleRules.FX_ABSORB){
