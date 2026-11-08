@@ -79,10 +79,10 @@ public final class GojoGravityClient {
     }
     private static void quad(BufferBuilder b,PoseStack ps,Vec3 a,Vec3 c,Vec3 d,Vec3 e,int color,float alpha){
         var matrix=ps.last().pose();int r=color>>16&255,g=color>>8&255,v=color&255,opacity=Math.max(0,Math.min(255,(int)(alpha*255)));
-        b.vertex(matrix,(float)a.x,(float)a.y,(float)a.z).color(r,g,v,opacity).endVertex();
-        b.vertex(matrix,(float)c.x,(float)c.y,(float)c.z).color(r,g,v,opacity).endVertex();
-        b.vertex(matrix,(float)d.x,(float)d.y,(float)d.z).color(r,g,v,opacity).endVertex();
-        b.vertex(matrix,(float)e.x,(float)e.y,(float)e.z).color(r,g,v,opacity).endVertex();
+        b.addVertex(matrix,(float)a.x,(float)a.y,(float)a.z).color(r,g,v,opacity).endVertex();
+        b.addVertex(matrix,(float)c.x,(float)c.y,(float)c.z).color(r,g,v,opacity).endVertex();
+        b.addVertex(matrix,(float)d.x,(float)d.y,(float)d.z).color(r,g,v,opacity).endVertex();
+        b.addVertex(matrix,(float)e.x,(float)e.y,(float)e.z).color(r,g,v,opacity).endVertex();
     }
     private GojoGravityClient(){}
 }

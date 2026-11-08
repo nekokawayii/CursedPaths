@@ -26,7 +26,7 @@ public final class ScreenSeverance {
         BufferBuilder b=Tesselator.getInstance().getBuilder();b.begin(VertexFormat.Mode.TRIANGLES,DefaultVertexFormat.POSITION_TEX_COLOR);
         for(int sign:new int[]{-1,1}){
             List<Point> polygon=clip(List.of(new Point(0,0),new Point(w,0),new Point(w,h),new Point(0,h)),w/2,h/2,nx,ny,sign);
-            for(int i=1;i+1<polygon.size();i++)for(Point p:List.of(polygon.get(0),polygon.get(i),polygon.get(i+1))){double dx=-sign*nx*offset,dy=-sign*ny*offset;b.vertex(graphics.pose().last().pose(),(float)(p.x+dx),(float)(p.y+dy),-80).uv((float)(p.x/w),(float)(1-p.y/h)).color(255,255,255,(int)(255*Math.min(1,fade*3))).endVertex();}
+            for(int i=1;i+1<polygon.size();i++)for(Point p:List.of(polygon.get(0),polygon.get(i),polygon.get(i+1))){double dx=-sign*nx*offset,dy=-sign*ny*offset;b.addVertex(graphics.pose().last().pose(),(float)(p.x+dx),(float)(p.y+dy),-80).uv((float)(p.x/w),(float)(1-p.y/h)).color(255,255,255,(int)(255*Math.min(1,fade*3))).endVertex();}
         }
         BufferUploader.drawWithShader(b.end());RenderSystem.enableCull();RenderSystem.disableBlend();RenderSystem.enableDepthTest();
     }

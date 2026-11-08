@@ -10,9 +10,10 @@ import net.minecraft.world.phys.*;
 import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
 import net.neoforged.bus.api.*;
 import net.neoforged.fml.common.Mod;
+import net.neoforged.fml.common.EventBusSubscriber;
 
 /** 标记只由手持道具的右键触发；普通攻击不参与军团选目标。 */
-@Mod.EventBusSubscriber(modid="jujutsu_kaisen_cursed_paths")
+@EventBusSubscriber(modid="jujutsu_kaisen_cursed_paths")
 public final class AuthorityMarkerItem extends Item {
     public AuthorityMarkerItem(){super(new Properties().stacksTo(1).rarity(Rarity.EPIC).fireResistant());}
 

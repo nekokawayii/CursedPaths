@@ -8,9 +8,10 @@ import net.neoforged.bus.api.*;
 import net.neoforged.fml.common.Mod;
 import org.lwjgl.glfw.GLFW;
 import net.neoforged.neoforge.client.event.ClientTickEvent;
+import net.neoforged.fml.common.EventBusSubscriber;
 
 /** 只接收服务端进度；蓝色永远代表本机玩家。 */
-@Mod.EventBusSubscriber(modid="jujutsu_kaisen_cursed_paths",value=Dist.CLIENT)
+@EventBusSubscriber(modid="jujutsu_kaisen_cursed_paths",value=Dist.CLIENT)
 public final class DomainClashClient {
     private static Network.ClashState state;
     private static Object world;

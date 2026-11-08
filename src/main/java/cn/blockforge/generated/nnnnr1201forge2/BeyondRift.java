@@ -20,6 +20,7 @@ import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
 import net.neoforged.bus.api.*;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.neoforge.event.tick.PlayerTickEvent;
+import net.neoforged.fml.common.EventBusSubscriber;
 
 /**
  * 隐藏剧情「观测者」的服务端部分。
@@ -27,7 +28,7 @@ import net.neoforged.neoforge.event.tick.PlayerTickEvent;
  * ②击败五条悟之后靠近裂隙，会从里面掉出「不属于这个世界的碎片」；
  * ③带着碎片回到岩手地形的虎杖家：虎天帝消失，地上留下那封信，屏幕出现系统错误。
  */
-@Mod.EventBusSubscriber(modid="jujutsu_kaisen_cursed_paths")
+@EventBusSubscriber(modid="jujutsu_kaisen_cursed_paths")
 public final class BeyondRift {
     /** 裂隙中心：灵魂通道北端内壁前 0.14 格（墙面在 z=-48.0，放更里面会被墙挡住）。 */
     public static final Vec3 CENTER=new Vec3(0.5,72.5,-47.86);

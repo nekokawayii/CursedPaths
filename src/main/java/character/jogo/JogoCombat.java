@@ -112,7 +112,7 @@ public final class JogoCombat {
                 finally{AttackTypes.clear();}
                 target.setDeltaMovement(target.getDeltaMovement().add(0,0.95,0));
                 target.hurtMarked=true;
-                target.setSecondsOnFire(3);
+                target.igniteForSeconds(3);
             }
         }
     }
@@ -151,7 +151,7 @@ public final class JogoCombat {
         ServerPlayer caster=CombatSettings.caster(e.getSource());if(caster==null)return;
         var target=e.getEntity();if(target==caster)return;
         var d=CharacterService.selected(caster);if(d==null||!d.id().equals("jogo"))return;
-        target.setSecondsOnFire(4);
+        target.igniteForSeconds(4);
         if(Curse.data(caster).getBoolean(ASH_CRIT)){
             Curse.data(caster).putBoolean(ASH_CRIT,false);
             e.setAmount(e.getAmount()*1.5f);
@@ -243,7 +243,7 @@ public final class JogoCombat {
             AttackTypes.mark(AttackTypes.MAGIC);
             try{CombatSettings.hurt(caster,target,caster.damageSources().indirectMagic(caster,caster),damage);}
             finally{AttackTypes.clear();}
-            target.setSecondsOnFire(2);
+            target.igniteForSeconds(2);
         }
     }
     private static void tickMeteors() {
@@ -296,7 +296,7 @@ public final class JogoCombat {
                     AttackTypes.mark(AttackTypes.MAGIC);
                     try{CombatSettings.hurt(caster,target,caster.damageSources().indirectMagic(caster,caster),pillar.damage());}
                     finally{AttackTypes.clear();}
-                    target.setSecondsOnFire(3);
+                    target.igniteForSeconds(3);
                 }
             }
             if(ticks>=PILLAR_LIFE||(ticks<=8&&!pillarFlies(next,pillar.dir(),level))){it.remove();continue;}
@@ -328,7 +328,7 @@ public final class JogoCombat {
                     AttackTypes.mark(AttackTypes.MAGIC);
                     try{CombatSettings.hurt(owner,target,owner.damageSources().indirectMagic(owner,owner),fan.damage());}
                     finally{AttackTypes.clear();}
-                    target.setSecondsOnFire(3);
+                    target.igniteForSeconds(3);
                 }
             }
         }
@@ -347,7 +347,7 @@ public final class JogoCombat {
                 AttackTypes.mark(AttackTypes.MAGIC);
                 try{CombatSettings.hurt(owner,target,owner.damageSources().indirectMagic(owner,owner),c.damage());}
                 finally{AttackTypes.clear();}
-                target.setSecondsOnFire(4);
+                target.igniteForSeconds(4);
             }
             int x=(int)Math.floor(next.x),z=(int)Math.floor(next.z);
             int y=level.getHeight(net.minecraft.world.level.levelgen.Heightmap.Types.WORLD_SURFACE,x,z);

@@ -177,7 +177,7 @@ public final class GojoOpticsClient {
             RenderSystem.setShader(()->shader);
             RenderSystem.setShaderTexture(0,scene.getColorTextureId());RenderSystem.setShaderTexture(1,scene.getDepthTextureId());RenderSystem.setShaderTexture(2,shadows.getId());
             BufferBuilder b=Tesselator.getInstance().getBuilder();b.begin(VertexFormat.Mode.QUADS,DefaultVertexFormat.POSITION);
-            b.vertex(-1,-1,0).endVertex();b.vertex(1,-1,0).endVertex();b.vertex(1,1,0).endVertex();b.vertex(-1,1,0).endVertex();
+            b.addVertex(-1,-1,0).endVertex();b.addVertex(1,-1,0).endVertex();b.addVertex(1,1,0).endVertex();b.addVertex(-1,1,0).endVertex();
             BufferUploader.drawWithShader(b.end());
         }catch(RuntimeException ex){
             if(!warned){com.mojang.logging.LogUtils.getLogger().warn("苍赫茈光学效果暂停，保留原有术式特效",ex);warned=true;}

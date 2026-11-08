@@ -133,7 +133,7 @@ public final class VoidCombat {
                     damage(p,w.target,VoidTechniqueRules.FIRE_DAMAGE*(float)VoidController.voidDamage(p)*MahoragaRules.bossDamage(w.target,MahoragaRules.FURNACE_MULTIPLIER),true);
                     if(CombatSettings.canHit(p,w.target)){
                         var tag=w.target.getPersistentData();tag.putUUID("SukunaVoidIgnitionOwner",p.getUUID());tag.putBoolean("SukunaVoidIgnitionMaid",MaidBridge.isCaster(p));tag.putLong("SukunaVoidIgnitionUntil",p.level().getGameTime()+160);
-                        w.target.setSecondsOnFire(8);
+                        w.target.igniteForSeconds(8);
                     }
                 }
             }

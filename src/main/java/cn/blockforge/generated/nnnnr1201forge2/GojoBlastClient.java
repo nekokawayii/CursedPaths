@@ -10,10 +10,11 @@ import net.neoforged.api.distmarker.Dist;
 import net.neoforged.neoforge.client.event.RenderLevelStageEvent;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.Mod;
+import net.neoforged.fml.common.EventBusSubscriber;
 
 /** 命中/终结演出：只做大与渐隐，**不结算任何伤害**（伤害在服务端命中的那一刻已经结清）。
  *  Photon 的发射器没法在运行中改尺寸与不透明度，所以这一层用模组自己的顶点通路画。 */
-@Mod.EventBusSubscriber(modid="jujutsu_kaisen_cursed_paths",value=Dist.CLIENT)
+@EventBusSubscriber(modid="jujutsu_kaisen_cursed_paths",value=Dist.CLIENT)
 public final class GojoBlastClient {
     private record Blast(Vec3 at,double radius,int rgb,long born,int life){}
     /** 宇宙大爆炸：白热核心一闪 → 三层不同速度的壳 → 径向光针 → 迟到的第二圈冲击。 */
@@ -87,10 +88,10 @@ public final class GojoBlastClient {
     private static void quad(BufferBuilder b,PoseStack ps,Vec3 a,Vec3 c,Vec3 d,Vec3 e,int color){
         int red=(color>>16)&255,green=(color>>8)&255,blue=color&255,alpha=(color>>>24)&255;
         var pose=ps.last().pose();
-        b.vertex(pose,(float)a.x,(float)a.y,(float)a.z).color(red,green,blue,alpha).endVertex();
-        b.vertex(pose,(float)c.x,(float)c.y,(float)c.z).color(red,green,blue,alpha).endVertex();
-        b.vertex(pose,(float)d.x,(float)d.y,(float)d.z).color(red,green,blue,alpha).endVertex();
-        b.vertex(pose,(float)e.x,(float)e.y,(float)e.z).color(red,green,blue,alpha).endVertex();
+        b.addVertex(pose,(float)a.x,(float)a.y,(float)a.z).color(red,green,blue,alpha).endVertex();
+        b.addVertex(pose,(float)c.x,(float)c.y,(float)c.z).color(red,green,blue,alpha).endVertex();
+        b.addVertex(pose,(float)d.x,(float)d.y,(float)d.z).color(red,green,blue,alpha).endVertex();
+        b.addVertex(pose,(float)e.x,(float)e.y,(float)e.z).color(red,green,blue,alpha).endVertex();
     }
     // ------------------------------------------------------------ 宇宙大爆炸
     /** 一帧的大爆炸：t ∈ [0,1)。所有层都是镜头朝向的圆盘/圆环 + 极角排布的光针，不依赖任何贴图。 */

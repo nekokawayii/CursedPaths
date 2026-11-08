@@ -15,9 +15,10 @@ import net.neoforged.api.distmarker.Dist;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.neoforge.client.event.*;
 import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.EventBusSubscriber;
 
 /** 遗迹的局部天空和非实体残影，不生成怪物、不改变世界时间。 */
-@Mod.EventBusSubscriber(modid="jujutsu_kaisen_cursed_paths",value=Dist.CLIENT)
+@EventBusSubscriber(modid="jujutsu_kaisen_cursed_paths",value=Dist.CLIENT)
 public final class RuinClient {
     private static Vec3 origin;private static int rotation;private static long until,caption;
     private static Vec3 local(double x,double y,double z){return switch(rotation){case 1->origin.add(64-z,y,x);case 2->origin.add(48-x,y,64-z);case 3->origin.add(z,y,48-x);default->origin.add(x,y,z);};}
@@ -27,7 +28,7 @@ public final class RuinClient {
     private static boolean active(){var mc=Minecraft.getInstance();return origin!=null&&mc.level!=null&&mc.player!=null&&mc.level.dimension()==net.minecraft.world.level.Level.OVERWORLD&&mc.level.getGameTime()<until&&mc.player.getX()>=origin.x&&mc.player.getX()<origin.x+(rotation%2==0?49:65)&&mc.player.getZ()>=origin.z&&mc.player.getZ()<origin.z+(rotation%2==0?65:49);}
     @SubscribeEvent public static void fog(ViewportEvent.ComputeFogColor e){if(active()){e.setRed(0.43f);e.setGreen(0.39f);e.setBlue(0.51f);}}
     @SubscribeEvent public static void hud(RenderGuiEvent.Post e){var mc=Minecraft.getInstance();if(!active()||mc.options.hideGui||mc.level.getGameTime()>=caption)return;int h=mc.getWindow().getGuiScaledHeight();e.getGuiGraphics().drawString(mc.font,"……护人之魂，镇咒于此……",12,h/2,0xA5D7CBE3);}
-    private static void vertex(BufferBuilder b,PoseStack ps,Vec3 p,int color){b.vertex(ps.last().pose(),(float)p.x,(float)p.y,(float)p.z).color(color>>16&255,color>>8&255,color&255,color>>>24).endVertex();}
+    private static void vertex(BufferBuilder b,PoseStack ps,Vec3 p,int color){b.addVertex(ps.last().pose(),(float)p.x,(float)p.y,(float)p.z).color(color>>16&255,color>>8&255,color&255,color>>>24).endVertex();}
     private static void quad(BufferBuilder b,PoseStack ps,Vec3 a,Vec3 c,Vec3 d,Vec3 e,int color){vertex(b,ps,a,color);vertex(b,ps,c,color);vertex(b,ps,d,color);vertex(b,ps,e,color);}
     @SubscribeEvent public static void render(RenderLevelStageEvent e){
         if(!active())return;boolean sky=e.getStage()==RenderLevelStageEvent.Stage.AFTER_SKY;

@@ -15,9 +15,10 @@ import net.neoforged.neoforge.client.event.*;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.Mod;
 import org.joml.Vector4f;
+import net.neoforged.fml.common.EventBusSubscriber;
 
 /** 编辑器保留世界画面，用鼠标点击投影后的真实生物；红框不修改队伍颜色。 */
-@Mod.EventBusSubscriber(modid="jujutsu_kaisen_cursed_paths",value=Dist.CLIENT)
+@EventBusSubscriber(modid="jujutsu_kaisen_cursed_paths",value=Dist.CLIENT)
 public final class AuthorityClient {
     private static AuthorityPackets.State state=new AuthorityPackets.State(false,0,0,new int[0],new int[0]);
     private record Box(int id,int left,int top,int right,int bottom,double distance){}

@@ -17,9 +17,10 @@ import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.neoforge.registries.RegistryObject;
 import net.neoforged.neoforge.event.tick.PlayerTickEvent;
+import net.neoforged.fml.common.EventBusSubscriber;
 
 /** 通关奖励与永久权限；不向未通关者泄露路线。 */
-@Mod.EventBusSubscriber(modid="jujutsu_kaisen_cursed_paths")
+@EventBusSubscriber(modid="jujutsu_kaisen_cursed_paths")
 public final class Authority {
     public static final RegistryObject<Item> PERMISSION=Content.ITEMS.register("permission",()->new Item(new Item.Properties().stacksTo(1).rarity(Rarity.EPIC).fireResistant().food(new FoodProperties.Builder().nutrition(0).saturationMod(0).alwaysEat().build())){
         @Override public InteractionResultHolder<ItemStack> use(Level l,Player p,InteractionHand h){return unlocked(p)?InteractionResultHolder.fail(p.getItemInHand(h)):super.use(l,p,h);}

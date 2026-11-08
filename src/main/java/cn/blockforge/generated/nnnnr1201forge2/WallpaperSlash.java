@@ -11,6 +11,7 @@ import net.neoforged.api.distmarker.Dist;
 import net.neoforged.neoforge.client.event.RegisterShadersEvent;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.Mod;
+import net.neoforged.fml.common.EventBusSubscriber;
 
 /** 黑芯负责未授权或读取失败时的回退；壁纸按屏幕坐标覆盖同一尖梭内部。 */
 public final class WallpaperSlash {
@@ -21,7 +22,7 @@ public final class WallpaperSlash {
     private static ShaderInstance shader;
     private static boolean collecting;
     private static int batchCuts;
-    @Mod.EventBusSubscriber(modid="jujutsu_kaisen_cursed_paths",value=Dist.CLIENT,bus=Mod.EventBusSubscriber.Bus.MOD)
+    @EventBusSubscriber(modid="jujutsu_kaisen_cursed_paths",value=Dist.CLIENT,bus=EventBusSubscriber.Bus.MOD)
     public static final class Registration {
         @SubscribeEvent public static void shaders(RegisterShadersEvent e){
             shader=null;try{e.registerShader(new ShaderInstance(e.getResourceProvider(),ResourceLocation.fromNamespaceAndPath("jujutsu_kaisen_cursed_paths", "wallpaper_slash"),DefaultVertexFormat.POSITION_COLOR),s->shader=s);}catch(java.io.IOException|RuntimeException ex){com.mojang.logging.LogUtils.getLogger().warn("壁纸专用材质不可用，斩击保留原版贴图通道",ex);}
@@ -94,6 +95,6 @@ public final class WallpaperSlash {
         }finally{pending.clear();modelView.popPose();RenderSystem.applyModelViewMatrix();RenderSystem.setProjectionMatrix(projection,sorting);RenderSystem.setShaderTexture(0,texture);RenderSystem.setShaderColor(color[0],color[1],color[2],color[3]);RenderSystem.setShader(GameRenderer::getPositionColorShader);}
     }
     private static WallpaperProjection.Point project(org.joml.Matrix4f matrix,Vec3 p){var v=new org.joml.Vector4f((float)p.x,(float)p.y,(float)p.z,1).mul(matrix);return new WallpaperProjection.Point(v.x,v.y,v.z,v.w);}
-    private static void screenVertex(BufferBuilder b,WallpaperProjection.Point p,float alpha,double ox,double oy,double sx,double sy){double x=p.x()/p.w(),y=p.y()/p.w(),z=p.z()/p.w();double[] uv=WallpaperProjection.uv(x,y,ox,oy,sx,sy);b.vertex(x,y,z-.000001);if(shader==null)b.uv((float)uv[0],(float)uv[1]);b.color(1f,1f,1f,alpha).endVertex();}
+    private static void screenVertex(BufferBuilder b,WallpaperProjection.Point p,float alpha,double ox,double oy,double sx,double sy){double x=p.x()/p.w(),y=p.y()/p.w(),z=p.z()/p.w();double[] uv=WallpaperProjection.uv(x,y,ox,oy,sx,sy);b.addVertex(x,y,z-.000001);if(shader==null)b.uv((float)uv[0],(float)uv[1]);b.color(1f,1f,1f,alpha).endVertex();}
     private WallpaperSlash(){}
 }

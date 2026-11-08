@@ -117,7 +117,7 @@ public final class MahitoSelf {
                               UUID id, double amount, String name) {
         AttributeInstance inst = p.getAttribute(attr);
         if (inst == null || inst.getModifier(CompatAttr.id(id)) != null) return;
-        inst.addPermanentModifier(new AttributeModifier(id, name, amount, AttributeModifier.Operation.MULTIPLY_TOTAL));
+        inst.addPermanentModifier(new AttributeModifier(id, name, amount, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL));
     }
 
     /** 肢体：增加一只手臂（最多 4），并把当前数量同步给客户端用于打开肢体菜单。 */
@@ -157,7 +157,7 @@ public final class MahitoSelf {
         }
         AttributeInstance max = p.getAttribute(Attributes.MAX_HEALTH);
         if (max != null && max.getModifier(CompatAttr.id(CLONE_HEALTH)) == null)
-            max.addPermanentModifier(new AttributeModifier(CompatAttr.id(CLONE_HEALTH), -0.5, AttributeModifier.Operation.MULTIPLY_TOTAL));
+            max.addPermanentModifier(new AttributeModifier(CompatAttr.id(CLONE_HEALTH), -0.5, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL));
         cn.blockforge.generated.nnnnr1201forge2.Curse.data(p).putUUID(CLONE_ID, clone.getUUID());
         p.setHealth(Math.min(p.getHealth(), half));
         p.sendSystemMessage(Component.literal("无为转变·分身：血量对半（当前 " + (int) p.getHealth() + "）").withStyle(ChatFormatting.AQUA));

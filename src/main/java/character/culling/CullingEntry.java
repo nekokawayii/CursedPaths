@@ -46,7 +46,7 @@ public final class CullingEntry {
             case 0 -> {
                 var atk = p.getAttribute(Attributes.ATTACK_DAMAGE);
                 if (atk != null && atk.getModifier(CompatAttr.id(ATK_UUID)) == null)
-                    atk.addPermanentModifier(new AttributeModifier(CompatAttr.id(ATK_UUID), 0.2, AttributeModifier.Operation.MULTIPLY_TOTAL));
+                    atk.addPermanentModifier(new AttributeModifier(CompatAttr.id(ATK_UUID), 0.2, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL));
                 p.sendSystemMessage(Component.literal("【开局祝福】伤害 +20%。").withStyle(ChatFormatting.LIGHT_PURPLE));
             }
             case 1 -> {
@@ -108,7 +108,7 @@ public final class CullingEntry {
         if (!d.getBoolean("CullingRegistered")) return;
         var atk = p.getAttribute(Attributes.ATTACK_DAMAGE);
         if (atk != null && atk.getModifier(CompatAttr.id(ATK_UUID)) == null)
-            atk.addPermanentModifier(new AttributeModifier(CompatAttr.id(ATK_UUID), 0.2, AttributeModifier.Operation.MULTIPLY_TOTAL));
+            atk.addPermanentModifier(new AttributeModifier(CompatAttr.id(ATK_UUID), 0.2, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL));
     }
 
     // ===== 邀请函：原地展开黑色立方体，40 刻后把附近玩家吸进去（r257） =====

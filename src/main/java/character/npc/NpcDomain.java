@@ -241,7 +241,7 @@ public final class NpcDomain {
                     if (living.distanceToSqr(Vec3.atCenterOf(job.center)) > (double) job.radius * job.radius) continue;
                     Network.send(level, new Network.Effect(character.ryu.RyuFx.BURST, living.getId(),
                         living.position(), Vec3.ZERO, 1.2f, 10, 0));
-                    if (level.getGameTime() % 16 == 0) living.setSecondsOnFire(2);
+                    if (level.getGameTime() % 16 == 0) living.igniteForSeconds(2);
                 }
             }
             // ── 石流龙·打上花火：每 1 秒两枚火箭炸出追踪弹幕（与玩家同款机制：必中） ──
@@ -292,7 +292,7 @@ public final class NpcDomain {
                         }
                         case LAVA -> {                           // 漏壶：盖棺铁围山 · 点燃
                             living.hurt(living.damageSources().magic(), (float) DAMAGE);
-                            living.setSecondsOnFire(2);
+                            living.igniteForSeconds(2);
                         }
                         case ICE -> {                            // 里梅·霜天宫殿：冻结 + 霜寒拉满 + 禁飞
                             living.hurt(living.damageSources().magic(), (float) DAMAGE);

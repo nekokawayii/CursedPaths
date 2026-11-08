@@ -12,9 +12,10 @@ import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
 import net.neoforged.bus.api.*;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.neoforge.registries.ForgeRegistries;
+import net.neoforged.fml.common.EventBusSubscriber;
 
 /** 创造专用测试入口，不走正常治疗/修复熔断的资格和费用限制。 */
-@Mod.EventBusSubscriber(modid="jujutsu_kaisen_cursed_paths")
+@EventBusSubscriber(modid="jujutsu_kaisen_cursed_paths")
 public final class CreativeRestorer extends Item {
     public CreativeRestorer(){super(new Properties().stacksTo(1).rarity(Rarity.EPIC).fireResistant());}
     @Override public InteractionResultHolder<ItemStack> use(Level level,Player player,InteractionHand hand){

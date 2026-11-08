@@ -729,5 +729,5 @@ public final class Client {
         edge=edge.normalize().scale(width);quad(b,ps,a.add(edge),z.add(edge),z.subtract(edge),a.subtract(edge),color);
     }
     static void quad(BufferBuilder b,PoseStack ps,Vec3 a,Vec3 c,Vec3 d,Vec3 e,int color){vertex(b,ps,a,color);vertex(b,ps,c,color);vertex(b,ps,d,color);vertex(b,ps,e,color);}
-    private static void vertex(BufferBuilder b,PoseStack ps,Vec3 p,int color){color=VoidTechniqueClient.tint(color);b.vertex(ps.last().pose(),(float)p.x,(float)p.y,(float)p.z).color((color>>16)&255,(color>>8)&255,color&255,(color>>>24)&255).endVertex();}
+    private static void vertex(BufferBuilder b,PoseStack ps,Vec3 p,int color){color=VoidTechniqueClient.tint(color);b.addVertex(ps.last().pose(),(float)p.x,(float)p.y,(float)p.z).color((color>>16)&255,(color>>8)&255,color&255,(color>>>24)&255).endVertex();}
 }

@@ -8,12 +8,13 @@ import net.neoforged.api.distmarker.Dist;
 import net.neoforged.neoforge.client.event.RegisterGuiOverlaysEvent;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.Mod;
+import net.neoforged.fml.common.EventBusSubscriber;
 
 /**
  * 秤金次的老虎机 HUD：屏幕上方三格滚动图案 + 幸运值进度条；中奖期间变成金色横幅与倒计时。
  * 被拉进「坐杀博徒」领域的玩家也会看到（服务端把 SLOT 广播给领域内所有人）。
  */
-@Mod.EventBusSubscriber(modid = "jujutsu_kaisen_cursed_paths", value = Dist.CLIENT, bus = Mod.EventBusSubscriber.Bus.MOD)
+@EventBusSubscriber(modid = "jujutsu_kaisen_cursed_paths", value = Dist.CLIENT, bus = EventBusSubscriber.Bus.MOD)
 public final class HakariClient {
     private static long slotUntil, jackpotUntil;
     private static int luck;

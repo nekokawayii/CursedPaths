@@ -12,9 +12,10 @@ import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.neoforge.event.server.ServerStoppedEvent;
 import net.neoforged.neoforge.event.tick.ServerTickEvent;
 import cn.blockforge.generated.nnnnr1201forge2.CompatAttr;
+import net.neoforged.fml.common.EventBusSubscriber;
 
 /** 有界弹幕队列与逻辑血海：不放置方块、不强载区块，每格最多一次自动索敌。 */
-@net.neoforged.fml.common.Mod.EventBusSubscriber(modid="jujutsu_kaisen_cursed_paths")
+@net.neoforged.fml.common.EventBusSubscriber(modid="jujutsu_kaisen_cursed_paths")
 public final class BloodExpansion {
     public static final int FX_OCEAN=470,FX_CELL=471,FX_TRAP=472,FX_NEEDLE=473,FX_METEOR=474,FX_OCEAN_CLOSE=475;
     private static final List<Shot> shots=new ArrayList<>();
@@ -52,7 +53,7 @@ public final class BloodExpansion {
     public static boolean canOcean(ServerPlayer p){return oceans.size()<8&&oceans.stream().noneMatch(o->o.p==p);}
     public static void ocean(ServerPlayer p,Vec3 at){if(!canOcean(p))return;Ocean o=new Ocean(p,at);oceans.add(o);sync(o);}
     private static void sync(Ocean o){BloodArts.fx(o.p,FX_OCEAN,o.center,new Vec3(o.start,o.cursor,0),100,500,o.id);}
-    private static void slow(ServerPlayer p,LivingEntity t,long until){if(!CombatSafety.canAffect(p,t))return;var a=t.getAttribute(Attributes.MOVEMENT_SPEED);if(a!=null&&a.getModifier(CompatAttr.id(SLOW))==null)a.addTransientModifier(new AttributeModifier(CompatAttr.id(SLOW), -.35, AttributeModifier.Operation.MULTIPLY_TOTAL));slows.put(t.getUUID(),new Slow(t,p,until));}
+    private static void slow(ServerPlayer p,LivingEntity t,long until){if(!CombatSafety.canAffect(p,t))return;var a=t.getAttribute(Attributes.MOVEMENT_SPEED);if(a!=null&&a.getModifier(CompatAttr.id(SLOW))==null)a.addTransientModifier(new AttributeModifier(CompatAttr.id(SLOW), -.35, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL));slows.put(t.getUUID(),new Slow(t,p,until));}
     public static boolean slowed(LivingEntity target){Slow s=slows.get(target.getUUID());return s!=null&&s.until>target.level().getGameTime()&&CombatSafety.canAffect(s.p,target);}
     private static void clearSlow(Slow s){var a=s.target.getAttribute(Attributes.MOVEMENT_SPEED);if(a!=null)a.removeModifier(CompatAttr.id(SLOW));}
     public static void protect(ServerPlayer p,UUID id){Slow s=slows.get(id);if(s!=null&&s.p==p){clearSlow(s);slows.remove(id);}for(Trap t:traps)if(t.p==p)t.dwell.remove(id);}

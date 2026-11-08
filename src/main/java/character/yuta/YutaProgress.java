@@ -25,6 +25,7 @@ import net.neoforged.neoforge.event.entity.living.LivingDeathEvent;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.neoforge.event.tick.ServerTickEvent;
+import net.neoforged.fml.common.EventBusSubscriber;
 
 /**
  * 乙骨忧太三条个人线的真实判定（框架只提供 {@link CharacterService#markChapter}，由这里触发）。
@@ -34,7 +35,7 @@ import net.neoforged.neoforge.event.tick.ServerTickEvent;
  *   <li><b>百鬼夜行</b>：新维度内击败 100 只低级咒灵（维度内每 5 秒补怪，上限 15）。</li>
  * </ol>
  */
-@Mod.EventBusSubscriber(modid = "jujutsu_kaisen_cursed_paths")
+@EventBusSubscriber(modid = "jujutsu_kaisen_cursed_paths")
 public final class YutaProgress {
     public static final ResourceKey<Level> HYAKKI =
         ResourceKey.create(Registries.DIMENSION, ResourceLocation.fromNamespaceAndPath("jujutsu_kaisen_cursed_paths", "hyakki"));

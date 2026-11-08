@@ -10,9 +10,10 @@ import net.minecraft.client.model.geom.builders.MeshDefinition;
 import net.minecraft.client.model.geom.builders.PartDefinition;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
+import net.neoforged.fml.common.EventBusSubscriber;
 
 /** 由 tools/bbmodel_to_java.py 从 model.bbmodel 自动生成（方块数 85，贴图 128×128）。 */
-@net.neoforged.fml.common.Mod.EventBusSubscriber(modid="jujutsu_kaisen_cursed_paths", value=net.neoforged.api.distmarker.Dist.CLIENT, bus=net.neoforged.fml.common.Mod.EventBusSubscriber.Bus.MOD)
+@net.neoforged.fml.common.EventBusSubscriber(modid="jujutsu_kaisen_cursed_paths", value=net.neoforged.api.distmarker.Dist.CLIENT, bus=net.neoforged.fml.common.EventBusSubscriber.Bus.MOD)
 public final class JogoNpcModel extends EntityModel<JogoNpcEntity> {
     public static final net.minecraft.client.model.geom.ModelLayerLocation LAYER =
         new net.minecraft.client.model.geom.ModelLayerLocation(new net.minecraft.resources.ResourceLocation("jujutsu_kaisen_cursed_paths", "jogo_npc"), "main");

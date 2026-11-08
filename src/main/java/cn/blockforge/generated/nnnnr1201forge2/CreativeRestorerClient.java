@@ -5,9 +5,10 @@ import net.neoforged.api.distmarker.Dist;
 import net.neoforged.neoforge.client.event.InputEvent;
 import net.neoforged.bus.api.*;
 import net.neoforged.fml.common.Mod;
+import net.neoforged.fml.common.EventBusSubscriber;
 
 /** 仅为创造测试符放行右键，熔断或动作锁定不影响恢复入口。 */
-@Mod.EventBusSubscriber(modid="jujutsu_kaisen_cursed_paths",value=Dist.CLIENT)
+@EventBusSubscriber(modid="jujutsu_kaisen_cursed_paths",value=Dist.CLIENT)
 public final class CreativeRestorerClient {
     @SubscribeEvent(priority=EventPriority.LOWEST,receiveCanceled=true)
     public static void use(InputEvent.InteractionKeyMappingTriggered e){

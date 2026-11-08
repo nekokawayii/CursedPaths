@@ -11,6 +11,7 @@ import net.neoforged.api.distmarker.Dist;
 import net.neoforged.neoforge.client.event.RenderLevelStageEvent;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.Mod;
+import net.neoforged.fml.common.EventBusSubscriber;
 
 /** 无量空处 · 半径 100 格的绝对画布。
  *
@@ -21,7 +22,7 @@ import net.neoforged.fml.common.Mod;
  *  <p>Photon 的叠加混合 + bloom 画不出纯黑，所以"纯黑盘面 + 白色硬边"这一小块仍用模组自己的顶点通路，
  *  和整块底衬一起画在 {@code AFTER_CUTOUT_BLOCKS}：比天空与方块高一级、比实体低一级，
  *  并顺手清掉深度缓冲，让远处的粒子不再被（已经被盖住的地形）挡掉，而怪物与玩家依旧压在画布之上。</p> */
-@Mod.EventBusSubscriber(modid="jujutsu_kaisen_cursed_paths",value=Dist.CLIENT)
+@EventBusSubscriber(modid="jujutsu_kaisen_cursed_paths",value=Dist.CLIENT)
 public final class GojoVoidClient {
     private static int ownerId=Integer.MIN_VALUE;
     private static Vec3 center,anchor,holeAt,holeOffset;
@@ -203,17 +204,17 @@ public final class GojoVoidClient {
     private static void quad(BufferBuilder b,PoseStack ps,Vec3 a,Vec3 c,Vec3 d,Vec3 e,int color){
         int red=(color>>16)&255,green=(color>>8)&255,blue=color&255,alpha=(color>>>24)&255;
         var pose=ps.last().pose();
-        b.vertex(pose,(float)a.x,(float)a.y,(float)a.z).color(red,green,blue,alpha).endVertex();
-        b.vertex(pose,(float)c.x,(float)c.y,(float)c.z).color(red,green,blue,alpha).endVertex();
-        b.vertex(pose,(float)d.x,(float)d.y,(float)d.z).color(red,green,blue,alpha).endVertex();
-        b.vertex(pose,(float)e.x,(float)e.y,(float)e.z).color(red,green,blue,alpha).endVertex();
+        b.addVertex(pose,(float)a.x,(float)a.y,(float)a.z).color(red,green,blue,alpha).endVertex();
+        b.addVertex(pose,(float)c.x,(float)c.y,(float)c.z).color(red,green,blue,alpha).endVertex();
+        b.addVertex(pose,(float)d.x,(float)d.y,(float)d.z).color(red,green,blue,alpha).endVertex();
+        b.addVertex(pose,(float)e.x,(float)e.y,(float)e.z).color(red,green,blue,alpha).endVertex();
     }
     private static void quadGrad(BufferBuilder b,PoseStack ps,Vec3 a,Vec3 c,Vec3 d,Vec3 e,int ca,int cc,int cd,int ce){
         var pose=ps.last().pose();
         vertex(b,pose,a,ca);vertex(b,pose,c,cc);vertex(b,pose,d,cd);vertex(b,pose,e,ce);
     }
     private static void vertex(BufferBuilder b,org.joml.Matrix4f pose,Vec3 v,int color){
-        b.vertex(pose,(float)v.x,(float)v.y,(float)v.z).color((color>>16)&255,(color>>8)&255,color&255,(color>>>24)&255).endVertex();
+        b.addVertex(pose,(float)v.x,(float)v.y,(float)v.z).color((color>>16)&255,(color>>8)&255,color&255,(color>>>24)&255).endVertex();
     }
     private GojoVoidClient(){}
 }

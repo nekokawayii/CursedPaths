@@ -10,9 +10,10 @@ import net.neoforged.neoforge.event.entity.EntityJoinLevelEvent;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.neoforge.event.tick.ServerTickEvent;
+import net.neoforged.fml.common.EventBusSubscriber;
 
 /** 独立施术上下文把十倍伤害保留到弹体和持续伤害命中，不会污染玩家下一招。 */
-@Mod.EventBusSubscriber(modid="jujutsu_kaisen_cursed_paths")
+@EventBusSubscriber(modid="jujutsu_kaisen_cursed_paths")
 public final class AuthorityEditor {
     private record Echo(ServerPlayer owner,ArmorStand body,MaidBridge.Actor actor,long born,boolean offhand){}
     private static final List<Echo> echoes=new ArrayList<>();

@@ -8,9 +8,10 @@ import net.neoforged.neoforge.client.event.MovementInputUpdateEvent;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.fml.common.Mod;
+import net.neoforged.fml.common.EventBusSubscriber;
 
 /** 固定在世界坐标中的横向十字与实体月牙，不随镜头旋转。 */
-@Mod.EventBusSubscriber(modid="jujutsu_kaisen_cursed_paths",value=Dist.CLIENT)
+@EventBusSubscriber(modid="jujutsu_kaisen_cursed_paths",value=Dist.CLIENT)
 public final class NetBranchVisuals {
     private record Visual(Network.Effect effect,long born){}
     private record Hold(long id,long end){}

@@ -11,9 +11,10 @@ import net.neoforged.neoforge.event.server.ServerStoppedEvent;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.neoforge.event.tick.ServerTickEvent;
+import net.neoforged.fml.common.EventBusSubscriber;
 
 /** 舌头是真正的双向定身，不只给缓慢效果；结束、死亡、收回时立即释放。 */
-@Mod.EventBusSubscriber(modid="jujutsu_kaisen_cursed_paths")
+@EventBusSubscriber(modid="jujutsu_kaisen_cursed_paths")
 public final class ShadowBindings {
     private record Hold(ShadowEntity frog,LivingEntity target,Vec3 frogAt,Vec3 targetAt,long end){}
     private static final Map<UUID,Hold> holds=new HashMap<>();

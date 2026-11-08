@@ -7,6 +7,7 @@ import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.neoforged.neoforge.event.entity.EntityJoinLevelEvent;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.Mod;
+import net.neoforged.fml.common.EventBusSubscriber;
 
 /**
  * NPC 血量的整合包倍率：**整合包模式开启时所有 NPC 血量 ×30，关闭时保持原值**。
@@ -17,7 +18,7 @@ import net.neoforged.fml.common.Mod;
  *
  * <p>覆盖的是"新的"那几个 NPC：胀相 / 里梅 / 漏壶 / 东堂葵 / 石流龙。
  */
-@Mod.EventBusSubscriber(modid = "jujutsu_kaisen_cursed_paths")
+@EventBusSubscriber(modid = "jujutsu_kaisen_cursed_paths")
 public final class NpcBalance {
     /** NPC → 关闭模式下的基础血量（开启时 ×30）。 */
     private static final Map<String, Double> BASE = new LinkedHashMap<>();

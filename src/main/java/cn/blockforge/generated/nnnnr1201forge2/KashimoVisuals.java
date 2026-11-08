@@ -18,13 +18,14 @@ import net.neoforged.fml.common.Mod;
 import org.joml.Matrix4f;
 import org.joml.Vector4f;
 import net.neoforged.neoforge.client.event.ClientTickEvent;
+import net.neoforged.fml.common.EventBusSubscriber;
 
 /**
  * 鹿紫云一的表现层：落雷、雷走残影、放电环、吸附拉线、头顶正电荷图标、屏幕边缘电弧。
  * <p>分工按项目既有约束：形体（雷柱折线 / 焦痕 / 环）走 {@code Client.ribbon/quad} 顶点通路，
  * 发光（火花、光晕、冲击环）走 PhotonFx 加法混合层。
  */
-@Mod.EventBusSubscriber(modid = "jujutsu_kaisen_cursed_paths", value = Dist.CLIENT)
+@EventBusSubscriber(modid = "jujutsu_kaisen_cursed_paths", value = Dist.CLIENT)
 public final class KashimoVisuals {
     private static final int CORE = 0xFFFFFF, GLOW = 0x7FD8FF, DEEP = 0x2E9BE0;
     private static final String TEX_GLOW = "textures/effect/glow.png";

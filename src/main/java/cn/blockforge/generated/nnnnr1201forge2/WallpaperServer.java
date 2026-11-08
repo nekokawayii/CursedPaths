@@ -10,9 +10,10 @@ import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.neoforge.network.PacketDistributor;
 import net.neoforged.neoforge.event.tick.ServerTickEvent;
+import net.neoforged.fml.common.EventBusSubscriber;
 
 /** 服务器只在本次连接内暂存自愿上传的壁纸；按发送者身份归属，分片限速，不落盘。 */
-@Mod.EventBusSubscriber(modid="jujutsu_kaisen_cursed_paths")
+@EventBusSubscriber(modid="jujutsu_kaisen_cursed_paths")
 public final class WallpaperServer {
     private record Picture(long revision,byte[] data){}
     private static final class Incoming {

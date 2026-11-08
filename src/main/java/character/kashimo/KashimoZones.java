@@ -251,7 +251,7 @@ public final class KashimoZones {
                     .ifPresent(charged::add);
             }
             for (LivingEntity target : charged) {
-                if (strike(owner, target, KashimoSkills.BOLT_DAMAGE)) target.setSecondsOnFire(3);
+                if (strike(owner, target, KashimoSkills.BOLT_DAMAGE)) target.igniteForSeconds(3);
             }
             Network.send(warn.level(), new Network.Effect(KashimoFx.STRIKE, owner.getId(), warn.pos(),
                 Vec3.ZERO, 2.2f, 20 * 15, owner.getId()));

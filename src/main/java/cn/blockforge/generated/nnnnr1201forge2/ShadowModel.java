@@ -126,7 +126,7 @@ public final class ShadowModel {
         Matrix4f m=new Matrix4f(parent).mul(local);
         if(!bone.faces.isEmpty()){
             Matrix4f combined=new Matrix4f(ps.last().pose()).scale(1f/16).mul(m);org.joml.Matrix3f normalMatrix=m.normal(new org.joml.Matrix3f());Vector3f normal=new Vector3f();
-            for(Face face:bone.faces){normalMatrix.transform(face.normal,normal).normalize();VertexConsumer out=consumers[face.texture];for(Vertex vertex:face.vertices){Vector3f at=vertex.position;out.vertex(combined,at.x,at.y,at.z).color(1,1,1,alpha).uv(vertex.u,vertex.v).overlayCoords(OverlayTexture.NO_OVERLAY).uv2(light).normal(ps.last().normal(),normal.x,normal.y,normal.z).endVertex();}}
+            for(Face face:bone.faces){normalMatrix.transform(face.normal,normal).normalize();VertexConsumer out=consumers[face.texture];for(Vertex vertex:face.vertices){Vector3f at=vertex.position;out.addVertex(combined,at.x,at.y,at.z).color(1,1,1,alpha).uv(vertex.u,vertex.v).overlayCoords(OverlayTexture.NO_OVERLAY).uv2(light).normal(ps.last().normal(),normal.x,normal.y,normal.z).endVertex();}}
         }
         for(Bone child:bone.children)draw(child,m,animation,time,ps,consumers,light,alpha);
     }

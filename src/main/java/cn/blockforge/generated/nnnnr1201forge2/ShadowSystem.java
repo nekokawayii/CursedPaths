@@ -16,9 +16,10 @@ import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.neoforge.network.*;
 import net.neoforged.neoforge.event.tick.PlayerTickEvent;
+import net.neoforged.fml.common.EventBusSubscriber;
 
 /** 服务端保存调服和存续令牌；区块卸载不允许绕过唯一式神/五只虾蟇限制。 */
-@Mod.EventBusSubscriber(modid="jujutsu_kaisen_cursed_paths")
+@EventBusSubscriber(modid="jujutsu_kaisen_cursed_paths")
 public final class ShadowSystem {
     public record Request(int operation,int kind,int count){}
     public record State(int mask,boolean fused,int[] active,int[] seconds){}

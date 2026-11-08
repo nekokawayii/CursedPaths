@@ -14,9 +14,10 @@ import net.neoforged.neoforge.event.server.ServerStoppingEvent;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.neoforge.event.tick.ServerTickEvent;
+import net.neoforged.fml.common.EventBusSubscriber;
 
 /** 共用地形事务。每次领域使用独立 Handle；方块按同一对拼平面选层，原地形不混入其它领域。 */
-@Mod.EventBusSubscriber(modid="jujutsu_kaisen_cursed_paths")
+@EventBusSubscriber(modid="jujutsu_kaisen_cursed_paths")
 public final class DomainTerrain extends SavedData {
     private static final int BUDGET=4096;
     private static final class Cell {

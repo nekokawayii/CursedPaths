@@ -6,8 +6,9 @@ import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.neoforge.registries.ForgeRegistries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.ChatFormatting;
+import net.neoforged.fml.common.EventBusSubscriber;
 
-@Mod.EventBusSubscriber(modid="jujutsu_kaisen_cursed_paths")
+@EventBusSubscriber(modid="jujutsu_kaisen_cursed_paths")
 public final class ItemDescriptions {
     @SubscribeEvent public static void tooltip(ItemTooltipEvent event){
         var id=ForgeRegistries.ITEMS.getKey(event.getItemStack().getItem());if(id==null||!id.getNamespace().equals("jujutsu_kaisen_cursed_paths"))return;

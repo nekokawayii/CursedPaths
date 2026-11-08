@@ -13,6 +13,7 @@ import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
 import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.Mod;
+import net.neoforged.fml.common.EventBusSubscriber;
 
 /**
  * 乙骨忧太的「复制术式」。
@@ -20,7 +21,7 @@ import net.neoforged.fml.common.Mod;
  * <p>池子按目标判定：目标是玩家就看该玩家当前选择的角色；目标是已知 Boss 实体就按其类型。
  * <p>已复制的术式编号存在该角色的存档段（{@code YutaCopies}），切换角色再切回不会丢。
  */
-@Mod.EventBusSubscriber(modid = "jujutsu_kaisen_cursed_paths")
+@EventBusSubscriber(modid = "jujutsu_kaisen_cursed_paths")
 public final class YutaCopies {
     private static final String KEY = "YutaCopies";
     private static final String USED = "YutaUsedDuringRika";

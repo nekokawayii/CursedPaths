@@ -16,6 +16,7 @@ import net.neoforged.api.distmarker.Dist;
 import net.neoforged.neoforge.client.event.RenderLevelStageEvent;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.Mod;
+import net.neoforged.fml.common.EventBusSubscriber;
 
 /**
  * 直哉投射咒法的客户端表现：
@@ -23,7 +24,7 @@ import net.neoforged.fml.common.Mod;
  * ② 投影节点（青白色小环）与帧线（节点之间拉出的直线）；
  * ③ 命中/截断闪光。
  */
-@Mod.EventBusSubscriber(modid = "jujutsu_kaisen_cursed_paths", value = Dist.CLIENT)
+@EventBusSubscriber(modid = "jujutsu_kaisen_cursed_paths", value = Dist.CLIENT)
 public final class NaoyaVisuals {
     private record Ghost(int owner, Vec3 at, Vec3 look, long until) {}
     private record Node(Vec3 at, long until) {}

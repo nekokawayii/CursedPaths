@@ -15,9 +15,10 @@ import net.neoforged.neoforge.event.server.ServerStoppingEvent;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.neoforge.event.tick.ServerTickEvent;
+import net.neoforged.fml.common.EventBusSubscriber;
 
 /** 可编译的地形领域范例，默认不登记技能。先让角色目录包含9101，再调用 install(role)。 */
-@Mod.EventBusSubscriber(modid="jujutsu_kaisen_cursed_paths")
+@EventBusSubscriber(modid="jujutsu_kaisen_cursed_paths")
 public final class TerrainDomainExample {
     public static final int SKILL=9101;
     private static final int RADIUS=12,DURATION=600;

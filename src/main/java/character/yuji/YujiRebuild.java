@@ -44,8 +44,8 @@ public final class YujiRebuild {
         d.putLong("YujiComboAt", p.level().getGameTime());
         var atk = p.getAttribute(Attributes.ATTACK_SPEED);
         var mv = p.getAttribute(Attributes.MOVEMENT_SPEED);
-        if (atk != null) { atk.removeModifier(CompatAttr.id(ATK_SPEED_ID)); atk.addTransientModifier(new AttributeModifier(CompatAttr.id(ATK_SPEED_ID), n * 0.10, AttributeModifier.Operation.MULTIPLY_TOTAL)); }
-        if (mv != null) { mv.removeModifier(CompatAttr.id(MOVE_ID)); mv.addTransientModifier(new AttributeModifier(CompatAttr.id(MOVE_ID), n * 0.05, AttributeModifier.Operation.MULTIPLY_TOTAL)); }
+        if (atk != null) { atk.removeModifier(CompatAttr.id(ATK_SPEED_ID)); atk.addTransientModifier(new AttributeModifier(CompatAttr.id(ATK_SPEED_ID), n * 0.10, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL)); }
+        if (mv != null) { mv.removeModifier(CompatAttr.id(MOVE_ID)); mv.addTransientModifier(new AttributeModifier(CompatAttr.id(MOVE_ID), n * 0.05, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL)); }
     }
     private static void clearCombo(ServerPlayer p) {
         var d = Curse.data(p); d.putInt("YujiCombo", 0);

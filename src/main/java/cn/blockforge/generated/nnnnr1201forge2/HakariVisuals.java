@@ -6,16 +6,17 @@ import net.neoforged.api.distmarker.Dist;
 import net.neoforged.neoforge.client.event.RenderLevelStageEvent;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.Mod;
+import net.neoforged.fml.common.EventBusSubscriber;
 
 /**
  * 秤金次的世界内表现：车门猛砸的**正方形边框向内收拢**。
  *
  * <p>注意总线：`RenderLevelStageEvent` 属于 **Forge 总线**，所以这个类**不能**和
  * `HakariClient`（注册 HUD 的 `RegisterGuiOverlaysEvent` 是**模组总线**）放在一起——
- * 混在一个 `@Mod.EventBusSubscriber(bus = MOD)` 类里会在启动时直接抛
+ * 混在一个 `@EventBusSubscriber(bus = MOD)` 类里会在启动时直接抛
  * IllegalArgumentException 把整个模组打成 broken state（r375 崩服的原因）。
  */
-@Mod.EventBusSubscriber(modid = "jujutsu_kaisen_cursed_paths", value = Dist.CLIENT)
+@EventBusSubscriber(modid = "jujutsu_kaisen_cursed_paths", value = Dist.CLIENT)
 public final class HakariVisuals {
     /** 车门猛砸：正方形边框向内收拢。 */
     record Door(Vec3 at, Vec3 dir, long born, int life) {}

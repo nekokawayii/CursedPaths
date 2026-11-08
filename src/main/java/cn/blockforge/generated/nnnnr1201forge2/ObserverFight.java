@@ -15,9 +15,10 @@ import net.neoforged.fml.common.Mod;
 import org.joml.Vector4f;
 import org.lwjgl.glfw.GLFW;
 import net.neoforged.neoforge.client.event.ClientTickEvent;
+import net.neoforged.fml.common.EventBusSubscriber;
 
 /** 客户端只上报输入；护盾、招式冷却、QTE 与通关由服务端计算。 */
-@Mod.EventBusSubscriber(modid="jujutsu_kaisen_cursed_paths",value=Dist.CLIENT)
+@EventBusSubscriber(modid="jujutsu_kaisen_cursed_paths",value=Dist.CLIENT)
 public final class ObserverFight {
     private static ObserverPackets.State state;
     private static java.util.List<ObserverPackets.Cursor> otherCursors=java.util.List.of();

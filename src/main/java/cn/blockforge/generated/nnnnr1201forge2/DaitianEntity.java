@@ -29,7 +29,7 @@ public final class DaitianEntity extends Monster {
     private double growth(){return CursedGrowth.scale(getTarget());}
     public DaitianEntity(EntityType<? extends Monster> type,Level level){super(type,level);xpReward=25;setPersistenceRequired();
         getAttribute(Attributes.MAX_HEALTH).setBaseValue(200);
-        getAttribute(Attributes.ATTACK_DAMAGE).addPermanentModifier(new AttributeModifier(UUID.fromString("75f17bd4-f6fe-4f5d-bf29-424c3c444832"),"咒胎攻击",0.2,AttributeModifier.Operation.MULTIPLY_TOTAL));setHealth(getMaxHealth());}
+        getAttribute(Attributes.ATTACK_DAMAGE).addPermanentModifier(new AttributeModifier(UUID.fromString("75f17bd4-f6fe-4f5d-bf29-424c3c444832"),"咒胎攻击",0.2,AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL));setHealth(getMaxHealth());}
     @Override protected void defineSynchedData(){super.defineSynchedData();entityData.define(ACTION,0);}
     public int action(){return entityData.get(ACTION);}
     @Override protected void registerGoals(){goalSelector.addGoal(0,new FloatGoal(this));goalSelector.addGoal(4,new RandomStrollGoal(this,0.65));goalSelector.addGoal(5,new LookAtPlayerGoal(this,Player.class,16));}

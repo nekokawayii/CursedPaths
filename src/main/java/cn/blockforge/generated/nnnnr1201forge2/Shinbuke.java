@@ -9,13 +9,14 @@ import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.event.tick.ServerTickEvent;
+import net.neoforged.fml.common.EventBusSubscriber;
 
 /** 咒具「神武解」：左键近战 15 伤害，右键打出**面前扇形 15 格**的彩色雷击。
  *
  *  <p>雷击伤害 = {@link #STRIKE_DAMAGE}（基准 15 的 **20 倍** = 300 原值），走模组统一的
  *  {@code BalanceRules} / {@code CombatSettings.hurt} 结算，并按 {@link AttackTypes#LIGHTNING}
  *  归类（魔虚罗的"雷电适应"吃这一条）。</p> */
-@net.neoforged.fml.common.Mod.EventBusSubscriber(modid="jujutsu_kaisen_cursed_paths")
+@net.neoforged.fml.common.EventBusSubscriber(modid="jujutsu_kaisen_cursed_paths")
 public final class Shinbuke {
     /** 左键近战伤害（原值）。 */
     public static final double MELEE_DAMAGE=15;

@@ -103,7 +103,7 @@ public final class ScreenCracks {
         quad(b,ps,x0+nx,y0+ny,x1+nx,y1+ny,x1-nx,y1-ny,x0-nx,y0-ny,color);
     }
     private static void vertex(BufferBuilder b,PoseStack ps,double x,double y,int color){
-        b.vertex(ps.last().pose(),(float)x,(float)y,0f).color((color>>16)&255,(color>>8)&255,color&255,(color>>>24)&255).endVertex();
+        b.addVertex(ps.last().pose(),(float)x,(float)y,0f).color((color>>16)&255,(color>>8)&255,color&255,(color>>>24)&255).endVertex();
     }
     private ScreenCracks(){}
 }

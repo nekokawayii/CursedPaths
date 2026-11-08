@@ -15,6 +15,7 @@ import net.neoforged.neoforge.client.event.RenderLevelStageEvent;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.neoforge.event.tick.ServerTickEvent;
+import net.neoforged.fml.common.EventBusSubscriber;
 
 /** 咒力附拳期间的黑闪标记（用户要求）：
  *  <ul>
@@ -24,7 +25,7 @@ import net.neoforged.neoforge.event.tick.ServerTickEvent;
  *        伤害 = **本次普攻伤害的 3 次方**（封顶 {@link #MAX_DAMAGE}）。</li>
  *  </ul>
  *  服务端负责掷骰、发标记与结算瞬移黑闪；客户端只管画红圈、瞄准判定与发按键包。 */
-@Mod.EventBusSubscriber(modid="jujutsu_kaisen_cursed_paths")
+@EventBusSubscriber(modid="jujutsu_kaisen_cursed_paths")
 public final class BlackFlashMarks {
     /** 特效号：客户端据此在指定点画红圈（position=点，owner=敌人 id，life=持续时间刻）。 */
     public static final int FX_MARK=237;
@@ -210,10 +211,10 @@ public final class BlackFlashMarks {
         }
     }
     private static void quad(BufferBuilder b,PoseStack ps,Vec3 p0,Vec3 p1,Vec3 p2,Vec3 p3,int color){
-        b.vertex(ps.last().pose(),(float)p0.x,(float)p0.y,(float)p0.z).color(color).endVertex();
-        b.vertex(ps.last().pose(),(float)p1.x,(float)p1.y,(float)p1.z).color(color).endVertex();
-        b.vertex(ps.last().pose(),(float)p2.x,(float)p2.y,(float)p2.z).color(color).endVertex();
-        b.vertex(ps.last().pose(),(float)p3.x,(float)p3.y,(float)p3.z).color(color).endVertex();
+        b.addVertex(ps.last().pose(),(float)p0.x,(float)p0.y,(float)p0.z).color(color).endVertex();
+        b.addVertex(ps.last().pose(),(float)p1.x,(float)p1.y,(float)p1.z).color(color).endVertex();
+        b.addVertex(ps.last().pose(),(float)p2.x,(float)p2.y,(float)p2.z).color(color).endVertex();
+        b.addVertex(ps.last().pose(),(float)p3.x,(float)p3.y,(float)p3.z).color(color).endVertex();
     }
     private BlackFlashMarks(){}
 }

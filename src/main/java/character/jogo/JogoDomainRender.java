@@ -99,10 +99,10 @@ public final class JogoDomainRender {
         return 0xFF000000|(r<<16)|(g<<8)|b;
     }
     private static void vertexColor(VertexConsumer vc,org.joml.Matrix4f m,double x,double y,double z,int color) {
-        vc.vertex(m,(float)x,(float)y,(float)z).color(color).endVertex();
+        vc.addVertex(m,(float)x,(float)y,(float)z).color(color).endVertex();
     }
     private static void vertexTex(VertexConsumer vc,org.joml.Matrix4f m,double x,double y,double z,float u,float v) {
-        vc.vertex(m,(float)x,(float)y,(float)z).color(200,150,140,255).uv(u,v).endVertex();   // 压暗，保持火山岩质感
+        vc.addVertex(m,(float)x,(float)y,(float)z).color(200,150,140,255).uv(u,v).endVertex();   // 压暗，保持火山岩质感
     }
     private JogoDomainRender() {}
 }

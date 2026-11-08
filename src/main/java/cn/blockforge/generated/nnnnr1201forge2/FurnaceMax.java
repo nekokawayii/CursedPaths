@@ -17,6 +17,7 @@ import net.neoforged.neoforge.event.entity.living.LivingHurtEvent;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.neoforge.event.tick.ServerTickEvent;
 import cn.blockforge.generated.nnnnr1201forge2.CompatAttr;
+import net.neoforged.fml.common.EventBusSubscriber;
 
 /** 开 的终盘分支「**灶 · 最大功率 · 开**」（技能号 44）。
  *
@@ -32,7 +33,7 @@ import cn.blockforge.generated.nnnnr1201forge2.CompatAttr;
  *
  *  <p>与其它技能的关系：这是「开」的一支，**灶/开系对魔虚罗 ×20**的规则照旧生效
  *  （{@link MahoragaRules#bossDamage}）；蓄力期间接管输入，宿傩六式一律不理（同简易领域的做法）。</p> */
-@net.neoforged.fml.common.Mod.EventBusSubscriber(modid="jujutsu_kaisen_cursed_paths")
+@net.neoforged.fml.common.EventBusSubscriber(modid="jujutsu_kaisen_cursed_paths")
 public final class FurnaceMax {
     /** 技能号（开的分支，挂在轮盘 side 列表里）。已占用到 43（简易领域），所以取 44。 */
     public static final int SKILL=44;
@@ -149,7 +150,7 @@ public final class FurnaceMax {
         AttributeInstance attr=body.getAttribute(Attributes.MOVEMENT_SPEED);
         if(attr==null)return;
         attr.removeModifier(CompatAttr.id(FREEZE_ID));
-        attr.addTransientModifier(new AttributeModifier(CompatAttr.id(FREEZE_ID), -1.0, AttributeModifier.Operation.MULTIPLY_TOTAL));
+        attr.addTransientModifier(new AttributeModifier(CompatAttr.id(FREEZE_ID), -1.0, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL));
     }
     private static void unfreeze(LivingEntity body){
         AttributeInstance attr=body.getAttribute(Attributes.MOVEMENT_SPEED);

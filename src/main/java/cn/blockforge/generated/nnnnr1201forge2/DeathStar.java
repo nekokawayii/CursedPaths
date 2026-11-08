@@ -65,7 +65,7 @@ public final class DeathStar {
         p.serverLevel().playSound(null,p.blockPosition(),SoundEvents.WARDEN_HEARTBEAT,SoundSource.PLAYERS,2,.5f);
         tell(p,"极之番·死胎星：蓄力2秒，生命与咒力已献祭，中断不返还");
     }
-    private static void slow(ServerPlayer p,boolean on){var a=MaidBridge.body(p).getAttribute(Attributes.MOVEMENT_SPEED);if(a==null)return;if(!on)a.removeModifier(CompatAttr.id(SLOW));else if(a.getModifier(CompatAttr.id(SLOW))==null)a.addTransientModifier(new AttributeModifier(CompatAttr.id(SLOW), -.5, AttributeModifier.Operation.MULTIPLY_TOTAL));}
+    private static void slow(ServerPlayer p,boolean on){var a=MaidBridge.body(p).getAttribute(Attributes.MOVEMENT_SPEED);if(a==null)return;if(!on)a.removeModifier(CompatAttr.id(SLOW));else if(a.getModifier(CompatAttr.id(SLOW))==null)a.addTransientModifier(new AttributeModifier(CompatAttr.id(SLOW), -.5, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL));}
     private static void syncAnemia(ServerPlayer p){if(p instanceof net.neoforged.neoforge.common.util.FakePlayer)return;int ticks=(int)Math.max(0,Curse.data(p).getLong(UNTIL)-now(p));Network.CHANNEL.send(net.neoforged.neoforge.network.PacketDistributor.PLAYER.with(()->p),new Network.Effect(FX_ANEMIA,p.getId(),p.position(),Vec3.ZERO,0,ticks,0));}
     public static void cancel(ServerPlayer p){Cast c=casts.remove(p.getUUID());if(c!=null){pose(p,0);fx(p,FX_STOP,hand(p),Vec3.ZERO,0,0,c.id);}}
     private static boolean boss(LivingEntity t){

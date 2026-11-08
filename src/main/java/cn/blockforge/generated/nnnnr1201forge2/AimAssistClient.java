@@ -6,8 +6,9 @@ import net.neoforged.neoforge.client.event.*;
 import net.neoforged.neoforge.client.gui.overlay.VanillaGuiOverlay;
 import net.neoforged.bus.api.*;
 import net.neoforged.fml.common.Mod;
+import net.neoforged.fml.common.EventBusSubscriber;
 
-@Mod.EventBusSubscriber(modid="jujutsu_kaisen_cursed_paths",value=Dist.CLIENT)
+@EventBusSubscriber(modid="jujutsu_kaisen_cursed_paths",value=Dist.CLIENT)
 public final class AimAssistClient {
     private static Network.AimState state=new Network.AimState(true,AimRules.DEFAULT_ANGLE,AimRules.DEFAULT_RANGE,false);
     private static double fov=70;

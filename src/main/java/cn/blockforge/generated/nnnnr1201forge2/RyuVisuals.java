@@ -16,9 +16,10 @@ import net.neoforged.neoforge.client.event.RenderLevelStageEvent;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.neoforge.client.event.ClientTickEvent;
+import net.neoforged.fml.common.EventBusSubscriber;
 
 /** 石流龙的表现层：蓝白高密度光炮、蓄力、追踪弹、咒力喷涌环、甜品、领域起手。 */
-@Mod.EventBusSubscriber(modid = "jujutsu_kaisen_cursed_paths", value = Dist.CLIENT)
+@EventBusSubscriber(modid = "jujutsu_kaisen_cursed_paths", value = Dist.CLIENT)
 public final class RyuVisuals {
     private static final int CORE = 0xFFFFFF, GLOW = 0x9FDFFF, DEEP = 0x3E93C8;
     private static final String TEX_GLOW = "textures/effect/glow.png";
@@ -430,7 +431,7 @@ public final class RyuVisuals {
         float x = (float) (center.x + radius * cosPhi * Math.cos(theta));
         float y = (float) (center.y + radius * Math.sin(phi));
         float z = (float) (center.z + radius * cosPhi * Math.sin(theta));
-        var vertex = b.vertex(ps.last().pose(), x, y, z);
+        var vertex = b.addVertex(ps.last().pose(), x, y, z);
         if (textured) vertex.uv((float) u, (float) (1 - v));   // 贴图 v=0 在上，球的 v=0 在南极 → 翻转
         vertex.color((color >> 16) & 255, (color >> 8) & 255, color & 255, (color >>> 24) & 255).endVertex();
     }

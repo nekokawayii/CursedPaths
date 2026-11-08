@@ -17,6 +17,7 @@ import net.neoforged.bus.api.SubscribeEvent;
 import org.lwjgl.opengl.GL11;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.neoforged.neoforge.client.event.ClientTickEvent;
+import net.neoforged.fml.common.EventBusSubscriber;
 
 /**
  * 「羂索的邀请函」演出（r257）：原地展开一个逐渐变大的黑色立方体，把周围的人吸进去。
@@ -24,7 +25,7 @@ import net.neoforged.neoforge.client.event.ClientTickEvent;
  * <p>服务端用 {@code Network.Effect(623)} 广播（position=展开点、life=时长刻）；客户端收到后
  * 强制切第三人称，画 40 刻的扩张黑立方（面 + 棱线），播完自动切回第一人称。
  */
-@net.neoforged.fml.common.Mod.EventBusSubscriber(modid = "jujutsu_kaisen_cursed_paths", value = Dist.CLIENT)
+@net.neoforged.fml.common.EventBusSubscriber(modid = "jujutsu_kaisen_cursed_paths", value = Dist.CLIENT)
 public final class CullingCubeClient {
     private static final int LIFE = 40;
     private static Vec3 center;

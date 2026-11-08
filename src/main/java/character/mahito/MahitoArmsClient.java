@@ -22,6 +22,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import net.neoforged.fml.common.EventBusSubscriber;
 
 /**
  * 肢体：在玩家模型上额外画出多条手臂（第三人称/他人可见）。
@@ -29,7 +30,7 @@ import java.util.Map;
  * 沿肩部左右交替错开、略微前倾，看起来像从身体侧后方长出来的多余手臂。</p>
  * <p>说明：目前只做“模型渲染”，额外手臂的独立持物/使用与第一人称手部还没有接入。</p>
  */
-@Mod.EventBusSubscriber(modid = "jujutsu_kaisen_cursed_paths", value = Dist.CLIENT, bus = Mod.EventBusSubscriber.Bus.MOD)
+@EventBusSubscriber(modid = "jujutsu_kaisen_cursed_paths", value = Dist.CLIENT, bus = EventBusSubscriber.Bus.MOD)
 public final class MahitoArmsClient {
     private static final Map<Integer, Integer> ARMS = new HashMap<>();
     private static final Map<Integer, List<ItemStack>> HELD = new HashMap<>();

@@ -17,6 +17,7 @@ import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.neoforge.registries.ForgeRegistries;
 import net.neoforged.neoforge.event.tick.ServerTickEvent;
+import net.neoforged.fml.common.EventBusSubscriber;
 
 /**
  * 领域展开 · 真赝相爱。
@@ -25,7 +26,7 @@ import net.neoforged.neoforge.event.tick.ServerTickEvent;
  * <p>音效严格依次播放（实测时长）：start 1.19s → mid 1.12s → ost 25.71s，
  * 即 start 在 0 刻、mid 在 24 刻、ost 在 47 刻。
  */
-@Mod.EventBusSubscriber(modid = "jujutsu_kaisen_cursed_paths")
+@EventBusSubscriber(modid = "jujutsu_kaisen_cursed_paths")
 public final class YutaDomain {
     public static final int SKILL = 1002;
     /** 领域半径（方块）。 */

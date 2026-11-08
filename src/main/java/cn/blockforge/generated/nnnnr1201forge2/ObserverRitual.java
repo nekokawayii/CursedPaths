@@ -17,9 +17,10 @@ import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.neoforge.network.PacketDistributor;
 import net.neoforged.neoforge.event.tick.PlayerTickEvent;
+import net.neoforged.fml.common.EventBusSubscriber;
 
 /** 高位战服务端：入口、权威战斗状态、断线恢复与胜负结算。 */
-@Mod.EventBusSubscriber(modid="jujutsu_kaisen_cursed_paths")
+@EventBusSubscriber(modid="jujutsu_kaisen_cursed_paths")
 public final class ObserverRitual {
     public static final int FX_START=250,FX_SHAKE=251,FX_BLACK=252,FX_DIALOG=253,FX_ATTACK=254,FX_LINE=255,FX_END=256,FX_FIGHT=257;
     public static final Vec3 SPACE=new Vec3(.5,400,.5),BOSS_AT=SPACE.add(0,0,-4.5);

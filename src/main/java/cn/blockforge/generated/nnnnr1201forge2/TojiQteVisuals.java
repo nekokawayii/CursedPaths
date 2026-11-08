@@ -17,6 +17,7 @@ import net.neoforged.api.distmarker.Dist;
 import net.neoforged.neoforge.client.event.RenderLevelStageEvent;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.Mod;
+import net.neoforged.fml.common.EventBusSubscriber;
 
 /**
  * 甚尔 QTE 的客户端表现：
@@ -24,7 +25,7 @@ import net.neoforged.fml.common.Mod;
  * ② 被锁定的生物/弹幕身上包一圈会收缩的红环；
  * ③ 连招命中时播对应的自绘动作 + 红色冲击波。
  */
-@Mod.EventBusSubscriber(modid = "jujutsu_kaisen_cursed_paths", value = Dist.CLIENT)
+@EventBusSubscriber(modid = "jujutsu_kaisen_cursed_paths", value = Dist.CLIENT)
 public final class TojiQteVisuals {
     private record Mark(int entity, long until) {}
     private record Burst(Vec3 at, int combo, long born, int life) {}

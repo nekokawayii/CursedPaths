@@ -9,13 +9,14 @@ import net.minecraft.world.entity.projectile.ThrownTrident;
 import net.minecraft.world.item.AxeItem;
 import net.minecraft.world.item.SwordItem;
 import net.neoforged.neoforge.event.tick.ServerTickEvent;
+import net.neoforged.fml.common.EventBusSubscriber;
 
 /** 魔虚罗的"攻击类型"语言：12 类，法轮与适应都按这个维度计算（不是按技能）。
  *
  *  <p>模组自己的术式用 {@link #mark(String)} 在施术前打标记；标记是**一次伤害一份**：
  *  {@code CombatSettings.hurt} 在结算时 {@link #consume()} 取走，服务端每刻开始再兜底清空，
  *  所以原版/其他模组的伤害永远不会被前一刻残留的标记污染。原版与其他模组的伤害按 DamageSource 归类。</p> */
-@net.neoforged.fml.common.Mod.EventBusSubscriber(modid="jujutsu_kaisen_cursed_paths")
+@net.neoforged.fml.common.EventBusSubscriber(modid="jujutsu_kaisen_cursed_paths")
 public final class AttackTypes {
     public static final String SLASH="slash",FIRE="fire",SOUL="soul",VOID="void",ARROW="arrow",TRIDENT="trident",
         UNARMED="unarmed",THROWN="thrown",EXPLOSION="explosion",MAGIC="magic",ICE="ice",LIGHTNING="lightning";

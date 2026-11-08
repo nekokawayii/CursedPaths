@@ -26,9 +26,10 @@ import net.neoforged.bus.api.*;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.neoforge.event.tick.ServerTickEvent;
 import cn.blockforge.generated.nnnnr1201forge2.CompatAttr;
+import net.neoforged.fml.common.EventBusSubscriber;
 
 /** 真人共用战斗规则。延迟命中重查敌友；临时属性均使用独立修饰符，不改基础存档数值。 */
-@Mod.EventBusSubscriber(modid="jujutsu_kaisen_cursed_paths")
+@EventBusSubscriber(modid="jujutsu_kaisen_cursed_paths")
 public final class MahitoCombat {
     public static final int TOUCH=730,TAIL=731,THREADS=732,ARMS=733,DODGE=734,REFORGE=735,DOMAIN=736,DOMAIN_END=737,PUPPET=738;
     private static final ResourceKey<DamageType> SOUL=ResourceKey.create(Registries.DAMAGE_TYPE,ResourceLocation.fromNamespaceAndPath("jujutsu_kaisen_cursed_paths", "mahito_soul"));
@@ -137,7 +138,7 @@ public final class MahitoCombat {
             LivingEntity victim=aimed(p,10);if(victim==null)return;
             pose(p,3,40);COLLAPSES.removeIf(c->c.victim==victim);
             COLLAPSES.add(new Collapse(p,victim,victim.position(),now(p)));root(victim,40);
-            var armor=victim.getAttribute(Attributes.ARMOR);if(armor!=null){armor.removeModifier(CompatAttr.id(ARMOR_ZERO));armor.addTransientModifier(new AttributeModifier(CompatAttr.id(ARMOR_ZERO), -1, AttributeModifier.Operation.MULTIPLY_TOTAL));}
+            var armor=victim.getAttribute(Attributes.ARMOR);if(armor!=null){armor.removeModifier(CompatAttr.id(ARMOR_ZERO));armor.addTransientModifier(new AttributeModifier(CompatAttr.id(ARMOR_ZERO), -1, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL));}
             victim.getPersistentData().putLong("MahitoArmorUntil",now(p)+40);
             fx(p,THREADS,caster.getEyePosition(),victim.getBoundingBox().getCenter(),victim.getId(),40);
         }else if(id==MahitoSkills.ARMS){
@@ -205,7 +206,7 @@ public final class MahitoCombat {
     private static void restoreSoul(LivingEntity entity){var attribute=entity.getAttribute(Attributes.MAX_HEALTH);if(attribute!=null)attribute.removeModifier(CompatAttr.id(SOUL_LOSS));entity.getPersistentData().remove("MahitoSoulOwner");}
     public static void root(LivingEntity victim,int ticks){
         victim.getPersistentData().putLong("MahitoRootUntil",Math.max(now(victim)+ticks,victim.getPersistentData().getLong("MahitoRootUntil")));
-        var speed=victim.getAttribute(Attributes.MOVEMENT_SPEED);if(speed!=null&&!speed.hasModifier(new AttributeModifier(CompatAttr.id(ROOT), -1, AttributeModifier.Operation.MULTIPLY_TOTAL)))speed.addTransientModifier(new AttributeModifier(CompatAttr.id(ROOT), -1, AttributeModifier.Operation.MULTIPLY_TOTAL));
+        var speed=victim.getAttribute(Attributes.MOVEMENT_SPEED);if(speed!=null&&!speed.hasModifier(new AttributeModifier(CompatAttr.id(ROOT), -1, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL)))speed.addTransientModifier(new AttributeModifier(CompatAttr.id(ROOT), -1, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL));
         victim.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN,ticks,9));
     }
     @SubscribeEvent(priority=EventPriority.HIGHEST) public static void invincible(LivingAttackEvent event){

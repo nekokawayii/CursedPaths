@@ -13,6 +13,7 @@ import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.event.tick.ServerTickEvent;
 import cn.blockforge.generated.nnnnr1201forge2.CompatAttr;
+import net.neoforged.fml.common.EventBusSubscriber;
 
 /** 捌的分支「**简易领域 · 捌**」：**长按释放**的贴身简易领域。
  *
@@ -28,7 +29,7 @@ import cn.blockforge.generated.nnnnr1201forge2.CompatAttr;
  *        减速是**直接改 MOVEMENT_SPEED 属性**，不是「缓慢」药水效果 —— HUD 上不会出现药水图标，
  *        也只在这个技能维持期间存在，收招立刻恢复。</li>
  *  </ul> */
-@net.neoforged.fml.common.Mod.EventBusSubscriber(modid="jujutsu_kaisen_cursed_paths")
+@net.neoforged.fml.common.EventBusSubscriber(modid="jujutsu_kaisen_cursed_paths")
 public final class SimpleDomain {
     /** 技能号（捌的新分支，挂在轮盘 side 列表里）。
      *  **注意：不能用 33** —— 33 是 {@code FinaleRules.SKILL}（终式），
@@ -49,7 +50,7 @@ public final class SimpleDomain {
     public static final int DAMAGE_INTERVAL=5;
     /** 维持消耗：**每秒 150 咒力**（每 20 刻结算一次）；付不出就自动收招。 */
     public static final double ENERGY_PER_SECOND=150;
-    /** 释放期间的减速：**直接改移动速度属性**（{@code MULTIPLY_TOTAL -0.70} → 只剩 30%），
+    /** 释放期间的减速：**直接改移动速度属性**（{@code ADD_MULTIPLIED_TOTAL -0.70} → 只剩 30%），
      *  不是「缓慢」药水效果，所以没有药水图标、也不会和其它缓慢叠加。
      *  只在维持期间挂着；收招/死亡/换维度立刻摘掉（修饰符是 transient，不写进存档）。 */
     public static final float SLOW_SHARE=0.70f;
@@ -150,13 +151,13 @@ public final class SimpleDomain {
         }
     }
 
-    /** 挂上「减速 70%」：**直接改 MOVEMENT_SPEED 属性**（MULTIPLY_TOTAL -0.70 → 只剩 30% 移速）。
+    /** 挂上「减速 70%」：**直接改 MOVEMENT_SPEED 属性**（ADD_MULTIPLIED_TOTAL -0.70 → 只剩 30% 移速）。
      *  先摘旧的那份再挂，重复调用是幂等的，不会叠成一堆修饰符。 */
     private static void applySlow(LivingEntity body){
         AttributeInstance attr=body.getAttribute(Attributes.MOVEMENT_SPEED);
         if(attr==null)return;
         attr.removeModifier(CompatAttr.id(SLOW_ID));
-        attr.addTransientModifier(new AttributeModifier(CompatAttr.id(SLOW_ID), -SLOW_SHARE, AttributeModifier.Operation.MULTIPLY_TOTAL));
+        attr.addTransientModifier(new AttributeModifier(CompatAttr.id(SLOW_ID), -SLOW_SHARE, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL));
     }
     /** 摘掉减速：只在确实挂着时才动属性，避免每刻对无关玩家做无意义的属性重算。 */
     private static void clearSlow(LivingEntity body){

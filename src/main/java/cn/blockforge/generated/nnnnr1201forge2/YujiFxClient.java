@@ -3,9 +3,10 @@ package cn.blockforge.generated.nnnnr1201forge2;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.fml.common.Mod;
+import net.neoforged.fml.common.EventBusSubscriber;
 
 /** 虎杖重做（r321）表现层：改用 Photon 粒子 + 简单贴图（PhotonBridge），不再用 PhotonFx 光球/光环。 */
-@Mod.EventBusSubscriber(modid = "jujutsu_kaisen_cursed_paths", value = Dist.CLIENT)
+@EventBusSubscriber(modid = "jujutsu_kaisen_cursed_paths", value = Dist.CLIENT)
 public final class YujiFxClient {
     private static final int BLUE = 0xFF6FB6FF, RED = 0xFFFF4A3C, WHITE = 0xFFEAF4FF, BLACK = 0xFF1A0E0E;
 

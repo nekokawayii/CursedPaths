@@ -14,14 +14,15 @@ import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.Mod;
 import java.util.*;
 import net.neoforged.neoforge.client.event.ClientTickEvent;
+import net.neoforged.fml.common.EventBusSubscriber;
 
 /** 真实世界中的球面天空和对拼交界。深度测试保留，绝不使用遮住 NPC 的全屏贴片。 */
-@Mod.EventBusSubscriber(modid="jujutsu_kaisen_cursed_paths",value=Dist.CLIENT)
+@EventBusSubscriber(modid="jujutsu_kaisen_cursed_paths",value=Dist.CLIENT)
 public final class DomainWorldRenderer {
     private static DomainPresentation.Snapshot snapshot;
     private static long received;
     private static net.minecraft.client.multiplayer.ClientLevel receivedLevel;
-    @Mod.EventBusSubscriber(modid="jujutsu_kaisen_cursed_paths",value=Dist.CLIENT,bus=Mod.EventBusSubscriber.Bus.MOD)
+    @EventBusSubscriber(modid="jujutsu_kaisen_cursed_paths",value=Dist.CLIENT,bus=EventBusSubscriber.Bus.MOD)
     public static final class Setup {
         @SubscribeEvent public static void setup(net.neoforged.fml.event.lifecycle.FMLClientSetupEvent event){
             event.enqueueWork(()->DomainPresentation.receiver=DomainWorldRenderer::receive);
@@ -83,7 +84,7 @@ public final class DomainWorldRenderer {
             for(int i=1;i<count;i++)us[i]=(float)character.domain.DomainVisualRules.unwrap(us[0],us[i]);
             int color=textured?0xFFFFFF:f.style().color();
             for(int i=1;i<count-1;i++)for(int index:new int[]{0,i,i+1}){
-                Vec3 pos=polygon.get(index);b.vertex(ps.last().pose(),(float)pos.x,(float)pos.y,(float)pos.z);
+                Vec3 pos=polygon.get(index);b.addVertex(ps.last().pose(),(float)pos.x,(float)pos.y,(float)pos.z);
                 if(textured)b.uv(us[index]+f.style().yaw()/360f+(float)(time*f.style().spin()/7200),vs[index]);
                 b.color((color>>16)&255,(color>>8)&255,color&255,alpha).endVertex();
             }

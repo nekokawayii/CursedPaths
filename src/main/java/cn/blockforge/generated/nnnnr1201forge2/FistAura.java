@@ -54,11 +54,11 @@ public final class FistAura {
         double radius=Math.sqrt(x*x+y*y),falloff=Math.max(0,1-radius);falloff*=falloff;
         double px=cx+x*rx,py=cy+y*ry,shift=Math.sin(radius*19-age*0.22)*2.5*falloff;
         double u=(px+x*shift+Math.sin(age*0.10+y*8)*falloff)/w,v=1-(py+y*shift)/h;
-        b.vertex(g.pose().last().pose(),(float)px,(float)py,-70).uv((float)u,(float)v).color(255,255,255,255).endVertex();
+        b.addVertex(g.pose().last().pose(),(float)px,(float)py,-70).uv((float)u,(float)v).color(255,255,255,255).endVertex();
     }
     private static void line(BufferBuilder b,GuiGraphics g,double x,double y,double xx,double yy,double width,int color){
         double dx=xx-x,dy=yy-y,length=Math.max(0.001,Math.sqrt(dx*dx+dy*dy));dx=dx/length*width;dy=dy/length*width;
         vertex(b,g,x-dy,y+dx,color);vertex(b,g,xx-dy,yy+dx,color);vertex(b,g,xx+dy,yy-dx,color);vertex(b,g,x+dy,y-dx,color);
     }
-    private static void vertex(BufferBuilder b,GuiGraphics g,double x,double y,int c){b.vertex(g.pose().last().pose(),(float)x,(float)y,-60).color((c>>16)&255,(c>>8)&255,c&255,(c>>>24)&255).endVertex();}
+    private static void vertex(BufferBuilder b,GuiGraphics g,double x,double y,int c){b.addVertex(g.pose().last().pose(),(float)x,(float)y,-60).color((c>>16)&255,(c>>8)&255,c&255,(c>>>24)&255).endVertex();}
 }

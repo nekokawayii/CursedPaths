@@ -9,9 +9,10 @@ import net.neoforged.neoforge.client.event.*;
 import net.neoforged.bus.api.*;
 import net.neoforged.neoforge.client.event.RenderFrameEvent;
 import net.neoforged.neoforge.client.event.ClientTickEvent;
+import net.neoforged.fml.common.EventBusSubscriber;
 
 /** 只放慢本机绘制的呼吸/挥手动画；实体位置、碰撞和服务器时间绝不改动。 */
-@net.neoforged.fml.common.Mod.EventBusSubscriber(modid="jujutsu_kaisen_cursed_paths",value=Dist.CLIENT)
+@net.neoforged.fml.common.EventBusSubscriber(modid="jujutsu_kaisen_cursed_paths",value=Dist.CLIENT)
 public final class BloodVisionClient {
     private record Saved(int tick,float attack,float oldAttack){}
     private static final Map<LivingEntity,Saved> saved=new IdentityHashMap<>();

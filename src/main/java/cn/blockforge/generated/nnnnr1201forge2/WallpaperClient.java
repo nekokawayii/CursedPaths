@@ -17,9 +17,10 @@ import net.neoforged.fml.common.Mod;
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.system.MemoryStack;
 import net.neoforged.neoforge.client.event.ClientTickEvent;
+import net.neoforged.fml.common.EventBusSubscriber;
 
 /** 先应用本人的共享选择；未设置时使用发行版默认值，询问版在答复前不读取。 */
-@Mod.EventBusSubscriber(modid="jujutsu_kaisen_cursed_paths",value=Dist.CLIENT)
+@EventBusSubscriber(modid="jujutsu_kaisen_cursed_paths",value=Dist.CLIENT)
 public final class WallpaperClient {
     private static final class Incoming {
         final long revision,born;final int count,total;final byte[] data;int next,offset;

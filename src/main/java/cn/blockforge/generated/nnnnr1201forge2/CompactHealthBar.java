@@ -6,13 +6,14 @@ import net.neoforged.neoforge.client.event.RenderGuiOverlayEvent;
 import net.neoforged.neoforge.client.gui.overlay.VanillaGuiOverlay;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.Mod;
+import net.neoforged.fml.common.EventBusSubscriber;
 
 /**
  * 超长血条的替代渲染。
  * <p>原版血条按 {@code maxHealth / 2} 逐颗画心：生命 24000 时每帧要画 12000 个心，
  * 生存模式直接掉到个位数帧。这里在生命上限超过 40 时取消原版渲染，改画一条紧凑血条 + 数字。
  */
-@Mod.EventBusSubscriber(modid = "jujutsu_kaisen_cursed_paths", value = Dist.CLIENT)
+@EventBusSubscriber(modid = "jujutsu_kaisen_cursed_paths", value = Dist.CLIENT)
 public final class CompactHealthBar {
     /** 超过这个生命上限就改用紧凑血条（原版最多 20 颗心）。 */
     private static final float THRESHOLD = 40f;

@@ -12,8 +12,9 @@ import net.minecraft.world.level.Level;
 import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.Mod;
+import net.neoforged.fml.common.EventBusSubscriber;
 
-@Mod.EventBusSubscriber(modid="jujutsu_kaisen_cursed_paths")
+@EventBusSubscriber(modid="jujutsu_kaisen_cursed_paths")
 public final class MegumiSeanceItem extends Item {
     public MegumiSeanceItem(Properties properties){super(properties);}
     // 村民交易先于 Item.interactLivingEntity，必须在实体交互事件拦截才能真正降灵。

@@ -18,6 +18,7 @@ import net.neoforged.api.distmarker.Dist;
 import net.neoforged.neoforge.client.event.RenderLevelStageEvent;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.Mod;
+import net.neoforged.fml.common.EventBusSubscriber;
 
 /** 玩家头上的法轮：**把「法轮」戴在头盔槽**才会出现（{@link MahoragaRules#wheelOnHead}）。
  *
@@ -28,7 +29,7 @@ import net.neoforged.fml.common.Mod;
  *  <p><b>转动特效（重做）</b>：转格时**不再使用 Photon 粒子**，改为用模组自己的顶点通路，
  *  在法轮外侧画一圈**由内向外扩散并渐隐的金色光环**（{@code POSITION_COLOR} + 加色混合），
  *  见 {@link #ring}。</p> */
-@Mod.EventBusSubscriber(modid="jujutsu_kaisen_cursed_paths",value=Dist.CLIENT)
+@EventBusSubscriber(modid="jujutsu_kaisen_cursed_paths",value=Dist.CLIENT)
 public final class MahoragaWheelRenderer {
     private static final BbModel WHEEL=new BbModel("mahoraga_wheel","mahoraga_wheel");
     /** 不完全显现的法轮贴近头顶但不压进皮肤；模型居中后直径约 1.18 格。 */
@@ -142,7 +143,7 @@ public final class MahoragaWheelRenderer {
         vertex(b,pose,x0,halfWidth,z0,r,g,bl,outer);
     }
     private static void vertex(BufferBuilder b,org.joml.Matrix4f pose,float x,float y,float z,int r,int g,int bl,int a){
-        b.vertex(pose,x,y,z).color(r,g,bl,a).endVertex();
+        b.addVertex(pose,x,y,z).color(r,g,bl,a).endVertex();
     }
     /** 转满 4 格时法轮由暗金变为亮金。 */
     private static float[] tint(int cells){

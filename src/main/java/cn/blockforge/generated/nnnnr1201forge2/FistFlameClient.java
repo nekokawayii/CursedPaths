@@ -22,6 +22,7 @@ import net.neoforged.api.distmarker.Dist;
 import net.neoforged.neoforge.client.event.*;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.Mod;
+import net.neoforged.fml.common.EventBusSubscriber;
 
 /** 「咒力附拳」＝挂在**双手**上的用户特效 `ldlib/assets/photon/fx/11.fx`。
  *
@@ -33,7 +34,7 @@ import net.neoforged.fml.common.Mod;
  *        起效/更新/销毁全部放到客户端 `tick()` 里做，回收用"**{@link #GRACE} 刻没刷新才销毁**"的宽限判定，
  *        既不会因为状态抖动反复重建，也能在附拳关闭后自动收掉。</li>
  *  </ol> */
-@Mod.EventBusSubscriber(modid="jujutsu_kaisen_cursed_paths",value=Dist.CLIENT)
+@EventBusSubscriber(modid="jujutsu_kaisen_cursed_paths",value=Dist.CLIENT)
 public final class FistFlameClient {
     /** 服务端广播的特效号：附拳期间每 15 刻一条（带 entityId 与寿命）。 */
     public static final int FX=236;
@@ -159,7 +160,7 @@ public final class FistFlameClient {
         return m.invoke(o instanceof Class<?>?null:o,args);
     }
 
-    @Mod.EventBusSubscriber(modid="jujutsu_kaisen_cursed_paths",value=Dist.CLIENT,bus=Mod.EventBusSubscriber.Bus.MOD)
+    @EventBusSubscriber(modid="jujutsu_kaisen_cursed_paths",value=Dist.CLIENT,bus=EventBusSubscriber.Bus.MOD)
     public static final class Registration {
         @SubscribeEvent public static void layers(EntityRenderersEvent.AddLayers e){
             for(String skin:e.getSkins()){PlayerRenderer renderer=e.getSkin(skin);if(renderer!=null)renderer.addLayer(new Punch(renderer));}
@@ -233,7 +234,7 @@ public final class FistFlameClient {
             }
         }
         private static void vertex(PoseStack.Pose pose,com.mojang.blaze3d.vertex.VertexConsumer vb,int light,float x,float y,float z,int color,float u,float v){
-            vb.vertex(pose.pose(),x,y,z).color(color).uv(u,v).overlayCoords(4194304).uv2(light).normal(pose.normal(),0,0,1).endVertex();
+            vb.addVertex(pose.pose(),x,y,z).color(color).uv(u,v).overlayCoords(4194304).uv2(light).normal(pose.normal(),0,0,1).endVertex();
         }
         /** 沿**整条手臂**均匀取 ARM_POINTS 个点（玩家手臂箱体固定为肩下 -2~10 像素，取 1~9.5 像素＝前臂到拳头）。
          *  注：`ModelPart.cubes` 是 private，那个参考模组是带 Mixin/AT 才读到方块几何的；玩家模型尺寸固定，直接用像素范围更稳。 */
@@ -302,10 +303,10 @@ public final class FistFlameClient {
     /** 第一人称世界层里的一张柔光面片（面向相机，贴图通道，尺寸单位＝格）。 */
     private static void worldQuad(BufferBuilder b,Vec3 c,Vec3 right,Vec3 up,double w,double h,int color,double scale){
         Vec3 u=up.scale(h*scale),r=right.scale(w*scale);
-        b.vertex(c.x-r.x-u.x,c.y-r.y-u.y,c.z-r.z-u.z).uv(0,0).color(color).endVertex();
-        b.vertex(c.x+r.x-u.x,c.y+r.y-u.y,c.z+r.z-u.z).uv(1,0).color(color).endVertex();
-        b.vertex(c.x+r.x+u.x,c.y+r.y+u.y,c.z+r.z+u.z).uv(1,1).color(color).endVertex();
-        b.vertex(c.x-r.x+u.x,c.y-r.y+u.y,c.z-r.z+u.z).uv(0,1).color(color).endVertex();
+        b.addVertex(c.x-r.x-u.x,c.y-r.y-u.y,c.z-r.z-u.z).uv(0,0).color(color).endVertex();
+        b.addVertex(c.x+r.x-u.x,c.y+r.y-u.y,c.z+r.z-u.z).uv(1,0).color(color).endVertex();
+        b.addVertex(c.x+r.x+u.x,c.y+r.y+u.y,c.z+r.z+u.z).uv(1,1).color(color).endVertex();
+        b.addVertex(c.x-r.x+u.x,c.y-r.y+u.y,c.z-r.z+u.z).uv(0,1).color(color).endVertex();
     }
     private FistFlameClient(){}
 }

@@ -385,7 +385,7 @@ public final class CullingRules {
         if(Math.abs(amount)<1e-6){if(old!=null)a.removeModifier(CompatAttr.id(id));return;}
         if(old!=null&&Math.abs(old.getAmount()-amount)<1e-6)return;
         if(old!=null)a.removeModifier(CompatAttr.id(id));
-        a.addTransientModifier(new AttributeModifier(CompatAttr.id(id), amount, AttributeModifier.Operation.MULTIPLY_TOTAL));
+        a.addTransientModifier(new AttributeModifier(CompatAttr.id(id), amount, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL));
     }
     public static void clear(ServerPlayer p){
         for(UUID id:new UUID[]{HEALTH,ATTACK,SPEED,ATK_SPEED,JUMP,ARMOR}){

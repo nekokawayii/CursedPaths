@@ -258,7 +258,7 @@ public final class ThousandMileChain {
     private static void immobilize(LivingEntity target) {
         for(var attribute:List.of(Attributes.MOVEMENT_SPEED,Attributes.FLYING_SPEED)){
             var value=target.getAttribute(attribute);
-            if(value!=null&&value.getModifier(CompatAttr.id(ROOT))==null)value.addTransientModifier(new AttributeModifier(CompatAttr.id(ROOT), -1, AttributeModifier.Operation.MULTIPLY_TOTAL));
+            if(value!=null&&value.getModifier(CompatAttr.id(ROOT))==null)value.addTransientModifier(new AttributeModifier(CompatAttr.id(ROOT), -1, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL));
         }
     }
     private static void restore(LivingEntity target) {

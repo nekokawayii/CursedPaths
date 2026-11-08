@@ -31,7 +31,7 @@ public final class FinaleScreenGlass {
         int alpha=(int)(255*Math.max(0,1-age/10));
         for(int i=0;i<to.size();i++){
             var a=from.get(i);var z=to.get(i);var uv=List.of(a.a(),a.b(),a.c());var points=List.of(z.a(),z.b(),z.c());
-            for(int j=0;j<3;j++){var p=points.get(j);var texture=uv.get(j);b.vertex(g.pose().last().pose(),(float)p.x(),(float)p.y(),0).uv((float)(texture.x()/w),(float)(1-texture.y()/h)).color(255,255,255,alpha).endVertex();}
+            for(int j=0;j<3;j++){var p=points.get(j);var texture=uv.get(j);b.addVertex(g.pose().last().pose(),(float)p.x(),(float)p.y(),0).uv((float)(texture.x()/w),(float)(1-texture.y()/h)).color(255,255,255,alpha).endVertex();}
         }
         BufferUploader.drawWithShader(b.end());RenderSystem.enableCull();RenderSystem.disableBlend();RenderSystem.enableDepthTest();
     }

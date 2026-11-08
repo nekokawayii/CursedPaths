@@ -72,14 +72,14 @@ public final class Skills {
     private static void ignite(ServerPlayer owner,LivingEntity target,int seconds){
         if(!canHit(owner,target))return;
         if(SoulJourney.evolved(owner)){burns.put(target,new Burn(owner.getUUID(),Long.MAX_VALUE,CombatSettings.spellMultiplier(owner)));Curse.permanentSoulFire(owner,target);fx(owner,95,target.getBoundingBox().getCenter(),Vec3.ZERO,1,40,owner.getId());return;}
-        target.setSecondsOnFire(seconds);
+        target.igniteForSeconds(seconds);
         Burn previous=burns.get(target);long until=target.level().getGameTime()+seconds*20L;
         if(previous==null||until>=previous.until)burns.put(target,new Burn(owner.getUUID(),until,CombatSettings.spellMultiplier(owner)));
     }
     /** 有归属的短时燃烧；不会因灵魂进化自动升级成永久火。 */
     public static void burn(ServerPlayer owner,LivingEntity target,int seconds){
         if(!CombatSafety.canAffect(owner,target)||seconds<=0)return;
-        target.setSecondsOnFire(seconds);long until=target.level().getGameTime()+seconds*20L;Burn old=burns.get(target);
+        target.igniteForSeconds(seconds);long until=target.level().getGameTime()+seconds*20L;Burn old=burns.get(target);
         if(old==null||old.until<=until)burns.put(target,new Burn(owner.getUUID(),until,CombatSettings.spellMultiplier(owner)));
     }
     public static void protectAlly(ServerPlayer owner,UUID target){
@@ -186,7 +186,7 @@ public final class Skills {
         var attr=MaidBridge.body(p).getAttribute(net.minecraft.world.entity.ai.attributes.Attributes.MOVEMENT_SPEED);
         if(attr==null)return;
         attr.removeModifier(CompatAttr.id(SEAL_SLOW));
-        attr.addTransientModifier(new net.minecraft.world.entity.ai.attributes.AttributeModifier(SEAL_SLOW,"sukuna_domain_seal",-1,net.minecraft.world.entity.ai.attributes.AttributeModifier.Operation.MULTIPLY_TOTAL));
+        attr.addTransientModifier(new net.minecraft.world.entity.ai.attributes.AttributeModifier(SEAL_SLOW,"sukuna_domain_seal",-1,net.minecraft.world.entity.ai.attributes.AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL));
     }
     private static void unfreeze(ServerPlayer p){
         var attr=MaidBridge.body(p).getAttribute(net.minecraft.world.entity.ai.attributes.Attributes.MOVEMENT_SPEED);

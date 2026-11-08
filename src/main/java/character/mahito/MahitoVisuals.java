@@ -14,9 +14,10 @@ import net.neoforged.api.distmarker.Dist;
 import net.neoforged.neoforge.client.event.*;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.Mod;
+import net.neoforged.fml.common.EventBusSubscriber;
 
 /** 纯客户端演出，不生成一堆装饰生物；每个领域固定24只倒悬手臂。 */
-@Mod.EventBusSubscriber(modid="jujutsu_kaisen_cursed_paths",value=Dist.CLIENT)
+@EventBusSubscriber(modid="jujutsu_kaisen_cursed_paths",value=Dist.CLIENT)
 public final class MahitoVisuals {
     private record Visual(Network.Effect effect,long born){}
     private static final List<Visual> EFFECTS=new ArrayList<>();
@@ -83,17 +84,17 @@ public final class MahitoVisuals {
             for(int i=0;i<4;i++){
                 double lat=angles[i][0],az=angles[i][1],h=Math.cos(lat)*radius;
                 float px=(float)(effect.position().x+Math.cos(az)*h),py=(float)(effect.position().y+Math.sin(lat)*radius),pz=(float)(effect.position().z+Math.sin(az)*h);
-                out.vertex(ps.last().pose(),px,py,pz).color(1f,1f,1f,1f).uv(i==0||i==3?0:1,i<2?1:0).overlayCoords(OverlayTexture.NO_OVERLAY).uv2(15728880).normal(0,1,0).endVertex();
+                out.addVertex(ps.last().pose(),px,py,pz).color(1f,1f,1f,1f).uv(i==0||i==3?0:1,i<2?1:0).overlayCoords(OverlayTexture.NO_OVERLAY).uv2(15728880).normal(0,1,0).endVertex();
             }
         }
     }
     private static void ribbon(PoseStack ps,MultiBufferSource buffers,Vec3 a,Vec3 b,float width,float r,float g,float blue){
         var out=buffers.getBuffer(RenderType.entityTranslucent(SKIN));var matrix=ps.last().pose();
-        for(Vec3 p:List.of(a.add(width,0,0),b.add(width,0,0),b.add(-width,0,0),a.add(-width,0,0)))out.vertex(matrix,(float)p.x,(float)p.y,(float)p.z).color(r,g,blue,.9f).uv(.1f,.1f).overlayCoords(OverlayTexture.NO_OVERLAY).uv2(15728880).normal(0,1,0).endVertex();
+        for(Vec3 p:List.of(a.add(width,0,0),b.add(width,0,0),b.add(-width,0,0),a.add(-width,0,0)))out.addVertex(matrix,(float)p.x,(float)p.y,(float)p.z).color(r,g,blue,.9f).uv(.1f,.1f).overlayCoords(OverlayTexture.NO_OVERLAY).uv2(15728880).normal(0,1,0).endVertex();
     }
     private static void box(PoseStack ps,MultiBufferSource buffers,float x,float y,float z,float X,float Y,float Z,float r,float g,float b,float alpha){
         float[][][] faces={{{x,y,z},{X,y,z},{X,Y,z},{x,Y,z}},{{X,y,Z},{x,y,Z},{x,Y,Z},{X,Y,Z}},{{x,y,Z},{x,y,z},{x,Y,z},{x,Y,Z}},{{X,y,z},{X,y,Z},{X,Y,Z},{X,Y,z}},{{x,Y,z},{X,Y,z},{X,Y,Z},{x,Y,Z}}};
-        var out=buffers.getBuffer(RenderType.entityTranslucent(SKIN));for(var face:faces)for(int i=0;i<4;i++)out.vertex(ps.last().pose(),face[i][0],face[i][1],face[i][2]).color(r,g,b,alpha).uv(i%2*.4f,(i/2)*.4f).overlayCoords(OverlayTexture.NO_OVERLAY).uv2(15728880).normal(0,1,0).endVertex();
+        var out=buffers.getBuffer(RenderType.entityTranslucent(SKIN));for(var face:faces)for(int i=0;i<4;i++)out.addVertex(ps.last().pose(),face[i][0],face[i][1],face[i][2]).color(r,g,b,alpha).uv(i%2*.4f,(i/2)*.4f).overlayCoords(OverlayTexture.NO_OVERLAY).uv2(15728880).normal(0,1,0).endVertex();
     }
     public static final class PuppetRenderer extends EntityRenderer<MahitoPuppetEntity>{
         private final BbModel model=new BbModel("mahito_puppet","mahito_soul");

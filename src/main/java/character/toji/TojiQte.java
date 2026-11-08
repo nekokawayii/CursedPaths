@@ -298,7 +298,7 @@ public final class TojiQte {
         if (attribute == null) return;
         var id = java.util.UUID.fromString("480bb88f-333a-45aa-8bbb-001100220010");
         attribute.removeModifier(CompatAttr.id(id));
-        attribute.addTransientModifier(new AttributeModifier(CompatAttr.id(id), attribute.getBaseValue(), AttributeModifier.Operation.MULTIPLY_TOTAL));   // 等于当前速度 ×2
+        attribute.addTransientModifier(new AttributeModifier(CompatAttr.id(id), attribute.getBaseValue(), AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL));   // 等于当前速度 ×2
         Curse.data(p).putLong("TojiSpeedClear", n + PERFECT_TICKS);
     }
 

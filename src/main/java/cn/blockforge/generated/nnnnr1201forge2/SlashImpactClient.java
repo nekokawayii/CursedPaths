@@ -16,9 +16,10 @@ import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.Mod;
 import org.joml.Vector3f;
 import net.neoforged.neoforge.client.event.ClientTickEvent;
+import net.neoforged.fml.common.EventBusSubscriber;
 
 /** 捕获实体当时的真实蒙皮顶点，沿斩击平面裁成两块；不生成掉落物、不改死亡结算。 */
-@Mod.EventBusSubscriber(modid="jujutsu_kaisen_cursed_paths",value=Dist.CLIENT)
+@EventBusSubscriber(modid="jujutsu_kaisen_cursed_paths",value=Dist.CLIENT)
 public final class SlashImpactClient {
     private static final DustParticleOptions BLOOD=new DustParticleOptions(new Vector3f(.65f,.012f,.025f),1.15f);
     private record V(Vec3 p,float r,float g,float b,float a,float u,float v,int overlay,int light,Vec3 normal){
@@ -116,11 +117,11 @@ public final class SlashImpactClient {
             Vec3 at=p.old.lerp(p.at,e.getPartialTick()).subtract(camera);ps.pushPose();ps.translate(at.x,at.y,at.z);ps.mulPose(com.mojang.math.Axis.ZP.rotation(p.angle));
             for(var entry:p.mesh.entrySet()){
                 VertexConsumer consumer=source.getBuffer(entry.getKey());
-                for(V v:entry.getValue())consumer.vertex(ps.last().pose(),(float)v.p.x,(float)v.p.y,(float)v.p.z).color(v.r,v.g,v.b,v.a).uv(v.u,v.v).overlayCoords(v.overlay).uv2(v.light).normal(ps.last().normal(),(float)v.normal.x,(float)v.normal.y,(float)v.normal.z).endVertex();
+                for(V v:entry.getValue())consumer.addVertex(ps.last().pose(),(float)v.p.x,(float)v.p.y,(float)v.p.z).color(v.r,v.g,v.b,v.a).uv(v.u,v.v).overlayCoords(v.overlay).uv2(v.light).normal(ps.last().normal(),(float)v.normal.x,(float)v.normal.y,(float)v.normal.z).endVertex();
             }
             if(p.seam.size()>=3){
                 var cap=source.getBuffer(RenderType.debugQuads());Vec3 center=p.seam.stream().reduce(Vec3.ZERO,Vec3::add).scale(1.0/p.seam.size());
-                for(int i=0;i<p.seam.size();i++){Vec3 a=p.seam.get(i),z=p.seam.get((i+1)%p.seam.size());for(Vec3 v:List.of(center,a,z,z))cap.vertex(ps.last().pose(),(float)v.x,(float)v.y,(float)v.z).color(105,5,16,255).endVertex();}
+                for(int i=0;i<p.seam.size();i++){Vec3 a=p.seam.get(i),z=p.seam.get((i+1)%p.seam.size());for(Vec3 v:List.of(center,a,z,z))cap.addVertex(ps.last().pose(),(float)v.x,(float)v.y,(float)v.z).color(105,5,16,255).endVertex();}
             }
             ps.popPose();
         }source.endBatch();

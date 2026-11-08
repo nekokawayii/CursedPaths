@@ -12,12 +12,13 @@ import net.neoforged.api.distmarker.Dist;
 import net.neoforged.neoforge.client.event.RenderLevelStageEvent;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.Mod;
+import net.neoforged.fml.common.EventBusSubscriber;
 
 /** 「神武解」右键雷击的**彩色闪电**（纯自绘顶点，不用 Photon、也不用原版蓝闪电）。
  *
  *  <p>每道雷由若干段折线组成，从目标上方 24 格劈到目标身上，配色按彩虹循环（hue 随索引与时间偏移），
  *  用加色混合画成"彩色雷"；落地再补一圈扩散光环。存活 {@link #LIFE} 刻。</p> */
-@Mod.EventBusSubscriber(modid="jujutsu_kaisen_cursed_paths",value=Dist.CLIENT)
+@EventBusSubscriber(modid="jujutsu_kaisen_cursed_paths",value=Dist.CLIENT)
 public final class ShinbukeVisuals {
     /** 网络编号（避开已有区段：180-186 终式、187-203 五条悟、204-218 魔虚罗）。 */
     public static final int STRIKE=219;
@@ -133,7 +134,7 @@ public final class ShinbukeVisuals {
         RenderSystem.defaultBlendFunc();RenderSystem.enableCull();RenderSystem.disableBlend();
     }
     private static void emit(BufferBuilder b,org.joml.Matrix4f pose,Vec3 v,int r,int g,int bl,int a){
-        b.vertex(pose,(float)v.x,(float)v.y,(float)v.z).color(r,g,bl,a).endVertex();
+        b.addVertex(pose,(float)v.x,(float)v.y,(float)v.z).color(r,g,bl,a).endVertex();
     }
     /** 简化 HSV→RGB（只用于闪电配色）。 */
     private static int hsv(float h,float s,float v){
