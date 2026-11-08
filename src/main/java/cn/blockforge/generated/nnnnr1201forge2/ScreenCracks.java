@@ -32,8 +32,8 @@ public final class ScreenCracks {
         if(mc.player!=null&&WallpaperClient.hasImage(mc.player.getUUID()))desktop=WallpaperClient.texture(mc.player.getUUID());
         RenderSystem.backupProjectionMatrix();
         RenderSystem.setProjectionMatrix(new Matrix4f().setOrtho(0f,width,height,0f,1000f,21000f),VertexSorting.ORTHOGRAPHIC_Z);
-        PoseStack mv=RenderSystem.getModelViewStack();
-        mv.pushPose();mv.setIdentity();mv.translate(0f,0f,-2000f);RenderSystem.applyModelViewMatrix();
+        PoseStack mv=new PoseStack();
+        mv.pushPose();mv.last().pose().identity();mv.translate(0f,0f,-2000f);
         PoseStack ps=new PoseStack();
         RenderSystem.disableCull();RenderSystem.enableBlend();RenderSystem.defaultBlendFunc();RenderSystem.depthMask(false);
         // ① 玻璃碎片：相邻两条裂纹之间的一角，露出桌面
@@ -50,7 +50,7 @@ public final class ScreenCracks {
         for(Hit hit:hits)cracks(b,ps,hit,width,height);
         RenderSystem.setShader(GameRenderer::getPositionColorShader);
         BufferUploader.drawWithShader(b.buildOrThrow());
-        mv.popPose();RenderSystem.applyModelViewMatrix();RenderSystem.restoreProjectionMatrix();
+        mv.popPose();RenderSystem.restoreProjectionMatrix();
         RenderSystem.enableCull();RenderSystem.depthMask(true);RenderSystem.disableBlend();
     }
 

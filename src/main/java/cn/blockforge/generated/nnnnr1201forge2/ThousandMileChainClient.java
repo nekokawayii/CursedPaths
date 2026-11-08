@@ -27,7 +27,7 @@ public final class ThousandMileChainClient {
     private static long clock;
     private static double fov=70;
     private static int budget;
-    private static final MultiBufferSource.BufferSource CHAIN_BUFFERS=MultiBufferSource.immediate(new com.mojang.blaze3d.vertex.BufferBuilder(262144));
+    private static final MultiBufferSource.BufferSource CHAIN_BUFFERS=MultiBufferSource.immediate(new com.mojang.blaze3d.vertex.ByteBufferBuilder(262144));
     private static final class Visual {
         ThousandMileChain.Snapshot previous, current;
         long received;

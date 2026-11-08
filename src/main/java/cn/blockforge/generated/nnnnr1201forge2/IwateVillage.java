@@ -25,7 +25,7 @@ public final class IwateVillage {
     public static void sign(ChunkAccess c,int x,int y,int z,String a,String b,String d,String e,int rotation){
         if(!owns(c,x,z))return;set(c,x,y,z,Blocks.OAK_SIGN.defaultBlockState().setValue(BlockStateProperties.ROTATION_16,rotation));
         CompoundTag tag=blockTag("minecraft:sign",x,y,z),front=new CompoundTag();ListTag lines=new ListTag();
-        for(String s:new String[]{a,b,d,e})lines.add(StringTag.valueOf(Component.Serializer.toJson(Component.literal(s))));
+        for(String s:new String[]{a,b,d,e})lines.add(StringTag.valueOf(Component.Serializer.toJson(Component.literal(s), c.getLevel().registryAccess())));
         front.put("messages",lines);front.putString("color","brown");front.putBoolean("has_glowing_text",false);tag.put("front_text",front);tag.put("back_text",front.copy());tag.putBoolean("is_waxed",true);blockNbt(c,tag);
     }
     private static CompoundTag blockTag(String id,int x,int y,int z){CompoundTag t=new CompoundTag();t.putString("id",id);t.putInt("x",x);t.putInt("y",y);t.putInt("z",z);return t;}
