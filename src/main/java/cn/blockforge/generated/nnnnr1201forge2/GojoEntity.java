@@ -42,7 +42,7 @@ public final class GojoEntity extends Monster {
     public static void attributes(net.neoforged.neoforge.event.entity.EntityAttributeCreationEvent e){
         e.put(VoidContent.GOJO.get(),Monster.createMonsterAttributes().add(Attributes.MAX_HEALTH,HEALTH).add(Attributes.ARMOR,ARMOR).add(Attributes.MOVEMENT_SPEED,0.3).add(Attributes.ATTACK_DAMAGE,20).add(Attributes.FOLLOW_RANGE,120).add(Attributes.KNOCKBACK_RESISTANCE,0.8).build());
     }
-    @Override protected void defineSynchedData(){super.defineSynchedData();entityData.define(ACTION,0);entityData.define(AGE,0);}
+    @Override protected void defineSynchedData(net.minecraft.network.syncher.SynchedEntityData.Builder builder){super.defineSynchedData(builder);builder.define(ACTION,0);builder.define(AGE,0);}
     public int action(){return entityData.get(ACTION);}public int actionAge(){return entityData.get(AGE);}
     @Override public void addAdditionalSaveData(CompoundTag tag){super.addAdditionalSaveData(tag);tag.putLongArray("GojoCooldowns",cooldowns);tag.putInt("GojoDomain",domain);tag.putDouble("GojoCenterX",center.x);tag.putDouble("GojoCenterY",center.y);tag.putDouble("GojoCenterZ",center.z);}
     @Override public void readAdditionalSaveData(CompoundTag tag){super.readAdditionalSaveData(tag);long[] saved=tag.getLongArray("GojoCooldowns");for(int i=0;i<Math.min(saved.length,cooldowns.length);i++)cooldowns[i]=saved[i];domain=tag.getInt("GojoDomain");center=new Vec3(tag.getDouble("GojoCenterX"),tag.getDouble("GojoCenterY"),tag.getDouble("GojoCenterZ"));}

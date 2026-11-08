@@ -75,11 +75,10 @@ public final class GetoEntity extends Monster {
             .add(Attributes.KNOCKBACK_RESISTANCE, 0.6);
     }
 
-    @Override protected void defineSynchedData() {
-        super.defineSynchedData();
-        entityData.define(ACTION, 0);
-        entityData.define(AGE, 0);
-        entityData.define(PHASE2, false);
+    @Override protected void defineSynchedData(net.minecraft.network.syncher.SynchedEntityData.Builder builder){super.defineSynchedData(builder);
+        builder.define(ACTION, 0);
+        builder.define(AGE, 0);
+        builder.define(PHASE2, false);
     }
 
     @Override protected void registerGoals() {

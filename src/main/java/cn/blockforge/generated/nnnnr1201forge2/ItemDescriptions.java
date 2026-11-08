@@ -7,11 +7,12 @@ import net.neoforged.neoforge.registries.ForgeRegistries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.ChatFormatting;
 import net.neoforged.fml.common.EventBusSubscriber;
+import net.minecraft.core.registries.BuiltInRegistries;
 
 @EventBusSubscriber(modid="jujutsu_kaisen_cursed_paths")
 public final class ItemDescriptions {
     @SubscribeEvent public static void tooltip(ItemTooltipEvent event){
-        var id=ForgeRegistries.ITEMS.getKey(event.getItemStack().getItem());if(id==null||!id.getNamespace().equals("jujutsu_kaisen_cursed_paths"))return;
+        var id=BuiltInRegistries.ITEMS.getKey(event.getItemStack().getItem());if(id==null||!id.getNamespace().equals("jujutsu_kaisen_cursed_paths"))return;
         String text=switch(id.getPath()){
             case "sukuna_finger"->"不可合成；击败神庙内咒胎戴天获得。长按右键吞噬，最多20根。|每根固定增加："+GrowthConfig.FINGER.description(Network.tooltipFactor(BalanceRules.Category.PLAYER_HEALTH),Network.tooltipFactor(BalanceRules.Category.PLAYER_ATTACK),Network.tooltipFactor(BalanceRules.Category.DAMAGE))+"。|5根起普攻附带一次原伤害70%的解；Del单独切换附拳。|5/10/15/18/20根解锁招式强化。|15根解锁反转术式：轮盘左侧方格，松手直接自疗；永久生命成长越高，恢复量和咒力消耗越高。";
             case "buddha_body"->"击败即身佛掉落；吃满20根手指后长按右键融合，仅一次。|"+GrowthConfig.BODY.description(Network.tooltipFactor(BalanceRules.Category.PLAYER_HEALTH),Network.tooltipFactor(BalanceRules.Category.PLAYER_ATTACK),Network.tooltipFactor(BalanceRules.Category.DAMAGE))+"；解锁飞行、世界斩、虚空捌和空间斩。";

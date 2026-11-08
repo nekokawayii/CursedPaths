@@ -41,7 +41,7 @@ public final class MegumiEntity extends PathfinderMob {
     }
     public MegumiEntity(EntityType<? extends PathfinderMob> type,Level level){super(type,level);setPersistenceRequired();}
     @Override protected void registerGoals(){goalSelector.addGoal(0,new FloatGoal(this));}
-    @Override protected void defineSynchedData(){super.defineSynchedData();entityData.define(PHASE,0);entityData.define(CHANT,0);}
+    @Override protected void defineSynchedData(net.minecraft.network.syncher.SynchedEntityData.Builder builder){super.defineSynchedData(builder);builder.define(PHASE,0);builder.define(CHANT,0);}
     public int phase(){return entityData.get(PHASE);}
     public boolean downed(){return phase()==3;}
     public boolean chanting(){return phase()==2||phase()==4;}

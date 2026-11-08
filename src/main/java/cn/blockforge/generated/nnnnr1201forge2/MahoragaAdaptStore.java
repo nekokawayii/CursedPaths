@@ -13,6 +13,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.neoforged.neoforge.registries.ForgeRegistries;
 import net.neoforged.neoforge.event.tick.ServerTickEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
+import net.minecraft.core.registries.BuiltInRegistries;
 
 /** 戴上「法轮」之后的**自身适应**：与魔虚罗同款的法轮机制，但直接以"整只生物"为单位。
  *
@@ -54,7 +55,7 @@ public final class MahoragaAdaptStore {
     private static final Map<String,String> TYPE_NAMES=new HashMap<>();
 
     private static String typeKey(Entity entity){
-        ResourceLocation id=ForgeRegistries.ENTITY_TYPES.getKey(entity.getType());
+        ResourceLocation id=BuiltInRegistries.ENTITY_TYPES.getKey(entity.getType());
         return id==null?"unknown":id.toString();
     }
     private static String display(String key){
@@ -64,7 +65,7 @@ public final class MahoragaAdaptStore {
         return TYPE_NAMES.computeIfAbsent(key,k->{
             try{
                 ResourceLocation id=ResourceLocation.parse(k);
-                EntityType<?> type=ForgeRegistries.ENTITY_TYPES.getValue(id);
+                EntityType<?> type=BuiltInRegistries.ENTITY_TYPES.getValue(id);
                 if(type!=null)return type.getDescription().getString();
             }catch(RuntimeException ignored){}
             return k;

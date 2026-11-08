@@ -11,6 +11,7 @@ import net.neoforged.neoforge.registries.ForgeRegistries;
 
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.neoforge.event.tick.PlayerTickEvent;
+import net.minecraft.core.registries.BuiltInRegistries;
 
 /** 每角色每章节只发一次；标记随角色存档，切换、重登、死亡不会再次领取。 */
 public final class CharacterRewards {
@@ -39,7 +40,7 @@ public final class CharacterRewards {
         boolean valid=true;
         for(var item:reward.items()){
             var key=new ResourceLocation(item.id());
-            if(!ForgeRegistries.ITEMS.containsKey(key)||ForgeRegistries.ITEMS.getValue(key)==Items.AIR){valid=false;break;}
+            if(!BuiltInRegistries.ITEMS.containsKey(key)||BuiltInRegistries.ITEMS.getValue(key)==Items.AIR){valid=false;break;}
         }
         if(!valid){
             if(!data.getBoolean("RewardError_"+id)){
@@ -52,7 +53,7 @@ public final class CharacterRewards {
         data.remove("RewardError_"+id);
         p.giveExperiencePoints(reward.experience());Curse.add(p,reward.energy());
         for(var item:reward.items()){
-            var type=ForgeRegistries.ITEMS.getValue(new ResourceLocation(item.id()));int left=item.count();
+            var type=BuiltInRegistries.ITEMS.getValue(new ResourceLocation(item.id()));int left=item.count();
             while(left>0){var stack=new ItemStack(type,Math.min(left,type.getMaxStackSize()));left-=stack.getCount();Journey.give(p,stack);}
         }
         if(!reward.equals(CharacterReward.NONE))p.sendSystemMessage(Component.literal("已领取「"+title+"」奖励："+summary));

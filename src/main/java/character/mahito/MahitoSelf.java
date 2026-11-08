@@ -19,6 +19,7 @@ import java.util.UUID;
 import net.neoforged.neoforge.event.tick.ServerTickEvent;
 import net.minecraft.core.Holder;
 import cn.blockforge.generated.nnnnr1201forge2.CompatAttr;
+import net.minecraft.core.registries.BuiltInRegistries;
 
 /** 无为转变的「自我改变」与贮存轮盘的辅助功能：治疗 / 爆裂 / 遍杀即灵体 / 肢体。 */
 public final class MahitoSelf {

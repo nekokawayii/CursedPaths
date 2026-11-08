@@ -40,7 +40,7 @@ public class BuddhaEntity extends Monster {
     private final List<Mark> marks=new ArrayList<>();
     private record Mark(Vec3 pos,int due,float radius,float damage,int type,float bonus){}
     public BuddhaEntity(EntityType<? extends Monster> type,Level level){super(type,level);xpReward=100;setPersistenceRequired();countdown.setVisible(false);}
-    @Override protected void defineSynchedData(){super.defineSynchedData();entityData.define(PHASE,1);entityData.define(ACTION,0);}
+    @Override protected void defineSynchedData(net.minecraft.network.syncher.SynchedEntityData.Builder builder){super.defineSynchedData(builder);builder.define(PHASE,1);builder.define(ACTION,0);}
     public int phase(){return entityData.get(PHASE);}
     public int action(){return entityData.get(ACTION);}
     @Override protected void registerGoals(){goalSelector.addGoal(0,new FloatGoal(this));}

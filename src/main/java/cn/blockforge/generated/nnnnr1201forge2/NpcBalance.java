@@ -8,6 +8,7 @@ import net.neoforged.neoforge.event.entity.EntityJoinLevelEvent;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.common.EventBusSubscriber;
+import net.minecraft.core.registries.BuiltInRegistries;
 
 /**
  * NPC 血量的整合包倍率：**整合包模式开启时所有 NPC 血量 ×30，关闭时保持原值**。
@@ -50,7 +51,7 @@ public final class NpcBalance {
 
     @SubscribeEvent public static void join(EntityJoinLevelEvent e) {
         if (e.getLevel().isClientSide() || !(e.getEntity() instanceof LivingEntity living)) return;
-        String id = net.neoforged.neoforge.registries.ForgeRegistries.ENTITY_TYPES.getKey(living.getType()).toString();
+        String id = net.neoforged.neoforge.registries.BuiltInRegistries.ENTITY_TYPES.getKey(living.getType()).toString();
         Double base = BASE.get(id);
         if (base == null) return;
         var attribute = living.getAttribute(Attributes.MAX_HEALTH);

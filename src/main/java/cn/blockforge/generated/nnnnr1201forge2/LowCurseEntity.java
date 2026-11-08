@@ -13,6 +13,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.registries.ForgeRegistries;
+import net.minecraft.core.registries.BuiltInRegistries;
 
 /** 原模型、等级、碰撞尺寸统一由FORM同步，召唤归属单独存档。 */
 public final class LowCurseEntity extends Monster {
@@ -24,11 +25,11 @@ public final class LowCurseEntity extends Monster {
     private boolean modelReady;
     public LowCurseEntity(EntityType<? extends Monster> type,Level level){
         super(type,level);modelReady=true;
-        var key=ForgeRegistries.ENTITY_TYPES.getKey(type);String id=key==null?"":key.getPath();
+        var key=BuiltInRegistries.ENTITY_TYPES.getKey(type);String id=key==null?"":key.getPath();
         configure(id.startsWith("curse_")?CurseCatalog.index(id.substring(6)):CurseCatalog.choose(random,true));
     }
     public static AttributeSupplier.Builder createAttributes(){return Monster.createMonsterAttributes().add(Attributes.MAX_HEALTH,60).add(Attributes.ATTACK_DAMAGE,6).add(Attributes.MOVEMENT_SPEED,.27).add(Attributes.FOLLOW_RANGE,40).add(Attributes.ARMOR,2);}
-    @Override protected void defineSynchedData(){super.defineSynchedData();entityData.define(ACTION,0);entityData.define(AGE,0);entityData.define(FORM,0);}
+    @Override protected void defineSynchedData(net.minecraft.network.syncher.SynchedEntityData.Builder builder){super.defineSynchedData(builder);builder.define(ACTION,0);builder.define(AGE,0);builder.define(FORM,0);}
     public int formIndex(){return entityData.get(FORM);}
     public CurseCatalog.Form form(){return CurseCatalog.form(formIndex());}
     public void configure(int index){

@@ -159,7 +159,7 @@ public final class DismantleMotionClient {
         if(!MaidBridge.isMaid(entity))return;
         e.setCanceled(true);rendering=true;var ps=e.getPoseStack();ps.pushPose();
         try{
-            transform(entity,ps,e.getPartialTick());
+            transform(entity,ps,e.getPartialTick().getGameTimeDeltaPartialTick(true));
             // YSM 的深层 renderer 不一定覆写原版 render；从实体原入口重入才能保留其 geoRender 分流。
             var motionRenderer=Minecraft.getInstance().getEntityRenderDispatcher().getRenderer(entity);
             if(motionRenderer!=null)motionRenderer.render(entity,entity.getYRot(),e.getPartialTick(),ps,e.getMultiBufferSource(),e.getPackedLight());

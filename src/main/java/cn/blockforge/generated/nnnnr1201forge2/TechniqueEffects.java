@@ -4,9 +4,10 @@ import java.util.List;
 import net.minecraft.world.effect.*;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.registries.*;
+import net.minecraft.core.registries.BuiltInRegistries;
 
 public final class TechniqueEffects {
-    public static final DeferredRegister<MobEffect> EFFECTS=DeferredRegister.create(ForgeRegistries.MOB_EFFECTS,"jujutsu_kaisen_cursed_paths");
+    public static final DeferredRegister<MobEffect> EFFECTS=DeferredRegister.create(BuiltInRegistries.MOB_EFFECTS,"jujutsu_kaisen_cursed_paths");
     public static final DeferredHolder<MobEffect, MobEffect> BURNOUT=EFFECTS.register("technique_burnout",()->new MobEffect(MobEffectCategory.HARMFUL,0x853343){
         @Override public List<ItemStack> getCurativeItems(){return List.of();}
     });

@@ -16,12 +16,13 @@ import net.minecraft.world.level.levelgen.feature.Feature;
 import net.neoforged.neoforge.registries.*;
 import net.neoforged.bus.api.*;
 import net.neoforged.neoforge.event.server.ServerAboutToStartEvent;
+import net.minecraft.core.registries.BuiltInRegistries;
 
 public final class ExpeditionWorldgen {
     public static final List<String> BIOMES=List.of("cursed_wasteland","cursed_sakura_forest","scorched_volcanic_fields","ancient_battlefield");
     private static final DeferredRegister<Codec<? extends BiomeSource>> SOURCES=DeferredRegister.create(Registries.BIOME_SOURCE,"jujutsu_kaisen_cursed_paths");
     private static final DeferredRegister<Codec<? extends ChunkGenerator>> GENERATORS=DeferredRegister.create(Registries.CHUNK_GENERATOR,"jujutsu_kaisen_cursed_paths");
-    private static final DeferredRegister<Feature<?>> FEATURES=DeferredRegister.create(ForgeRegistries.FEATURES,"jujutsu_kaisen_cursed_paths");
+    private static final DeferredRegister<Feature<?>> FEATURES=DeferredRegister.create(BuiltInRegistries.FEATURES,"jujutsu_kaisen_cursed_paths");
     static {
         SOURCES.register("cursed_overworld",()->CursedSource.CODEC);
         GENERATORS.register("culling_city",()->CullingCityGenerator.CODEC);

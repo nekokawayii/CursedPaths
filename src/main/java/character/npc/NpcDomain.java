@@ -19,6 +19,7 @@ import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.event.server.ServerStoppingEvent;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.neoforge.event.tick.ServerTickEvent;
+import net.minecraft.core.registries.BuiltInRegistries;
 
 /**
  * **NPC 的"真领域"**（r384，用户选 A：跟玩家一样真改地形）。

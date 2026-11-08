@@ -36,7 +36,7 @@ public final class MahitoVisuals {
     public static void reload(){tail=new BbModel("mahito_tail","mahito_soul");arm=new BbModel("mahito_arm","mahito_soul");}
     @SubscribeEvent public static void render(RenderLevelStageEvent event){
         if(event.getStage()!=RenderLevelStageEvent.Stage.AFTER_ENTITIES)return;
-        var mc=Minecraft.getInstance();if(mc.level==null)return;long now=mc.level.getGameTime();float partial=event.getPartialTick();
+        var mc=Minecraft.getInstance();if(mc.level==null)return;long now=mc.level.getGameTime();float partial=event.getPartialTick().getGameTimeDeltaPartialTick(true);
         EFFECTS.removeIf(v->now-v.born>v.effect.life());DOMAINS.values().removeIf(v->now-v.born>v.effect.life()+40);
         var ps=event.getPoseStack();var buffers=mc.renderBuffers().bufferSource();Vec3 camera=event.getCamera().getPosition();
         ps.pushPose();ps.translate(-camera.x,-camera.y,-camera.z);

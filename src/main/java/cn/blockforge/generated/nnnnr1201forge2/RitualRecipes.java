@@ -5,6 +5,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.*;
 import net.neoforged.neoforge.registries.ForgeRegistries;
+import net.minecraft.core.registries.BuiltInRegistries;
 
 /** 消耗先校验再扣除，输出只在仪式完成时产生。后续祭坛配方只需登记一行。 */
 public final class RitualRecipes {
@@ -63,7 +64,7 @@ public final class RitualRecipes {
             "seal_white",1,"curse_concentrate",1,"soul_echo",2,"residue_medium",3);
     }
     private static void add(String id,int tier,int ticks,String output,int count,boolean bp,Object... parts){Map<String,Integer> m=new LinkedHashMap<>();for(int i=0;i<parts.length;i+=2)m.put((String)parts[i],(Integer)parts[i+1]);ALL.add(new Recipe(id,tier,ticks,output,count,bp,Collections.unmodifiableMap(m)));}
-    public static Item resolve(String id){return ForgeRegistries.ITEMS.getValue(new ResourceLocation(id.contains(":")?id:"jujutsu_kaisen_cursed_paths:"+id));}
+    public static Item resolve(String id){return BuiltInRegistries.ITEMS.getValue(new ResourceLocation(id.contains(":")?id:"jujutsu_kaisen_cursed_paths:"+id));}
     public static Recipe get(String id){return ALL.stream().filter(r->r.id.equals(id)).findFirst().orElse(null);}
     public static void take(ServerPlayer p,Item item,int amount){for(int i=0;i<p.getInventory().getContainerSize()&&amount>0;i++){var s=p.getInventory().getItem(i);if(s.is(item)){int n=Math.min(amount,s.getCount());s.shrink(n);amount-=n;}}}
     private RitualRecipes(){}

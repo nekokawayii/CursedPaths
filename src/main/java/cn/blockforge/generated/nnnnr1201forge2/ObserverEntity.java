@@ -16,7 +16,7 @@ public class ObserverEntity extends Monster {
         super(type,level);
         setPersistenceRequired();setNoAi(true);setInvulnerable(true);setNoGravity(true);setSilent(false);xpReward=0;
     }
-    @Override protected void defineSynchedData(){super.defineSynchedData();entityData.define(ACTION,0);}
+    @Override protected void defineSynchedData(net.minecraft.network.syncher.SynchedEntityData.Builder builder){super.defineSynchedData(builder);builder.define(ACTION,0);}
     public int action(){return entityData.get(ACTION);}
     public void action(int value){entityData.set(ACTION,value);}
     @Override public void tick(){

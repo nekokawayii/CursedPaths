@@ -4,6 +4,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.InventoryScreen;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.core.registries.BuiltInRegistries;
 
 /** 界面里画「实体预览」的安全封装。
  *  原版绘制路径从渲染表拿渲染器后完全不检查 null，一旦某个实体类型不在表里
@@ -19,13 +20,13 @@ public final class GuiEntityPreview {
         if(mc.level==null)return false; // 退出世界后屏幕还在画时，跳过 3D 预览
         try{
             if(mc.getEntityRenderDispatcher().getRenderer(entity)==null){
-                System.out.println("[宿傩] 实体预览缺少渲染器，已改用二维占位："+net.neoforged.neoforge.registries.ForgeRegistries.ENTITY_TYPES.getKey(entity.getType()));
+                System.out.println("[宿傩] 实体预览缺少渲染器，已改用二维占位："+net.neoforged.neoforge.registries.BuiltInRegistries.ENTITY_TYPES.getKey(entity.getType()));
                 return false;
             }
             InventoryScreen.renderEntityInInventoryFollowsMouse(g,x,y,scale,angleX,angleY,entity);
             return true;
         }catch(Throwable t){
-            System.out.println("[宿傩] 实体预览绘制抛错，已改用二维占位："+net.neoforged.neoforge.registries.ForgeRegistries.ENTITY_TYPES.getKey(entity.getType())+" "+t);
+            System.out.println("[宿傩] 实体预览绘制抛错，已改用二维占位："+net.neoforged.neoforge.registries.BuiltInRegistries.ENTITY_TYPES.getKey(entity.getType())+" "+t);
             return false;
         }
     }

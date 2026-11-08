@@ -58,7 +58,7 @@ public final class DeathStarClient {
     }
     @SubscribeEvent public static void render(RenderLevelStageEvent event){
         if(event.getStage()!=RenderLevelStageEvent.Stage.AFTER_PARTICLES||visuals.isEmpty())return;
-        var mc=Minecraft.getInstance();if(mc.level==null)return;Vec3 camera=event.getCamera().getPosition();var ps=event.getPoseStack();double now=time()+event.getPartialTick();
+        var mc=Minecraft.getInstance();if(mc.level==null)return;Vec3 camera=event.getCamera().getPosition();var ps=event.getPoseStack();double now=time()+event.getPartialTick().getGameTimeDeltaPartialTick(true);
         boolean depth=GL30.glIsEnabled(GL30.GL_DEPTH_TEST),blend=GL30.glIsEnabled(GL30.GL_BLEND),cull=GL30.glIsEnabled(GL30.GL_CULL_FACE),mask=GL30.glGetBoolean(GL30.GL_DEPTH_WRITEMASK);
         int src=GL30.glGetInteger(GL30.GL_BLEND_SRC_RGB),dst=GL30.glGetInteger(GL30.GL_BLEND_DST_RGB),srcA=GL30.glGetInteger(GL30.GL_BLEND_SRC_ALPHA),dstA=GL30.glGetInteger(GL30.GL_BLEND_DST_ALPHA);var shader=RenderSystem.getShader();float[] color=RenderSystem.getShaderColor().clone();
         ps.pushPose();try{

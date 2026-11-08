@@ -112,7 +112,7 @@ public final class TodoVisuals {
             if (drawn++ >= MAX_MARKS) break;
             Entity entity = mc.level.getEntity(id);
             if (entity == null) continue;
-            Vec3 at = entity.getPosition(e.getPartialTick());
+            Vec3 at = entity.getPosition(e.getPartialTick().getGameTimeDeltaPartialTick(true));
             if (at.distanceToSqr(cam) > 64 * 64) continue;
             mark(b, ps, at, Math.max(0.45, entity.getBbWidth() * 0.75), now, cam);
         }

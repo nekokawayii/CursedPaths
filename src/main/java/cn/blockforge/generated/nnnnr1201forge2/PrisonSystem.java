@@ -19,6 +19,7 @@ import net.neoforged.neoforge.event.entity.player.*;
 import net.neoforged.neoforge.event.level.BlockEvent;
 import net.neoforged.bus.api.*;
 import net.neoforged.neoforge.event.tick.ServerTickEvent;
+import net.minecraft.core.registries.BuiltInRegistries;
 
 /** 所有封印、解封、库存和传送约束只由服务端裁决。 */
 public final class PrisonSystem {
@@ -91,7 +92,7 @@ public final class PrisonSystem {
             transferPlayer(player,prison,x,64,z);player.setGameMode(GameType.ADVENTURE);player.setDeltaMovement(Vec3.ZERO);
             tell(player,"你已被狱门僵封印 · 物品暂存，等待外部的邪去悔天梯解封");
         }else{
-            CompoundTag snapshot=new CompoundTag();entity.saveWithoutId(snapshot);snapshot.putString("id",net.neoforged.neoforge.registries.ForgeRegistries.ENTITY_TYPES.getKey(entity.getType()).toString());snapshot.remove("Passengers");
+            CompoundTag snapshot=new CompoundTag();entity.saveWithoutId(snapshot);snapshot.putString("id",net.neoforged.neoforge.registries.BuiltInRegistries.ENTITY_TYPES.getKey(entity.getType()).toString());snapshot.remove("Passengers");
             record.put("Entity",snapshot);record.putBoolean("CanUpdate",entity.canUpdate());
             Entity copy=EntityType.loadEntityRecursive(snapshot.copy(),prison,e->e);if(!(copy instanceof LivingEntity captive))return false;
             captive.moveTo(x,64,z,entity.getYRot(),0);if(captive instanceof Mob mob){mob.setNoAi(true);mob.setPersistenceRequired();mob.setTarget(null);}captive.setInvulnerable(true);captive.canUpdate(false);

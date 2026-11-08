@@ -114,7 +114,7 @@ public final class SlashImpactClient {
         if(e.getStage()!=RenderLevelStageEvent.Stage.AFTER_ENTITIES||corpses.isEmpty())return;
         var mc=Minecraft.getInstance();var source=mc.renderBuffers().bufferSource();PoseStack ps=e.getPoseStack();Vec3 camera=e.getCamera().getPosition();
         for(Corpse c:corpses)for(Piece p:c.pieces){
-            Vec3 at=p.old.lerp(p.at,e.getPartialTick()).subtract(camera);ps.pushPose();ps.translate(at.x,at.y,at.z);ps.mulPose(com.mojang.math.Axis.ZP.rotation(p.angle));
+            Vec3 at=p.old.lerp(p.at,e.getPartialTick().getGameTimeDeltaPartialTick(true)).subtract(camera);ps.pushPose();ps.translate(at.x,at.y,at.z);ps.mulPose(com.mojang.math.Axis.ZP.rotation(p.angle));
             for(var entry:p.mesh.entrySet()){
                 VertexConsumer consumer=source.getBuffer(entry.getKey());
                 for(V v:entry.getValue())consumer.addVertex(ps.last().pose(),(float)v.p.x,(float)v.p.y,(float)v.p.z).color(v.r,v.g,v.b,v.a).uv(v.u,v.v).overlayCoords(v.overlay).uv2(v.light).normal(ps.last().normal(),(float)v.normal.x,(float)v.normal.y,(float)v.normal.z).endVertex();

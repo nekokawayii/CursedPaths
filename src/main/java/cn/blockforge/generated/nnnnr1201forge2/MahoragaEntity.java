@@ -40,6 +40,7 @@ import net.neoforged.neoforge.event.entity.EntityAttributeCreationEvent;
 import net.neoforged.neoforge.event.entity.living.LivingHealEvent;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.neoforge.registries.ForgeRegistries;
+import net.minecraft.core.registries.BuiltInRegistries;
 
 public final class MahoragaEntity extends Monster {
    public static final double HEALTH = 180000.0D;
@@ -99,16 +100,15 @@ public final class MahoragaEntity extends Monster {
       e.put((EntityType)VoidContent.MAHORAGA.get(), Monster.createMonsterAttributes().add(Attributes.MAX_HEALTH, 400000.0D).add(Attributes.ARMOR, 24.0D).add(Attributes.MOVEMENT_SPEED, 0.32D).add(Attributes.ATTACK_DAMAGE, 50.0D).add(Attributes.FOLLOW_RANGE, 160.0D).add(Attributes.KNOCKBACK_RESISTANCE, 1.0D).build());
    }
 
-   protected void defineSynchedData() {
-      super.defineSynchedData();
-      this.entityData.define(ACTION, 0);
-      this.entityData.define(AGE, 0);
-      this.entityData.define(IMMUNE, 0);
-      this.entityData.define(OWN_MASK, 0);
-      this.entityData.define(ALLY, 0);
-      this.entityData.define(WHEEL, -1);
-      this.entityData.define(CELL, 0);
-      this.entityData.define(RITUAL, 0);
+   protected void defineSynchedData(net.minecraft.network.syncher.SynchedEntityData.Builder builder){super.defineSynchedData(builder);
+      this.builder.define(ACTION, 0);
+      this.builder.define(AGE, 0);
+      this.builder.define(IMMUNE, 0);
+      this.builder.define(OWN_MASK, 0);
+      this.builder.define(ALLY, 0);
+      this.builder.define(WHEEL, -1);
+      this.builder.define(CELL, 0);
+      this.builder.define(RITUAL, 0);
    }
 
    public int action() {
@@ -564,7 +564,7 @@ public final class MahoragaEntity extends Monster {
 
    private void turnOwnByAttack(LivingEntity victim) {
       if (victim != null) {
-         ResourceLocation id = ForgeRegistries.ENTITY_TYPES.getKey(victim.getType());
+         ResourceLocation id = BuiltInRegistries.ENTITY_TYPES.getKey(victim.getType());
          if (id != null) {
             this.turnOwn(MahoragaAdaptStore.DEALT + id);
          }
@@ -581,7 +581,7 @@ public final class MahoragaEntity extends Monster {
          return "\u5176\u4ed6\u4f24\u5bb3";
       } else {
          try {
-            EntityType<?> type = (EntityType)ForgeRegistries.ENTITY_TYPES.getValue(ResourceLocation.parse(bare));
+            EntityType<?> type = (EntityType)BuiltInRegistries.ENTITY_TYPES.getValue(ResourceLocation.parse(bare));
             if (type != null) {
                return "\u300c" + type.getDescription().getString() + "\u300d";
             }

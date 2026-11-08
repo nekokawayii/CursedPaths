@@ -9,10 +9,11 @@ import net.minecraft.core.Holder;
 import net.minecraft.network.protocol.game.ClientboundSoundPacket;
 import net.neoforged.neoforge.registries.*;
 import net.neoforged.bus.api.IEventBus;
+import net.minecraft.core.registries.BuiltInRegistries;
 
 /** 每种招式独立音频槽位；客户端资源包可覆盖同名 Vorbis ogg。 */
 public final class SkillSounds {
-    private static final DeferredRegister<SoundEvent> REGISTRY=DeferredRegister.create(ForgeRegistries.SOUND_EVENTS,"jujutsu_kaisen_cursed_paths");
+    private static final DeferredRegister<SoundEvent> REGISTRY=DeferredRegister.create(BuiltInRegistries.SOUND_EVENTS,"jujutsu_kaisen_cursed_paths");
     private static final Map<String,DeferredHolder<SoundEvent, SoundEvent>> SOUNDS=new LinkedHashMap<>();
     public static final String[] NORMAL={"dismantle","web","cleave","flame_bow","furnace","shrine","soul_peel"};
     public static final String[] AWAKENED={"world_slash","sphere_web","void_cleave","heaven_bow","inferno","burning_shrine","soul_peel"};

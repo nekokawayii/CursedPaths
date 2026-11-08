@@ -21,6 +21,7 @@ import net.neoforged.neoforge.event.entity.EntityJoinLevelEvent;
 import net.neoforged.neoforge.registries.ForgeRegistries;
 import org.slf4j.Logger;
 import net.neoforged.neoforge.client.event.RenderFrameEvent;
+import net.minecraft.core.registries.BuiltInRegistries;
 
 /** 单一的完整实体目录：正常注册与运行时校验共用，不从已经触发过的事件收集目录。 */
 public final class EntityRendererRegistry {
@@ -135,7 +136,7 @@ public final class EntityRendererRegistry {
             for(var entry:ENTRIES)entry.require(required,lazyContext);
             var result=RendererRepair.repair(dispatcher.renderers,required);
             dispatcher.renderers=result.renderers();
-            for(var type:result.repaired())LOGGER.warn("[宿傩渲染 r125] 已恢复实体的真实渲染器：{}",ForgeRegistries.ENTITY_TYPES.getKey(type));
+            for(var type:result.repaired())LOGGER.warn("[宿傩渲染 r125] 已恢复实体的真实渲染器：{}",BuiltInRegistries.ENTITY_TYPES.getKey(type));
         } catch(RuntimeException | LinkageError failure) {
             // 保留完整原因，不吞掉初始化错误再让原版在无名称的 null 处崩溃。
             LOGGER.error("[宿傩渲染 r125] 实体渲染器恢复失败。",failure);
@@ -180,7 +181,7 @@ public final class EntityRendererRegistry {
     private static void verifyEntity(Minecraft mc,Entity entity) {
         var dispatcher=mc.getEntityRenderDispatcher();
         if(dispatcher.getRenderer(entity)!=null)return;
-        ResourceLocation id=ForgeRegistries.ENTITY_TYPES.getKey(entity.getType());
+        ResourceLocation id=BuiltInRegistries.ENTITY_TYPES.getKey(entity.getType());
         boolean player=entity instanceof net.minecraft.client.player.AbstractClientPlayer;
         boolean retry=player?!playerRecoveryTried:recoveryTried.add(id);
         if(player)playerRecoveryTried=true;

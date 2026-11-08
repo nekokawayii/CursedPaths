@@ -278,7 +278,7 @@ public final class FistFlameClient {
                 }
             }
             // 第一人称的自绘包覆层：沿"肘→拳"画一串柔光面片（贴图通道，尺寸以格为单位）
-            float power=(float)(0.70+0.18*Math.sin((p.tickCount+e.getPartialTick())*0.16)+0.55*p.getAttackAnim(e.getPartialTick())*p.getAttackAnim(e.getPartialTick()));
+            float power=(float)(0.70+0.18*Math.sin((p.tickCount+e.getPartialTick().getGameTimeDeltaPartialTick(true))*0.16)+0.55*p.getAttackAnim(e.getPartialTick().getGameTimeDeltaPartialTick(true))*p.getAttackAnim(e.getPartialTick().getGameTimeDeltaPartialTick(true)));
             RenderSystem.enableDepthTest();RenderSystem.disableCull();RenderSystem.enableBlend();
             RenderSystem.defaultBlendFunc();RenderSystem.setShader(net.minecraft.client.renderer.GameRenderer::getPositionTexShader);
             RenderSystem.setShaderTexture(0,AURA_FX_TEXTURE);

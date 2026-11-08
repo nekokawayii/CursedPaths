@@ -56,11 +56,10 @@ public final class RikaEntity extends PathfinderMob {
             .add(Attributes.ATTACK_DAMAGE, 120);
     }
 
-    @Override protected void defineSynchedData() {
-        super.defineSynchedData();
-        entityData.define(OWNER, Optional.empty());
-        entityData.define(ACTION, 0);
-        entityData.define(AGE, 0);
+    @Override protected void defineSynchedData(net.minecraft.network.syncher.SynchedEntityData.Builder builder){super.defineSynchedData(builder);
+        builder.define(OWNER, Optional.empty());
+        builder.define(ACTION, 0);
+        builder.define(AGE, 0);
     }
 
     public int action() { return entityData.get(ACTION); }

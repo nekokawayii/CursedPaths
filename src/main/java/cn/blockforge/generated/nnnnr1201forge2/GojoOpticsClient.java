@@ -118,8 +118,8 @@ public final class GojoOpticsClient {
             Vec3 camera=e.getCamera().getPosition();
             var glow=lights.entrySet().stream().filter(entry->!entry.getKey().contains("/death/")).map(Map.Entry::getValue).filter(l->l.pos.distanceToSqr(camera)<96*96)
                 .sorted(Comparator.comparingDouble(l->l.pos.distanceToSqr(camera))).limit(24)
-                .map(l->new GojoGravityClient.Orb(l.previous.lerp(l.pos,e.getPartialTick()),l.size,l.color,l.lens)).toList();
-            GojoGravityClient.render(e,glow,tick+e.getPartialTick());return;
+                .map(l->new GojoGravityClient.Orb(l.previous.lerp(l.pos,e.getPartialTick().getGameTimeDeltaPartialTick(true)),l.size,l.color,l.lens)).toList();
+            GojoGravityClient.render(e,glow,tick+e.getPartialTick().getGameTimeDeltaPartialTick(true));return;
         }
         if(e.getStage()!=RenderLevelStageEvent.Stage.AFTER_LEVEL||lights.isEmpty()||shader==null||warned||worldView==null)return;
         var main=mc.getMainRenderTarget();if(main.width<=0||main.height<=0||main.getDepthTextureId()<0)return;
@@ -163,7 +163,7 @@ public final class GojoOpticsClient {
             shader.safeGetUniform("LightCount").set(visible.size());
             for(int i=0;i<MAX;i++){
                 Light l=i<visible.size()?visible.get(i):null;
-                Vec3 pos=l==null?Vec3.ZERO:l.previous.lerp(l.pos,e.getPartialTick()).subtract(camera);
+                Vec3 pos=l==null?Vec3.ZERO:l.previous.lerp(l.pos,e.getPartialTick().getGameTimeDeltaPartialTick(true)).subtract(camera);
                 shader.safeGetUniform("Light"+i).set((float)pos.x,(float)pos.y,(float)pos.z,l==null?0:l.size);
                 Vec3 origin=l==null||l.shadowPos==null?pos:l.shadowPos.subtract(camera);
                 shader.safeGetUniform("Shadow"+i).set((float)origin.x,(float)origin.y,(float)origin.z,l!=null&&l.shadowPos!=null?1:0);

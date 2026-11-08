@@ -11,6 +11,7 @@ import net.minecraft.world.item.Items;
 import net.neoforged.neoforge.event.entity.player.PlayerEvent;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.neoforge.event.tick.PlayerTickEvent;
+import net.minecraft.core.registries.BuiltInRegistries;
 
 /**
  * 开局赠送《游玩方法手册》（r171）：涵盖全部角色、全流程、全术式、全物品，不含隐藏支线。

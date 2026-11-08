@@ -15,11 +15,12 @@ import net.minecraft.world.item.crafting.*;
 import net.minecraft.world.level.Level;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.registries.*;
+import net.minecraft.core.registries.BuiltInRegistries;
 
 public final class IceContent {
     public static final DeferredHolder<Item, Item> MEMORY=Content.ITEMS.register("uraume_memory",()->new IceFood(true));
     public static final DeferredHolder<Item, Item> FISH=Content.ITEMS.register("ice_fish",()->new IceFood(false));
-    private static final DeferredRegister<RecipeSerializer<?>> RECIPES=DeferredRegister.create(ForgeRegistries.RECIPE_SERIALIZERS,"jujutsu_kaisen_cursed_paths");
+    private static final DeferredRegister<RecipeSerializer<?>> RECIPES=DeferredRegister.create(BuiltInRegistries.RECIPE_SERIALIZERS,"jujutsu_kaisen_cursed_paths");
     public static final DeferredHolder<?, SimpleCraftingRecipeSerializer<IceFishRecipe>> FISH_RECIPE=RECIPES.register("ice_fish",()->new SimpleCraftingRecipeSerializer<>(IceFishRecipe::new));
     public static void init(IEventBus bus){RECIPES.register(bus);}
     private static final class IceFood extends Item {
@@ -71,7 +72,7 @@ public final class IceContent {
     }
     private static final Map<String,Map<String,String>> chinese=new HashMap<>();
     private static String names(ItemStack stack){
-        ResourceLocation id=ForgeRegistries.ITEMS.getKey(stack.getItem());if(id==null)return stack.getHoverName().getString();
+        ResourceLocation id=BuiltInRegistries.ITEMS.getKey(stack.getItem());if(id==null)return stack.getHoverName().getString();
         Map<String,String> translations=chinese.computeIfAbsent(id.getNamespace(),ns->{
             Map<String,String> map=new HashMap<>();
             try(var stream=IceContent.class.getResourceAsStream("/assets/"+ns+"/lang/zh_cn.json")){

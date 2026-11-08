@@ -86,7 +86,7 @@ public final class ObserverFight {
         if(state==null||e.getStage()!=RenderLevelStageEvent.Stage.AFTER_PARTICLES)return;
         var boss=boss();if(boss==null){weakX=-1000;return;}
         double height=switch(state.weakPart()){case 0->1.55;case 1->1.0;default->.48;};
-        Vec3 point=boss.getPosition(e.getPartialTick()).add(0,height,0).subtract(e.getCamera().getPosition());
+        Vec3 point=boss.getPosition(e.getPartialTick().getGameTimeDeltaPartialTick(true)).add(0,height,0).subtract(e.getCamera().getPosition());
         Vector4f v=new Vector4f((float)point.x,(float)point.y,(float)point.z,1);
         v.mul(e.getPoseStack().last().pose()).mul(e.getProjectionMatrix());
         if(v.w<=.01f){weakX=-1000;return;}

@@ -422,7 +422,7 @@ public final class Client {
         if(ObserverClient.active())return;
         FurnaceMaxClient.overlay(e.getGuiGraphics());
         boolean heat=mc.player!=null&&domains.values().stream().anyMatch(d->d.burning&&mc.player.position().distanceToSqr(d.center)<d.radius*d.radius);
-        if(heat)FistAura.heat(e.getGuiGraphics(),tick+e.getPartialTick());
+        if(heat)FistAura.heat(e.getGuiGraphics(),tick+e.getPartialTick().getGameTimeDeltaPartialTick(true));
         if(!heat)FistAura.clear();
     }
     @SubscribeEvent public static void hud(RenderGuiEvent.Post e){
@@ -498,34 +498,34 @@ public final class Client {
         PoseStack ps=e.getPoseStack();Vec3 cam=e.getCamera().getPosition();ps.pushPose();ps.translate(-cam.x,-cam.y,-cam.z);
         MultiBufferSource.BufferSource source=mc.renderBuffers().bufferSource();
         for(DomainVisual d:domains.values()){
-            double rise=Math.min(1,(tick-d.born+e.getPartialTick())/35.0);
-            ps.pushPose();ps.translate(d.shrine.x,d.shrine.y+0.1-(1-rise)*5,d.shrine.z);ps.mulPose(Axis.YP.rotationDegrees(d.yaw));if(VoidBossClient.shrine(d.owner))VoidBossClient.renderShrine(ps,source,(float)(tick-d.born+e.getPartialTick()),d.owner);else ShrineModel.render(ps,source,d.burning,d.soul,(float)(tick-d.born+e.getPartialTick()));ps.popPose();
+            double rise=Math.min(1,(tick-d.born+e.getPartialTick().getGameTimeDeltaPartialTick(true))/35.0);
+            ps.pushPose();ps.translate(d.shrine.x,d.shrine.y+0.1-(1-rise)*5,d.shrine.z);ps.mulPose(Axis.YP.rotationDegrees(d.yaw));if(VoidBossClient.shrine(d.owner))VoidBossClient.renderShrine(ps,source,(float)(tick-d.born+e.getPartialTick().getGameTimeDeltaPartialTick(true)),d.owner);else ShrineModel.render(ps,source,d.burning,d.soul,(float)(tick-d.born+e.getPartialTick().getGameTimeDeltaPartialTick(true)));ps.popPose();
         }source.endBatch();
         RenderSystem.enableDepthTest();RenderSystem.depthFunc(org.lwjgl.opengl.GL11.GL_LEQUAL);
         RenderSystem.enableBlend();RenderSystem.defaultBlendFunc();RenderSystem.disableCull();RenderSystem.depthMask(false);RenderSystem.setShader(GameRenderer::getPositionColorShader);RenderSystem.setShaderColor(1,1,1,1);
         BufferBuilder b=Tesselator.getInstance().getBuilder();b.begin(VertexFormat.Mode.QUADS,DefaultVertexFormat.POSITION_COLOR);
         WallpaperSlash.begin();
-        SlashFormVisuals.draw(b,ps,cam,e.getPartialTick());SlashTerrainClient.draw(b,ps,cam,e.getPartialTick());
-        ExpansionVisuals.draw(b,ps,cam,e.getPartialTick());
-        FinaleClient.draw(b,ps,cam,e.getPartialTick());
-        VoidVisuals.render(b,ps,cam,e.getPartialTick());
-        VoidTechniqueClient.draw(b,ps,cam,e.getPartialTick());
-        SoulClient.draw(b,ps,cam,e.getPartialTick());
-        NetBranchVisuals.draw(b,ps,cam,e.getPartialTick());
-        BranchVisuals.draw(b,ps,cam,e.getPartialTick());
-        BeyondRiftClient.draw(b,ps,cam,e.getPartialTick());
+        SlashFormVisuals.draw(b,ps,cam,e.getPartialTick().getGameTimeDeltaPartialTick(true));SlashTerrainClient.draw(b,ps,cam,e.getPartialTick().getGameTimeDeltaPartialTick(true));
+        ExpansionVisuals.draw(b,ps,cam,e.getPartialTick().getGameTimeDeltaPartialTick(true));
+        FinaleClient.draw(b,ps,cam,e.getPartialTick().getGameTimeDeltaPartialTick(true));
+        VoidVisuals.render(b,ps,cam,e.getPartialTick().getGameTimeDeltaPartialTick(true));
+        VoidTechniqueClient.draw(b,ps,cam,e.getPartialTick().getGameTimeDeltaPartialTick(true));
+        SoulClient.draw(b,ps,cam,e.getPartialTick().getGameTimeDeltaPartialTick(true));
+        NetBranchVisuals.draw(b,ps,cam,e.getPartialTick().getGameTimeDeltaPartialTick(true));
+        BranchVisuals.draw(b,ps,cam,e.getPartialTick().getGameTimeDeltaPartialTick(true));
+        BeyondRiftClient.draw(b,ps,cam,e.getPartialTick().getGameTimeDeltaPartialTick(true));
         // 背景先画、低透明度、不写入深度；方块与神龛已写入的深度会正常遮住斩击。
-        for(Visual v:visuals)if(v.background)drawSlash(b,ps,v,cam,e.getPartialTick());
-        for(DomainVisual d:domains.values())domain(b,ps,d,cam,e.getPartialTick());
-        for(AuraVisual a:auras.values())aura(b,ps,a,cam,e.getPartialTick());
+        for(Visual v:visuals)if(v.background)drawSlash(b,ps,v,cam,e.getPartialTick().getGameTimeDeltaPartialTick(true));
+        for(DomainVisual d:domains.values())domain(b,ps,d,cam,e.getPartialTick().getGameTimeDeltaPartialTick(true));
+        for(AuraVisual a:auras.values())aura(b,ps,a,cam,e.getPartialTick().getGameTimeDeltaPartialTick(true));
         for(Visual v:visuals){if(v.background)continue;SlashAppearance.use(v.e);float age=tick-v.born+e.getPartialTick();SlashAppearance.age(age);int kind=v.e.kind();
             if(v.e.size()==SlashReach.INFINITE&&(kind==96||kind==72||kind==123)){drawInfiniteCut(b,ps,v.e,cam,age);continue;}
             if(kind==96){Vec3 axis=slashAxis(v.e);SlashStyle.draw(b,ps,v.e.position().subtract(axis.scale(v.e.size()/2)),v.e.position().add(axis.scale(v.e.size()/2)),.12,Math.max(0,1-age/v.e.life()),cam);}
-            if(kind==0||kind==12||kind==72||kind==123)drawSlash(b,ps,v,cam,e.getPartialTick());
+            if(kind==0||kind==12||kind==72||kind==123)drawSlash(b,ps,v,cam,e.getPartialTick().getGameTimeDeltaPartialTick(true));
              if(kind==122)VoidTechniqueClient.drawSwordQi(b,ps,v.e,cam,age);
             if(kind==265)drawRope(b,ps,v.e,cam,age);
             if(kind>=20)BattleVisuals.draw(b,ps,v.e,cam,age);
-            if(kind==7||kind==10||kind==11)drawHit(b,ps,v,cam,e.getPartialTick());
+            if(kind==7||kind==10||kind==11)drawHit(b,ps,v,cam,e.getPartialTick().getGameTimeDeltaPartialTick(true));
             if(kind==2||kind==70&&v.e.size()==3){var p=mc.level.getEntity(v.e.owner());if(p!=null){
                 Vec3 center=p.getEyePosition().add(p.getLookAngle().scale(1.1)).add(new Vec3(-p.getLookAngle().z,0,p.getLookAngle().x).normalize().scale(-0.55));
                 bow(b,ps,center,p.getLookAngle(),age/v.e.life(),cam,kind==70);
@@ -533,7 +533,7 @@ public final class Client {
                 for(int j=0;j<8;j++){double a=j*Math.PI/4+age*0.18,r=0.35+(1-charge)*0.7;Vec3 q=center.add(Math.cos(a)*r,Math.sin(a)*r,0);ribbon(b,ps,q,q.add(0,0.15+charge*0.3,0),0.035,0xCFFFF0B0,cam);}
             }}
             if(kind==3){
-                Vec3 p=position(v,e.getPartialTick()),dir=v.e.direction();
+                Vec3 p=position(v,e.getPartialTick().getGameTimeDeltaPartialTick(true)),dir=v.e.direction();
                 ribbon(b,ps,p.subtract(dir.scale(11)),p,0.55,0x70FF3800,cam);
                 ribbon(b,ps,p.subtract(dir.scale(8)),p,0.30,0xEFFF3800,cam);ribbon(b,ps,p.subtract(dir.scale(6)),p,0.09,0xFFFFFFC0,cam);
                 Vec3 side=new Vec3(-dir.z,0,dir.x).normalize();if(side.lengthSqr()<0.1)side=new Vec3(1,0,0);Vec3 up=dir.cross(side).normalize();
@@ -548,7 +548,7 @@ public final class Client {
         }
         BufferUploader.drawWithShader(b.end());WallpaperSlash.end(ps);
         // 桌面是在 end() 里最后 flush 的：红色乱码条必须等它画完再另起一批，才能压在桌面之上。
-        BeyondRiftClient.overlay(ps,cam,e.getPartialTick());
+        BeyondRiftClient.overlay(ps,cam,e.getPartialTick().getGameTimeDeltaPartialTick(true));
         RenderSystem.depthMask(true);RenderSystem.enableCull();RenderSystem.disableBlend();ps.popPose();
     }
     /** 无限线按相机可见区段绘制；长度不进入伤害判定，也不发送无穷浮点数。 */
@@ -619,12 +619,12 @@ public final class Client {
         Vec3 eye=Vec3.ZERO;
         for(int j=0;j<5;j++)ring(b,ps,new Vec3(0,96-j*2,0),25+j*25,0.5,blueSky?0x652699FF:voidSky?0x657A349D:0x65FF6172,eye);
         for(int i=0;i<24;i++){
-            double a=i*Math.PI/12-(tick+e.getPartialTick())*0.002;
+            double a=i*Math.PI/12-(tick+e.getPartialTick().getGameTimeDeltaPartialTick(true))*0.002;
             Vec3 p=new Vec3(Math.cos(a)*75,91,Math.sin(a)*75),q=new Vec3(Math.cos(a+0.05)*84,91,Math.sin(a+0.05)*84);
             ribbon(b,ps,p,q,0.3,blueSky?0x8066CFFF:voidSky?0x808D51BC:0x80FFC3BE,eye);
         }
         for(int i=0;i<18;i++){
-            double a=i*Math.PI/9+(tick+e.getPartialTick())*0.0015;
+            double a=i*Math.PI/9+(tick+e.getPartialTick().getGameTimeDeltaPartialTick(true))*0.0015;
             Vec3 p=new Vec3(Math.cos(a)*42,94,Math.sin(a)*42),q=new Vec3(Math.cos(a+0.07)*160,94,Math.sin(a+0.07)*160);
             ribbon(b,ps,p,q,0.16,blueSky?0x6530B6FF:voidSky?0x657637A9:0x65FFB7B7,eye);
         }
@@ -691,7 +691,7 @@ public final class Client {
         ribbon(b,ps,bottom,top,0.25,((int)(130*fade)<<24)|0xFFD7CE,cam);
     }
     private static void bow(BufferBuilder b,PoseStack ps,Vec3 center,Vec3 forward,float draw,Vec3 cam,boolean purple){int outer=purple?0xFF6F16D8:0xFFFF420A,inner=purple?0xFFE8B7FF:0xFFFFEAA0,string=purple?0xFFD98AFF:0xFFFFBE3B,tip=purple?0xFFF5D6FF:0xFFFFF5BB;Vec3 side=new Vec3(-forward.z,0,forward.x).normalize();Vec3 up=side.cross(forward).normalize();Vec3 top=center.add(up.scale(1.15)),bottom=center.add(up.scale(-1.15));Vec3 prev=bottom;for(int i=1;i<=16;i++){double t=i/16.0;Vec3 q=center.add(up.scale(-1.15+2.3*t)).add(forward.scale(Math.sin(t*Math.PI)*0.4));ribbon(b,ps,prev,q,0.12,outer,cam);ribbon(b,ps,prev,q,0.035,inner,cam);prev=q;}Vec3 pull=center.subtract(forward.scale(0.2+Math.min(1,draw)*0.9));ribbon(b,ps,top,pull,0.022,string,cam);ribbon(b,ps,bottom,pull,0.022,string,cam);Vec3 tipPoint=center.add(forward.scale(1.6));ribbon(b,ps,pull,tipPoint,0.075,tip,cam);ribbon(b,ps,tipPoint.subtract(forward.scale(0.35)).add(up.scale(0.2)),tipPoint,0.09,outer,cam);ribbon(b,ps,tipPoint.subtract(forward.scale(0.35)).subtract(up.scale(0.2)),tipPoint,0.09,outer,cam);}
-    @SubscribeEvent public static void camera(ViewportEvent.ComputeCameraAngles e){if(tick<shakeUntil){float f=(shakeUntil-tick)/14f;e.setRoll(e.getRoll()+(float)Math.sin((tick+e.getPartialTick())*2.4)*0.65f*f);e.setPitch(e.getPitch()+(float)Math.cos((tick+e.getPartialTick())*1.8)*0.4f*f);}}
+    @SubscribeEvent public static void camera(ViewportEvent.ComputeCameraAngles e){if(tick<shakeUntil){float f=(shakeUntil-tick)/14f;e.setRoll(e.getRoll()+(float)Math.sin((tick+e.getPartialTick().getGameTimeDeltaPartialTick(true))*2.4)*0.65f*f);e.setPitch(e.getPitch()+(float)Math.cos((tick+e.getPartialTick().getGameTimeDeltaPartialTick(true))*1.8)*0.4f*f);}}
     @SubscribeEvent public static void fov(ViewportEvent.ComputeFov e){if(tick<shakeUntil&&e.usedConfiguredFov())e.setFOV(e.getFOV()+4*(shakeUntil-tick)/14.0);}
     /** 十字斩保留黑白包边；虚空及传承后的内部同样接入施术者壁纸。 */
     static void monochromeCut(BufferBuilder b,PoseStack ps,Vec3 p,Vec3 axis,float length,float alpha,Vec3 cam){

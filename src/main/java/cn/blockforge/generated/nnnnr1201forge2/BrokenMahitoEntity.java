@@ -24,7 +24,7 @@ public final class BrokenMahitoEntity extends Monster {
     private Vec3 strikeOrigin=Vec3.ZERO,strikeDirection=Vec3.ZERO;
     private UUID target;
     public BrokenMahitoEntity(EntityType<? extends Monster> type,Level level){super(type,level);setPersistenceRequired();xpReward=1200;}
-    @Override protected void defineSynchedData(){super.defineSynchedData();entityData.define(ACTION,0);}
+    @Override protected void defineSynchedData(net.minecraft.network.syncher.SynchedEntityData.Builder builder){super.defineSynchedData(builder);builder.define(ACTION,0);}
     @Override protected void registerGoals(){}
     public int action(){return entityData.get(ACTION);}
     @Override public boolean removeWhenFarAway(double distance){return false;}

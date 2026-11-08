@@ -13,6 +13,7 @@ import net.neoforged.bus.api.*;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.neoforge.registries.ForgeRegistries;
 import net.neoforged.fml.common.EventBusSubscriber;
+import net.minecraft.core.registries.BuiltInRegistries;
 
 /** 创造专用测试入口，不走正常治疗/修复熔断的资格和费用限制。 */
 @EventBusSubscriber(modid="jujutsu_kaisen_cursed_paths")
@@ -59,7 +60,7 @@ public final class CreativeRestorer extends Item {
         progress.putDouble("Energy",Curse.maximum(p));
         for(String key:List.copyOf(progress.getAllKeys()))if(key.startsWith("CharacterSkillCooldown_")||key.equals("CharacterGlobalCooldown"))progress.remove(key);
         progress.putDouble("TojiStamina",character.toji.TojiCombat.maximum(p));progress.remove("TojiAirUsed");progress.remove("TojiRecoveryDelay");progress.remove("TojiLeapLock");
-        for(Item item:ForgeRegistries.ITEMS)if(p.getCooldowns().isOnCooldown(item))p.getCooldowns().removeCooldown(item);
+        for(Item item:BuiltInRegistries.ITEMS)if(p.getCooldowns().isOnCooldown(item))p.getCooldowns().removeCooldown(item);
         Network.CHANNEL.send(net.neoforged.neoforge.network.SimpleChannel.Target.player(p),new Network.TestReset());
         Curse.sync(p);p.displayClientMessage(Component.literal("测试恢复完成：生命、咒力已满；熔断、冷却与负面状态已清除，成长保留"),true);
     }

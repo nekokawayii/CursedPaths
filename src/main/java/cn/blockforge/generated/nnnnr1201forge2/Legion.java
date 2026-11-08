@@ -16,6 +16,7 @@ import net.neoforged.bus.api.*;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.neoforge.event.tick.ServerTickEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
+import net.minecraft.core.registries.BuiltInRegistries;
 
 /** 言灵恩赐：服务端成员、目标、传送和序列化，实体 AI 仍可使用原生技能。 */
 @EventBusSubscriber(modid="jujutsu_kaisen_cursed_paths")
@@ -35,7 +36,7 @@ public final class Legion {
             if(exists||stored.size()>=AuthorityRules.MAX_MEMBERS)continue;
             var actor=MaidBridge.caster(mob);if(actor!=null)AuthoritySkills.cancel(actor);
             var versions=army.getCompound("Versions");int rev=Math.max(versions.getInt(mob.getStringUUID()),mob.getPersistentData().getInt("AuthorityRevision"))+1;mob.getPersistentData().putInt("AuthorityRevision",rev);versions.putInt(mob.getStringUUID(),rev);army.put("Versions",versions);
-            CompoundTag saved=mob.saveWithoutId(new CompoundTag());saved.putString("id",net.neoforged.neoforge.registries.ForgeRegistries.ENTITY_TYPES.getKey(mob.getType()).toString());saved.remove("Passengers");stored.add(saved);army.put("Stored",stored);state.setDirty();
+            CompoundTag saved=mob.saveWithoutId(new CompoundTag());saved.putString("id",net.neoforged.neoforge.registries.BuiltInRegistries.ENTITY_TYPES.getKey(mob.getType()).toString());saved.remove("Passengers");stored.add(saved);army.put("Stored",stored);state.setDirty();
             ServerPlayer p=owner(mob);if(p!=null&&p.isAlive()&&!p.hasDisconnected()&&!army.getBoolean("RecallPending"))releaseAll(p);
         }
     }

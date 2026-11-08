@@ -14,7 +14,7 @@ public final class SorcererNpcEntity extends PathfinderMob implements character.
     private final String role;
     private static final net.minecraft.network.syncher.EntityDataAccessor<Integer> MAHITO_POSE=net.minecraft.network.syncher.SynchedEntityData.defineId(SorcererNpcEntity.class,net.minecraft.network.syncher.EntityDataSerializers.INT);
     private static final net.minecraft.network.syncher.EntityDataAccessor<Long> MAHITO_UNTIL=net.minecraft.network.syncher.SynchedEntityData.defineId(SorcererNpcEntity.class,net.minecraft.network.syncher.EntityDataSerializers.LONG);
-    @Override protected void defineSynchedData(){super.defineSynchedData();entityData.define(MAHITO_POSE,0);entityData.define(MAHITO_UNTIL,0L);}
+    @Override protected void defineSynchedData(net.minecraft.network.syncher.SynchedEntityData.Builder builder){super.defineSynchedData(builder);builder.define(MAHITO_POSE,0);builder.define(MAHITO_UNTIL,0L);}
     public void mahitoPose(int action,int ticks){entityData.set(MAHITO_POSE,action);entityData.set(MAHITO_UNTIL,level().getGameTime()+ticks);}
     public int mahitoPose(){return entityData.get(MAHITO_UNTIL)>level().getGameTime()?entityData.get(MAHITO_POSE):0;}
     @Override public boolean doHurtTarget(Entity target){

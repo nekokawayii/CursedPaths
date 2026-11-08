@@ -60,11 +60,11 @@ public final class ObserverClient {
     @SubscribeEvent(priority=EventPriority.LOWEST) public static void camera(ViewportEvent.ComputeCameraAngles e){
         if(!white())return;var mc=Minecraft.getInstance();var boss=ObserverFight.boss();if(boss==null)return;
         var state=ObserverFight.state();boolean god=state.age()>=180;
-        Vec3 focus=(god?state.arena():boss.getPosition((float)e.getPartialTick())).add(0,1,0);
+        Vec3 focus=(god?state.arena():boss.getPosition((float)e.getPartialTick().getGameTimeDeltaPartialTick(true))).add(0,1,0);
         // 机位永远固定在身体上方；鼠标只带来小幅观察偏移，不能重新控制身体。
         double mouseX=(mc.mouseHandler.xpos()/Math.max(1,mc.getWindow().getScreenWidth())-.5)*1.2;
         Vec3 at=focus.add(god?mouseX+dragX:1.5,god?8+dragY:1.3,god?8:4);
-        e.getCamera().setup(mc.level,mc.player,true,false,(float)e.getPartialTick());
+        e.getCamera().setup(mc.level,mc.player,true,false,(float)e.getPartialTick().getGameTimeDeltaPartialTick(true));
         if(CAMERA_POSITION!=null)try{CAMERA_POSITION.invoke(e.getCamera(),at);}catch(ReflectiveOperationException ignored){at=e.getCamera().getPosition();}
         Vec3 direction=focus.subtract(at);
         e.setYaw((float)Math.toDegrees(Math.atan2(-direction.x,direction.z)));

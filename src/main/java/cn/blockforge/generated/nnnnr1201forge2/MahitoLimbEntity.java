@@ -20,7 +20,7 @@ public final class MahitoLimbEntity extends Monster {
     private float castBonus;
     private Vec3 flight=Vec3.ZERO;
     public MahitoLimbEntity(EntityType<? extends Monster> type,Level level){super(type,level);noPhysics=true;setNoGravity(true);xpReward=0;}
-    @Override protected void defineSynchedData(){super.defineSynchedData();entityData.define(WARNING,16);}
+    @Override protected void defineSynchedData(net.minecraft.network.syncher.SynchedEntityData.Builder builder){super.defineSynchedData(builder);builder.define(WARNING,16);}
     @Override protected void registerGoals(){}
     public void setup(BrokenMahitoEntity owner,LivingEntity target){this.owner=owner.getUUID();this.target=target.getUUID();castBonus=owner.castBonus();setHealth(getMaxHealth());}
     private ServerLevel server(){return (ServerLevel)level();}

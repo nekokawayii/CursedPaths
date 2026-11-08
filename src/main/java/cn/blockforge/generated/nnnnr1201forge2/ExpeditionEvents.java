@@ -19,6 +19,7 @@ import net.neoforged.neoforge.event.level.BlockEvent;
 import net.neoforged.bus.api.*;
 import net.neoforged.neoforge.registries.ForgeRegistries;
 import net.neoforged.neoforge.event.tick.PlayerTickEvent;
+import net.minecraft.core.registries.BuiltInRegistries;
 
 public final class ExpeditionEvents {
     public static boolean mindShield(LivingEntity p){return p.getPersistentData().getLong("ExpeditionMindShield")>p.level().getGameTime();}
@@ -27,7 +28,7 @@ public final class ExpeditionEvents {
         var mob=e.getEntity();if(!(mob.level() instanceof ServerLevel l))return;
         ServerPlayer p=CombatSettings.caster(e.getSource());if(p==null&&mob.getKillCredit() instanceof ServerPlayer credited)p=credited;
         if(p==null||p instanceof net.neoforged.neoforge.common.util.FakePlayer)return;
-        String id=ForgeRegistries.ENTITY_TYPES.getKey(mob.getType()).getPath(),role=mob.getPersistentData().getString("ExpeditionRole");
+        String id=BuiltInRegistries.ENTITY_TYPES.getKey(mob.getType()).getPath(),role=mob.getPersistentData().getString("ExpeditionRole");
         if(mob instanceof LowCurseEntity||mob instanceof DaitianEntity||id.equals("broken_mahito")||id.equals("mahito_npc")){
             drop(e,"residue_"+(mob instanceof LowCurseEntity curse?(curse.form().grade()<=1?"high":curse.form().grade()==2?"medium":"low"):(mob.getMaxHealth()>=400?"high":mob.getMaxHealth()>=100?"medium":"low")),1+l.random.nextInt(3));
             if(l.random.nextInt(3)==0)drop(e,"deformed_bone",1);if(l.random.nextInt(4)==0)drop(e,"curse_flesh",1);

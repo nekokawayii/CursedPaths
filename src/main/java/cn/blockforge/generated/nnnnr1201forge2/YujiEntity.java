@@ -37,7 +37,7 @@ public class YujiEntity extends Monster {
     private boolean sureHit(LivingEntity p){ServerPlayer caster=MaidBridge.progression(p);return domainContains(p)&&!(caster!=null&&Skills.neutralizes(caster));}
     private boolean dashHit,rageUsed,comboFinisher;
     public YujiEntity(EntityType<? extends Monster> type,Level level){super(type,level);setPersistenceRequired();xpReward=500;}
-    @Override protected void defineSynchedData(){super.defineSynchedData();entityData.define(ACTION,0);entityData.define(AGE,0);entityData.define(DECOY,false);}
+    @Override protected void defineSynchedData(net.minecraft.network.syncher.SynchedEntityData.Builder builder){super.defineSynchedData(builder);builder.define(ACTION,0);builder.define(AGE,0);builder.define(DECOY,false);}
     @Override protected void registerGoals(){goalSelector.addGoal(0,new FloatGoal(this));}
     public int action(){return entityData.get(ACTION);}public int actionAge(){return entityData.get(AGE);}public boolean decoy(){return entityData.get(DECOY);}
     public void setFamilyMember(){familyMember=true;setPersistenceRequired();xpReward=0;setTarget(null);entityData.set(ACTION,0);}

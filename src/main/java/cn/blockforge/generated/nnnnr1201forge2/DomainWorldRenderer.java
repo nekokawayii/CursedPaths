@@ -40,7 +40,7 @@ public final class DomainWorldRenderer {
     @SubscribeEvent public static void render(RenderLevelStageEvent event){
         if(event.getStage()!=RenderLevelStageEvent.Stage.AFTER_PARTICLES||snapshot==null)return;
         var mc=Minecraft.getInstance();if(mc.level==null||!mc.level.dimension().location().equals(snapshot.dimension()))return;
-        Vec3 camera=event.getCamera().getPosition();double time=mc.level.getGameTime()+event.getPartialTick();
+        Vec3 camera=event.getCamera().getPosition();double time=mc.level.getGameTime()+event.getPartialTick().getGameTimeDeltaPartialTick(true);
         // 先挑对拼双方；不因为距离排序截断其中一方，造成只剩一个领域。
         var fields=snapshot.fields().stream().sorted(Comparator.<DomainPresentation.Frame>comparingInt(f->f.phase()>0?0:1)
             .thenComparingDouble(f->camera.distanceToSqr(f.plane()))).limit(16).toList();

@@ -50,7 +50,7 @@ public final class GojoBlastClient {
         BufferBuilder b=Tesselator.getInstance().getBuilder();
         b.begin(VertexFormat.Mode.QUADS,DefaultVertexFormat.POSITION_COLOR);
         for(Blast bl:blasts){
-            float t=(time-bl.born()+e.getPartialTick())/bl.life();
+            float t=(time-bl.born()+e.getPartialTick().getGameTimeDeltaPartialTick(true))/bl.life();
             if(t<0||t>=1)continue;
             double r=bl.radius()*(0.18+0.82*Math.sqrt(t)); // 先快后慢地变大
             int a=(int)(0xD8*Math.pow(1-t,1.6));          // 不透明度逐渐减小
@@ -62,7 +62,7 @@ public final class GojoBlastClient {
             band(b,ps,bl.at(),cam,r,r*1.14,(a/2)<<24|color);      // 外侧光晕
         }
         for(Bang bg:bangs){
-            float t=(time-bg.born()+e.getPartialTick())/BANG_LIFE;
+            float t=(time-bg.born()+e.getPartialTick().getGameTimeDeltaPartialTick(true))/BANG_LIFE;
             if(t<0||t>=1)continue;
             bang(b,ps,bg.at(),cam,bg.size(),t);
         }

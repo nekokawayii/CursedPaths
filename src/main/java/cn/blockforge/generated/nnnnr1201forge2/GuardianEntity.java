@@ -65,7 +65,7 @@ public final class GuardianEntity extends Monster {
         "虎杖：很久没这么痛快了"
     };
     public GuardianEntity(EntityType<? extends Monster> type,Level level){super(type,level);GuardianSettings.defaults(settings);setPersistenceRequired();xpReward=3000;healthReady=true;}
-    @Override protected void defineSynchedData(){super.defineSynchedData();entityData.define(ACTION,0);entityData.define(AGE,0);entityData.define(FRIENDLY,false);}
+    @Override protected void defineSynchedData(net.minecraft.network.syncher.SynchedEntityData.Builder builder){super.defineSynchedData(builder);builder.define(ACTION,0);builder.define(AGE,0);builder.define(FRIENDLY,false);}
     @Override protected void registerGoals(){
         goalSelector.addGoal(0,new FloatGoal(this));
         goalSelector.addGoal(5,new RandomStrollGoal(this,0.65,100){@Override public boolean canUse(){return friendly()&&dialogueFinished()&&super.canUse();}@Override public boolean canContinueToUse(){return friendly()&&dialogueFinished()&&super.canContinueToUse();}});

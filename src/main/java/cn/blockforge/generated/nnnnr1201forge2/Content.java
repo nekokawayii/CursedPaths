@@ -15,10 +15,11 @@ import net.neoforged.neoforge.event.BuildCreativeModeTabContentsEvent;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.phys.Vec3;
+import net.minecraft.core.registries.BuiltInRegistries;
 
 public final class Content {
-    public static final DeferredRegister<Item> ITEMS=DeferredRegister.create(ForgeRegistries.ITEMS,"jujutsu_kaisen_cursed_paths");
-    public static final DeferredRegister<EntityType<?>> ENTITIES=DeferredRegister.create(ForgeRegistries.ENTITY_TYPES,"jujutsu_kaisen_cursed_paths");
+    public static final DeferredRegister<Item> ITEMS=DeferredRegister.create(BuiltInRegistries.ITEMS,"jujutsu_kaisen_cursed_paths");
+    public static final DeferredRegister<EntityType<?>> ENTITIES=DeferredRegister.create(BuiltInRegistries.ENTITY_TYPES,"jujutsu_kaisen_cursed_paths");
     public static final DeferredHolder<EntityType<?>, EntityType<BuddhaEntity>> BUDDHA=ENTITIES.register("sokushinbutsu",()->EntityType.Builder.of(BuddhaEntity::new,MobCategory.MONSTER).sized(1.7f,4.0f).clientTrackingRange(16).updateInterval(1).build("jujutsu_kaisen_cursed_paths:sokushinbutsu"));
     public static final DeferredHolder<EntityType<?>, EntityType<ParasiteEntity>> PARASITE=ENTITIES.register("parasitic_buddha",()->EntityType.Builder.of(ParasiteEntity::new,MobCategory.MONSTER).sized(1.5f,3.0f).clientTrackingRange(10).build("jujutsu_kaisen_cursed_paths:parasitic_buddha"));
     public static final DeferredHolder<EntityType<?>, EntityType<ParasiteEntity>> MOTHER=ENTITIES.register("buddha_mother",()->EntityType.Builder.of(ParasiteEntity::new,MobCategory.MONSTER).sized(1.8f,3).clientTrackingRange(14).build("jujutsu_kaisen_cursed_paths:buddha_mother"));
@@ -315,7 +316,7 @@ public final class Content {
 
     /** 领域内的坟头（插着鬼妖村正，右键拔出）。 */
     public static final net.neoforged.neoforge.registries.DeferredRegister<net.minecraft.world.level.block.Block> YUTA_BLOCKS=
-        net.neoforged.neoforge.registries.DeferredRegister.create(net.neoforged.neoforge.registries.ForgeRegistries.BLOCKS,"jujutsu_kaisen_cursed_paths");
+        net.neoforged.neoforge.registries.DeferredRegister.create(net.neoforged.neoforge.registries.BuiltInRegistries.BLOCKS,"jujutsu_kaisen_cursed_paths");
     public static final DeferredHolder<?, net.minecraft.world.level.block.Block> YUTA_GRAVE=YUTA_BLOCKS.register("yuta_grave",
         ()->new character.yuta.YutaGraveBlock(net.minecraft.world.level.block.state.BlockBehaviour.Properties.of()
             .noCollission().strength(0.4f).noOcclusion().lightLevel(st->7)));
@@ -325,7 +326,7 @@ public final class Content {
             .strength(-1f,3600000f).lightLevel(st->15)));
 
     public static final net.neoforged.neoforge.registries.DeferredRegister<net.minecraft.world.level.block.entity.BlockEntityType<?>> YUTA_BES=
-        net.neoforged.neoforge.registries.DeferredRegister.create(net.neoforged.neoforge.registries.ForgeRegistries.BLOCK_ENTITY_TYPES,"jujutsu_kaisen_cursed_paths");
+        net.neoforged.neoforge.registries.DeferredRegister.create(net.neoforged.neoforge.registries.BuiltInRegistries.BLOCK_ENTITY_TYPES,"jujutsu_kaisen_cursed_paths");
     public static final DeferredHolder<?, net.minecraft.world.level.block.entity.BlockEntityType<character.yuta.YutaGraveBlockEntity>> YUTA_GRAVE_BE=
         YUTA_BES.register("yuta_grave",()->net.minecraft.world.level.block.entity.BlockEntityType.Builder
             .of(character.yuta.YutaGraveBlockEntity::new,YUTA_GRAVE.get()).build(null));

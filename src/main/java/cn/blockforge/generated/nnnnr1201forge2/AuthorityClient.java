@@ -34,7 +34,7 @@ public final class AuthorityClient {
         var pose=e.getPoseStack();Vec3 camera=e.getCamera().getPosition();
         var buffers=mc.renderBuffers().bufferSource();var lines=buffers.getBuffer(RenderType.lines());
         for(var entity:mc.level.entitiesForRendering())if(entity instanceof LivingEntity t&&t!=mc.player&&t.isAlive()&&!t.isInvisible()&&t.distanceToSqr(mc.player)<96*96){
-            AABB bb=t.getBoundingBox().move(t.getPosition(e.getPartialTick()).subtract(t.position())).inflate(.12);
+            AABB bb=t.getBoundingBox().move(t.getPosition(e.getPartialTick().getGameTimeDeltaPartialTick(true)).subtract(t.position())).inflate(.12);
             if(targets.contains(t.getId()))LevelRenderer.renderLineBox(pose,lines,bb.move(camera.scale(-1)),1,.05f,.1f,1);
             if(!editor||!mc.player.hasLineOfSight(t))continue;
             float left=Float.MAX_VALUE,top=Float.MAX_VALUE,right=-Float.MAX_VALUE,bottom=-Float.MAX_VALUE;boolean visible=true;
