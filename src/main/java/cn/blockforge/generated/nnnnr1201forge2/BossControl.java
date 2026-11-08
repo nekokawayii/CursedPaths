@@ -68,7 +68,7 @@ public final class BossControl extends SavedData {
         if(boss instanceof GuardianEntity g){g.refreshSettings(guardian(boss.getServer()),changed==null?"":changed);return;}
         stats(boss,changed!=null&&changed.equals(healthKey(boss)));
     }
-    @SubscribeEvent(priority=net.neoforged.bus.api.EventPriority.LOWEST) public static void enforce(net.neoforged.neoforge.event.entity.living.net.neoforged.neoforge.event.tick.EntityTickEvent.Post event){
+    @SubscribeEvent(priority=net.neoforged.bus.api.EventPriority.LOWEST) public static void enforce(net.neoforged.neoforge.event.tick.EntityTickEvent.Post event){
         var boss=event.getEntity();if(boss.level().isClientSide||!managed(boss)||excluded(boss))return;
         if(boss instanceof GuardianEntity g)g.enforceSettings();else stats(boss,false);
     }

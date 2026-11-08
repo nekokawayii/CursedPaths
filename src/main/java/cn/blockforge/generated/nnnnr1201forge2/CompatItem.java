@@ -7,7 +7,8 @@ import net.minecraft.world.item.ItemStack;
 /** 1.21 兼容：旧 CompatItem.save(ItemStack) 的替代（1.21 需要 HolderLookup.Provider）。 */
 public final class CompatItem {
     public static CompoundTag save(ItemStack stack) {
-        return stack.save(RegistryAccess.EMPTY);
+        var tag = stack.save(RegistryAccess.EMPTY);
+        return tag instanceof CompoundTag c ? c : new CompoundTag();
     }
     /** 1.21：CompatItem.load(CompoundTag) 已移除，改用 parseOptional(Provider, tag)。 */
     public static ItemStack load(CompoundTag tag) {

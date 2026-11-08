@@ -257,7 +257,7 @@ public final class FingerPossession {
         if (npc == null) return null;
         npc.moveTo(at.x, at.y, at.z, p.getYRot(), 0);
         npc.setPersistenceRequired();
-        npc.finalizeSpawn(level, level.getCurrentDifficultyAt(p.blockPosition()), MobSpawnType.EVENT, null, null);
+        npc.finalizeSpawn(level, level.getCurrentDifficultyAt(p.blockPosition()), MobSpawnType.EVENT, null);
         npc.getPersistentData().putBoolean("PossessedSukuna", true);
         npc.getPersistentData().putInt("PossessedPower", power);
         var def = character.CharacterService.selected(p);
