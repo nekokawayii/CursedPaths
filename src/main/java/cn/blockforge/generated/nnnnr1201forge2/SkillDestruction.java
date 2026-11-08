@@ -49,7 +49,7 @@ public final class SkillDestruction {
         ServerLevel l=p.serverLevel();if(!enabled(l)||!p.isAlive()||DomainClash.active(p)||!l.hasChunkAt(pos)||!l.getWorldBorder().isWithinBounds(pos))return false;
         var state=l.getBlockState(pos);if(state.isAir()||state.getDestroySpeed(l,pos)<0||state.hasBlockEntity()||SoulJourney.protectedBlock(l,pos))return false;
         ServerPlayer authority=p instanceof MaidBridge.Actor a?MaidBridge.owner(a):p;
-        return authority!=null&&l.mayInteract(authority,pos)&&!NeoForge.EVENT_BUS.post(new BlockEvent.BreakEvent(l,pos,state,authority))&&net.neoforged.neoforge.event.EventHooks.onEntityDestroyBlock(MaidBridge.body(p),pos,state);
+        return authority!=null&&l.mayInteract(authority,pos)&&breakDenied(l,pos,state,authority)&&net.neoforged.neoforge.event.EventHooks.onEntityDestroyBlock(MaidBridge.body(p),pos,state);
     }
     /**
      * 只移动、不破坏方块时的准入（东堂葵的方块换位用）：
@@ -61,7 +61,7 @@ public final class SkillDestruction {
         var state=l.getBlockState(pos);
         if(state.isAir()||state.getDestroySpeed(l,pos)<0||state.hasBlockEntity()||SoulJourney.protectedBlock(l,pos))return false;
         ServerPlayer authority=p instanceof MaidBridge.Actor a?MaidBridge.owner(a):p;
-        return authority!=null&&l.mayInteract(authority,pos)&&!NeoForge.EVENT_BUS.post(new BlockEvent.BreakEvent(l,pos,state,authority))
+        return authority!=null&&l.mayInteract(authority,pos)&&breakDenied(l,pos,state,authority)
             &&net.neoforged.neoforge.event.EventHooks.onEntityDestroyBlock(MaidBridge.body(p),pos,state);
     }
     public static boolean canChange(ServerPlayer p,BlockPos pos){return mayChange(p,pos);}
@@ -159,4 +159,11 @@ public final class SkillDestruction {
     }
     @SubscribeEvent public static void stop(ServerStoppedEvent e){loaded.clear();visitedNow.clear();visitedTick=Long.MIN_VALUE;}
     private SkillDestruction(){}
+
+    /** 1.21：EventBus.post 返回事件本体而非 boolean，取消判定要取 isCanceled()。 */
+    private static boolean breakDenied(net.minecraft.world.level.Level l,net.minecraft.core.BlockPos pos,net.minecraft.world.level.block.state.BlockState state,net.minecraft.world.entity.player.Player p){
+        var ev=new net.neoforged.neoforge.event.level.BlockEvent.BreakEvent(l,pos,state,p);
+        net.neoforged.neoforge.common.NeoForge.EVENT_BUS.post(ev);
+        return ev.isCanceled();
+    }
 }
