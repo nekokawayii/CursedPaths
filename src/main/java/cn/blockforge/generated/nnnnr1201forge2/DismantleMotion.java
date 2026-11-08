@@ -118,7 +118,7 @@ public final class DismantleMotion {
     private static Network.MotionState packet(Motion m,boolean end){return new Network.MotionState(m.actor.getId(),m.token,m.kind,m.age,m.yaw,m.position,end);}
     private static void send(Motion m,boolean end){
         // 必须追踪真实实体，不能向女仆的 FakePlayer 连接发包。
-        Network.CHANNEL.send(PacketDistributor.TRACKING_ENTITY_AND_SELF.with(()->m.actor),packet(m,end));
+        Network.CHANNEL.send(SimpleChannel.Target.tracking(m.actor),packet(m,end));
     }
     @SubscribeEvent public static void tick(ServerTickEvent.Post e){
         if(false)return;

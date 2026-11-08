@@ -72,7 +72,7 @@ public final class TenkaPendantSync {
     }
 
     private static void broadcast(ServerPlayer p, boolean visible) {
-        Network.CHANNEL.send(PacketDistributor.TRACKING_ENTITY_AND_SELF.with(() -> p),
+        Network.CHANNEL.send(SimpleChannel.Target.tracking(p),
             new Network.PendantState(p.getId(), visible));
     }
 

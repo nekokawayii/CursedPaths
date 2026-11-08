@@ -38,7 +38,7 @@ public final class SoulContent {
     public static final DeferredHolder<Block, Block> PASSAGE=ProgressionContent.BLOCKS.register("soul_passage",()->new Block(BlockBehaviour.Properties.ofFullCopy(Blocks.OBSIDIAN).strength(-1,3600000).lightLevel(s->8)){
         @Override public net.minecraft.world.ItemInteractionResult useItemOn(net.minecraft.world.item.ItemStack stack, net.minecraft.world.level.block.state.BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit){if(player instanceof ServerPlayer p)SoulJourney.passage(p,pos);return net.minecraft.world.ItemInteractionResult.sidedSuccess(level.isClientSide);}
     });
-    public static final DeferredHolder<Block, Block> RICE=ProgressionContent.BLOCKS.register("iwate_rice",()->new Block(BlockBehaviour.Properties.ofFullCopy(Blocks.GRASS).noCollission().noOcclusion().strength(0)));
+    public static final DeferredHolder<Block, Block> RICE=ProgressionContent.BLOCKS.register("iwate_rice",()->new Block(BlockBehaviour.Properties.ofFullCopy(Blocks.SHORT_GRASS).noCollission().noOcclusion().strength(0)));
     public static final DeferredHolder<Block, Block> THREAD=ProgressionContent.BLOCKS.register("soul_thread",()->new Block(BlockBehaviour.Properties.ofFullCopy(Blocks.COBWEB).noCollission().strength(0.2f).lightLevel(s->3)){
         @Override public void entityInside(net.minecraft.world.level.block.state.BlockState state,net.minecraft.world.level.Level level,net.minecraft.core.BlockPos pos,Entity entity){
             if(!level.isClientSide&&entity instanceof LivingEntity living)living.addEffect(new net.minecraft.world.effect.MobEffectInstance(net.minecraft.world.effect.MobEffects.MOVEMENT_SLOWDOWN,30,0,false,false));

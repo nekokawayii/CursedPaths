@@ -35,10 +35,12 @@ public final class SimpleChannel {
 
     /** 发送目标（替代 PacketDistributor.PLAYER/ALL）。 */
     public static final class Target {
-        private final ServerPlayer player; private final boolean all;
-        private Target(ServerPlayer p, boolean all) { this.player = p; this.all = all; }
+        private final ServerPlayer player; private final boolean all; private final net.minecraft.world.entity.Entity tracked;
+        private Target(ServerPlayer p, boolean all) { this(p, all, null); }
+        private Target(ServerPlayer p, boolean all, net.minecraft.world.entity.Entity tracked) { this.player = p; this.all = all; this.tracked = tracked; }
         public static Target player(ServerPlayer p) { return new Target(p, false); }
         public static Target all() { return new Target(null, true); }
+        public static Target tracking(net.minecraft.world.entity.Entity e) { return new Target(null, false, e); }
     }
 
     private static final Map<Integer, Entry<?>> ENTRIES = new HashMap<>();
@@ -131,6 +133,7 @@ public final class SimpleChannel {
             int id = idOf(msg);
             Frame frame = new Frame(id, encode(id, msg));
             if (target.all) PacketDistributor.sendToAllPlayers(frame);
+            else if (target.tracked != null) PacketDistributor.sendToPlayersTrackingEntityAndSelf(target.tracked, frame);
             else if (target.player != null) PacketDistributor.sendToPlayer(target.player, frame);
         }
         static <T> void toServer(T msg) {

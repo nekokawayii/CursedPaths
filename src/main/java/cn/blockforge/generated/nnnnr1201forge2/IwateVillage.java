@@ -50,7 +50,7 @@ public final class IwateVillage {
                 if(IwateTerrain.terraceBank(x,z))set(c,x,h,z,Blocks.MOSSY_COBBLESTONE);
                 else {set(c,x,h,z,Blocks.WATER);if(Math.floorMod(x+z,3)!=0)set(c,x,h+1,z,SoulContent.RICE.get());}
             }else if(!IwateTerrain.forest(x,z)&&(Math.floorMod(x,96)<3||Math.floorMod(z,96)<3))set(c,x,h,z,Blocks.DIRT_PATH);
-            else if(Math.floorMod(IwateTerrain.hash(x,z),41)==0)set(c,x,h+1,z,Blocks.GRASS);
+            else if(Math.floorMod(IwateTerrain.hash(x,z),41)==0)set(c,x,h+1,z,Blocks.SHORT_GRASS);
         }
         for(int gx=Math.floorDiv(c.getPos().getMinBlockX()-5,9);gx<=Math.floorDiv(c.getPos().getMaxBlockX()+5,9);gx++)for(int gz=Math.floorDiv(c.getPos().getMinBlockZ()-5,9);gz<=Math.floorDiv(c.getPos().getMaxBlockZ()+5,9);gz++){long hash=IwateTerrain.hash(gx,gz);int x=gx*9+(int)Math.floorMod(hash,5),z=gz*9+(int)Math.floorMod(hash>>>8,5);if(IwateTerrain.forest(x,z)&&IwateTerrain.riverDistance(x,z)>8&&Math.floorMod(hash,5)!=0)tree(c,x,height(x,z)+1,z,8+(int)Math.floorMod(hash,6),true);}
     }
@@ -66,7 +66,7 @@ public final class IwateVillage {
                 else {set(c,x,h-1,z,Blocks.CLAY);set(c,x,h,z,Blocks.WATER);if(Math.floorMod(x+z,3)!=0)set(c,x,h+1,z,SoulContent.RICE.get());}
             }else if(Math.abs(a+18-(int)(Math.sin(z*0.04)*5))<=2){
                 set(c,x,h-1,z,Math.floorMod(x*7+z,11)==0?Blocks.AMETHYST_BLOCK:Blocks.SMOOTH_STONE);set(c,x,h,z,Blocks.WATER);
-            }else if(Math.floorMod(x*73428767L^z*912931L,43)==0)set(c,x,h+1,z,(x+z)%3==0?Blocks.OXEYE_DAISY:Blocks.GRASS);
+            }else if(Math.floorMod(x*73428767L^z*912931L,43)==0)set(c,x,h+1,z,(x+z)%3==0?Blocks.OXEYE_DAISY:Blocks.SHORT_GRASS);
         }
         int tileX=Math.floorDiv(c.getPos().getMinBlockX()+128,384),tileZ=Math.floorDiv(c.getPos().getMinBlockZ()+128,384);
         for(int tx=tileX-1;tx<=tileX+1;tx++)for(int tz=tileZ-1;tz<=tileZ+1;tz++)village(c,tx*384,tz*384);

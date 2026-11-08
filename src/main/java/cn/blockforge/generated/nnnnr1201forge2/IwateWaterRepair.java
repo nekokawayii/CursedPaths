@@ -11,7 +11,7 @@ import net.neoforged.bus.api.SubscribeEvent;
 
 /** 仅修复附近已载入区块中的天然水系，不重建建筑、不重新召唤首领。 */
 public final class IwateWaterRepair {
-    private static boolean natural(BlockState s){return s.isAir()||s.is(Blocks.STONE)||s.is(Blocks.DIRT)||s.is(Blocks.GRASS_BLOCK)||s.is(Blocks.GRAVEL)||s.is(Blocks.CLAY)||s.is(Blocks.WATER)||s.is(Blocks.DIRT_PATH)||s.is(Blocks.GRASS)||s.is(Blocks.TALL_GRASS)||s.is(Blocks.FERN)||s.is(SoulContent.RICE.get())||s.is(Blocks.MOSSY_COBBLESTONE);}
+    private static boolean natural(BlockState s){return s.isAir()||s.is(Blocks.STONE)||s.is(Blocks.DIRT)||s.is(Blocks.GRASS_BLOCK)||s.is(Blocks.GRAVEL)||s.is(Blocks.CLAY)||s.is(Blocks.WATER)||s.is(Blocks.DIRT_PATH)||s.is(Blocks.SHORT_GRASS)||s.is(Blocks.TALL_GRASS)||s.is(Blocks.FERN)||s.is(SoulContent.RICE.get())||s.is(Blocks.MOSSY_COBBLESTONE);}
     private static int repair(ServerPlayer player){
         var level=player.serverLevel();if(level.dimension()!=SoulJourney.CORRIDOR){player.sendSystemMessage(Component.literal("请到岩手地区后使用这条修复指令。"));return 0;}
         int count=0,skipped=0;var origin=player.chunkPosition();

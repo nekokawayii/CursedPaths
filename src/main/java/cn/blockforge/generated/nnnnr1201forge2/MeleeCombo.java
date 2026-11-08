@@ -51,7 +51,7 @@ public final class MeleeCombo {
         long now=p.level().getGameTime();var step=chain.sequence.press(now);if(step==null)return;
         send(p,new State(p.getId(),p.getUUID(),step.stage(),(int)(step.start()-now)));
     }
-    private static void send(ServerPlayer p,State s){Network.CHANNEL.send(PacketDistributor.TRACKING_ENTITY_AND_SELF.with(()->p),s);}
+    private static void send(ServerPlayer p,State s){Network.CHANNEL.send(SimpleChannel.Target.tracking(p),s);}
     public static void cancel(ServerPlayer p){if(chains.remove(p.getUUID())!=null)send(p,new State(p.getId(),p.getUUID(),0,0));}
     @SubscribeEvent public static void tick(ServerTickEvent.Post e){
         if(false)return;
