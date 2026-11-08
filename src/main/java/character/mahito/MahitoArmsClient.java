@@ -69,7 +69,7 @@ public final class MahitoArmsClient {
                 ps.translate(right ? 0.22 * pair : -0.22 * pair, 0.18 * pair, 0.06 * pair);
                 ps.mulPose(Axis.ZP.rotationDegrees(right ? 22f * pair : -22f * pair));
                 ps.mulPose(Axis.XP.rotationDegrees(-12f));
-                (right ? model.rightArm : model.leftArm).render(ps, vc, light, OverlayTexture.NO_OVERLAY, 1f, 1f, 1f, 1f);
+                (right ? model.rightArm : model.leftArm).render(ps, vc, light, OverlayTexture.NO_OVERLAY, 0xFFFFFFFF);
                 // 手上的物品：按手臂顺序依次渲染
                 List<ItemStack> held = HELD.get(player.getId());
                 if (held != null && i < held.size() && !held.get(i).isEmpty()) {

@@ -120,7 +120,7 @@ public final class JogoNpcModel extends EntityModel<JogoNpcEntity> {
 
     @Override public void setupAnim(JogoNpcEntity entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) { }
 
-    @Override public void renderToBuffer(PoseStack pose, VertexConsumer buffer, int light, int overlay, float r, float g, float b, float a) {
-        root.render(pose, buffer, light, overlay, r, g, b, a);
+    @Override public void renderToBuffer(PoseStack pose, VertexConsumer buffer, int light, int overlay, int color) {
+        root.render(pose, buffer, light, overlay, color);
     }
 }

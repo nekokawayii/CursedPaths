@@ -202,7 +202,7 @@ public final class DismantleMotionClient {
                 model.prepareMobModel(p,0,0,partial);model.setupAnim(p,0,0,age,headYaw,pitch);
                 setupRotations(p,ps,age,bodyYaw,partial);ps.scale(-.9375f,-.9375f,.9375f);ps.translate(0,-1.501,0);
                 model.renderToBuffer(ps,buffers.getBuffer(net.minecraft.client.renderer.RenderType.entityCutoutNoCull(getTextureLocation(p))),
-                    light,getOverlayCoords(p,0),1,1,1,1);
+                    light,getOverlayCoords(p,0),0xFFFFFFFF);
                 // 单个盔甲/手持物兼容层失败不能再连带吞掉基础身体与动作。
                 for(var layer:layers){ps.pushPose();try{layer.render(ps,buffers,light,p,0,0,partial,age,headYaw,pitch);}
                     catch(RuntimeException|LinkageError ex){report(layer.getClass().getSimpleName(),ex);}finally{ps.popPose();}}
