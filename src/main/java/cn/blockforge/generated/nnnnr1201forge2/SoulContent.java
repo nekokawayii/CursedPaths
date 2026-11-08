@@ -14,6 +14,10 @@ import net.minecraft.server.level.ServerPlayer;
 import net.neoforged.neoforge.registries.*;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.event.entity.EntityAttributeCreationEvent;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.entity.player.Player;
 
 public final class SoulContent {
     private static final DeferredRegister<Codec<? extends ChunkGenerator>> GENERATORS=DeferredRegister.create(Registries.CHUNK_GENERATOR,"jujutsu_kaisen_cursed_paths");
@@ -27,12 +31,12 @@ public final class SoulContent {
         @Override public void entityInside(net.minecraft.world.level.block.state.BlockState state,net.minecraft.world.level.Level level,net.minecraft.core.BlockPos pos,Entity entity){
             if(entity instanceof ServerPlayer p&&level.getGameTime()>=p.getPersistentData().getLong("SukunaGateCooldown")){p.getPersistentData().putLong("SukunaGateCooldown",level.getGameTime()+80);SoulJourney.enter(p);}
         }
-        @Override public InteractionResult use(net.minecraft.world.level.block.state.BlockState state,net.minecraft.world.level.Level level,net.minecraft.core.BlockPos pos,net.minecraft.world.entity.player.Player player,InteractionHand hand,net.minecraft.world.phys.BlockHitResult hit){
-            if(player instanceof ServerPlayer p)SoulJourney.enter(p);return InteractionResult.sidedSuccess(level.isClientSide);
+        @Override public net.minecraft.world.ItemInteractionResult useItemOn(net.minecraft.world.item.ItemStack stack, net.minecraft.world.level.block.state.BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit){
+            if(player instanceof ServerPlayer p)SoulJourney.enter(p);return net.minecraft.world.ItemInteractionResult.sidedSuccess(level.isClientSide);
         }
     });
     public static final DeferredHolder<Block, Block> PASSAGE=ProgressionContent.BLOCKS.register("soul_passage",()->new Block(BlockBehaviour.Properties.ofFullCopy(Blocks.OBSIDIAN).strength(-1,3600000).lightLevel(s->8)){
-        @Override public InteractionResult use(net.minecraft.world.level.block.state.BlockState state,net.minecraft.world.level.Level level,net.minecraft.core.BlockPos pos,net.minecraft.world.entity.player.Player player,InteractionHand hand,net.minecraft.world.phys.BlockHitResult hit){if(player instanceof ServerPlayer p)SoulJourney.passage(p,pos);return InteractionResult.sidedSuccess(level.isClientSide);}
+        @Override public net.minecraft.world.ItemInteractionResult useItemOn(net.minecraft.world.item.ItemStack stack, net.minecraft.world.level.block.state.BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit){if(player instanceof ServerPlayer p)SoulJourney.passage(p,pos);return net.minecraft.world.ItemInteractionResult.sidedSuccess(level.isClientSide);}
     });
     public static final DeferredHolder<Block, Block> RICE=ProgressionContent.BLOCKS.register("iwate_rice",()->new Block(BlockBehaviour.Properties.ofFullCopy(Blocks.GRASS).noCollission().noOcclusion().strength(0)));
     public static final DeferredHolder<Block, Block> THREAD=ProgressionContent.BLOCKS.register("soul_thread",()->new Block(BlockBehaviour.Properties.ofFullCopy(Blocks.COBWEB).noCollission().strength(0.2f).lightLevel(s->3)){
@@ -41,12 +45,12 @@ public final class SoulContent {
         }
     });
     public static final DeferredHolder<Block, Block> PHOTO_SLOT=ProgressionContent.BLOCKS.register("yuji_photo_slot",()->new Block(BlockBehaviour.Properties.ofFullCopy(Blocks.POLISHED_DEEPSLATE).strength(-1,3600000).lightLevel(s->5)){
-        @Override public InteractionResult use(net.minecraft.world.level.block.state.BlockState state,net.minecraft.world.level.Level level,net.minecraft.core.BlockPos pos,net.minecraft.world.entity.player.Player player,InteractionHand hand,net.minecraft.world.phys.BlockHitResult hit){
-            ItemStack stack=player.getItemInHand(hand);if(!(player instanceof ServerPlayer p))return InteractionResult.SUCCESS;
-            if(!stack.is(Content.YUJI_FAMILY_PHOTO.get())){p.displayClientMessage(net.minecraft.network.chat.Component.literal("照片槽需要放入“虎杖家双人合照”"),true);return InteractionResult.CONSUME;}
-            if(level.getDifficulty()==net.minecraft.world.Difficulty.PEACEFUL){p.displayClientMessage(net.minecraft.network.chat.Component.literal("请先把难度改为简单、普通或困难"),true);return InteractionResult.CONSUME;}
-            SoulWorldState world=SoulWorldState.get(p.serverLevel());if(world.guardianSummoned()){p.displayClientMessage(net.minecraft.network.chat.Component.literal("净土守护者已经被合照唤醒"),true);return InteractionResult.CONSUME;}
-            GuardianEntity yuji=GUARDIAN.get().create(level);if(yuji==null)return InteractionResult.FAIL;yuji.configure(p);yuji.moveTo(pos.getX()+0.5,pos.getY()+2,pos.getZ()+4.5,180,0);yuji.setTarget(p);if(!level.noCollision(yuji)||!level.addFreshEntity(yuji))return InteractionResult.FAIL;world.markGuardianSummoned();for(YujiEntity old:level.getEntitiesOfClass(YujiEntity.class,yuji.getBoundingBox().inflate(128),YujiEntity::familyMember))old.discard();if(!p.isCreative())stack.shrink(1);p.sendSystemMessage(net.minecraft.network.chat.Component.literal("合照泛起微光，虎杖悠仁·净土守护者降临。"));return InteractionResult.CONSUME;
+        @Override public net.minecraft.world.ItemInteractionResult useItemOn(net.minecraft.world.item.ItemStack stack, net.minecraft.world.level.block.state.BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit){
+            ItemStack stack=player.getItemInHand(hand);if(!(player instanceof ServerPlayer p))return net.minecraft.world.ItemInteractionResult.SUCCESS;
+            if(!stack.is(Content.YUJI_FAMILY_PHOTO.get())){p.displayClientMessage(net.minecraft.network.chat.Component.literal("照片槽需要放入“虎杖家双人合照”"),true);return net.minecraft.world.ItemInteractionResult.CONSUME;}
+            if(level.getDifficulty()==net.minecraft.world.Difficulty.PEACEFUL){p.displayClientMessage(net.minecraft.network.chat.Component.literal("请先把难度改为简单、普通或困难"),true);return net.minecraft.world.ItemInteractionResult.CONSUME;}
+            SoulWorldState world=SoulWorldState.get(p.serverLevel());if(world.guardianSummoned()){p.displayClientMessage(net.minecraft.network.chat.Component.literal("净土守护者已经被合照唤醒"),true);return net.minecraft.world.ItemInteractionResult.CONSUME;}
+            GuardianEntity yuji=GUARDIAN.get().create(level);if(yuji==null)return net.minecraft.world.ItemInteractionResult.FAIL;yuji.configure(p);yuji.moveTo(pos.getX()+0.5,pos.getY()+2,pos.getZ()+4.5,180,0);yuji.setTarget(p);if(!level.noCollision(yuji)||!level.addFreshEntity(yuji))return net.minecraft.world.ItemInteractionResult.FAIL;world.markGuardianSummoned();for(YujiEntity old:level.getEntitiesOfClass(YujiEntity.class,yuji.getBoundingBox().inflate(128),YujiEntity::familyMember))old.discard();if(!p.isCreative())stack.shrink(1);p.sendSystemMessage(net.minecraft.network.chat.Component.literal("合照泛起微光，虎杖悠仁·净土守护者降临。"));return net.minecraft.world.ItemInteractionResult.CONSUME;
         }
     });
     public static final DeferredHolder<Item, Item> EGG=Content.ITEMS.register("yuji_spawn_egg",()->new net.neoforged.neoforge.common.DeferredSpawnEggItem(YUJI,0x171d33,0xda8a8a,new Item.Properties()));

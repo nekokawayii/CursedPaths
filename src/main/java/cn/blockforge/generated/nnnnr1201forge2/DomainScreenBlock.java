@@ -10,6 +10,8 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.IntegerProperty;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.phys.BlockHitResult;
 
 /**
  * 领域方块（石流龙「打上花火」的内壳材料）。
@@ -32,16 +34,14 @@ public class DomainScreenBlock extends DomainMaskBlock {
     }
 
     /** 潜行 + 右键：切换这一格显示的图片（每格独立）。 */
-    @Override public InteractionResult use(BlockState state, Level level, net.minecraft.core.BlockPos pos,
-                                           Player player, InteractionHand hand,
-                                           net.minecraft.world.phys.BlockHitResult hit) {
-        if (!player.isShiftKeyDown()) return InteractionResult.PASS;
+    @Override public net.minecraft.world.ItemInteractionResult useItemOn(net.minecraft.world.item.ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
+        if (!player.isShiftKeyDown()) return net.minecraft.world.ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
         if (!level.isClientSide) {
             int next = (state.getValue(IMAGE) + 1) % DomainScreenItem.IMAGES;
             level.setBlock(pos, state.setValue(IMAGE, next), 3);
             player.displayClientMessage(Component.literal("领域方块：" + DomainScreenItem.imageName(next))
                 .withStyle(ChatFormatting.AQUA), true);
         }
-        return InteractionResult.sidedSuccess(level.isClientSide);
+        return net.minecraft.world.ItemInteractionResult.sidedSuccess(level.isClientSide);
     }
 }

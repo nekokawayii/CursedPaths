@@ -57,10 +57,10 @@ public final class ExpeditionContent {
         block("tengen_core",()->new RitualBlock(2));
         block("barrier_trap",()->new ExpeditionTrapBlock());
         block("culling_exchange",()->new Block(BlockBehaviour.Properties.ofFullCopy(Blocks.LODESTONE)){
-            @Override public InteractionResult use(BlockState s,Level l,BlockPos pos,Player p,InteractionHand h,BlockHitResult hit){if(h==InteractionHand.MAIN_HAND&&p instanceof ServerPlayer sp)CullingGame.exchange(sp);return InteractionResult.sidedSuccess(l.isClientSide);}
+            @Override public net.minecraft.world.ItemInteractionResult useItemOn(net.minecraft.world.item.ItemStack stack, BlockState s, Level l, BlockPos pos, Player p, InteractionHand h, BlockHitResult hit){if(h==InteractionHand.MAIN_HAND&&p instanceof ServerPlayer sp)CullingGame.exchange(sp);return net.minecraft.world.ItemInteractionResult.sidedSuccess(l.isClientSide);}
         });
         block("culling_exit",()->new Block(BlockBehaviour.Properties.ofFullCopy(Blocks.CRYING_OBSIDIAN).strength(-1,3600000).lightLevel(s->12)){
-            @Override public InteractionResult use(BlockState s,Level l,BlockPos pos,Player p,InteractionHand h,BlockHitResult hit){if(p instanceof ServerPlayer sp)CullingGame.leave(sp);return InteractionResult.sidedSuccess(l.isClientSide);}
+            @Override public net.minecraft.world.ItemInteractionResult useItemOn(net.minecraft.world.item.ItemStack stack, BlockState s, Level l, BlockPos pos, Player p, InteractionHand h, BlockHitResult hit){if(p instanceof ServerPlayer sp)CullingGame.leave(sp);return net.minecraft.world.ItemInteractionResult.sidedSuccess(l.isClientSide);}
         });
         block("culling_barrier",()->new GlassBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.BLACK_STAINED_GLASS).strength(-1,3600000).noOcclusion()));
     }

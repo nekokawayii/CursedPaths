@@ -16,6 +16,6 @@ public final class RitualBlock extends BaseEntityBlock {
     @Override public RenderShape getRenderShape(BlockState s){return RenderShape.MODEL;}
     @Override public BlockEntity newBlockEntity(BlockPos p,BlockState s){return new RitualBlockEntity(p,s);}
     @Override public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level l,BlockState s,BlockEntityType<T> type){return l.isClientSide?null:createTickerHelper(type,ExpeditionContent.RITUAL.get(),RitualBlockEntity::tick);}
-    @Override public InteractionResult use(BlockState s,Level l,BlockPos pos,Player p,InteractionHand h,BlockHitResult hit){if(h==InteractionHand.MAIN_HAND&&p instanceof ServerPlayer sp&&l.getBlockEntity(pos) instanceof RitualBlockEntity be)be.interact(sp);return InteractionResult.sidedSuccess(l.isClientSide);}
+    @Override public net.minecraft.world.ItemInteractionResult useItemOn(net.minecraft.world.item.ItemStack stack, BlockState s, Level l, BlockPos pos, Player p, InteractionHand h, BlockHitResult hit){if(h==InteractionHand.MAIN_HAND&&p instanceof ServerPlayer sp&&l.getBlockEntity(pos) instanceof RitualBlockEntity be)be.interact(sp);return net.minecraft.world.ItemInteractionResult.sidedSuccess(l.isClientSide);}
     @Override public void onRemove(BlockState s,Level l,BlockPos pos,BlockState next,boolean moving){if(!s.is(next.getBlock())&&l.getBlockEntity(pos) instanceof RitualBlockEntity be)be.destroy();super.onRemove(s,l,pos,next,moving);}
 }
