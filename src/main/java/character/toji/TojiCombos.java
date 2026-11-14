@@ -288,9 +288,13 @@ public final class TojiCombos {
     private static boolean flurry(ServerPlayer p) {
         LivingEntity target = TojiQte.approach(p, 4.0);
         if (target == null) return false;
-        for (int i = 0; i < 8; i++) hit(p, target, C13, 0.05, 0, 2);
-        hit(p, target, C13_LAST, 1.6, 0, 14);
-        target.setDeltaMovement(target.getDeltaMovement().add(0, 0.45, 0));
+        // 8 下轻击**不带击退**：hit() 每带一次击退都会补 +0.3 纵向速度，8 下叠起来会把目标顶到天上不下来。
+        for (int i = 0; i < 8; i++) hit(p, target, C13, 0, 0, 2);
+        hit(p, target, C13_LAST, 0, 0, 14);
+        // 浮空只做一次：直接设值而不是叠加，避免吃到前一击的残余纵向速度。
+        var v = target.getDeltaMovement();
+        target.setDeltaMovement(v.x * 0.3, 0.45, v.z * 0.3);
+        target.hurtMarked = true;
         fx(p, 13, target.position());
         say(p, "游云·浮空乱打");
         return true;
@@ -420,7 +424,10 @@ public final class TojiCombos {
         if(!CombatSettings.hurt(p, target, p.damageSources().playerAttack(p), (float) amount))return;
         if (knockback > 0) {
             Vec3 push = target.position().subtract(p.position()).multiply(1, 0, 1).normalize().scale(knockback);
-            target.setDeltaMovement(target.getDeltaMovement().add(push.x, Math.max(0.15, push.y + 0.3), push.z));
+            var motion = target.getDeltaMovement();
+            // 纵向速度封顶 0.9：连段里反复调用 hit() 不会再把目标越顶越高。
+            double vy = Math.min(0.9, Math.max(0.15, push.y + 0.3) + Math.max(0, motion.y));
+            target.setDeltaMovement(motion.x + push.x, vy, motion.z + push.z);
             target.hurtMarked = true;
         }
         if (stun > 0) TojiQte.stun(p, target, stun);
