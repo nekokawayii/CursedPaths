@@ -50,6 +50,7 @@ public final class EntityRendererRegistry {
         entry(Content.YUKI_NPC,SorcererNpcRenderer.class,SorcererNpcRenderer::new),
         entry(Content.TOJI_NPC,SorcererNpcRenderer.class,SorcererNpcRenderer::new),
         entry(Content.MAHITO_NPC,SorcererNpcRenderer.class,SorcererNpcRenderer::new),
+        entry(Content.YUJI_NPC,SorcererNpcRenderer.class,SorcererNpcRenderer::new),
         entry(Content.TODO_NPC,TodoNpcRenderer.class,TodoNpcRenderer::new),
         entry(Content.RYU_NPC,RyuNpcRenderer.class,RyuNpcRenderer::new),
         entry(Content.HAKARI_NPC,HakariNpcRenderer.class,HakariNpcRenderer::new),

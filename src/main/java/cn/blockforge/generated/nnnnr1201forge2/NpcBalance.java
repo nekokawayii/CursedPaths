@@ -38,13 +38,22 @@ public final class NpcBalance {
         BASE.put("jujutsu_kaisen_cursed_paths:yuki_npc", 650.0);
         BASE.put("jujutsu_kaisen_cursed_paths:toji_npc", 600.0);
         BASE.put("jujutsu_kaisen_cursed_paths:mahito_npc", 600.0);
+        // 虎杖 NPC：非整合包 950，整合包 25000（不是 ×30，单独列在 MODPACK 里）。
+        BASE.put("jujutsu_kaisen_cursed_paths:yuji_npc", 950.0);
+    }
+    /** 少数 NPC 的整合包血量不是 ×30，单独给绝对值。 */
+    private static final Map<String, Double> MODPACK = new LinkedHashMap<>();
+    static {
+        MODPACK.put("jujutsu_kaisen_cursed_paths:yuji_npc", 25000.0);
     }
     public static final double MODPACK_MULTIPLIER = 30.0;
 
     public static double health(String entityId) {
         Double base = BASE.get(entityId);
         if (base == null) return 1;
-        return BalanceRules.modpackMode() ? base * MODPACK_MULTIPLIER : base;
+        if (!BalanceRules.modpackMode()) return base;
+        Double explicit = MODPACK.get(entityId);
+        return explicit != null ? explicit : base * MODPACK_MULTIPLIER;
     }
 
     @SubscribeEvent public static void join(EntityJoinLevelEvent e) {
@@ -75,7 +84,8 @@ public final class NpcBalance {
         // r282：宿傩 NPC 特殊档——整合包 18000 / 非整合包 2500（不走 ×30）
         double want = "jujutsu_kaisen_cursed_paths:sukuna_npc".equals(id)
             ? (BalanceRules.modpackMode() ? 18000.0 : 2500.0)
-            : (BalanceRules.modpackMode() ? base * MODPACK_MULTIPLIER : base);
+            : !BalanceRules.modpackMode() ? base
+            : MODPACK.containsKey(id) ? MODPACK.get(id) : base * MODPACK_MULTIPLIER;
         if (Math.abs(attribute.getBaseValue() - want) > 0.5) {
             attribute.setBaseValue(want);
             living.setHealth(living.getMaxHealth());

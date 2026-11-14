@@ -11,6 +11,9 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 /** NPC 独立调度玩家同款术式；没有真人在场也会运行。 */
 public final class NpcCombatCasting {
+    /** 虎杖 NPC：施法间隔与每招冷却都是 0.5 秒（10 刻），其余角色沿用全局 24 刻。 */
+    private static final int YUJI_CD = 10;
+    private static int interval(String role) { return "yuji".equals(role) ? YUJI_CD : NpcBattleRules.CAST_INTERVAL; }
     public static List<Integer> skills(Mob mob) {
         String role = NpcBridge.character(mob);
         if (mob instanceof NpcTechniqueUser user) {
@@ -58,6 +61,7 @@ public final class NpcCombatCasting {
                 character.ryu.RyuCombat.startCharge(actor);Curse.status(actor,"NpcChannelUntil",80);
                 Curse.status(actor,"CharacterSkillCooldown_"+id,skill.cooldown());
             } else CharacterCasting.cast(actor,id);
+            if("yuji".equals(actor.characterId))Curse.status(actor,"CharacterSkillCooldown_"+id,YUJI_CD);
             if(!Curse.active(actor,"CharacterSkillCooldown_"+id))return false;
             if(actor.characterId.equals("naoya")&&id==character.naoya.NaoyaSkills.PROJECT)Curse.status(actor,"NpcProjectionUntil",60);
             return committed(actor,domain);
@@ -67,7 +71,7 @@ public final class NpcCombatCasting {
         return committed(actor,domain);
     }
     private static boolean committed(NpcBridge.NpcActor actor,boolean domain) {
-        Curse.status(actor,"NpcCastInterval",NpcBattleRules.CAST_INTERVAL);
+        Curse.status(actor,"NpcCastInterval",interval(actor.characterId));
         if(domain)actor.mob.getPersistentData().putLong("NpcDomainReadyAt",actor.level().getGameTime()+NpcBattleRules.DOMAIN_COOLDOWN);
         actor.mob.swing(net.minecraft.world.InteractionHand.MAIN_HAND);
         return true;
