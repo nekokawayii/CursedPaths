@@ -33,6 +33,17 @@ public final class YujiRebuild {
     private static final List<Job> JOBS = new ArrayList<>();
     private static final List<Job> PENDING = new ArrayList<>();
 
+    /** NPC 版二段径庭拳：Mob 主人没有 ServerPlayer，单独一条队列。 */
+    private record NpcJob(net.minecraft.world.entity.Mob owner, ServerLevel level, LivingEntity target, long at) { }
+    private static final List<NpcJob> NPC_JOBS = new ArrayList<>();
+    /** NPC 虎杖命中时调用：0.5 秒后在目标体内炸开二段。 */
+    public static void npcIkki(net.minecraft.world.entity.Mob owner, LivingEntity target) {
+        if (owner == null || target == null || !target.isAlive()) return;
+        if (!(owner.level() instanceof ServerLevel level)) return;
+        if (NPC_JOBS.stream().noneMatch(j -> j.owner == owner && j.target == target))
+            NPC_JOBS.add(new NpcJob(owner, level, target, level.getGameTime() + 10));
+    }
+
     // ===== 被动：连击狂热 =====
     public static int combo(ServerPlayer p) { return Curse.data(p).getInt("YujiCombo"); }
     private static void addCombo(ServerPlayer p) {
@@ -82,6 +93,9 @@ public final class YujiRebuild {
     public static void hurt(LivingHurtEvent e) {
         if (e.getEntity().level().isClientSide) return;
         var src = e.getSource();
+        // NPC 虎杖（Mob）也有径庭拳被动：命中即挂二段。
+        if (src.getDirectEntity() instanceof net.minecraft.world.entity.Mob m && m == src.getEntity()
+            && "yuji".equals(cn.blockforge.generated.nnnnr1201forge2.NpcBridge.character(m))) npcIkki(m, e.getEntity());
         if (!(src.getEntity() instanceof ServerPlayer p) || !"yuji".equals(role(p))) return;
         LivingEntity t = e.getEntity();
         if (!CombatSettings.canHit(p, t)) return;
@@ -357,6 +371,18 @@ public final class YujiRebuild {
             }
         }
         if (!PENDING.isEmpty()) { JOBS.addAll(PENDING); PENDING.clear(); }
+        // NPC 虎杖的二段径庭拳
+        for (NpcJob j : new ArrayList<>(NPC_JOBS)) {
+            if (j.level.getGameTime() < j.at) continue;
+            NPC_JOBS.remove(j);
+            if (j.owner == null || !j.owner.isAlive() || j.target == null || !j.target.isAlive()) continue;
+            j.target.invulnerableTime = 0;
+            var holder = j.level.registryAccess().registryOrThrow(net.minecraft.core.registries.Registries.DAMAGE_TYPE)
+                .getHolderOrThrow(net.minecraft.world.damagesource.DamageTypes.GENERIC_KILL);
+            j.target.hurt(new net.minecraft.world.damagesource.DamageSource(holder, j.owner, j.owner), 10f);
+            j.target.invulnerableTime = 0;
+            Network.send(j.level, new Network.Effect(YujiFx.IKKI, j.owner.getId(), j.target.position().add(0, 1, 0), j.owner.getLookAngle(), 1.2f, 14, 0));
+        }
         // 连击超时清空
         for (ServerPlayer p : e.getServer().getPlayerList().getPlayers()) {
             if (!"yuji".equals(role(p))) continue;
