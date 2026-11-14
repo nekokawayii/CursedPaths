@@ -36,6 +36,8 @@ public final class YujiRebuild {
     /** NPC 版二段径庭拳：Mob 主人没有 ServerPlayer，单独一条队列。 */
     private record NpcJob(net.minecraft.world.entity.Mob owner, ServerLevel level, LivingEntity target, long at) { }
     private static final List<NpcJob> NPC_JOBS = new ArrayList<>();
+    /** r375：二段自己的伤害又会触发一次"命中"，不挡住会无限自我喂养。 */
+    private static boolean APPLYING_IKKI;
     /** NPC 虎杖命中时调用：0.5 秒后在目标体内炸开二段。 */
     public static void npcIkki(net.minecraft.world.entity.Mob owner, LivingEntity target) {
         if (owner == null || target == null || !target.isAlive()) return;
@@ -94,7 +96,7 @@ public final class YujiRebuild {
         if (e.getEntity().level().isClientSide) return;
         var src = e.getSource();
         // NPC 虎杖（Mob）也有径庭拳被动：命中即挂二段。
-        if (src.getDirectEntity() instanceof net.minecraft.world.entity.Mob m && m == src.getEntity()
+        if (!APPLYING_IKKI && src.getDirectEntity() instanceof net.minecraft.world.entity.Mob m && m == src.getEntity()
             && "yuji".equals(cn.blockforge.generated.nnnnr1201forge2.NpcBridge.character(m))) npcIkki(m, e.getEntity());
         if (!(src.getEntity() instanceof ServerPlayer p) || !"yuji".equals(role(p))) return;
         LivingEntity t = e.getEntity();
@@ -379,7 +381,9 @@ public final class YujiRebuild {
             j.target.invulnerableTime = 0;
             var holder = j.level.registryAccess().registryOrThrow(net.minecraft.core.registries.Registries.DAMAGE_TYPE)
                 .getHolderOrThrow(net.minecraft.world.damagesource.DamageTypes.GENERIC_KILL);
-            j.target.hurt(new net.minecraft.world.damagesource.DamageSource(holder, j.owner, j.owner), 10f);
+            APPLYING_IKKI = true;
+            try { j.target.hurt(new net.minecraft.world.damagesource.DamageSource(holder, j.owner, j.owner), 10f); }
+            finally { APPLYING_IKKI = false; }
             j.target.invulnerableTime = 0;
             Network.send(j.level, new Network.Effect(YujiFx.IKKI, j.owner.getId(), j.target.position().add(0, 1, 0), j.owner.getLookAngle(), 1.2f, 14, 0));
         }
