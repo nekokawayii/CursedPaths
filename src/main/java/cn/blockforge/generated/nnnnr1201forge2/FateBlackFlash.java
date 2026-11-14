@@ -42,8 +42,9 @@ public final class FateBlackFlash {
         e.setAmount((float) Math.min(1.0e7, Math.max(1.0, e.getAmount()) * SCALE));
         SkillSounds.play(attacker, "black_flash", 3.5f);
         if (e.getEntity().level() instanceof ServerLevel level) {
-            Network.send(level, new Network.Effect(YujiFx.BLACK_FLASH, attacker.getId(),
-                e.getEntity().position(), attacker.getLookAngle(), 3f, 20, 0));
+            // 85 = SoulClient 的 BlackFlashRender（宿傩线附拳用的就是它，自绘黑红闪电）
+            Network.send(level, new Network.Effect(85, attacker.getId(),
+                e.getEntity().getEyePosition(), attacker.getLookAngle(), 1f, 16, attacker.getId()));
         }
     }
 

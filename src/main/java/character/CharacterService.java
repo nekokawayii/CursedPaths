@@ -76,7 +76,7 @@ public final class CharacterService {
         return d.unlocked(skill,rank(p))||(d.family()==CharacterDefinition.Family.BLOOD&&skill==BloodRules.DEATH_STAR);
     }
     public static boolean allowsAction(Player p,SkillAction action) {
-        if(action==SkillAction.DOMAIN_AMPLIFICATION||action==SkillAction.REVERSE||action==SkillAction.GUARDIAN_REVERSE)return true;
+        if(action==SkillAction.DOMAIN_AMPLIFICATION||action==SkillAction.REVERSE||action==SkillAction.GUARDIAN_REVERSE||action==SkillAction.TOGGLE_FIST)return true;
         var d=selected(p);if(d==null||action==SkillAction.CANCEL_CHARGE)return true;
         if(toji(p))return false;
         int skill=switch(action){

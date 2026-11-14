@@ -130,8 +130,8 @@ public final class YujiRebuild {
             if (!cn.blockforge.generated.nnnnr1201forge2.FateBlackFlash.applied && npcFocusAdd(m, 20) >= FOCUS_MAX) { // 黑闪：×10
                 e.setAmount((float) Math.min(1.0e7, Math.max(1, e.getAmount()) * 10.0));
                 m.getPersistentData().putInt("YujiNpcFocus", 0);
-                Network.send((ServerLevel) m.level(), new Network.Effect(YujiFx.BLACK_FLASH, m.getId(),
-                    e.getEntity().position(), m.getLookAngle(), 3f, 20, 0));
+                Network.send((ServerLevel) m.level(), new Network.Effect(85, m.getId(),
+                    e.getEntity().getEyePosition(), m.getLookAngle(), 1f, 16, m.getId()));
                 cn.blockforge.generated.nnnnr1201forge2.SkillSounds.play(m, "black_flash", 3.5f);
             }
         }
@@ -146,7 +146,7 @@ public final class YujiRebuild {
                 double dmg = Math.max(1, e.getAmount()) * 10.0;
                 e.setAmount((float) Math.min(1.0e7, dmg));
                 Curse.data(p).putInt("YujiFocus", 0);
-                Network.send((ServerLevel) p.level(), new Network.Effect(YujiFx.BLACK_FLASH, p.getId(), t.position(), p.getLookAngle(), 3f, 20, 0));
+                Network.send((ServerLevel) p.level(), new Network.Effect(85, p.getId(), t.getEyePosition(), p.getLookAngle(), 1f, 16, p.getId()));
                 cn.blockforge.generated.nnnnr1201forge2.SkillSounds.play(p, "black_flash", 3.5f);
             }
         }

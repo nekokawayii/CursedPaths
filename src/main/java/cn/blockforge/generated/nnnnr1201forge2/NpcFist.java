@@ -42,6 +42,10 @@ public final class NpcFist {
         var data = mob.getPersistentData();
         long now = mob.level().getGameTime();
         if (data.getBoolean("Fist")) {
+            if (now % 10 == 0 && mob.level() instanceof ServerLevel level) {
+                Network.send(level, new Network.Effect(YujiFx.FIST_AURA, mob.getId(),
+                    mob.getEyePosition().add(0, -0.35, 0), mob.getLookAngle(), 1f, 12, 0));
+            }
             if (now >= data.getLong("NpcFistEnd")) {
                 data.putBoolean("Fist", false);
                 data.putLong("NpcFistReadyAt", now + COOLDOWN);
@@ -70,8 +74,8 @@ public final class NpcFist {
         e.setAmount((float) Math.min(1.0e7, amount));
         SkillSounds.play(mob, "black_flash", 3.5f);
         if (e.getEntity().level() instanceof ServerLevel level) {
-            Network.send(level, new Network.Effect(YujiFx.BLACK_FLASH, mob.getId(),
-                e.getEntity().position(), mob.getLookAngle(), 3f, 20, 0));
+            Network.send(level, new Network.Effect(85, mob.getId(),
+                e.getEntity().getEyePosition(), mob.getLookAngle(), 1f, 16, mob.getId()));
         }
     }
 }

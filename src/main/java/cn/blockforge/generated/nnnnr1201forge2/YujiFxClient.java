@@ -59,12 +59,15 @@ public final class YujiFxClient {
             }
             case YujiFx.ELBOW -> PhotonBridge.smoke(at, BLUE, .3, .55, 8, 8);
             case YujiFx.KNEE -> PhotonBridge.cloud(at, WHITE, 1.2, .5, 14, 10);
-            case YujiFx.BLACK_FLASH -> {     // 黑闪：四段 .fx 主体 + 黑红粒子 + 白闪 + 震屏
-                BlackFlashFx.play(at);      // r378：四段 Photon 特效（原先没有任何调用点，只有小粒子）
+            case YujiFx.BLACK_FLASH -> {     // 黑闪：黑红粒子 + 白闪 + 震屏（宿命黑闪已改走 85 号自绘）
                 PhotonBridge.cloud(at, BLACK, 2.2, .9, 26, 14);
                 PhotonBridge.cloud(at, RED, 1.6, .7, 18, 12);
                 PhotonBridge.spawn(at, WHITE, .8, 8, 6);
                 Client.shake(12);
+            }
+            case YujiFx.FIST_AURA -> {       // NPC / 首领附拳：手部黑红咒力
+                PhotonBridge.smoke(at, RED, 1.0, .5, 6, 10);
+                PhotonBridge.spawn(at, BLACK, .55, 6, 8);
             }
             default -> { }
         }
