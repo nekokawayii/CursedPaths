@@ -127,7 +127,7 @@ public final class YujiRebuild {
             && "yuji".equals(cn.blockforge.generated.nnnnr1201forge2.NpcBridge.character(m))) {
             npcIkki(m, e.getEntity());
             npcCombo(m);
-            if (npcFocusAdd(m, 20) >= FOCUS_MAX) { // 黑闪：×10
+            if (!cn.blockforge.generated.nnnnr1201forge2.FateBlackFlash.applied && npcFocusAdd(m, 20) >= FOCUS_MAX) { // 黑闪：×10
                 e.setAmount((float) Math.min(1.0e7, Math.max(1, e.getAmount()) * 10.0));
                 m.getPersistentData().putInt("YujiNpcFocus", 0);
                 Network.send((ServerLevel) m.level(), new Network.Effect(YujiFx.BLACK_FLASH, m.getId(),
@@ -141,7 +141,7 @@ public final class YujiRebuild {
         if (melee) {
             addCombo(p);
             addFocus(p, 20);
-            if (focus(p) >= FOCUS_MAX) { // 黑闪：×10
+            if (!cn.blockforge.generated.nnnnr1201forge2.FateBlackFlash.applied && focus(p) >= FOCUS_MAX) { // 黑闪：×10
                 double dmg = Math.max(1, e.getAmount()) * 10.0;
                 e.setAmount((float) Math.min(1.0e7, dmg));
                 Curse.data(p).putInt("YujiFocus", 0);

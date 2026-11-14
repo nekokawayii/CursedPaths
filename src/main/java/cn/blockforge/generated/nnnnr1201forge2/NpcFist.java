@@ -62,6 +62,7 @@ public final class NpcFist {
     @SubscribeEvent
     public static void hurt(LivingHurtEvent e) {
         if (e.getEntity().level().isClientSide) return;
+        if (FateBlackFlash.applied) return; // 宿命黑闪已经乘过 ×10，不再叠
         if (!(e.getSource().getDirectEntity() instanceof Mob mob) || mob != e.getSource().getEntity()) return;
         if (!active(mob)) return;
         if (mob.getRandom().nextDouble() >= BLACK_FLASH_CHANCE) return;
