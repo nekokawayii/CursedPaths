@@ -17,6 +17,7 @@ public final class GeneratedMod {
         MinecraftForge.EVENT_BUS.register(SixfoldFinale.class);
         SkillDestruction.init();
         IceContent.init(net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext.get().getModEventBus());
+        FistParticles.init();
         MinecraftForge.EVENT_BUS.register(SukunaBranches.class);
         MinecraftForge.EVENT_BUS.register(Uraume.class);
         SukunaTempleStructure.TYPES.register(net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext.get().getModEventBus());

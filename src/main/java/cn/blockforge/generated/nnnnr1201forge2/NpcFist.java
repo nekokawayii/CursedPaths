@@ -42,6 +42,16 @@ public final class NpcFist {
         var data = mob.getPersistentData();
         long now = mob.level().getGameTime();
         if (data.getBoolean("Fist")) {
+            if (now % 5 == 0 && mob.level() instanceof ServerLevel level) {
+                // 贴图火焰粒子（ComfyUI 生成的 fist_flame）：左右手各一把
+                var eye = mob.getEyePosition();
+                var right = mob.getLookAngle().cross(new net.minecraft.world.phys.Vec3(0, 1, 0));
+                right = right.lengthSqr() < 1e-6 ? new net.minecraft.world.phys.Vec3(1, 0, 0) : right.normalize();
+                for (int hand = -1; hand <= 1; hand += 2) {
+                    var at = eye.add(right.scale(0.40 * hand)).add(0, -0.42, 0);
+                    level.sendParticles(FistParticles.FIST_FLAME.get(), at.x, at.y, at.z, 2, 0.10, 0.16, 0.10, 0.0);
+                }
+            }
             if (now % 10 == 0 && mob.level() instanceof ServerLevel level) {
                 Network.send(level, new Network.Effect(YujiFx.FIST_AURA, mob.getId(),
                     mob.getEyePosition().add(0, -0.35, 0), mob.getLookAngle(), 1f, 12, 0));
