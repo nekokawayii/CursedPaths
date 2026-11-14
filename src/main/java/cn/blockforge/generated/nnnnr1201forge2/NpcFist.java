@@ -68,6 +68,7 @@ public final class NpcFist {
         if (mob.getRandom().nextDouble() >= BLACK_FLASH_CHANCE) return;
         double amount = Math.max(1.0, e.getAmount()) * BLACK_FLASH_SCALE;
         e.setAmount((float) Math.min(1.0e7, amount));
+        SkillSounds.play(mob, "black_flash", 3.5f);
         if (e.getEntity().level() instanceof ServerLevel level) {
             Network.send(level, new Network.Effect(YujiFx.BLACK_FLASH, mob.getId(),
                 e.getEntity().position(), mob.getLookAngle(), 3f, 20, 0));

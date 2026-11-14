@@ -132,6 +132,7 @@ public final class YujiRebuild {
                 m.getPersistentData().putInt("YujiNpcFocus", 0);
                 Network.send((ServerLevel) m.level(), new Network.Effect(YujiFx.BLACK_FLASH, m.getId(),
                     e.getEntity().position(), m.getLookAngle(), 3f, 20, 0));
+                cn.blockforge.generated.nnnnr1201forge2.SkillSounds.play(m, "black_flash", 3.5f);
             }
         }
         if (!(src.getEntity() instanceof ServerPlayer p) || !"yuji".equals(role(p))) return;
@@ -146,6 +147,7 @@ public final class YujiRebuild {
                 e.setAmount((float) Math.min(1.0e7, dmg));
                 Curse.data(p).putInt("YujiFocus", 0);
                 Network.send((ServerLevel) p.level(), new Network.Effect(YujiFx.BLACK_FLASH, p.getId(), t.position(), p.getLookAngle(), 3f, 20, 0));
+                cn.blockforge.generated.nnnnr1201forge2.SkillSounds.play(p, "black_flash", 3.5f);
             }
         }
     }

@@ -40,6 +40,7 @@ public final class FateBlackFlash {
         if (!mahito(e.getEntity())) return;
         applied = true;
         e.setAmount((float) Math.min(1.0e7, Math.max(1.0, e.getAmount()) * SCALE));
+        SkillSounds.play(attacker, "black_flash", 3.5f);
         if (e.getEntity().level() instanceof ServerLevel level) {
             Network.send(level, new Network.Effect(YujiFx.BLACK_FLASH, attacker.getId(),
                 e.getEntity().position(), attacker.getLookAngle(), 3f, 20, 0));
