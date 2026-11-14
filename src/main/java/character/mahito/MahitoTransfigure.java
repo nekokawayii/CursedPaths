@@ -36,7 +36,8 @@ public final class MahitoTransfigure {
 
     private static final int ARM_TICKS = 200;
     private static final String[] TIER_NAMES = {"木", "石", "金", "铁", "钻石", "下界合金"};
-    private static final String[] CURSED_NAMES = {"黑绳", "屠坐魔", "游云", "神武解", "飞天"};
+    private static final String[] CURSED_NAMES = {"黑绳", "屠坐魔", "游云", "神武解", "飞天",
+        "天逆鉾", "赤血刃", "高专制式刀", "噬魂刀"};
 
     private record Armed(UUID target, long at) {}
     private static final Map<UUID, Armed> ARMED = new HashMap<>();
@@ -167,7 +168,7 @@ public final class MahitoTransfigure {
         }
         if (action >= 401 && action <= 406) { adjust(p, action); return; }
         if (action == 410) { applyToMonster(p); return; }
-        if (action >= FORM_CURSED_BASE && action <= FORM_CURSED_BASE + 4) { transformCursed(p, action - FORM_CURSED_BASE); return; }
+        if (action >= FORM_CURSED_BASE && action <= FORM_CURSED_BASE + 8) { transformCursed(p, action - FORM_CURSED_BASE); return; }
         if (action >= FORM_SWORD && action <= FORM_SHOVEL) transform(p, action);
     }
 
@@ -307,13 +308,17 @@ public final class MahitoTransfigure {
 
     private static void transformCursed(ServerPlayer p, int index) {
         ItemStack held = p.getMainHandItem();
-        if (held.getTagElement(BASE_TAG) == null || index < 0 || index > 4) return;
+        if (held.getTagElement(BASE_TAG) == null || index < 0 || index >= CURSED_NAMES.length) return;
         ItemStack out = switch (index) {
             case 0 -> new ItemStack(cn.blockforge.generated.nnnnr1201forge2.Content.BLACK_ROPE.get());
             case 1 -> new ItemStack(cn.blockforge.generated.nnnnr1201forge2.Content.SLAUGHTER_DEMON.get());
             case 2 -> new ItemStack(cn.blockforge.generated.nnnnr1201forge2.Content.YUYUN.get());
             case 3 -> new ItemStack(cn.blockforge.generated.nnnnr1201forge2.VoidContent.SHINBUKE.get());
-            default -> new ItemStack(cn.blockforge.generated.nnnnr1201forge2.VoidContent.HITEN.get());
+            case 4 -> new ItemStack(cn.blockforge.generated.nnnnr1201forge2.VoidContent.HITEN.get());
+            case 5 -> new ItemStack(cn.blockforge.generated.nnnnr1201forge2.Content.TENKA_SPEAR.get());
+            case 6 -> new ItemStack(cn.blockforge.generated.nnnnr1201forge2.ExpeditionContent.item("blood_blade"));
+            case 7 -> new ItemStack(cn.blockforge.generated.nnnnr1201forge2.ExpeditionContent.item("alloy_sword"));
+            default -> new ItemStack(cn.blockforge.generated.nnnnr1201forge2.ExpeditionContent.item("soul_splitter"));
         };
         finish(p, held, out, CURSED_NAMES[index], true);
     }

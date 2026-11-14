@@ -21,7 +21,10 @@ public final class TransfigureScreen extends Screen {
 
     private static final String[] ROOT = {"1 工具", "2 咒具", "3 具象化", "？", "5 攻击", "？"};
     private static final String[] TOOLS = {"剑", "斧", "镐", "锄", "铲", "返回"};
-    private static final String[] CURSED = {"黑绳", "屠坐魔", "游云", "神武解", "飞天", "返回"};
+    /** 咒具页：模组里所有咒具（5 个一页，第 6 格固定「返回」）。 */
+    private static final String[] CURSED = {"黑绳", "屠坐魔", "游云", "神武解", "飞天",
+        "天逆鉾", "赤血刃", "高专制式刀", "噬魂刀"};
+    private static final int CURSED_PER_PAGE = 5;
     private static final String[] ATTACK = {"墙", "桥", "返回", "？", "？", "？"};
 
     private final int mode;
@@ -43,15 +46,20 @@ public final class TransfigureScreen extends Screen {
         if (mode == 3) return new String[]{"1 治疗", "2 分身", "3 遍杀即灵体", "4 肢体", "？", "？"}[i];
         return switch (page) {
             case 1 -> TOOLS[i];
-            case 2 -> CURSED[i];
+            case 2 -> cursedLabel(i);
             case 3 -> ATTACK[i];
             case 4 -> entityLabel(i);
             default -> ROOT[i];
         };
     }
 
-    private String entityLabel(int i) {
-        List<ResourceLocation> keys = MahitoPowers.entityKeys();
+    /** 咒具页第 i 格：第 6 格固定「返回」，其余按 listPage 取。 */
+    private String cursedLabel(int i) {
+        if (i == 5) return "返回";
+        int index = listPage * CURSED_PER_PAGE + i;
+        return index < CURSED.length ? CURSED[index] : "？";
+    }
+    private String entityLabel(int i) {        List<ResourceLocation> keys = MahitoPowers.entityKeys();
         int index = listPage * SLOTS + i;
         if (index >= keys.size()) return "？";
         String path = keys.get(index).getPath();
@@ -62,7 +70,7 @@ public final class TransfigureScreen extends Screen {
         if (mode == 0) return i <= 4;
         if (mode == 3) return i <= 3;
         return switch (page) {
-            case 1, 2 -> true;
+            case 2 -> i == 5 || listPage * CURSED_PER_PAGE + i < CURSED.length;
             case 3 -> i < 3;
             case 4 -> listPage * SLOTS + i < MahitoPowers.entityKeys().size();
             default -> i != 3 && i != 5;
@@ -81,11 +89,11 @@ public final class TransfigureScreen extends Screen {
     }
 
     private boolean leftArrow(double mx, double my) {
-        return page == 4 && mx > width / 2.0 - 150 && mx < width / 2.0 - 118 && my > height / 2.0 - 14 && my < height / 2.0 + 14;
+        return (page == 4 || page == 2) && mx > width / 2.0 - 150 && mx < width / 2.0 - 118 && my > height / 2.0 - 14 && my < height / 2.0 + 14;
     }
 
     private boolean rightArrow(double mx, double my) {
-        return page == 4 && mx > width / 2.0 + 118 && mx < width / 2.0 + 150 && my > height / 2.0 - 14 && my < height / 2.0 + 14;
+        return (page == 4 || page == 2) && mx > width / 2.0 + 118 && mx < width / 2.0 + 150 && my > height / 2.0 - 14 && my < height / 2.0 + 14;
     }
 
     @Override public void render(GuiGraphics g, int mouseX, int mouseY, float partial) {
@@ -102,9 +110,10 @@ public final class TransfigureScreen extends Screen {
             g.fill(x - NODE / 2, y - NODE / 2, x + NODE / 2, y + NODE / 2, fill);
             g.drawCenteredString(font, label(i), x, y - 4, selectable(i) ? 0xFFE8F0F5 : 0xFF5D686F);
         }
-        if (page == 4) {
+        if (page == 4 || page == 2) {
             List<ResourceLocation> keys = MahitoPowers.entityKeys();
-            int pages = Math.max(1, (keys.size() + SLOTS - 1) / SLOTS);
+            int pages = page == 4 ? Math.max(1, (keys.size() + SLOTS - 1) / SLOTS)
+                : Math.max(1, (CURSED.length + CURSED_PER_PAGE - 1) / CURSED_PER_PAGE);
             boolean l = leftArrow(mouseX, mouseY), r = rightArrow(mouseX, mouseY);
             g.drawString(font, "<", (int) (cx - 134), (int) (cy - 4), l ? 0xFFFFFFFF : 0xFF8899A0);
             g.drawString(font, ">", (int) (cx + 130), (int) (cy - 4), r ? 0xFFFFFFFF : 0xFF8899A0);
@@ -126,7 +135,9 @@ public final class TransfigureScreen extends Screen {
         if (button != 0) return super.mouseClicked(mx, my, button);
         if (leftArrow(mx, my)) { listPage = Math.max(0, listPage - 1); return true; }
         if (rightArrow(mx, my)) {
-            int pages = Math.max(1, (MahitoPowers.entityKeys().size() + SLOTS - 1) / SLOTS);
+            int pages = page == 4
+                ? Math.max(1, (MahitoPowers.entityKeys().size() + SLOTS - 1) / SLOTS)
+                : Math.max(1, (CURSED.length + CURSED_PER_PAGE - 1) / CURSED_PER_PAGE);
             listPage = Math.min(pages - 1, listPage + 1);
             return true;
         }
@@ -136,12 +147,12 @@ public final class TransfigureScreen extends Screen {
         if (mode == 3) { send(510 + hit); return true; }
         switch (page) {
             case 1 -> { if (hit == 5) { page = 0; return true; } send(hit + 1); return true; }
-            case 2 -> { if (hit == 5) { page = 0; return true; } send(MahitoTransfigure.FORM_CURSED_BASE + hit); return true; }
+            case 2 -> { if (hit == 5) { page = 0; listPage = 0; return true; } send(MahitoTransfigure.FORM_CURSED_BASE + listPage * CURSED_PER_PAGE + hit); return true; }
             case 3 -> { if (hit == 2) { page = 0; return true; } send(200 + hit); return true; }
             case 4 -> { send(1000 + listPage * SLOTS + hit); return true; }
             default -> {
                 if (hit == 0) { page = 1; return true; }
-                if (hit == 1) { page = 2; return true; }
+                if (hit == 1) { page = 2; listPage = 0; return true; }
                 if (hit == 2) { page = 4; listPage = 0; return true; }
                 if (hit == 4) { page = 3; return true; }
                 return true;
