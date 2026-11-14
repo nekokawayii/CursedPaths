@@ -46,6 +46,33 @@ public final class YujiRebuild {
             NPC_JOBS.add(new NpcJob(owner, level, target, level.getGameTime() + 10));
     }
 
+    // ===== NPC 版被动：连击狂热 / 黑闪的才能（Mob 没有 ServerPlayer，状态挂在实体 NBT 上）=====
+    /** 命中叠层；超过 60 刻没再命中就从头算。属性修饰器按实体独立生效。 */
+    private static void npcCombo(Mob m) {
+        var d = m.getPersistentData();
+        long now = m.level().getGameTime();
+        int n = now - d.getLong("YujiNpcComboAt") > COMBO_TIMEOUT ? 0 : d.getInt("YujiNpcCombo");
+        n = Math.min(COMBO_MAX, n + 1);
+        d.putInt("YujiNpcCombo", n);
+        d.putLong("YujiNpcComboAt", now);
+        var atk = m.getAttribute(Attributes.ATTACK_SPEED);
+        var mv = m.getAttribute(Attributes.MOVEMENT_SPEED);
+        if (atk != null) {
+            atk.removeModifier(ATK_SPEED_ID);
+            atk.addTransientModifier(new AttributeModifier(ATK_SPEED_ID, "yuji_npc_combo_atk", n * 0.10, AttributeModifier.Operation.MULTIPLY_TOTAL));
+        }
+        if (mv != null) {
+            mv.removeModifier(MOVE_ID);
+            mv.addTransientModifier(new AttributeModifier(MOVE_ID, "yuji_npc_combo_move", n * 0.05, AttributeModifier.Operation.MULTIPLY_TOTAL));
+        }
+    }
+    private static int npcFocusAdd(Mob m, int n) {
+        var d = m.getPersistentData();
+        int v = Math.min(FOCUS_MAX, d.getInt("YujiNpcFocus") + n);
+        d.putInt("YujiNpcFocus", v);
+        return v;
+    }
+
     // ===== 被动：连击狂热 =====
     public static int combo(ServerPlayer p) { return Curse.data(p).getInt("YujiCombo"); }
     private static void addCombo(ServerPlayer p) {
@@ -95,9 +122,18 @@ public final class YujiRebuild {
     public static void hurt(LivingHurtEvent e) {
         if (e.getEntity().level().isClientSide) return;
         var src = e.getSource();
-        // NPC 虎杖（Mob）也有径庭拳被动：命中即挂二段。
-        if (!APPLYING_IKKI && src.getDirectEntity() instanceof net.minecraft.world.entity.Mob m && m == src.getEntity()
-            && "yuji".equals(cn.blockforge.generated.nnnnr1201forge2.NpcBridge.character(m))) npcIkki(m, e.getEntity());
+        // NPC 虎杖（Mob）：径庭拳二段 + 连击狂热 + 黑闪的才能
+        if (!APPLYING_IKKI && src.getDirectEntity() instanceof Mob m && m == src.getEntity()
+            && "yuji".equals(cn.blockforge.generated.nnnnr1201forge2.NpcBridge.character(m))) {
+            npcIkki(m, e.getEntity());
+            npcCombo(m);
+            if (npcFocusAdd(m, 20) >= FOCUS_MAX) { // 黑闪：×10
+                e.setAmount((float) Math.min(1.0e7, Math.max(1, e.getAmount()) * 10.0));
+                m.getPersistentData().putInt("YujiNpcFocus", 0);
+                Network.send((ServerLevel) m.level(), new Network.Effect(YujiFx.BLACK_FLASH, m.getId(),
+                    e.getEntity().position(), m.getLookAngle(), 3f, 20, 0));
+            }
+        }
         if (!(src.getEntity() instanceof ServerPlayer p) || !"yuji".equals(role(p))) return;
         LivingEntity t = e.getEntity();
         if (!CombatSettings.canHit(p, t)) return;
@@ -105,8 +141,8 @@ public final class YujiRebuild {
         if (melee) {
             addCombo(p);
             addFocus(p, 20);
-            if (focus(p) >= FOCUS_MAX) { // 黑闪：2.5 次方
-                double dmg = Math.pow(Math.max(1, e.getAmount()), 2.5);
+            if (focus(p) >= FOCUS_MAX) { // 黑闪：×10
+                double dmg = Math.max(1, e.getAmount()) * 10.0;
                 e.setAmount((float) Math.min(1.0e7, dmg));
                 Curse.data(p).putInt("YujiFocus", 0);
                 Network.send((ServerLevel) p.level(), new Network.Effect(YujiFx.BLACK_FLASH, p.getId(), t.position(), p.getLookAngle(), 3f, 20, 0));

@@ -10,7 +10,7 @@ import org.lwjgl.glfw.GLFW;
 public final class CharacterWheel extends Screen {
     private final CharacterDefinition definition;
     private int current,mainlineHover=-1,branchHover=-1;
-    private boolean confirmed,starHover,ultHover;
+    private boolean confirmed,starHover,ultHover,fistHover;
     public CharacterWheel() { super(Component.literal("角色术式轮盘"));definition=CharacterClient.selected();current=definition!=null&&CharacterClient.skills().contains(Client.selected)?Client.selected:definition==null?0:definition.firstSkill(); }
     private int radius() { return Math.max(42,Math.min(156,Math.min(width/2-100,(height-92)/2))); }
     private boolean blood() { return definition!=null&&definition.family()==CharacterDefinition.Family.BLOOD; }
@@ -37,6 +37,8 @@ public final class CharacterWheel extends Screen {
     private void hover(double mx,double my) {
         mainlineHover=character.mainline.MainlineWheel.hover(width,height,mx,my);
         branchHover=-1;
+        // 右上角固定格：咒力附拳（所有角色通用）
+        fistHover=WheelSideSlots.fist(width,height,false).contains(mx,my);
         int[] bs=branches();
         for(int i=0;i<bs.length;i++){int[] b=branchBox(i);
             if(mx>=b[0]&&mx<=b[0]+b[2]&&my>=b[1]&&my<=b[1]+b[3])branchHover=bs[i];}
@@ -54,6 +56,7 @@ public final class CharacterWheel extends Screen {
             Network.CHANNEL.sendToServer(new TechniqueInput.Input(character.kashimo.KashimoCombat.ULT,7,false,false,false,false,0,0));
             minecraft.setScreen(null);return;
         }
+        if(fistHover){Network.CHANNEL.sendToServer(new Network.Cast(SkillAction.TOGGLE_FIST));minecraft.setScreen(null);return;}
         if(branchHover>=0){Client.selected=branchHover;minecraft.setScreen(null);return;}
         int skill=starHover?BloodRules.DEATH_STAR:current;
         if(Client.availableSkill(skill))Client.selected=skill;
@@ -109,6 +112,15 @@ public final class CharacterWheel extends Screen {
             g.drawCenteredString(font,GojoBranches.label(id),b[0]+b[2]/2,b[1]+5,on?0xFFFFFFFF:0xFFFFE6DE);
             g.drawCenteredString(font,Client.energyText(GojoBranches.cost(id))+"咒力",b[0]+b[2]/2,b[1]+16,0xFFDCC1F4);}
         character.mainline.MainlineWheel.render(g,font,width,height,mx,my);
+        fist(g);
         super.render(g,mx,my,partial);
+    }
+    /** 右上角固定格：咒力附拳（所有角色通用，悬浮后松开轮盘键即开关）。 */
+    private void fist(GuiGraphics g){
+        var box=WheelSideSlots.fist(width,height,false);boolean on=Client.progress.fist();
+        int x=box.x(),y=box.y();
+        g.fill(x,y,x+box.width(),y+box.height(),fistHover?(on?0xE69D263B:0xE63B7A9D):(on?0xDD5A1530:0xDD1B2A38));
+        g.drawCenteredString(font,"咒力附拳",x+box.width()/2,y+4,on?0xFFFFC9C1:0xFFD8E6F2);
+        g.drawCenteredString(font,on?"开启 · 再按关闭":"关闭 · 手燃咒力",x+box.width()/2,y+19,on?0xFFFF9E7A:0xFFA8C4D8);
     }
 }

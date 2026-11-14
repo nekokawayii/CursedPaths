@@ -481,7 +481,7 @@ public final class Skills {
     }
     /** 咒力附拳（技能号 45）的技能号声明见 {@link #FIST_SKILL}。 */
     public static final int FIST_SKILL=45;
-    public static void toggleFist(ServerPlayer p){if(!Curse.canUseTechnique(p))return;if(Curse.fingers(p)<5){p.displayClientMessage(Component.literal("咒力附拳需要先吃下5根宿傩手指"),true);return;}boolean active=Curse.data(p).getBoolean("Fist");Curse.data(p).putBoolean("Fist",!active);Curse.sync(p);p.displayClientMessage(Component.literal("咒力附拳："+(!active?"开启 · 再按一次切换关闭":"关闭")),true);}
+    public static void toggleFist(ServerPlayer p){if(!Curse.canUseTechnique(p))return;if(Curse.fingers(p)<5&&!character.CharacterService.active(p)){p.displayClientMessage(Component.literal("咒力附拳需要先吃下5根宿傩手指"),true);return;}boolean active=Curse.data(p).getBoolean("Fist");Curse.data(p).putBoolean("Fist",!active);Curse.sync(p);p.displayClientMessage(Component.literal("咒力附拳："+(!active?"开启 · 再按一次切换关闭":"关闭")),true);}
     public static void charge(ServerPlayer p,boolean start){
         if(start)CombatExpansion.worldChant(p,TechniqueInput.intent(p));
     }
