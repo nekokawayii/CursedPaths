@@ -27,7 +27,7 @@ public final class CullingSpawns {
     // r283：把全部 NPC 都编进参赛者池（胀相/里梅/漏壶/东堂/秤/日车/乙骨/九十九由基）
     private static final String[] SORCERERS = {"participant_ryu", "participant_kashimo", "participant_mahito",
         "naoya", "kenjaku", "renegade", "toji_echo",
-        "jogo", "uraume", "choso", "todo", "hakari", "higuruma", "yuta", "yuki"};
+        "jogo", "uraume", "choso", "todo", "hakari", "higuruma", "yuta", "yuki", "yuji"};
     private static final String[] CURSES = {"mutant", "special_curse", "low_curse", "ash_curse", "wraith"};
     /** 波次计数：每触发一轮刷新 +1，用来抬高后续一波的数值。 */
     private static int WAVE_INDEX;
