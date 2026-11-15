@@ -64,9 +64,13 @@ void main() {
 
     // ---- 双层吸积盘（屏幕空间环带）----
     // r397：把 y 乘大才是"压扁"成横向椭圆（乘小反而纵向更长）。
-    // r399：压扁系数 1.6 → 2.0，让盘更平；并且**光子环与光晕也改用 rDisk**，
-    // 否则它们仍是正圆，看起来就是"外盘是个圆环"——那正是用户截图里要改掉的部分。
+    // r399：光子环与光晕也改用 rDisk，否则它们仍是正圆。
+    // r400：给盘面加**引力弯曲**——离中轴越远的横向两端越向中轴收，
+    //       让盘的等值线变成弯曲的弧，看起来像被视界的引力"包"住，而不是一张平整的椭圆贴纸。
     vec2 diskDelta = delta;
+    float wx = delta.x / max(radius, 1e-4);
+    float curve = 0.40 * radius * wx * wx;          // 两端收、中间不动
+    diskDelta.y += (diskDelta.y >= 0.0 ? -curve : curve);
     diskDelta.y *= 2.0;
     float rDisk = length(diskDelta) / radius;
     float angle = atan(diskDelta.y, diskDelta.x);
