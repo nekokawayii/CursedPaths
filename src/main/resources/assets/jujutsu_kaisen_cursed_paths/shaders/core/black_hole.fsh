@@ -46,8 +46,8 @@ void main() {
     float aspect = FrameSize.x / max(FrameSize.y, 1.0);
     vec2 md = (uv - screenC) * vec2(aspect, 1.0);
     float distScreen = length(md);
-    float radiusOuter = abs(1.0 / clipC.w) * diskOut * 0.62;   // 粗略的屏幕半径
-    float mask = 1.0 - smoothstep(radiusOuter * 0.9, radiusOuter * 1.8, distScreen);
+    float radiusOuter = abs(ViewProjection[1][1] * diskOut / clipC.w) * 0.5;   // uv 高度比例
+    float mask = 1.0 - smoothstep(radiusOuter * 1.0, radiusOuter * 1.7, distScreen);
     if (mask <= 0.001) { fragColor = vec4(base, 1.0); return; }
 
     float depth = texture(Sampler1, uv).r;
