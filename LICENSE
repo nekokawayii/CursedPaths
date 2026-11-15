@@ -24,9 +24,13 @@ Minecraft 及其相关组件的权利归 Mojang / Microsoft；Forge 的权利归
 在完全遵守本协议的前提下，作者免费授予你：复制、分发、修改、非商业使用的权利。 除此之外的一切权利由作者保留。
 
 3. 你的义务
-3.1 署名：任何转载、分发、修改或以整合包形式收录，必须： a. 保留本协议全文； b. 注明原作者 nekokawayii、WDjiuyoubaihu 与项目名「咒命歧路 / CursedPaths」； c. 明确标注你做了哪些修改。
+3.1 署名：任何转载、分发、修改或以整合包形式收录，必须： a. 保留本协议全文； b. 注明本项目作者 nekokawayii、WDjiuyoubaihu 与项目名「咒命歧路 / CursedPaths」； c. 明确标注你做了哪些修改。
 
-3.2 非商业：不得将本项目或其衍生作品用于商业用途。 商业使用须事先取得作者的书面许可。
+3.2 非商业：不得将本项目或其衍生作品用于商业用途。
+
+3.2.1 商业使用本项目，须事先取得本项目作者的书面许可。
+
+3.2.2 本项目包含《咒术回战》相关元素，商业使用还须自行取得 株式会社集英社及原作者芥见下下的许可。本项目作者无权代为授权， 亦不保证该许可可以获得。本协议不构成上述任何授权。
 
 3.3 同条款发布：衍生作品必须以本协议发布，并允许他人继续在其基础上 署名、非商业地二次修改，不得追加更严格的限制。
 
@@ -52,7 +56,7 @@ Minecraft 及其相关组件的权利归 Mojang / Microsoft；Forge 的权利归
 
 7.3 商业授权及其他事宜请联系：〔填写你的邮箱 / QQ / Discord〕
 
-如需商业授权，请先联系原作者取得书面许可。
+如需本项目原创部分的商业授权，请联系原作者 nekokawayii、WDjiuyoubaihu。 《咒术回战》相关元素的商业授权，请另行联系株式会社集英社。
 
 English Summary (short form, for international distribution)
 Cursed Paths is an unofficial fan mod for Minecraft based on Jujutsu Kaisen. All Jujutsu Kaisen characters, techniques and world elements remain the property of Gege Akutami and Shueisha; this license claims no rights over them. Minecraft is a trademark of Mojang / Microsoft.
@@ -62,8 +66,8 @@ You are free to copy, distribute, modify and use this project for non-commercial
 keep this license in full and credit the authors (nekokawayii, WDjiuyoubaihu) and the project name "Cursed Paths / 咒命歧路";
 state clearly what you changed;
 release derivative works under this same license (no stricter terms).
-Commercial use — including paid modpacks, paywalled downloads, monetized servers, advertising, or paid services built on this project — requires prior written permission.
+Commercial use — including paid modpacks, paywalled downloads, monetized servers, advertising, or paid services built on this project — requires two separate permissions:
 
+prior written permission from the mod authors for their original work; and
+your own license from Shueisha and Gege Akutami for the Jujutsu Kaisen elements. The mod authors cannot grant this and do not guarantee that it can be obtained.
 Using this project means you accept these terms. Provided "as is", without warranty of any kind. Contact: 〔your email / QQ / Discord〕
-
-如需商业授权，请先联系原作者（包括芥见下下）取得书面许可。
