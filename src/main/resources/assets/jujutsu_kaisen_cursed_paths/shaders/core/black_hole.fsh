@@ -64,13 +64,12 @@ void main() {
 
     // ---- 双层吸积盘（屏幕空间环带）----
     // r397：把 y 乘大才是"压扁"成横向椭圆（乘小反而纵向更长）。
-    // r399：光子环与光晕也改用 rDisk，否则它们仍是正圆。
-    // r400：给盘面加**引力弯曲**——离中轴越远的横向两端越向中轴收，
-    //       让盘的等值线变成弯曲的弧，看起来像被视界的引力"包"住，而不是一张平整的椭圆贴纸。
-    vec2 diskDelta = delta;
-    float wx = delta.x / max(radius, 1e-4);
-    float curve = 0.40 * radius * wx * wx;          // 两端收、中间不动
-    diskDelta.y += (diskDelta.y >= 0.0 ? -curve : curve);
+    // r399：光子环/光晕改用 rDisk，避免它们仍是正圆。
+    // r400 失败记录：用 `diskDelta.y += ±curve`（按 y 的符号分别加减）会在中轴处产生**接缝**，
+    //   画出来就是"白色四角星"——千万不要用带符号分支去弯盘面。
+    // r401：改成**连续的径向放大**来表现盘面被引力弯：越靠近视界，盘面坐标被放得越大，
+    //   等值线整体外扩且平滑，没有接缝。
+    vec2 diskDelta = delta * (1.0 + 0.75 * exp(-r * r * 1.6));
     diskDelta.y *= 2.0;
     float rDisk = length(diskDelta) / radius;
     float angle = atan(diskDelta.y, diskDelta.x);
