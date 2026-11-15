@@ -26,8 +26,8 @@ public final class YukiCombat {
     private static final String RAGE_KEY = "YukiRage";
     /** 叠加上限；超过即触发黑洞。 */
     public static final int RAGE_MAX = 10;
-    /** 每层加伤倍率（层数 n → 1 + 0.5n，满层 ×6）。 */
-    private static final double RAGE_STEP = 0.5;
+    /** 每层加伤倍率（层数 n → 1 + 0.25n，满层 ×3.5）。r389：0.5 → 0.25，削弱到与其他角色同级。 */
+    private static final double RAGE_STEP = 0.25;
     /** 标记：当前缓慢效果是「加重」施加的，层数清零时要移除。 */
     private static final String SLOW_MARK = "YukiRageSlow";
 
@@ -58,14 +58,14 @@ public final class YukiCombat {
     public static void starCrash(ServerPlayer p, CharacterSkill skill, int rank) {
         Vec3 eye = p.getEyePosition(), dir = p.getLookAngle();
         double range = skill.range();
-        float base = (float) (skill.damageAt(rank) * rageMultiplier(p));
+        float base = cn.blockforge.generated.nnnnr1201forge2.CombatSettings.spellDamage(p, skill.damageAt(rank) * rageMultiplier(p));
         int hit = 0;
         for (LivingEntity e : around(p, eye.add(dir.scale(range * 0.5)), range * 0.6 + skill.radius())) {
             Vec3 to = e.getBoundingBox().getCenter().subtract(eye);
             if (to.length() > range) continue;
             if (to.normalize().dot(dir) < Math.cos(Math.toRadians(skill.halfAngle()))) continue;
             // 先按正常伤害结算（magic：无视护甲）
-            float floor = e.getMaxHealth() * 0.20f;                    // 保底 20% 目标生命上限
+            float floor = e.getMaxHealth() * 0.06f;                    // 保底 6% 目标生命上限（r389：20% → 6%）
             float before = e.getHealth();
             if(!cn.blockforge.generated.nnnnr1201forge2.CombatSettings.hurt(p,e,p.damageSources().indirectMagic(p,p),Math.max(base,floor)))continue;
             // 保底优先级最高：不足 20% 就用「真伤」补足，绕过一切限伤/防御/减伤。
@@ -92,7 +92,7 @@ public final class YukiCombat {
     private static void punchOnce(ServerPlayer p, CharacterSkill skill, int rank, double multiplier) {
         Vec3 eye = p.getEyePosition(), dir = p.getLookAngle();
         double range = skill.range();
-        float damage = (float) (skill.damageAt(rank) * rageMultiplier(p) * multiplier);
+        float damage = cn.blockforge.generated.nnnnr1201forge2.CombatSettings.spellDamage(p, skill.damageAt(rank) * rageMultiplier(p) * multiplier);
         for (LivingEntity e : around(p, eye.add(dir.scale(range * 0.5)), range * 0.6 + skill.radius())) {
             Vec3 to = e.getBoundingBox().getCenter().subtract(eye);
             if (to.length() > range) continue;
@@ -115,7 +115,7 @@ public final class YukiCombat {
     public static void garuda(ServerPlayer p, CharacterSkill skill, int rank) {
         Vec3 eye = p.getEyePosition(), dir = p.getLookAngle();
         double range = skill.range();
-        float damage = (float) (skill.damageAt(rank) * rageMultiplier(p));
+        float damage = cn.blockforge.generated.nnnnr1201forge2.CombatSettings.spellDamage(p, skill.damageAt(rank) * rageMultiplier(p));
         java.util.Set<LivingEntity> hit = new java.util.HashSet<>();
         for (double t = 1; t <= range; t += 1.0) {
             hit.addAll(around(p, eye.add(dir.scale(t)), skill.radius()));
@@ -188,7 +188,7 @@ public final class YukiCombat {
         p.hurt(p.damageSources().magic(), selfDamage);
         p.displayClientMessage(Component.literal("质量坍缩——黑洞炸开（自身承受 90% 生命）"), false);
 
-        float damage = (float) ((1200 + 300 * Math.max(0, rank)) * multiplier);
+        float damage = cn.blockforge.generated.nnnnr1201forge2.CombatSettings.spellDamage(p, (90 + 20 * Math.max(0, rank)) * multiplier);
         Vec3 center = p.position();
         for (LivingEntity e : around(p, center, 24)) {
             if(!cn.blockforge.generated.nnnnr1201forge2.CombatSettings.canHit(p,e))continue;
@@ -261,7 +261,7 @@ public final class YukiCombat {
     public static float regenPerSecond(ServerPlayer p) {
         int rank = character.CharacterService.rank(p);
         float raw = 1f + Math.max(0, rank - 27) * 0.5f;
-        return Math.min(raw, p.getMaxHealth() * 0.10f);
+        return Math.min(raw, p.getMaxHealth() * 0.03f);
     }
 
     /** 每秒结算一次生命恢复（仅九十九由基）。 */
@@ -291,7 +291,7 @@ public final class YukiCombat {
         if (!"yuki".equals(character.CharacterService.selected(p) == null ? ""
             : character.CharacterService.selected(p).id())) return 0;
         int rank = character.CharacterService.rank(p);
-        return Math.min(0.60, Math.max(0, rank - 27) * 0.01);
+        return Math.min(0.30, Math.max(0, rank - 27) * 0.01);
     }
 
     @net.minecraftforge.eventbus.api.SubscribeEvent

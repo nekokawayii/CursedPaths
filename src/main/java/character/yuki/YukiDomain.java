@@ -25,7 +25,7 @@ import net.minecraft.world.phys.Vec3;
 /**
  * 领域展开 · 星轨坠亡（九十九由基）。
  * <p>与乙骨「真赝相爱」同尺寸（R=50）：外壳与内壁都是「星轨壁」，并额外铺一层地板。
- * <p>效果：领域内敌对生物无法移动、持续虚弱；<b>生命上限低于施术者的生物会被压扁后死亡</b>
+ * <p>效果：领域内敌对生物无法移动、持续虚弱；<b>生命上限不到施术者 35% 的生物会被压扁并受到一次重伤</b>
  * （复用真人无为转变的 303 形态缩放通道：先压扁再处决）。
  */
 public final class YukiDomain {
@@ -186,7 +186,7 @@ public final class YukiDomain {
             e.addEffect(new MobEffectInstance(MobEffects.WEAKNESS, 30, 2, false, false, false));
             e.setDeltaMovement(0, Math.min(0, e.getDeltaMovement().y), 0);
             e.hurtMarked = true;
-            if (e.getMaxHealth() < hp && !e.isDeadOrDying() && !e.getPersistentData().getBoolean("YukiCrushed")) {
+            if (e.getMaxHealth() < hp * 0.35 && !e.isDeadOrDying() && !e.getPersistentData().getBoolean("YukiCrushed")) {
                 crush(job, owner, e);
             }
         }
@@ -215,7 +215,7 @@ public final class YukiDomain {
                 target.getPersistentData().remove("YukiCrushed");
                 cn.blockforge.generated.nnnnr1201forge2.Network.send(job.level,new cn.blockforge.generated.nnnnr1201forge2.Network.Effect(303,target.getId(),target.position(),Vec3.ZERO,1f,1000,0));
                 if(target.isAlive()&&!character.mainline.Mainline.simpleProtected(target)&&target.position().distanceToSqr(Vec3.atCenterOf(job.center))<RADIUS*RADIUS)
-                    cn.blockforge.generated.nnnnr1201forge2.CombatSettings.hurt(owner,target,owner.damageSources().indirectMagic(owner,owner),target.getMaxHealth()+200f);
+                    cn.blockforge.generated.nnnnr1201forge2.CombatSettings.hurt(owner,target,owner.damageSources().indirectMagic(owner,owner),target.getMaxHealth()*0.35f);
             }
         }
     }
