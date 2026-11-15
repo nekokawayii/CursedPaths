@@ -62,37 +62,36 @@ void main() {
         lensed = mix(lensed, texture(Sampler0, ringUV).rgb * 1.35, ringBand * 0.32);
     }
 
-    // ---- 双层吸积盘（屏幕空间环带）----
-    // r397：把 y 乘大才是"压扁"成横向椭圆（乘小反而纵向更长）。
-    // r399：光子环/光晕改用 rDisk，避免它们仍是正圆。
-    // r400 失败记录：用 `diskDelta.y += ±curve`（按 y 的符号分别加减）会在中轴处产生**接缝**，
-    //   画出来就是"白色四角星"——千万不要用带符号分支去弯盘面。
-    // r401：改成**连续的径向放大**来表现盘面被引力弯：越靠近视界，盘面坐标被放得越大，
-    //   等值线整体外扩且平滑，没有接缝。
+    // ---- 吸积盘（对齐参考图：扁平、蓝色为主体、亮度压低，不要叠成白/黄）----
+    // r397：y 乘大才是横向椭圆。r400 的带符号弯曲会产生接缝（白色四角星），已废弃。
+    // r401：用连续径向放大表现"盘被引力拉住"。
+    // r402：重做配色与层次——参考图是「细蓝白光子环 + 扁平蓝盘 + 纯黑核」，
+    //   之前内盘冰蓝 + 外盘橙相加直接饱和成白/黄，所以把各自强度砍下来，橙只留外缘。
     vec2 diskDelta = delta * (1.0 + 0.75 * exp(-r * r * 1.6));
     diskDelta.y *= 2.0;
     float rDisk = length(diskDelta) / radius;
     float angle = atan(diskDelta.y, diskDelta.x);
-    float inner = smoothstep(INNER_IN, INNER_IN + 0.10, rDisk)
-                * (1.0 - smoothstep(INNER_OUT - 0.14, INNER_OUT, rDisk));
-    float outer = smoothstep(OUTER_IN, OUTER_IN + 0.16, rDisk)
-                * (1.0 - smoothstep(OUTER_OUT - 0.30, OUTER_OUT, rDisk));
 
-    float innerTex = bandNoise(angle, rDisk, 2.1);
-    float outerTex = bandNoise(angle + 0.9, rDisk, 0.85);
+    // 平滑的环带边界 + 极轻的角向纹理，避免高频噪声把边缘打成锯齿。
+    float inner = smoothstep(INNER_IN, INNER_IN + 0.12, rDisk)
+                * (1.0 - smoothstep(INNER_OUT - 0.22, INNER_OUT, rDisk));
+    float outer = smoothstep(OUTER_IN - 0.10, OUTER_IN + 0.22, rDisk)
+                * (1.0 - smoothstep(OUTER_OUT - 0.40, OUTER_OUT, rDisk));
+    float streak = 0.86 + 0.14 * sin(angle * 7.0 - Time * 1.6)
+                        + 0.06 * sin(angle * 17.0 + Time * 0.9);
 
-    // 内盘更亮更密（冰蓝），外盘偏暗偏暖（橙），中间留一条窄缝让暗核轮廓更清楚。
-    vec3 disk = InnerColor.rgb * inner * (0.65 + 1.00 * innerTex)
-              + OuterColor.rgb * outer * (0.42 + 0.78 * outerTex);
+    vec3 disk = InnerColor.rgb * inner * streak * 0.55      // 冰蓝内盘：主体但不刺眼
+              + OuterColor.rgb * outer * streak * 0.30;     // 橙色外盘：只做外缘暖光
 
-    // ---- 光子环与外侧光晕（全部跟着盘的椭圆走）----
-    float photonRing = exp(-pow((rDisk - 1.05) * 34.0, 2.0));
-    float innerGlow = exp(-pow((rDisk - 1.30) * 3.2, 2.0)) * 0.34;
-    float outerGlow = exp(-max(0.0, rDisk - 1.95) * 1.45) * 0.18;
-    vec3 halo = InnerColor.rgb * (photonRing * 1.10 + innerGlow)
-              + mix(InnerColor.rgb, OuterColor.rgb, 0.72) * outerGlow;
+    // 光子环：参考图里那道**很细的正圆蓝白亮环**（这是透镜成像，保持正圆）
+    float photon = exp(-pow((r - 1.02) * 62.0, 2.0));
+    vec3 ring = mix(InnerColor.rgb, vec3(1.0), 0.55) * photon * 0.95;
+
+    // 外圈柔和辉光：跟着盘的椭圆，向外快速衰减
+    float glow = exp(-max(0.0, rDisk - 1.55) * 2.4) * 0.14;
+    vec3 halo = InnerColor.rgb * glow;
 
     // ---- 合成：背景先被透镜替换，再叠盘面与光晕 ----
-    vec3 col = mix(base, lensed, Alpha * 0.94) + (disk + halo) * Alpha;
+    vec3 col = mix(base, lensed, Alpha * 0.94) + (disk + ring + halo) * Alpha;
     fragColor = vec4(clamp(col, 0.0, 1.0), 1.0);
 }
