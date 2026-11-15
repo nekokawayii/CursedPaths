@@ -23,7 +23,9 @@ public final class YukiBlackHole {
     /** 默认演出时长：5 秒。 */
     public static final int LIFETIME = 100;
     /** 默认世界半径（格），只影响视觉与镜头尺度。 */
-    public static final float RADIUS = 4.0f;
+    public static final float RADIUS = 1.8f;
+    /** 视觉中心放在施术者眼前多远（格）；太近会糊满整屏。 */
+    public static final double DISTANCE = 7.0;
 
     private record State(ServerLevel level, long end) { }
     private static final Map<UUID, State> ACTIVE = new HashMap<>();
@@ -33,6 +35,7 @@ public final class YukiBlackHole {
         int life = Math.max(20, ticks);
         ACTIVE.put(owner.getUUID(), new State(level, level.getGameTime() + life));
         Network.send(level, new Network.Effect(FX, owner.getId(), center, Vec3.ZERO, radius, life, 0));
+        com.mojang.logging.LogUtils.getLogger().info("[黑洞] 触发 {} 半径={} 时长={} @{}", owner.getGameProfile().getName(), radius, life, center);
     }
 
     @SubscribeEvent public static void tick(TickEvent.ServerTickEvent e) {

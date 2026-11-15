@@ -45,7 +45,7 @@ public final class YukiBlackHoleClient {
 
     private static ShaderInstance shader;
     private static TextureTarget scene;
-    private static boolean warned, externalNoted;
+    private static boolean warned, externalNoted, loggedDraw;
     private static long tick;
     private static Object world;
     private static Matrix4f worldView, worldProjection;
@@ -72,6 +72,7 @@ public final class YukiBlackHoleClient {
         HOLES.removeIf(h -> h.owner == e.owner());
         HOLES.add(new Hole(e.owner(), e.position(), Math.max(0.5f, e.size()), tick, until));
         if (HOLES.size() > 2) HOLES.remove(0);
+        com.mojang.logging.LogUtils.getLogger().info("[黑洞] 客户端收到 radius={} life={} shader={}", e.size(), e.life(), shader != null);
     }
 
     @SubscribeEvent public static void tick(net.minecraftforge.event.TickEvent.ClientTickEvent e) {
@@ -83,7 +84,7 @@ public final class YukiBlackHoleClient {
     }
 
     public static void clear() {
-        HOLES.clear(); tick = 0; warned = false; externalNoted = false; world = null;
+        HOLES.clear(); tick = 0; warned = false; externalNoted = false; loggedDraw = false; world = null;
         worldView = worldProjection = null;
         if (scene != null) { scene.destroyBuffers(); scene = null; }
     }
@@ -114,8 +115,12 @@ public final class YukiBlackHoleClient {
         float cx = projected.x / projected.w * 0.5f + 0.5f;
         float cy = projected.y / projected.w * 0.5f + 0.5f;
         float screenRadius = Math.abs(worldProjection.m11() * hole.radius / projected.w) * 0.5f;
-        screenRadius = Math.max(0.02f, Math.min(0.85f, screenRadius));
+        screenRadius = Math.max(0.02f, Math.min(0.34f, screenRadius));
         if (cx < -1 || cx > 2 || cy < -1 || cy > 2) return;
+        if (!loggedDraw) {
+            loggedDraw = true;
+            com.mojang.logging.LogUtils.getLogger().info("[黑洞] 开始绘制 screen=({},{}) r={} alpha={}", cx, cy, screenRadius, fade(hole));
+        }
 
         float alpha = fade(hole);
         if (alpha <= 0.001f) return;

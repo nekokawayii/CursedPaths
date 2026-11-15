@@ -184,14 +184,15 @@ public final class YukiCombat {
      */
     private static void blackHole(ServerPlayer p, int rank, int stacks) {
         double multiplier = 1 + RAGE_STEP * stacks;
-        float selfDamage = (float) (p.getMaxHealth() * 0.9);
+        float selfDamage = (float) Math.max(0, Math.min(p.getMaxHealth() * 0.9, p.getHealth() - 1.0));
+        // r392：自损不再致死（原来血量不满时 90% 会直接把人打死，玩家看到的是死亡界面而不是黑洞）。
         p.hurt(p.damageSources().magic(), selfDamage);
         p.displayClientMessage(Component.literal("质量坍缩——黑洞炸开（自身承受 90% 生命）"), false);
         // r390：真正的黑洞后期（冰蓝视界 + 冰蓝内盘 + 橙色外盘 + 背景透镜），
         // 由 YukiBlackHole / YukiBlackHoleClient 做屏幕空间渲染；下面的粒子只作着色器不可用时的兜底。
         if (p.level() instanceof ServerLevel level) {
             cn.blockforge.generated.nnnnr1201forge2.YukiBlackHole.open(level, p,
-                p.getEyePosition().add(p.getLookAngle().scale(2.6)),
+                p.getEyePosition().add(p.getLookAngle().scale(cn.blockforge.generated.nnnnr1201forge2.YukiBlackHole.DISTANCE)),
                 cn.blockforge.generated.nnnnr1201forge2.YukiBlackHole.RADIUS,
                 cn.blockforge.generated.nnnnr1201forge2.YukiBlackHole.LIFETIME);
         }
