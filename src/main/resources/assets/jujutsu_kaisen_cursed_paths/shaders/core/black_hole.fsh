@@ -50,7 +50,7 @@ void main() {
     // 导致位移偏竖直、看起来像"竖向拉伸"。这里先取径向单位再回 uv 空间，保证是圆形径向。
     vec2 radial = normalize(delta + vec2(1e-5));
     vec2 radialUV = vec2(radial.x / aspect, radial.y);
-    float bend = clamp(Lens.w * 4.50 / (r * r + 0.03), 0.0, 6.0);
+    float bend = clamp(Lens.w * 2.00 / (r * r + 0.03), 0.0, 3.0);
     vec2 warped = clamp(uv - radialUV * (bend * radius * 0.55),
                         1.0 / FrameSize, 1.0 - 1.0 / FrameSize);
     vec3 lensed = texture(Sampler0, warped).rgb;
