@@ -17,9 +17,11 @@ public final class CompactHealthBar {
     /** 超过这个生命上限就改用紧凑血条（原版最多 20 颗心）。 */
     private static final float THRESHOLD = 40f;
 
-    @SubscribeEvent
+    @SubscribeEvent(priority = net.minecraftforge.eventbus.api.EventPriority.LOWEST)
     public static void onRender(RenderGuiOverlayEvent.Pre event) {
         if (!event.getOverlay().id().equals(VanillaGuiOverlay.PLAYER_HEALTH.id())) return;
+        // r425：只要装了别的血条类模组，就完全让位（不取消原版渲染、也不画自己的条）
+        if (yieldsToOtherMods()) return;
         var mc = Minecraft.getInstance();
         var player = mc.player;
         if (player == null || mc.options.hideGui || player.isSpectator()) return;
@@ -53,6 +55,54 @@ public final class CompactHealthBar {
         if (absorb > 0) {
             g.fill(x, y + barHeight + 1, x + barWidth, y + barHeight + 3, 0xFFFFD257);
         }
+    }
+
+    /**
+     * 其它血条模组检测。命中任何一个就让位，避免两条血条叠在一起。
+     * <p>列表覆盖常见的"会自己画血条/改血量显示"的模组；另外对模组 id 里带
+     * health/heart/hud 字样的也视为同类（排除本模组自身）。
+     */
+    private static final String[] KNOWN_HEALTH_MODS = {
+        "healthoverlay",     // Health Overlay（最常见的血条 API）
+        "firstaid",          // First Aid（整套血量系统）
+        "toughasnails",      // 温度/口渴，自带血量 HUD
+        "overloadedarmorbar",// 护甲条（会重排 HUD 位置）
+        "applecore",         // 饥饿/血量 HUD
+        "hudcompass",
+        "betterhealth",
+        "healthbars",
+        "damageindicator",
+        "rpghealthbar",
+        "toughnessbar",
+        "extrahealthbar"
+    };
+
+    private static Boolean yields;
+
+    /** 是否应该让位给别的血条模组（结果只算一次）。 */
+    public static boolean yieldsToOtherMods() {
+        if (yields != null) return yields;
+        boolean found = false;
+        try {
+            var list = net.minecraftforge.fml.ModList.get();
+            for (String id : KNOWN_HEALTH_MODS) {
+                if (list.isLoaded(id)) { found = true; break; }
+            }
+            if (!found) {
+                for (var info : list.getMods()) {
+                    String id = info.getModId().toLowerCase(java.util.Locale.ROOT);
+                    if (id.equals("jujutsu_kaisen_cursed_paths") || id.equals("minecraft") || id.equals("forge")) continue;
+                    if (id.contains("health") || id.contains("heart") || id.endsWith("hud") || id.contains("hudbar")) { found = true; break; }
+                }
+            }
+        } catch (Throwable ignored) {
+            found = false;
+        }
+        yields = found;
+        if (found) {
+            com.mojang.logging.LogUtils.getLogger().info("[血条] 检测到其它血量/血条模组，扁平血条已关闭，交还原版或对方的渲染");
+        }
+        return found;
     }
 
     private CompactHealthBar() {}
