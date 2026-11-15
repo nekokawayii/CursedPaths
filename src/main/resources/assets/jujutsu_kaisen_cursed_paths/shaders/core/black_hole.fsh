@@ -1,70 +1,65 @@
 #version 150
-// 九十九由基·黑洞（世界空间版，r405）
-// 与 r390~r404 的屏幕空间版不同：这里**真的在 3D 里走射线**——
-//   ① 用深度重建每个像素的世界坐标与射线方向；
-//   ② 沿射线做引力偏折（向黑洞中心弯），射线真的会绕开/绕后；
-//   ③ 与一张**真实倾斜的薄盘**求交，所以盘子有近侧挡住核心、远侧被弯到上方；
-//   ④ 背景用偏折后的方向重新投影回已渲染画面采样（拿不到就退回原像素）。
-// 因此从侧面、背面看都成立，不再是"贴在镜头前的椭圆"。
+// 九十九由基·黑洞（世界空间版 r408）
+// 射线在 3D 里真的被偏折、真的和倾斜薄盘求交，所以侧面/背面都成立。
+// r408 修两处致命观感问题：
+//   ① 背景重采样原来对**每个像素**都做 → 整屏天空被卷成"两个世界"；
+//      现在用黑洞在屏幕上的投影算一个**局部遮罩**，只在它附近生效。
+//   ② 盘面过去用"厚度带"判定，射线每一步都落在带里 → 叠出几十圈同心圆；
+//      现在改成**检测射线穿过盘平面的那一瞬**，每次穿越只采一次色。
 uniform sampler2D Sampler0;      // 场景颜色副本
 uniform sampler2D Sampler1;      // 场景深度副本
 uniform mat4 InvViewProjection;  // 屏幕→世界
 uniform mat4 ViewProjection;     // 世界→屏幕
-uniform vec3 CamPos;             // 相机世界坐标
-uniform vec3 HoleCenter;         // 黑洞中心（世界坐标）
+uniform vec3 CamPos;
+uniform vec3 HoleCenter;
 uniform vec3 DiskNormal;         // 盘法线（已含倾角）
-uniform vec4 Params;             // x=视界半径 y=盘内缘 z=盘外缘 w=盘厚
+uniform vec4 Params;             // x=视界半径 y=盘内缘 z=盘外缘 w=盘厚（仅用于软边）
 uniform vec2 FrameSize;
 uniform float Time;
 uniform float Alpha;
-uniform vec4 InnerColor;         // 冰蓝内盘
-uniform vec4 OuterColor;         // 橙色外盘
+uniform vec4 InnerColor;
+uniform vec4 OuterColor;
 in vec2 uv;
 out vec4 fragColor;
 
-const int STEPS = 56;
-const float STEP_SCALE = 0.16;   // 步长 = 视界半径 × 该系数
+const int STEPS = 44;
+const float STEP_SCALE = 0.22;
 
 vec3 worldFromDepth(vec2 screenUV, float d) {
     vec4 p = InvViewProjection * vec4(screenUV * 2.0 - 1.0, d * 2.0 - 1.0, 1.0);
     return p.xyz / p.w;
 }
 
-// 偏折后的方向重新投影回屏幕，采样已经渲染好的场景当背景。
-vec3 sampleBackground(vec3 eye, vec3 dir, vec2 fallbackUV) {
-    vec4 clip = ViewProjection * vec4(eye + dir * 2048.0, 1.0);
-    if (clip.w <= 0.0) return texture(Sampler0, fallbackUV).rgb;
-    vec2 s = clip.xy / clip.w * 0.5 + 0.5;
-    if (s.x < 0.002 || s.x > 0.998 || s.y < 0.002 || s.y > 0.998) return texture(Sampler0, fallbackUV).rgb;
-    return texture(Sampler0, s).rgb;
-}
-
 void main() {
     vec3 base = texture(Sampler0, uv).rgb;
     if (Alpha <= 0.001) { fragColor = vec4(base, 1.0); return; }
 
+    float r = Params.x;
+    float diskIn = Params.y;
+    float diskOut = Params.z;
+    float diskThick = max(Params.w, r * 0.02);
+
+    // ---- 局部遮罩：只在黑洞投影附近改画面，避免整屏被卷 ----
+    vec4 clipC = ViewProjection * vec4(HoleCenter, 1.0);
+    if (clipC.w <= 0.01) { fragColor = vec4(base, 1.0); return; }
+    vec2 screenC = clipC.xy / clipC.w * 0.5 + 0.5;
+    float aspect = FrameSize.x / max(FrameSize.y, 1.0);
+    vec2 md = (uv - screenC) * vec2(aspect, 1.0);
+    float distScreen = length(md);
+    float radiusOuter = abs(1.0 / clipC.w) * diskOut * 0.62;   // 粗略的屏幕半径
+    float mask = 1.0 - smoothstep(radiusOuter * 0.9, radiusOuter * 1.8, distScreen);
+    if (mask <= 0.001) { fragColor = vec4(base, 1.0); return; }
+
     float depth = texture(Sampler1, uv).r;
     bool sky = depth >= 0.999999;
     vec3 surface = worldFromDepth(uv, sky ? 1.0 : depth);
-
-    // 相机 → 像素的世界射线
     vec3 rayDir = normalize(surface - CamPos);
+
     vec3 toHole = HoleCenter - CamPos;
     float holeDist = length(toHole);
+    // 前景挡住（看到的表面比黑洞更近）→ 该像素保持原样
+    if (!sky && length(surface - CamPos) < holeDist - r * 1.05) { fragColor = vec4(base, 1.0); return; }
 
-    // 这道像素本来看到的东西比黑洞更近 → 被前景挡住，保持原样（黑洞不会透墙）。
-    if (!sky && length(surface - CamPos) < holeDist - Params.x * 1.05) {
-        fragColor = vec4(base, 1.0);
-        return;
-    }
-
-    float r = Params.x;                 // 视界半径
-    float diskIn = Params.y;
-    float diskOut = Params.z;
-    float diskThick = Params.w;
-    float stepLen = r * STEP_SCALE;
-
-    // 盘面角向坐标用的切向基（r406 修：原来把 float 1e-4 直接加给 vec3，GLSL 编译不过 → 整个后期失效）
     vec3 nrm = normalize(DiskNormal);
     vec3 refAxis = abs(nrm.y) > 0.9 ? vec3(0.0, 0.0, 1.0) : vec3(0.0, 1.0, 0.0);
     vec3 tangent = normalize(cross(nrm, refAxis));
@@ -76,52 +71,62 @@ void main() {
     float transmit = 1.0;
     bool swallowed = false;
     float closest = 1e9;
+    float stepLen = r * STEP_SCALE;
+    float hPrev = dot(CamPos - HoleCenter, nrm);
 
     for (int i = 0; i < STEPS; i++) {
         vec3 rel = HoleCenter - pos;
         float dist = length(rel);
         closest = min(closest, dist);
 
-        // 引力偏折：给射线加一个朝中心的加速度（弱场近似，够出"绕过去"的观感）
-        float pull = 1.35 * r * r / max(dist * dist * dist, 1e-4);
+        // 引力偏折（弱场近似）
+        float pull = 1.25 * r * r / max(dist * dist * dist, 1e-4);
         dir = normalize(dir + normalize(rel) * pull * stepLen);
-
         pos += dir * stepLen;
 
-        // 视界：吸进去
         if (length(pos - HoleCenter) < r) { swallowed = true; break; }
 
-        // 与薄盘求交（绝对值厚度带）
-        float h = dot(pos - HoleCenter, DiskNormal);
-        if (abs(h) < diskThick) {
-            vec3 relPos = pos - HoleCenter;
-            float rr = length(relPos);
+        // ---- 盘面：只在穿过平面的那一瞬采样（避免同心圆叠加）----
+        float hCur = dot(pos - HoleCenter, nrm);
+        if (hPrev * hCur < 0.0 && transmit > 0.03) {
+            float t = hPrev / (hPrev - hCur);
+            vec3 hit = mix(pos - dir * stepLen, pos, clamp(t, 0.0, 1.0));
+            vec3 relHit = hit - HoleCenter;
+            float rr = length(relHit);
             if (rr > diskIn && rr < diskOut) {
-                float t = clamp((rr - diskIn) / max(diskOut - diskIn, 1e-3), 0.0, 1.0);
-                // 内圈冰蓝，外圈橙；中间平滑过渡
-                vec3 diskColor = mix(InnerColor.rgb, OuterColor.rgb, smoothstep(0.25, 0.95, t));
-                // 角向条纹 + 径向细纹（程序化，不依赖贴图）
-                float ang = atan(dot(relPos, bitangent), dot(relPos, tangent));
-                float streak = 0.72 + 0.28 * sin(ang * 7.0 + rr * 3.1 - Time * 1.7);
-                float density = (0.55 - 0.35 * smoothstep(0.55, 1.0, t)) * streak;
-                // 越靠内越亮（贴近视界被加热）
-                density *= mix(1.35, 0.55, t);
+                float k = clamp((rr - diskIn) / max(diskOut - diskIn, 1e-3), 0.0, 1.0);
+                vec3 diskColor = mix(InnerColor.rgb, OuterColor.rgb, smoothstep(0.25, 0.95, k));
+                float ang = atan(dot(relHit, bitangent), dot(relHit, tangent));
+                float streak = 0.74 + 0.26 * sin(ang * 6.0 + rr * 2.3 - Time * 1.6);
+                // 内缘更亮更热
+                float density = mix(1.25, 0.45, k) * streak;
+                // 软边：靠近内/外缘淡出，避免硬切
+                density *= smoothstep(0.0, diskThick * 8.0, rr - diskIn)
+                         * (1.0 - smoothstep(diskOut - diskThick * 8.0, diskOut, rr));
                 color += diskColor * density * transmit;
-                transmit *= (1.0 - density * 0.65);
-                if (transmit < 0.03) break;
+                transmit *= (1.0 - density * 0.7);
             }
         }
+        hPrev = hCur;
 
-        if (length(pos - CamPos) > holeDist + r * 24.0) break;
+        if (length(pos - CamPos) > holeDist + r * 22.0) break;
     }
 
-    vec3 bg = swallowed ? vec3(0.0) : sampleBackground(CamPos, dir, uv);
-    // 视界边缘一圈很细的"光子环"：射线擦过视界时会绕过，这里用最近距离近似提亮
-    float photon = exp(-pow((closest / r - 1.0) * (swallowed ? 9.0 : 26.0), 2.0));
-    vec3 ring = mix(InnerColor.rgb, vec3(1.0), 0.5) * photon * (swallowed ? 0.25 : 0.6);
+    // ---- 背景：只在局部遮罩内、且没被吞掉时才做偏折重采样 ----
+    vec3 bg = base;
+    if (!swallowed) {
+        vec4 clipB = ViewProjection * vec4(CamPos + dir * 2048.0, 1.0);
+        if (clipB.w > 0.0) {
+            vec2 s = clipB.xy / clipB.w * 0.5 + 0.5;
+            if (s.x > 0.004 && s.x < 0.996 && s.y > 0.004 && s.y < 0.996) bg = texture(Sampler0, s).rgb;
+        }
+    } else {
+        bg = vec3(0.0);
+    }
 
-    vec3 col = bg * transmit + color + ring * Alpha;
-    // 黑洞吸光：背景整体稍压暗，避免白天把我们叠的盘冲白
-    col *= mix(1.0, 0.82, Alpha * smoothstep(1.0, 3.0, length(surface - HoleCenter) / r));
-    fragColor = vec4(clamp(mix(base, col, Alpha), 0.0, 1.0), 1.0);
+    float photon = exp(-pow((closest / r - 1.0) * (swallowed ? 10.0 : 30.0), 2.0));
+    vec3 ring = mix(InnerColor.rgb, vec3(1.0), 0.5) * photon * (swallowed ? 0.22 : 0.55);
+
+    vec3 col = bg * transmit + color + ring;
+    fragColor = vec4(clamp(mix(base, col, mask * Alpha), 0.0, 1.0), 1.0);
 }
