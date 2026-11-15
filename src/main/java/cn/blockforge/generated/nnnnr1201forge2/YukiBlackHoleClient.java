@@ -45,7 +45,27 @@ public final class YukiBlackHoleClient {
 
     private static ShaderInstance shader;
     private static TextureTarget scene;
-    private static boolean warned, externalNoted, loggedDraw;
+    private static boolean warned, externalNoted, loggedDraw, triedLazy;
+
+    /**
+     * 兜底：如果 {@code RegisterShadersEvent} 没把着色器交上来（实测在 Oculus/Embeddium 环境里遇到过
+     * 事件已注册但回调没跑），就在第一帧要做后期时按需构造一个。构造仍然走原版 ShaderInstance，
+     * 失败会打一条明确的日志，不会静默。
+     */
+    private static void ensureShader() {
+        if (shader != null || triedLazy) return;
+        triedLazy = true;
+        try {
+            var mc = Minecraft.getInstance();
+            shader = new ShaderInstance(mc.getResourceManager(),
+                new ResourceLocation("jujutsu_kaisen_cursed_paths", "black_hole"),
+                DefaultVertexFormat.POSITION);
+            com.mojang.logging.LogUtils.getLogger().info("[黑洞] 着色器按需加载成功（事件回调未触发）");
+        } catch (Throwable t) {
+            warned = true;
+            com.mojang.logging.LogUtils.getLogger().warn("[黑洞] 着色器按需加载失败：{}", t.toString());
+        }
+    }
     private static long tick;
     private static Object world;
     private static Matrix4f worldView, worldProjection;
@@ -53,10 +73,14 @@ public final class YukiBlackHoleClient {
     public static final class Registration {
         @SubscribeEvent public static void shaders(RegisterShadersEvent e) {
             shader = null; warned = false;
+            com.mojang.logging.LogUtils.getLogger().info("[黑洞] 开始注册 black_hole 着色器");
             try {
                 e.registerShader(new ShaderInstance(e.getResourceProvider(),
                     new ResourceLocation("jujutsu_kaisen_cursed_paths", "black_hole"),
-                    DefaultVertexFormat.POSITION), s -> { shader = s; warned = false; });
+                    DefaultVertexFormat.POSITION), s -> {
+                        shader = s; warned = false;
+                        com.mojang.logging.LogUtils.getLogger().info("[黑洞] black_hole 着色器已就绪");
+                    });
             } catch (java.io.IOException | RuntimeException ex) {
                 warned = true;
                 com.mojang.logging.LogUtils.getLogger().warn("黑洞后期着色器加载失败，保留粒子版本", ex);
@@ -98,6 +122,7 @@ public final class YukiBlackHoleClient {
             return;
         }
         if (e.getStage() != RenderLevelStageEvent.Stage.AFTER_LEVEL) return;
+        ensureShader();
         if (shader == null || warned || HOLES.isEmpty() || worldView == null || worldProjection == null) return;
 
         var main = mc.getMainRenderTarget();

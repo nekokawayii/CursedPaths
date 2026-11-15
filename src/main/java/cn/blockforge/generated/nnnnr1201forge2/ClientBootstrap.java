@@ -20,7 +20,7 @@ public final class ClientBootstrap {
         modBus.addListener(FinalePoseClient.Registration::layers);
         modBus.addListener(MeleeComboClient.Registration::layers);
         modBus.register(GojoOpticsClient.Registration.class);
-        modBus.register(YukiBlackHoleClient.Registration.class);
+        modBus.addListener(YukiBlackHoleClient.Registration::shaders);
         modBus.register(BloodClient.Registration.class);
         modBus.addListener(BloodRealmRenderer::shaders);
         Network.motionReceiver=DismantleMotionClient::receive;
