@@ -45,5 +45,26 @@ public final class YukiBlackHole {
 
     @SubscribeEvent public static void stop(ServerStoppedEvent e) { ACTIVE.clear(); }
 
+    /** 调试指令：在准星落点放一个黑洞（不依赖角色/加重层数），用于实机截屏迭代。 */
+    @SubscribeEvent public static void commands(net.minecraftforge.event.RegisterCommandsEvent e) {
+        e.getDispatcher().register(net.minecraft.commands.Commands.literal("jjksp")
+            .then(net.minecraft.commands.Commands.literal("bh").requires(s -> s.hasPermission(2))
+                .executes(c -> {
+                    var p = c.getSource().getPlayerOrException();
+                    if (!(p.level() instanceof ServerLevel level)) return 0;
+                    var eye = p.getEyePosition();
+                    var aim = eye.add(p.getLookAngle().scale(24));
+                    var hit = level.clip(new net.minecraft.world.level.ClipContext(eye, aim,
+                        net.minecraft.world.level.ClipContext.Block.COLLIDER,
+                        net.minecraft.world.level.ClipContext.Fluid.NONE, p));
+                    Vec3 center = hit.getType() == net.minecraft.world.phys.HitResult.Type.MISS
+                        ? eye.add(p.getLookAngle().scale(12))
+                        : hit.getLocation().subtract(p.getLookAngle().scale(1.5));
+                    open(level, p, center, RADIUS, 200);
+                    p.sendSystemMessage(net.minecraft.network.chat.Component.literal("黑洞已在准星处生成：" + center));
+                    return 1;
+                })));
+    }
+
     private YukiBlackHole() { }
 }

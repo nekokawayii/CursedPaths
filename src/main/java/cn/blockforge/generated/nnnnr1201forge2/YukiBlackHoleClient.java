@@ -107,11 +107,24 @@ public final class YukiBlackHoleClient {
 
     @SubscribeEvent public static void tick(net.minecraftforge.event.TickEvent.ClientTickEvent e) {
         if (e.phase != net.minecraftforge.event.TickEvent.Phase.END) return;
-        var level = Minecraft.getInstance().level;
+        var mc = Minecraft.getInstance();
+        var level = mc.level;
         if (world != level) { clear(); world = level; }
         tick++;
+        // 自动测试：-Ddsh.blackhole.autotest=1 时，每 60 刻在眼前 10 格自动放一个黑洞，
+        // 供 runClient 截屏迭代用（只影响本地这个客户端，不发给服务端）。
+        if (AUTOTEST && level != null && mc.player != null && tick % 60 == 20) {
+            Vec3 eye = mc.player.getEyePosition();
+            Vec3 at = eye.add(mc.player.getLookAngle().scale(10));
+            HOLES.removeIf(h -> h.owner == -1);
+            HOLES.add(new Hole(-1, at, YukiBlackHole.RADIUS, tick, tick + 200));
+            com.mojang.logging.LogUtils.getLogger().info("[黑洞] 自动测试投放 @{}", at);
+        }
         HOLES.removeIf(h -> tick > h.until);
     }
+
+    /** runClient 自动测试开关。 */
+    private static final boolean AUTOTEST = !System.getProperty("dsh.blackhole.autotest", "").isEmpty();
 
     public static void clear() {
         HOLES.clear(); tick = 0; warned = false; externalNoted = false; loggedDraw = false; world = null;

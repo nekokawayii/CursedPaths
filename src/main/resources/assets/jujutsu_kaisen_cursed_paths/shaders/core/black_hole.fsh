@@ -64,6 +64,12 @@ void main() {
     float diskThick = Params.w;
     float stepLen = r * STEP_SCALE;
 
+    // 盘面角向坐标用的切向基（r406 修：原来把 float 1e-4 直接加给 vec3，GLSL 编译不过 → 整个后期失效）
+    vec3 nrm = normalize(DiskNormal);
+    vec3 refAxis = abs(nrm.y) > 0.9 ? vec3(0.0, 0.0, 1.0) : vec3(0.0, 1.0, 0.0);
+    vec3 tangent = normalize(cross(nrm, refAxis));
+    vec3 bitangent = normalize(cross(nrm, tangent));
+
     vec3 pos = CamPos;
     vec3 dir = rayDir;
     vec3 color = vec3(0.0);
@@ -95,8 +101,7 @@ void main() {
                 // 内圈冰蓝，外圈橙；中间平滑过渡
                 vec3 diskColor = mix(InnerColor.rgb, OuterColor.rgb, smoothstep(0.25, 0.95, t));
                 // 角向条纹 + 径向细纹（程序化，不依赖贴图）
-                float ang = atan(dot(relPos, normalize(cross(DiskNormal, vec3(0.0, 1.0, 0.0)) + 1e-4)),
-                                 dot(relPos, normalize(cross(vec3(0.0, 1.0, 0.0), DiskNormal) + 1e-4)));
+                float ang = atan(dot(relPos, bitangent), dot(relPos, tangent));
                 float streak = 0.72 + 0.28 * sin(ang * 7.0 + rr * 3.1 - Time * 1.7);
                 float density = (0.55 - 0.35 * smoothstep(0.55, 1.0, t)) * streak;
                 // 越靠内越亮（贴近视界被加热）
