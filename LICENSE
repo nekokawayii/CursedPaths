@@ -1,15 +1,69 @@
-版权 (c) 2026 nekokawayii、WDjiuyoubaihu · 咒命歧路 / Jujutsu Kaisen: Cursed Paths
+咒命歧路 / Cursed Paths 使用许可
+版本 2.0 · 2026-11-15 版权 (c) 2026 nekokawayii、WDjiuyoubaihu
 
-保留所有权利，并按以下条款授权使用：
+0. 本项目的性质
+本项目（咒命歧路 / Cursed Paths）是《咒术回战》（Jujutsu Kaisen）的非官方二次创作。
 
-1. 署名：任何转载、分发、二次修改（包括整合包收录、改名发布、拆分模块），
-   必须保留本协议、注明原作者（nekokawayii、WDjiuyoubaihu）与项目名「咒命歧路 / CursedPaths」，
-   并明确标注你做了哪些修改。
-2. 禁止商用：不得将本项目或其衍生作品用于任何商业用途
-   （包括但不限于付费整合包、付费下载、商业服务器收费项目）。
-3. 二改作品必须以相同条款发布：衍生作品也必须允许他人继续在其基础上
-   署名、非商业地二次修改，不得追加更严格的限制。
-4. 保留本协议文件，不得删除或修改其中的署名与作者信息。
-5. 本项目按「现状」提供，作者不对使用后果承担任何责任。
+「咒术回战」及其角色、术式、世界观等元素的著作权归原作者芥见下下及集英社所有。 本协议对上述元素不主张任何权利，也不向你授予任何相关权利。
+Minecraft 及其相关组件的权利归 Mojang / Microsoft；Forge 的权利归其各自权利人。 使用本项目须同时遵守其条款。
+本协议仅约束本项目作者拥有著作权的原创部分：原创代码、原创美术资源、原创文本与配置。
+1. 定义
+「本项目」：本仓库内的原创内容，及由本仓库构建发布的分发产物（jar 等）。
 
-如需商业授权，请先联系原作者获得书面许可。
+「商业用途」：以获取金钱或其他经济利益为目的的使用，包括但不限于：
+
+将本项目或其衍生内容置于付费墙之后（付费整合包、付费下载、订阅制、付费会员）；
+在直接或间接获利的服务器上使用（含出售权限、道具、点券、赞助位、广告位）；
+将本项目用于商业推广、广告变现或商业产品；
+以本项目为对价换取报酬（含代建、代配置等付费服务）。
+以下不属于商业用途：个人游玩；免费整合包收录；无收益的内容创作；非营利的社区服务器。
+
+「衍生作品」：基于本项目修改、拆分、合并、反编译后再次发布的内容。
+
+2. 授权
+在完全遵守本协议的前提下，作者免费授予你：复制、分发、修改、非商业使用的权利。 除此之外的一切权利由作者保留。
+
+3. 你的义务
+3.1 署名：任何转载、分发、修改或以整合包形式收录，必须： a. 保留本协议全文； b. 注明原作者 nekokawayii、WDjiuyoubaihu 与项目名「咒命歧路 / CursedPaths」； c. 明确标注你做了哪些修改。
+
+3.2 非商业：不得将本项目或其衍生作品用于商业用途。 商业使用须事先取得作者的书面许可。
+
+3.3 同条款发布：衍生作品必须以本协议发布，并允许他人继续在其基础上 署名、非商业地二次修改，不得追加更严格的限制。
+
+3.4 署名信息不可删改：不得删除或修改本协议及项目中的作者署名信息。
+
+4. 使用即同意
+下载、安装、运行、复制或以任何方式使用本项目，即表示你已阅读、理解并同意本协议。 若不同意，请立即删除本项目全部文件并停止使用。
+
+5. 第三方与平台
+5.1 本协议不限制代码托管平台自身提供的复制、fork 等功能； 但通过 fork 产生的副本在对外分发时，仍受本协议约束。
+
+5.2 本项目引用或依赖的第三方组件，其各自的许可证继续有效，本协议不改变其条款。 若二者冲突，就第三方组件部分以其自身许可证为准。
+
+6. 免责
+6.1 本项目按「现状」提供，作者不提供任何明示或默示的担保， 包括但不限于适销性、特定用途适用性与不侵权担保。
+
+6.2 在法律允许的最大范围内，作者不对因使用或无法使用本项目 造成的任何损失承担责任。但以下情形不适用前句： 造成人身损害的；因作者故意或重大过失造成财产损失的。
+
+7. 其他
+7.1 本协议适用中华人民共和国法律。
+
+7.2 本协议任一条款被认定无效或不可执行的，不影响其余条款的效力。
+
+7.3 商业授权及其他事宜请联系：〔填写你的邮箱 / QQ / Discord〕
+
+如需商业授权，请先联系原作者取得书面许可。
+
+English Summary (short form, for international distribution)
+Cursed Paths is an unofficial fan mod for Minecraft based on Jujutsu Kaisen. All Jujutsu Kaisen characters, techniques and world elements remain the property of Gege Akutami and Shueisha; this license claims no rights over them. Minecraft is a trademark of Mojang / Microsoft.
+
+You are free to copy, distribute, modify and use this project for non-commercial purposes only, provided that you:
+
+keep this license in full and credit the authors (nekokawayii, WDjiuyoubaihu) and the project name "Cursed Paths / 咒命歧路";
+state clearly what you changed;
+release derivative works under this same license (no stricter terms).
+Commercial use — including paid modpacks, paywalled downloads, monetized servers, advertising, or paid services built on this project — requires prior written permission.
+
+Using this project means you accept these terms. Provided "as is", without warranty of any kind. Contact: 〔your email / QQ / Discord〕
+
+如需商业授权，请先联系原作者（包括芥见下下）取得书面许可。
