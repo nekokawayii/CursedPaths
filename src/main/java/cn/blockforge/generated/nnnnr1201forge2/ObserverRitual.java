@@ -160,9 +160,9 @@ public final class ObserverRitual {
         finish(s,true,true);
     }
     @SubscribeEvent public static void commands(net.minecraftforge.event.RegisterCommandsEvent e){
-        e.getDispatcher().register(net.minecraft.commands.Commands.literal("jujutsu_kaisen_cursed_paths").then(net.minecraft.commands.Commands.literal("reset").requires(source->source.getEntity() instanceof ServerPlayer player&&active(player)).executes(c->{reset(c.getSource().getPlayerOrException());return 1;})));
+        e.getDispatcher().register(net.minecraft.commands.Commands.literal("jjksp").then(net.minecraft.commands.Commands.literal("reset").requires(source->source.getEntity() instanceof ServerPlayer player&&active(player)).executes(c->{reset(c.getSource().getPlayerOrException());return 1;})));
         // 已通关但「权限」确实丢了（掉进虚空缝隙等）时的补救，不重复发放。
-        e.getDispatcher().register(net.minecraft.commands.Commands.literal("jujutsu_kaisen_cursed_paths").then(net.minecraft.commands.Commands.literal("permission").executes(c->{Authority.restoreReward(c.getSource().getPlayerOrException());return 1;})));
+        e.getDispatcher().register(net.minecraft.commands.Commands.literal("jjksp").then(net.minecraft.commands.Commands.literal("permission").executes(c->{Authority.restoreReward(c.getSource().getPlayerOrException());return 1;})));
     }
     @SubscribeEvent public static void login(PlayerEvent.PlayerLoggedInEvent e){
         if(!(e.getEntity() instanceof ServerPlayer p)||!Curse.data(p).getBoolean("ObserverRunning"))return;
