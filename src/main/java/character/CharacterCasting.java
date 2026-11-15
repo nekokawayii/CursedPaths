@@ -60,6 +60,7 @@ public final class CharacterCasting {
         CharacterSkill skill=def.config().skill(id);
         var effect=EFFECTS.get(new Key(role,id));
         if(skill==null||effect==null)return false;
+        clearVolume(p,skill);
         effect.apply(p,skill,rank);
         return true;
     }
@@ -185,7 +186,7 @@ public final class CharacterCasting {
         MeleeCombo.cancel(p);
         int rank=CharacterService.rank(p); // 先固定本次阶段，击杀升级不会在同次施法中再增伤。
         var effect=EFFECTS.get(new Key(definition.id(),id));
-        if(effect!=null){effect.apply(p,skill,rank);return;}
+        if(effect!=null){clearVolume(p,skill);effect.apply(p,skill,rank);return;}
         Vec3 start=p.getEyePosition(),look=p.getLookAngle(),end=start.add(look.scale(skill.range()));
         var wall=p.level().clip(new ClipContext(start,end,ClipContext.Block.COLLIDER,ClipContext.Fluid.NONE,p));
         if(wall.getType()!=HitResult.Type.MISS)end=wall.getLocation();
@@ -202,6 +203,25 @@ public final class CharacterCasting {
             if(++hits>=skill.targetsAt(rank))break;
         }
         particles(p,skill,start,look,end);
+        clearVolume(p,skill);
+    }
+    /**
+     * r383：开启 desblock 后，**角色技能一律按自己的判定体积清空方块**。
+     * 近身/环形招以自身为心（radius 覆盖到 range），远程/射线招取准星落点；
+     * 半径直接取 `CharacterSkill.radius()`，不封顶（大范围会走 SkillDestruction 的分刻队列）。
+     */
+    private static void clearVolume(ServerPlayer p,CharacterSkill skill) {
+        double radius=skill.radius();
+        if(radius<=0)return;
+        Vec3 center;
+        if(skill.shape()!=CharacterSkill.Shape.RAY&&radius>=skill.range()*0.8){
+            center=p.position().add(0,p.getBbHeight()*0.5,0);
+        }else{
+            Vec3 start=p.getEyePosition(),end=start.add(p.getLookAngle().scale(Math.min(skill.range(),8)));
+            var hit=p.level().clip(new ClipContext(start,end,ClipContext.Block.COLLIDER,ClipContext.Fluid.NONE,p));
+            center=hit.getType()==HitResult.Type.MISS?end:hit.getLocation();
+        }
+        cn.blockforge.generated.nnnnr1201forge2.SkillDestruction.sphere(p,center,radius);
     }
     private static boolean inside(CharacterSkill skill,ServerPlayer p,Vec3 start,Vec3 look,Vec3 end,LivingEntity target) {
         if(skill.shape()==CharacterSkill.Shape.RAY){

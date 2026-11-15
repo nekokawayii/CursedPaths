@@ -31,9 +31,11 @@ public final class SkillDestruction {
     /** 当刻直接破坏；不排队、不延后追着特效补破坏。仍保留原有地形开关和领地保护。 */
     public static void immediate(ServerPlayer p,Vec3 from,Vec3 to,double radius){
         ServerLevel l=p.serverLevel();if(!enabled(l)||!p.isAlive()||DomainClash.active(p)||EternalLove.settling(MaidBridge.body(p))||!Double.isFinite(from.lengthSqr()+to.lengthSqr()))return;
+        // r383：判定半径不再封顶。粗体积（光束/大口径）改走分刻队列，避免单刻扫几十万方块卡死服务器。
+        if(radius>3.0||from.distanceTo(to)*radius>9000){queue(p,l,from,to,radius);return;}
         long tick=l.getServer().overworld().getGameTime();if(tick!=visitedTick){visitedTick=tick;visitedNow.clear();}
         Set<BlockPos> visited=visitedNow.computeIfAbsent(p.getUUID(),k->new HashSet<>());
-        int n=Math.max(1,(int)Math.ceil(from.distanceTo(to)*1.75)),r=(int)Math.ceil(Math.min(4,Math.max(0,radius)));
+        int n=Math.max(1,(int)Math.ceil(from.distanceTo(to)*1.75)),r=(int)Math.ceil(Math.max(0,radius));
         for(int i=0;i<=n;i++){Vec3 point=from.lerp(to,i/(double)n);BlockPos c=BlockPos.containing(point);
             for(BlockPos pos:BlockPos.betweenClosed(c.offset(-r,-r,-r),c.offset(r,r,r))){
                 if(Vec3.atCenterOf(pos).distanceToSqr(point)>(radius+0.8)*(radius+0.8)||!visited.add(pos.immutable())||!l.hasChunkAt(pos)||!l.getWorldBorder().isWithinBounds(pos))continue;
@@ -128,11 +130,59 @@ public final class SkillDestruction {
             if(!miss&&low<=high)immediate(p,center.add(axis.scale(low)),center.add(axis.scale(high)),width);
         }
     }
-    /** 大范围终极技：同一刻结算，仍遵守总开关、领地、基岩和容器保护。 */
+    /** 大范围终极技：小半径当刻结算；大半径切成分刻队列，**判定半径不封顶**。 */
     public static void sphere(ServerPlayer p,Vec3 center,double radius){
-        if(!enabled(p.serverLevel())||!p.isAlive()||DomainClash.active(p))return;
-        int r=(int)Math.ceil(Math.min(50,Math.max(0,radius)));BlockPos c=BlockPos.containing(center);
-        for(BlockPos pos:BlockPos.betweenClosed(c.offset(-r,-r,-r),c.offset(r,r,r)))if(Vec3.atCenterOf(pos).distanceToSqr(center)<=radius*radius&&mayChange(p,pos))p.serverLevel().destroyBlock(pos,false,MaidBridge.body(p));
+        if(!enabled(p.serverLevel())||!p.isAlive()||DomainClash.active(p)||!Double.isFinite(radius)||radius<=0)return;
+        if(radius<=2.5){
+            int r=(int)Math.ceil(radius);BlockPos c=BlockPos.containing(center);
+            for(BlockPos pos:BlockPos.betweenClosed(c.offset(-r,-r,-r),c.offset(r,r,r)))if(Vec3.atCenterOf(pos).distanceToSqr(center)<=radius*radius&&mayChange(p,pos))p.serverLevel().destroyBlock(pos,false,MaidBridge.body(p));
+            return;
+        }
+        queue(p,p.serverLevel(),center,center,radius);
+    }
+    /** 把一段胶囊体（a→b，半径 radius）排进分刻队列。 */
+    private static void queue(ServerPlayer p,ServerLevel l,Vec3 a,Vec3 b,double radius){
+        if(!Double.isFinite(radius)||radius<=0)return;
+        if(JOBS.size()>=48)return;
+        JOBS.add(new Job(p,l,a,b,radius));
+    }
+    private static final java.util.ArrayDeque<Job> JOBS=new java.util.ArrayDeque<>();
+    private static final int JOB_BUDGET=2600;
+    private static final class Job{
+        final ServerPlayer owner;final ServerLevel level;final Vec3 a;final Vec3 b;final double r2;
+        final int minX,minY,minZ,maxX,maxY,maxZ;int x,y,z;boolean done;
+        Job(ServerPlayer owner,ServerLevel level,Vec3 a,Vec3 b,double radius){
+            this.owner=owner;this.level=level;this.a=a;this.b=b;this.r2=radius*radius;
+            int r=(int)Math.ceil(radius);
+            this.minX=(int)Math.floor(Math.min(a.x,b.x))-r;this.maxX=(int)Math.floor(Math.max(a.x,b.x))+r;
+            this.minY=Math.max(level.getMinBuildHeight(),(int)Math.floor(Math.min(a.y,b.y))-r);
+            this.maxY=Math.min(level.getMaxBuildHeight()-1,(int)Math.floor(Math.max(a.y,b.y))+r);
+            this.minZ=(int)Math.floor(Math.min(a.z,b.z))-r;this.maxZ=(int)Math.floor(Math.max(a.z,b.z))+r;
+            this.x=minX;this.y=minY;this.z=minZ;
+        }
+    }
+    /** 点到线段的距离平方（胶囊体判据）。 */
+    private static double segmentDistSqr(Vec3 p,Vec3 a,Vec3 b){
+        Vec3 ab=b.subtract(a);double len=ab.lengthSqr();
+        if(len<1e-6)return p.distanceToSqr(a);
+        double t=Math.max(0,Math.min(1,p.subtract(a).dot(ab)/len));
+        return p.distanceToSqr(a.add(ab.scale(t)));
+    }
+    @SubscribeEvent public static void tick(net.minecraftforge.event.TickEvent.ServerTickEvent e){
+        if(e.phase!=net.minecraftforge.event.TickEvent.Phase.END)return;
+        int budget=JOB_BUDGET;
+        while(!JOBS.isEmpty()&&budget>0){
+            Job j=JOBS.peekFirst();
+            if(j.done||!j.owner.isAlive()||j.owner.isRemoved()||j.owner.level()!=j.level){JOBS.pollFirst();continue;}
+            while(budget>0&&!j.done){
+                BlockPos pos=new BlockPos(j.x,j.y,j.z);
+                if(segmentDistSqr(Vec3.atCenterOf(pos),j.a,j.b)<=j.r2&&mayChange(j.owner,pos))
+                    j.level.destroyBlock(pos,false,MaidBridge.body(j.owner));
+                budget--;
+                if(++j.z>j.maxZ){j.z=j.minZ;if(++j.y>j.maxY){j.y=j.minY;if(++j.x>j.maxX)j.done=true;}}
+            }
+            if(j.done)JOBS.pollFirst();
+        }
     }
     public static void impact(ServerPlayer p,Vec3 point,double radius){line(p,point,point,radius);}
     public static void effect(ServerLevel level,Network.Effect e){
@@ -147,7 +197,7 @@ public final class SkillDestruction {
                 if(e.size()==SlashReach.INFINITE)infinite(p,e.position(),side);else line(p,e.position().subtract(side.scale(length/2)),e.position().add(side.scale(length/2)),0.6);
             }
             case 121,125,139,140,142 -> line(p,e.position(),e.direction(),0.7);
-            case 4,23,116,120 -> impact(p,e.position(),Math.min(4,e.size()));
+            case 4,23,116,120 -> impact(p,e.position(),e.size());
             case 1,90 -> {for(int i=0;i<24;i++){double a=p.getRandom().nextDouble()*Math.PI*2,r=Math.sqrt(p.getRandom().nextDouble())*e.size();Vec3 at=e.position().add(Math.cos(a)*r,0,Math.sin(a)*r);line(p,at.add(0,12,0),at.add(0,-8,0),0.7);}}
             default -> {}
         }
@@ -157,6 +207,6 @@ public final class SkillDestruction {
             .executes(c->{boolean on=enabled(c.getSource().getLevel());c.getSource().sendSuccess(()->Component.literal("技能破坏方块："+on),false);return on?1:0;})
             .then(Commands.argument("value",BoolArgumentType.bool()).executes(c->{boolean on=BoolArgumentType.getBool(c,"value");var server=c.getSource().getServer();set(server,on);c.getSource().sendSuccess(()->Component.literal("全部攻击技能破坏方块："+(on?"开启，请远离建筑":"关闭")),true);return 1;})))));
     }
-    @SubscribeEvent public static void stop(ServerStoppedEvent e){loaded.clear();visitedNow.clear();visitedTick=Long.MIN_VALUE;}
+    @SubscribeEvent public static void stop(ServerStoppedEvent e){loaded.clear();visitedNow.clear();JOBS.clear();visitedTick=Long.MIN_VALUE;}
     private SkillDestruction(){}
 }

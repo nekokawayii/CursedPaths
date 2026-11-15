@@ -149,6 +149,10 @@ public final class RyuCombat {
         if (effect) {
             Network.send(level, new Network.Effect(RyuFx.BEAM, caster.getId(), origin, end, (float) width, 8, 0));
         }
+        // r383：开了 desblock 时，光束按**自身宽度**沿轴线清空所到之处（不再只在命中点碎一块）
+        if (owner != null) {
+            cn.blockforge.generated.nnnnr1201forge2.SkillDestruction.line(owner, origin, end, Math.max(0.8, width * 0.5));
+        }
         double reach = end.distanceTo(origin);
         for (var target : level.getEntitiesOfClass(LivingEntity.class, new AABB(origin, end).inflate(width + 2),
                 t -> t != caster && t.isAlive() && !t.isSpectator() && (caster instanceof ServerPlayer p?CombatSettings.canHit(p,t):NpcBridge.canHit(caster,t)))) {
