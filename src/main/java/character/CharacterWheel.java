@@ -12,7 +12,7 @@ public final class CharacterWheel extends Screen {
     private int current,mainlineHover=-1,branchHover=-1;
     private boolean confirmed,starHover,ultHover,fistHover;
     public CharacterWheel() { super(Component.literal("角色术式轮盘"));definition=CharacterClient.selected();current=definition!=null&&CharacterClient.skills().contains(Client.selected)?Client.selected:definition==null?0:definition.firstSkill(); }
-    private int radius() { return Math.max(42,Math.min(156,Math.min(width/2-100,(height-92)/2))); }
+    private int radius() { return Math.max(38,Math.min(126,Math.min(width/2-116,(height-108)/2))); }
     private boolean blood() { return definition!=null&&definition.family()==CharacterDefinition.Family.BLOOD; }
     private boolean star() { return blood()&&BloodClient.ownDomain(); }
     /** 鹿紫云一：轮盘中心是终奥「幻兽·琥珀」。 */

@@ -20,7 +20,7 @@ public final class WheelSideSlots {
     public static int radius(int width,int height,boolean ice,boolean gojo){
         int left=ice?8+2*iceRadius(width,height)+76:100;
         int right=gojo?8+2*gojoRadius(width,height)+76:100;
-        return Math.max(12,Math.min((width-left-right)/2,Math.min(100,height/2-48)));
+        return Math.max(12,Math.min((width-left-right)/2,Math.min(84,height/2-56)));
     }
     public static int centerX(int width,int height,boolean ice){return centerX(width,height,ice,false);}
     public static int centerX(int width,int height,boolean ice,boolean gojo){int r=radius(width,height,ice,gojo);if(gojo&&!ice)return Math.min(width/2,width-8-2*gojoRadius(width,height)-76-r);return ice?Math.max(width/2,8+2*iceRadius(width,height)+76+r):width/2;}
