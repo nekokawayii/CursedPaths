@@ -126,7 +126,7 @@ public final class CullingSpawns {
     }
 
     /** 羂索本体出现概率。 */
-    private static final float GETO_CHANCE = .12f;
+    private static final float GETO_CHANCE = .04f;
     /** 强化原版生物池（替代自定义咒灵，省性能）。 */
     private static final net.minecraft.world.entity.EntityType<?>[] VANILLA = {
         net.minecraft.world.entity.EntityType.ZOMBIE, net.minecraft.world.entity.EntityType.HUSK,
@@ -369,6 +369,13 @@ public final class CullingSpawns {
         if (a.getModifier(id) != null) a.removeModifier(id);
         a.addTransientModifier(new net.minecraft.world.entity.ai.attributes.AttributeModifier(
             id, "死灭NPC规则", amount, net.minecraft.world.entity.ai.attributes.AttributeModifier.Operation.MULTIPLY_TOTAL));
+    }
+
+    /** NPC 已经定下的规则（r388 起与玩家规则并成一套全场共享）。 */
+    public static java.util.List<CullingRules.Rule> npcRules() {
+        java.util.List<CullingRules.Rule> out = new java.util.ArrayList<>();
+        for (int i : NPC_RULES) if (i >= 0 && i < CullingRules.ALL.size()) out.add(CullingRules.ALL.get(i));
+        return out;
     }
 
     /** 怪物打人的伤害倍率（来自 NPC 制定的规则）。 */

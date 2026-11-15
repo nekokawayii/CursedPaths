@@ -248,19 +248,36 @@ public final class CullingRules {
         return out;
     }
     public static boolean inDimension(Player p){return p.level().dimension().equals(CullingGame.DIM);}
+    /**
+     * r388：**规则是全场共享的** —— 所有玩家选的规则 + NPC 制定的规则都算一套，
+     * 谁定的都对所有人（含 NPC）生效。按游戏刻缓存一次，避免每次伤害都重算。
+     */
+    private static final List<Rule> SHARED=new ArrayList<>();
+    private static long sharedAt=-1;
+    public static List<Rule> activeAll(net.minecraft.server.MinecraftServer server){
+        if(server==null)return List.of();
+        long now=server.overworld().getGameTime();
+        if(now==sharedAt)return SHARED;
+        sharedAt=now;
+        List<Rule> out=new ArrayList<>();java.util.Set<String> seen=new java.util.HashSet<>();
+        for(ServerPlayer p:server.getPlayerList().getPlayers())for(Rule r:active(p))if(seen.add(r.id()))out.add(r);
+        for(Rule r:character.culling.CullingSpawns.npcRules())if(seen.add(r.id()))out.add(r);
+        SHARED.clear();SHARED.addAll(out);
+        return SHARED;
+    }
     public static double mul(Player p,java.util.function.ToDoubleFunction<Mods> get){
         if(!inDimension(p))return 1;
-        double v=1;for(Rule rule:active(p))v*=get.applyAsDouble(rule.mods());
+        double v=1;for(Rule rule:activeAll(p.getServer()))v*=get.applyAsDouble(rule.mods());
         return v;
     }
     public static boolean flag(Player p,java.util.function.Predicate<Mods> test){
         if(!inDimension(p))return false;
-        for(Rule rule:active(p))if(test.test(rule.mods()))return true;
+        for(Rule rule:activeAll(p.getServer()))if(test.test(rule.mods()))return true;
         return false;
     }
     public static boolean special(Player p,String id){
         if(!inDimension(p))return false;
-        for(Rule rule:active(p))if(rule.mods().special.contains(id))return true;
+        for(Rule rule:activeAll(p.getServer()))if(rule.mods().special.contains(id))return true;
         return false;
     }
     public static double energyMul(Player p){
@@ -365,13 +382,14 @@ public final class CullingRules {
 
     // ===================== 属性 =====================
     public static void applyModifiers(ServerPlayer p){
-        boolean on=inDimension(p)&&picked(p)>0;
+        var all=activeAll(p.getServer());
+        boolean on=inDimension(p)&&!all.isEmpty();
         put(p,Attributes.MAX_HEALTH,HEALTH,(on?mul(p,m->m.health):1)-1);
         put(p,Attributes.MOVEMENT_SPEED,SPEED,(on?mul(p,m->m.speed):1)-1);
         put(p,Attributes.ATTACK_DAMAGE,ATTACK,(on?mul(p,m->m.damage):1)-1);
         put(p,Attributes.ATTACK_SPEED,ATK_SPEED,(on?mul(p,m->m.atkSpeed):1)-1);
         put(p,Attributes.ARMOR,ARMOR,on&&flag(p,m->m.armorOff)?-1:0);
-        int jump=0;if(on)for(Rule rule:active(p))jump+=rule.mods().jump;
+        int jump=0;if(on)for(Rule rule:all)jump+=rule.mods().jump;
         put(p,Attributes.JUMP_STRENGTH,JUMP,jump*.08);
         if(p.getHealth()>p.getMaxHealth())p.setHealth(p.getMaxHealth());
     }

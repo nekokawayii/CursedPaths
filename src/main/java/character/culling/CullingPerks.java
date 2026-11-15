@@ -39,7 +39,7 @@ public final class CullingPerks {
     // ===== 规则数值读取 =====
     private static double sum(Player p, java.util.function.ToDoubleFunction<CullingRules.Mods> f) {
         double v = 0;
-        for (CullingRules.Rule r : CullingRules.active(p)) v += f.applyAsDouble(r.mods());
+        for (CullingRules.Rule r : CullingRules.activeAll(p.getServer())) v += f.applyAsDouble(r.mods());
         return v;
     }
 
