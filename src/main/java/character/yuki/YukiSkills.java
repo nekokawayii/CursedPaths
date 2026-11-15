@@ -32,7 +32,7 @@ public final class YukiSkills {
                 0xFFFFE9A8, 400, 60, CharacterSkill.Shape.RAY, 22, 2.6, 12, 36, 8, 10, 1, 0, 0),
             new CharacterSkill(STAR_RAGE, "星之怒·加重", "加重",
                 "给自己叠加质量，最多 10 层，每层大幅提高伤害；潜行释放可卸掉质量恢复正常速度；第 11 次会把质量压成黑洞。",
-                0xFFFFC46B, 500, 20, CharacterSkill.Shape.BURST, 1, 1, 180, 0, 0, 1, 0, 0, 0),
+                0xFFFFC46B, 500, 1, CharacterSkill.Shape.BURST, 1, 1, 180, 0, 0, 1, 0, 0, 0),
             new CharacterSkill(DOMAIN, "领域展开·星轨坠亡", "星轨坠亡",
                 "展开星空领域（内外两层星轨壁 + 星空地板）；领域内敌人无法移动且虚弱，生命低于你的会被压扁致死。",
                 0xFF1B2A6B, 1000, 1200, CharacterSkill.Shape.BURST, 1, 1, 180, 0, 0, 1, 0, 0, 0)
