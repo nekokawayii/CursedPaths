@@ -61,6 +61,10 @@ void main() {
                             1.0 / FrameSize, 1.0 - 1.0 / FrameSize);
         lensed = mix(lensed, texture(Sampler0, ringUV).rgb * 1.35, ringBand * 0.32);
     }
+    // r404：黑洞是"吸光"的——靠近视界把背景压暗，否则在白天/明亮天空下，
+    // 加法叠上去的盘会被背景亮度冲成白黄（你截图里那块就是被沙漠天空冲白的）。
+    float dim = mix(0.10, 1.0, smoothstep(1.0, 2.9, r));
+    lensed *= dim;
 
     // ---- 吸积盘（对齐参考图：扁平、蓝色为主体、亮度压低，不要叠成白/黄）----
     // r397：y 乘大才是横向椭圆。r400 的带符号弯曲会产生接缝（白色四角星），已废弃。
