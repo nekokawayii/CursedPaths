@@ -21,6 +21,19 @@ public final class SkillDestruction {
     public static boolean enabled(ServerLevel level){return level.getServer().overworld().getGameRules().getBoolean(RULE);}
     /** r385：开着 desblock 时，弹道/光束不再被地形截断（自己挖过去），避免"只破坏一格就消失"。 */
     public static boolean pierce(ServerLevel level){return enabled(level);}
+    /** r386：进入死灭洄游维度默认开启，离开自动关闭；指令随时可以再覆盖。 */
+    @SubscribeEvent public static void dimension(net.minecraftforge.event.entity.player.PlayerEvent.PlayerChangedDimensionEvent e){
+        if(!(e.getEntity() instanceof ServerPlayer p))return;
+        var server=p.getServer();if(server==null)return;
+        if(e.getTo().equals(CullingGame.DIM))set(server,true);
+        else if(e.getFrom().equals(CullingGame.DIM))set(server,false);
+    }
+    /** 重登时人在死灭洄游里（维度事件不会触发）也要是开启状态。 */
+    @SubscribeEvent public static void login(net.minecraftforge.event.entity.player.PlayerEvent.PlayerLoggedInEvent e){
+        if(!(e.getEntity() instanceof ServerPlayer p))return;
+        var server=p.getServer();if(server==null)return;
+        if(p.level().dimension().equals(CullingGame.DIM))set(server,true);
+    }
     public static void set(net.minecraft.server.MinecraftServer server,boolean on){server.overworld().getGameRules().getRule(RULE).set(on,server);if(!on)visitedNow.clear();}
     public static void line(ServerPlayer p,Vec3 from,Vec3 to,double radius){
         immediate(p,from,to,radius);
@@ -53,7 +66,19 @@ public final class SkillDestruction {
     private static boolean domainBlock(ServerLevel l,BlockPos pos){
         return character.domain.DomainTerrain.changing(l,pos)
             || character.uraume.UraumePalaceDomain.changing(l,pos)
-            || character.mainline.Mainline.changing(l,pos);
+            || character.mainline.Mainline.changing(l,pos)
+            || cullingBarrier(l,pos);
+    }
+    /** r386：死灭洄游的「结界」不可破坏 —— 主世界的立方体结界结构 + 维度里的登记室。 */
+    private static net.minecraft.world.level.levelgen.structure.Structure cubeStructure;
+    private static boolean cullingBarrier(ServerLevel l,BlockPos pos){
+        if(character.culling.CullingGate.inRoomArea(pos))return true;
+        if(cubeStructure==null){
+            cubeStructure=l.registryAccess().registryOrThrow(net.minecraft.core.registries.Registries.STRUCTURE)
+                .get(new net.minecraft.resources.ResourceLocation("jujutsu_kaisen_cursed_paths","culling_cube"));
+            if(cubeStructure==null)return false;
+        }
+        try{return l.structureManager().getStructureAt(pos,cubeStructure).isValid();}catch(Exception ignored){return false;}
     }
     private static boolean mayChange(ServerPlayer p,BlockPos pos){
         ServerLevel l=p.serverLevel();if(!enabled(l)||!p.isAlive()||DomainClash.active(p)||!l.hasChunkAt(pos)||!l.getWorldBorder().isWithinBounds(pos))return false;
@@ -69,7 +94,7 @@ public final class SkillDestruction {
         ServerLevel l=p.serverLevel();
         if(!p.isAlive()||DomainClash.active(p)||!l.hasChunkAt(pos)||!l.getWorldBorder().isWithinBounds(pos))return false;
         var state=l.getBlockState(pos);
-        if(state.isAir()||state.getDestroySpeed(l,pos)<0||state.hasBlockEntity()||SoulJourney.protectedBlock(l,pos))return false;
+        if(state.isAir()||state.getDestroySpeed(l,pos)<0||state.hasBlockEntity()||SoulJourney.protectedBlock(l,pos)||domainBlock(l,pos))return false;
         ServerPlayer authority=p instanceof MaidBridge.Actor a?MaidBridge.owner(a):p;
         return authority!=null&&l.mayInteract(authority,pos)&&!MinecraftForge.EVENT_BUS.post(new BlockEvent.BreakEvent(l,pos,state,authority))
             &&ForgeEventFactory.onEntityDestroyBlock(MaidBridge.body(p),pos,state);
@@ -215,6 +240,6 @@ public final class SkillDestruction {
             .executes(c->{boolean on=enabled(c.getSource().getLevel());c.getSource().sendSuccess(()->Component.literal("技能破坏方块："+on),false);return on?1:0;})
             .then(Commands.argument("value",BoolArgumentType.bool()).executes(c->{boolean on=BoolArgumentType.getBool(c,"value");var server=c.getSource().getServer();set(server,on);c.getSource().sendSuccess(()->Component.literal("全部攻击技能破坏方块："+(on?"开启，请远离建筑":"关闭")),true);return 1;})))));
     }
-    @SubscribeEvent public static void stop(ServerStoppedEvent e){loaded.clear();visitedNow.clear();JOBS.clear();visitedTick=Long.MIN_VALUE;}
+    @SubscribeEvent public static void stop(ServerStoppedEvent e){loaded.clear();visitedNow.clear();JOBS.clear();cubeStructure=null;visitedTick=Long.MIN_VALUE;}
     private SkillDestruction(){}
 }
