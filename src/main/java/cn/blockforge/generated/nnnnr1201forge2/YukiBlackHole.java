@@ -22,8 +22,8 @@ public final class YukiBlackHole {
     public static final int FX = 799;
     /** 默认演出时长：5 秒。 */
     public static final int LIFETIME = 100;
-    /** 默认世界半径（格），只影响视觉与镜头尺度。r395：1.8 → 5.4（用户要求"再大 3 倍"）。 */
-    public static final float RADIUS = 5.4f;
+    /** 世界半径（格）= 视界半径。r405 世界空间版用真实几何：2.5 格 → 盘外缘约 13.5 格。 */
+    public static final float RADIUS = 2.5f;
     /** 视觉中心放在施术者眼前多远（格）；太近会糊满整屏。 */
     public static final double DISTANCE = 7.0;
 

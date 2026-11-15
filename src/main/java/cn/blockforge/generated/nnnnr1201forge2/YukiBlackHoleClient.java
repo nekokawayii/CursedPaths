@@ -151,12 +151,11 @@ public final class YukiBlackHoleClient {
         float cx = projected.x / projected.w * 0.5f + 0.5f;
         float cy = projected.y / projected.w * 0.5f + 0.5f;
         float screenRadius = Math.abs(worldProjection.m11() * hole.radius / projected.w) * 0.5f;
-        // 上限 0.42：外盘扩到 3.35 倍半径后，再大会把橙盘裁出屏幕
-        screenRadius = Math.max(0.02f, Math.min(0.42f, screenRadius));
         if (cx < -1 || cx > 2 || cy < -1 || cy > 2) return;
         if (!loggedDraw) {
             loggedDraw = true;
-            com.mojang.logging.LogUtils.getLogger().info("[黑洞] 开始绘制 screen=({},{}) r={} alpha={}", cx, cy, screenRadius, fade(hole));
+            com.mojang.logging.LogUtils.getLogger().info("[黑洞] 开始绘制(世界空间) screen=({},{}) r={} alpha={}",
+                cx, cy, screenRadius, fade(hole));
         }
 
         float alpha = fade(hole);
@@ -188,10 +187,19 @@ public final class YukiBlackHoleClient {
                 GL30.GL_COLOR_BUFFER_BIT | GL30.GL_DEPTH_BUFFER_BIT, GL30.GL_NEAREST);
             main.bindWrite(true);
 
+            // ---- 世界空间版 uniform（r405）：不再有屏幕坐标/屏幕半径，全部走 3D ----
+            shader.safeGetUniform("ViewProjection").set(vp);
+            shader.safeGetUniform("InvViewProjection").set(new Matrix4f(vp).invert());
+            shader.safeGetUniform("CamPos").set((float) camera.x, (float) camera.y, (float) camera.z);
+            shader.safeGetUniform("HoleCenter").set((float) hole.pos.x, (float) hole.pos.y, (float) hole.pos.z);
+            // 盘法线：默认水平盘，绕 X 轴倾斜 20° → 侧面看得到盘的厚度与近远侧
+            double tilt = Math.toRadians(20.0);
+            shader.safeGetUniform("DiskNormal").set(0f, (float) Math.cos(tilt), (float) Math.sin(tilt));
+            float rr = hole.radius;
+            shader.safeGetUniform("Params").set(rr, rr * 1.7f, rr * 5.4f, rr * 0.10f);
             shader.safeGetUniform("FrameSize").set((float) main.width, (float) main.height);
             shader.safeGetUniform("Time").set((tick + e.getPartialTick()) / 20f);
             shader.safeGetUniform("Alpha").set(alpha);
-            shader.safeGetUniform("Lens").set(cx, cy, screenRadius, 1.0f);
             shader.safeGetUniform("InnerColor").set(INNER[0], INNER[1], INNER[2], 1f);
             shader.safeGetUniform("OuterColor").set(OUTER[0], OUTER[1], OUTER[2], 1f);
 
