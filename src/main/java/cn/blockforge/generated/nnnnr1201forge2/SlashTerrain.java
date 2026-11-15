@@ -76,6 +76,8 @@ public final class SlashTerrain {
                 Vec3 a=line.a().lerp(line.b(),part/(double)parts),b=line.a().lerp(line.b(),(part+1)/(double)parts);
                 AABB bounds=new AABB(a,b).expandTowards(step).inflate(.001);
                 List<Wall> walls=new ArrayList<>();ServerLevel level=owner.serverLevel();
+                // r424：slashPierceWalls=true 时不收集墙体 → 不会产生 blocked 段，剑气整道穿过去（也就不画斩痕）
+                if(!TechniqueConfig.slashPierce()){
                 for(BlockPos mutable:BlockPos.betweenClosed(BlockPos.containing(bounds.minX,bounds.minY,bounds.minZ).offset(-1,-1,-1),BlockPos.containing(bounds.maxX,bounds.maxY,bounds.maxZ).offset(1,1,1))){
                     BlockPos pos=mutable.immutable();
                     // 不加载远方区块；遇到未知边界宁可停止，不猜测墙后是空气。
@@ -85,6 +87,7 @@ public final class SlashTerrain {
                     for(AABB box:boxes(level,pos)){
                         var c=contact(a,b,step,box);if(c!=null)walls.add(new Wall(c,box,pos));
                     }
+                }
                 }
                 List<SlashSweepRules.Contact> contacts=walls.stream().map(Wall::contact).toList();
                 Set<BlockPos> marked=new HashSet<>();
