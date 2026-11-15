@@ -33,3 +33,9 @@ whitelist.json
 world/
 tools
 scripts
+build.gradle
+settings.gradle
+gradle.properties
+gradlew
+gradlew.bat
+gradle/
