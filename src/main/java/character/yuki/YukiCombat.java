@@ -187,6 +187,14 @@ public final class YukiCombat {
         float selfDamage = (float) (p.getMaxHealth() * 0.9);
         p.hurt(p.damageSources().magic(), selfDamage);
         p.displayClientMessage(Component.literal("质量坍缩——黑洞炸开（自身承受 90% 生命）"), false);
+        // r390：真正的黑洞后期（冰蓝视界 + 冰蓝内盘 + 橙色外盘 + 背景透镜），
+        // 由 YukiBlackHole / YukiBlackHoleClient 做屏幕空间渲染；下面的粒子只作着色器不可用时的兜底。
+        if (p.level() instanceof ServerLevel level) {
+            cn.blockforge.generated.nnnnr1201forge2.YukiBlackHole.open(level, p,
+                p.getEyePosition().add(p.getLookAngle().scale(2.6)),
+                cn.blockforge.generated.nnnnr1201forge2.YukiBlackHole.RADIUS,
+                cn.blockforge.generated.nnnnr1201forge2.YukiBlackHole.LIFETIME);
+        }
 
         float damage = cn.blockforge.generated.nnnnr1201forge2.CombatSettings.spellDamage(p, (90 + 20 * Math.max(0, rank)) * multiplier);
         Vec3 center = p.position();

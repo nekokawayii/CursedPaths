@@ -298,6 +298,7 @@ public final class Client {
     public static void receive(Network.Effect e){
         if(e.kind()==ManualContent.EFFECT_OPEN){Minecraft.getInstance().setScreen(new ManualScreen());return;}
         if(e.kind()==970){RitualClient.lightning(e);return;}
+        if(e.kind()==YukiBlackHole.FX){YukiBlackHoleClient.receive(e);return;}
         if(e.kind()>=character.mahito.MahitoCombat.TOUCH&&e.kind()<=character.mahito.MahitoCombat.PUPPET){character.mahito.MahitoVisuals.receive(e);return;}
         if(e.kind()>=character.kashimo.KashimoFx.FIRST&&e.kind()<=character.kashimo.KashimoFx.LAST){KashimoVisuals.receive(e);return;}
         if(e.kind()>=character.todo.TodoFx.FIRST&&e.kind()<=character.todo.TodoFx.LAST){TodoVisuals.receive(e);return;}
