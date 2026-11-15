@@ -130,7 +130,7 @@ public final class BloodArts {
             case BloodRules.BLADE -> s.blade=now+BloodRules.duration(200,rank);
             case BloodRules.METEOR -> BloodExpansion.meteors(p,origin,dir);
             case BloodRules.ARMOR -> {s.shield=Math.max(s.shield,BalanceRules.damage(160*(1+.15f*rank)));s.shieldEnd=now+BloodRules.duration(300,rank);}
-            case BloodRules.NOVA -> {nova(p,origin,empowered);BloodExpansion.novaEchoes(p,origin,empowered);}
+            case BloodRules.NOVA -> {nova(p,origin,empowered);BloodExpansion.novaEchoes(p,origin,empowered);SkillDestruction.impact(p,origin,3.0+rank(p)*0.6);}
             case BloodRules.CANAL -> {var targets=near(p,origin,36+rank*4);targets.removeIf(t->!cone(origin,dir,t,.65)||!visible(p,origin,t));targets.sort(Comparator.<LivingEntity>comparingDouble(t->-t.getBoundingBox().getCenter().subtract(origin).normalize().dot(dir)).thenComparingDouble(t->t.distanceToSqr(origin)));canals.removeIf(c->c.p==p);s.marks.clear();for(LivingEntity t:targets.stream().limit(BloodRules.canalTargets(rank)).toList())if(canals.size()<512)canals.add(new Canal(p,t,origin));if(targets.isEmpty())tell(p,"运河没有找到准星附近的敌人");}
             case BloodRules.WINGS -> {
                 // r262：手动关闭、不强制移动，时长 60 秒
@@ -168,6 +168,8 @@ public final class BloodArts {
         float before=t.getHealth()+t.getAbsorptionAmount();t.invulnerableTime=0;
         boolean previous=bloodDamage;bloodDamage=true;boolean accepted;
         try{AttackTypes.mark(AttackTypes.BLOOD);accepted=CombatSafety.hurt(p,t,new DamageSource(holder,p),amount);}finally{bloodDamage=previous;}
+        // r422：赤血操术的伤害走 CombatSafety 而不是 CombatSettings，所以命中点破坏要自己补
+        if(accepted)SkillDestruction.impact(p,t.position(),1.4+Math.min(1.8,amount*0.02));
         if(accepted&&t.getHealth()+t.getAbsorptionAmount()<before){if(t.getPersistentData().getLong("BloodHitFxAt")<p.level().getGameTime()){t.getPersistentData().putLong("BloodHitFxAt",p.level().getGameTime()+3);fx(p,FX_HIT,t.getBoundingBox().getCenter(),p.getLookAngle(),1,12,t.getId());}BloodDomain.onHit(p,t);return true;}return false;
     }
     public static void pierce(ServerPlayer p,Vec3 start,Vec3 dir,boolean empowered,boolean sure,LivingEntity designated){
@@ -178,6 +180,8 @@ public final class BloodArts {
         targets=new ArrayList<>(targets);targets.sort(Comparator.comparingDouble(t->t.position().distanceToSqr(start)));
         int remaining=sure?1:BloodRules.penetration(empowered);
         for(LivingEntity t:targets){if(remaining--<=0)break;boolean weak=!sure&&BlackFlashMarks.bloodWeakPoint(p,t,start,end);hit(p,t,32,.5f,false,BloodRules.multiplier(empowered,weak)*(sure?BloodRules.domainBase(MaidBridge.body(p).getMaxHealth())/32/(1+rank(p)):1));if(weak)fx(p,FX_HIT,t.getEyePosition().add(dir),dir,3,24,t.getId());}
+        // r422：穿血沿射线清空（受 desblock 与领域/结界保护约束）
+        SkillDestruction.line(p,start,stop,empowered?2.0:1.2);
         fx(p,FX+3,start,end,empowered?2:1,12,sure?2:0);
     }
     /** 翅王血雨的单条伤害：原版穿血的 5%（供 BloodWingsRain 调用）。 */
