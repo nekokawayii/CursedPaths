@@ -59,14 +59,15 @@ void main() {
     if (ringBand > 0.02) {
         vec2 ringUV = clamp(uv - radialUV * (bend * radius * 1.35),
                             1.0 / FrameSize, 1.0 - 1.0 / FrameSize);
-        lensed = mix(lensed, texture(Sampler0, ringUV).rgb * 1.35, ringBand * 0.55);
+        lensed = mix(lensed, texture(Sampler0, ringUV).rgb * 1.35, ringBand * 0.32);
     }
 
     // ---- 双层吸积盘（屏幕空间环带）----
-    // r397 修正：把 y 乘大才是"压扁"成横向椭圆！之前乘 0.62 反而让纵向更长，
-    // 所以盘一直看着是竖的。这里的 1.6 让同一圈 rDisk 在 x 方向更宽、y 方向更窄。
+    // r397：把 y 乘大才是"压扁"成横向椭圆（乘小反而纵向更长）。
+    // r399：压扁系数 1.6 → 2.0，让盘更平；并且**光子环与光晕也改用 rDisk**，
+    // 否则它们仍是正圆，看起来就是"外盘是个圆环"——那正是用户截图里要改掉的部分。
     vec2 diskDelta = delta;
-    diskDelta.y *= 1.6;
+    diskDelta.y *= 2.0;
     float rDisk = length(diskDelta) / radius;
     float angle = atan(diskDelta.y, diskDelta.x);
     float inner = smoothstep(INNER_IN, INNER_IN + 0.10, rDisk)
@@ -78,14 +79,14 @@ void main() {
     float outerTex = bandNoise(angle + 0.9, rDisk, 0.85);
 
     // 内盘更亮更密（冰蓝），外盘偏暗偏暖（橙），中间留一条窄缝让暗核轮廓更清楚。
-    vec3 disk = InnerColor.rgb * inner * (0.55 + 0.95 * innerTex)
-              + OuterColor.rgb * outer * (0.35 + 0.70 * outerTex);
+    vec3 disk = InnerColor.rgb * inner * (0.65 + 1.00 * innerTex)
+              + OuterColor.rgb * outer * (0.42 + 0.78 * outerTex);
 
-    // ---- 光子环与外侧光晕 ----
-    float photonRing = exp(-pow((r - 1.03) * 46.0, 2.0));
-    float innerGlow = exp(-pow((r - 1.22) * 3.4, 2.0)) * 0.30;
-    float outerGlow = exp(-max(0.0, r - 1.8) * 1.35) * 0.16;
-    vec3 halo = InnerColor.rgb * (photonRing * 1.05 + innerGlow)
+    // ---- 光子环与外侧光晕（全部跟着盘的椭圆走）----
+    float photonRing = exp(-pow((rDisk - 1.05) * 34.0, 2.0));
+    float innerGlow = exp(-pow((rDisk - 1.30) * 3.2, 2.0)) * 0.34;
+    float outerGlow = exp(-max(0.0, rDisk - 1.95) * 1.45) * 0.18;
+    vec3 halo = InnerColor.rgb * (photonRing * 1.10 + innerGlow)
               + mix(InnerColor.rgb, OuterColor.rgb, 0.72) * outerGlow;
 
     // ---- 合成：背景先被透镜替换，再叠盘面与光晕 ----
