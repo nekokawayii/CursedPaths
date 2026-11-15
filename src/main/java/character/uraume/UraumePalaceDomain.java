@@ -43,6 +43,14 @@ public final class UraumePalaceDomain {
 
     public static boolean active(ServerPlayer p) { return JOBS.containsKey(p.getUUID()); }
 
+    /** 该方块是不是霜天宫殿自己铺/留存过的那一格（r383：领域方块一律不可被技能破坏）。 */
+    public static boolean changing(ServerLevel level, BlockPos pos) {
+        for (Job job : JOBS.values()) {
+            if (job.level == level && job.old.containsKey(pos)) return true;
+        }
+        return false;
+    }
+
     public static boolean inDomain(net.minecraft.world.entity.Entity e) {
         for (Job job : JOBS.values()) {
             if (e.level() != job.level) continue;

@@ -52,6 +52,12 @@ public final class Mainline {
     public static final int SIMPLE_RADIUS=10,SIMPLE_TICKS=200,BARRIER_RADIUS=15,BARRIER_TICKS=200;
     private record Field(ServerPlayer owner,ServerLevel level,Vec3 center,long end,Map<BlockPos,BlockState> blocks) { }
     private static final Map<UUID,Field> SIMPLE_FIELDS=new HashMap<>(),BARRIERS=new HashMap<>();
+    /** 该方块是不是结界术/简易领域改动过的那一格（r383：领域方块一律不可被技能破坏）。 */
+    public static boolean changing(ServerLevel level,BlockPos pos){
+        for(var map:List.of(BARRIERS,SIMPLE_FIELDS))for(Field f:map.values())
+            if(f.level()==level&&f.blocks().containsKey(pos))return true;
+        return false;
+    }
     private static final Map<UUID,Set<UUID>> LOW_ALLIES=new HashMap<>();
     private static final DustParticleOptions BLUE=new DustParticleOptions(new Vector3f(.12f,.48f,1f),1.3f);
 

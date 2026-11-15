@@ -39,7 +39,7 @@ public final class SkillDestruction {
         for(int i=0;i<=n;i++){Vec3 point=from.lerp(to,i/(double)n);BlockPos c=BlockPos.containing(point);
             for(BlockPos pos:BlockPos.betweenClosed(c.offset(-r,-r,-r),c.offset(r,r,r))){
                 if(Vec3.atCenterOf(pos).distanceToSqr(point)>(radius+0.8)*(radius+0.8)||!visited.add(pos.immutable())||!l.hasChunkAt(pos)||!l.getWorldBorder().isWithinBounds(pos))continue;
-                var state=l.getBlockState(pos);if(state.isAir()||state.getDestroySpeed(l,pos)<0||state.hasBlockEntity()||SoulJourney.protectedBlock(l,pos))continue;
+                var state=l.getBlockState(pos);if(state.isAir()||state.getDestroySpeed(l,pos)<0||state.hasBlockEntity()||SoulJourney.protectedBlock(l,pos)||domainBlock(l,pos))continue;
                 ServerPlayer authority=p instanceof MaidBridge.Actor a?MaidBridge.owner(a):p;if(authority==null||!l.mayInteract(authority,pos))continue;
                 if(MinecraftForge.EVENT_BUS.post(new BlockEvent.BreakEvent(l,pos.immutable(),state,authority))||!ForgeEventFactory.onEntityDestroyBlock(MaidBridge.body(p),pos,state))continue;
                 l.destroyBlock(pos,false,MaidBridge.body(p));
@@ -47,9 +47,15 @@ public final class SkillDestruction {
         }
     }
     /** 掀块和断流也走相同的开关、领地事件与不可破坏方块保护。 */
+    /** r383：领域/结界自己铺过的方块一律不可破坏（用户要求：领域不可破坏）。 */
+    private static boolean domainBlock(ServerLevel l,BlockPos pos){
+        return character.domain.DomainTerrain.changing(l,pos)
+            || character.uraume.UraumePalaceDomain.changing(l,pos)
+            || character.mainline.Mainline.changing(l,pos);
+    }
     private static boolean mayChange(ServerPlayer p,BlockPos pos){
         ServerLevel l=p.serverLevel();if(!enabled(l)||!p.isAlive()||DomainClash.active(p)||!l.hasChunkAt(pos)||!l.getWorldBorder().isWithinBounds(pos))return false;
-        var state=l.getBlockState(pos);if(state.isAir()||state.getDestroySpeed(l,pos)<0||state.hasBlockEntity()||SoulJourney.protectedBlock(l,pos))return false;
+        var state=l.getBlockState(pos);if(state.isAir()||state.getDestroySpeed(l,pos)<0||state.hasBlockEntity()||SoulJourney.protectedBlock(l,pos)||domainBlock(l,pos))return false;
         ServerPlayer authority=p instanceof MaidBridge.Actor a?MaidBridge.owner(a):p;
         return authority!=null&&l.mayInteract(authority,pos)&&!MinecraftForge.EVENT_BUS.post(new BlockEvent.BreakEvent(l,pos,state,authority))&&ForgeEventFactory.onEntityDestroyBlock(MaidBridge.body(p),pos,state);
     }
