@@ -1,5 +1,5 @@
 plugins { id 'java'; id 'net.minecraftforge.gradle' version '[6.0,6.2)' }
-version = '1.8.1-original-textures-r412'
+version = '1.8.1-original-textures-r413'
 group = 'cn.blockforge.generated.nnnnr1201forge2'
 base { archivesName = "jujutsu-kaisen-cursed-paths-forge-1.20.1" }
 // 产物文件名固定为 jujutsu-kaisen-cursed-paths-forge-1.20.1（不带版本号），版本号只保留在 jar 内部的 mods.toml 里。
@@ -14,8 +14,6 @@ minecraft {
             workingDirectory project.file('run-client')
             property 'forge.logging.markers', 'REGISTRIES'
             property 'forge.logging.console.level', 'info'
-            // 自动测试：让客户端自己放黑洞，不用手点
-            property 'dsh.blackhole.autotest', System.getProperty('dsh.blackhole.autotest', '')
             arg '--username'; arg 'Dev'
             mods { cursed { source sourceSets.main } }
         }

@@ -35,7 +35,6 @@ public final class YukiBlackHole {
         int life = Math.max(20, ticks);
         ACTIVE.put(owner.getUUID(), new State(level, level.getGameTime() + life));
         Network.send(level, new Network.Effect(FX, owner.getId(), center, Vec3.ZERO, radius, life, 0));
-        com.mojang.logging.LogUtils.getLogger().info("[黑洞] 触发 {} 半径={} 时长={} @{}", owner.getGameProfile().getName(), radius, life, center);
     }
 
     @SubscribeEvent public static void tick(TickEvent.ServerTickEvent e) {

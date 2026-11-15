@@ -33,7 +33,7 @@ final class SkillBlackHole {
     private static Matrix4f frameView, frameProjection;
     private static Vec3 frameCamera;
     private static float framePartial, worldScale = 4.31f;
-    private static boolean logged, heard;
+    private static boolean heard;
 
     /** 视界半径（格）→ 着色器的 WorldScale（它内部 core 默认 0.58 局部单位）。 */
     static void setRadius(float worldRadius) { worldScale = worldRadius / 0.58f; }
@@ -45,7 +45,6 @@ final class SkillBlackHole {
                 DefaultVertexFormat.POSITION_TEX), s -> {
                     world = s;
                     if (snapshot != null) { snapshot.destroyBuffers(); snapshot = null; }
-                    com.mojang.logging.LogUtils.getLogger().info("[黑洞] skill 世界透镜着色器已就绪");
                 });
         } catch (java.io.IOException | RuntimeException ex) {
             com.mojang.logging.LogUtils.getLogger().warn("[黑洞] skill 世界透镜着色器加载失败", ex);
@@ -194,12 +193,6 @@ final class SkillBlackHole {
             b.vertex(1, 1, 0).uv(1, 1).endVertex();
             b.vertex(-1, 1, 0).uv(0, 1).endVertex();
             BufferUploader.drawWithShader(b.end());
-
-            if (!logged) {
-                logged = true;
-                com.mojang.logging.LogUtils.getLogger().info(
-                    "[黑洞] skill 世界透镜绘制 centerRel=({},{},{}) scale={}", rel.x, rel.y, rel.z, worldScale);
-            }
             return true;
         } catch (RuntimeException ex) {
             if (!heard) {

@@ -45,7 +45,7 @@ public final class YukiBlackHoleClient {
 
     private static ShaderInstance shader;
     private static TextureTarget scene;
-    private static boolean warned, externalNoted, loggedDraw, triedLazy;
+    private static boolean warned, externalNoted, triedLazy;
 
     /**
      * 兜底：如果 {@code RegisterShadersEvent} 没把着色器交上来（实测在 Oculus/Embeddium 环境里遇到过
@@ -60,7 +60,6 @@ public final class YukiBlackHoleClient {
             shader = new ShaderInstance(mc.getResourceManager(),
                 new ResourceLocation("jujutsu_kaisen_cursed_paths", "black_hole"),
                 DefaultVertexFormat.POSITION);
-            com.mojang.logging.LogUtils.getLogger().info("[黑洞] 着色器按需加载成功（事件回调未触发）");
         } catch (Throwable t) {
             warned = true;
             com.mojang.logging.LogUtils.getLogger().warn("[黑洞] 着色器按需加载失败：{}", t.toString());
@@ -73,13 +72,11 @@ public final class YukiBlackHoleClient {
     public static final class Registration {
         @SubscribeEvent public static void shaders(RegisterShadersEvent e) {
             shader = null; warned = false;
-            com.mojang.logging.LogUtils.getLogger().info("[黑洞] 开始注册 black_hole 着色器");
             try {
                 e.registerShader(new ShaderInstance(e.getResourceProvider(),
                     new ResourceLocation("jujutsu_kaisen_cursed_paths", "black_hole"),
                     DefaultVertexFormat.POSITION), s -> {
                         shader = s; warned = false;
-                        com.mojang.logging.LogUtils.getLogger().info("[黑洞] black_hole 着色器已就绪");
                     });
             } catch (java.io.IOException | RuntimeException ex) {
                 warned = true;
@@ -96,13 +93,6 @@ public final class YukiBlackHoleClient {
         HOLES.removeIf(h -> h.owner == e.owner());
         HOLES.add(new Hole(e.owner(), e.position(), Math.max(0.5f, e.size()), tick, until));
         if (HOLES.size() > 2) HOLES.remove(0);
-        com.mojang.logging.LogUtils.getLogger().info("[黑洞] 客户端收到 radius={} life={} shader={}", e.size(), e.life(), shader != null);
-        // 直接在动作栏告诉玩家这一发走的是哪条路径，不用翻日志也能判断"竖着的"是不是兜底粒子。
-        var mc = Minecraft.getInstance();
-        if (mc.player != null) {
-            mc.player.displayClientMessage(net.minecraft.network.chat.Component.literal(
-                shader != null ? "黑洞渲染：着色器" : "黑洞渲染：粒子兜底"), true);
-        }
     }
 
     @SubscribeEvent public static void tick(net.minecraftforge.event.TickEvent.ClientTickEvent e) {
@@ -111,23 +101,12 @@ public final class YukiBlackHoleClient {
         var level = mc.level;
         if (world != level) { clear(); world = level; }
         tick++;
-        // 自动测试：-Ddsh.blackhole.autotest=1 时，每 60 刻在眼前 10 格自动放一个黑洞，
-        // 供 runClient 截屏迭代用（只影响本地这个客户端，不发给服务端）。
-        if (AUTOTEST && level != null && mc.player != null && tick % 60 == 20) {
-            Vec3 eye = mc.player.getEyePosition();
-            Vec3 at = eye.add(mc.player.getLookAngle().scale(10));
-            HOLES.removeIf(h -> h.owner == -1);
-            HOLES.add(new Hole(-1, at, YukiBlackHole.RADIUS, tick, tick + 200));
-            com.mojang.logging.LogUtils.getLogger().info("[黑洞] 自动测试投放 @{}", at);
-        }
         HOLES.removeIf(h -> tick > h.until);
     }
 
-    /** runClient 自动测试开关。 */
-    private static final boolean AUTOTEST = !System.getProperty("dsh.blackhole.autotest", "").isEmpty();
 
     public static void clear() {
-        HOLES.clear(); tick = 0; warned = false; externalNoted = false; loggedDraw = false; world = null;
+        HOLES.clear(); tick = 0; warned = false; externalNoted = false; world = null;
         worldView = worldProjection = null;
         if (scene != null) { scene.destroyBuffers(); scene = null; }
     }
@@ -170,11 +149,6 @@ public final class YukiBlackHoleClient {
         float cy = projected.y / projected.w * 0.5f + 0.5f;
         float screenRadius = Math.abs(worldProjection.m11() * hole.radius / projected.w) * 0.5f;
         if (cx < -1 || cx > 2 || cy < -1 || cy > 2) return;
-        if (!loggedDraw) {
-            loggedDraw = true;
-            com.mojang.logging.LogUtils.getLogger().info("[黑洞] 开始绘制(世界空间) screen=({},{}) r={} alpha={}",
-                cx, cy, screenRadius, fade(hole));
-        }
 
         float alpha = fade(hole);
         if (alpha <= 0.001f) return;
