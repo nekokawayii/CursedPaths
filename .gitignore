@@ -31,3 +31,5 @@ server.properties
 usercache.json
 whitelist.json
 world/
+tools
+scripts
