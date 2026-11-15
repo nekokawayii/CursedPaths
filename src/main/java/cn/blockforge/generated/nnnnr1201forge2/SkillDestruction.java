@@ -19,6 +19,8 @@ public final class SkillDestruction {
     public static final GameRules.Key<GameRules.BooleanValue> RULE=GameRules.register("sukunaDesblock",GameRules.Category.MISC,GameRules.BooleanValue.create(false));
     public static void init(){MinecraftForge.EVENT_BUS.register(SkillDestruction.class);}
     public static boolean enabled(ServerLevel level){return level.getServer().overworld().getGameRules().getBoolean(RULE);}
+    /** r385：开着 desblock 时，弹道/光束不再被地形截断（自己挖过去），避免"只破坏一格就消失"。 */
+    public static boolean pierce(ServerLevel level){return enabled(level);}
     public static void set(net.minecraft.server.MinecraftServer server,boolean on){server.overworld().getGameRules().getRule(RULE).set(on,server);if(!on)visitedNow.clear();}
     public static void line(ServerPlayer p,Vec3 from,Vec3 to,double radius){
         immediate(p,from,to,radius);

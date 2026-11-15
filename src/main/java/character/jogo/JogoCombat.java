@@ -271,6 +271,8 @@ public final class JogoCombat {
         Network.send(level,new Network.Effect(JogoFx.METEOR_IMPACT,0,at,Vec3.ZERO,5f,14,0));
         level.playSound(null,BlockPos.containing(at),SoundEvents.GENERIC_EXPLODE,SoundSource.PLAYERS,1.4f,0.7f);
         ServerPlayer caster=MaidBridge.find(level,owner);if(caster==null)return;
+        // r385：陨石落点按爆炸半径砸坑
+        cn.blockforge.generated.nnnnr1201forge2.SkillDestruction.sphere(caster,at,3.0);
         for(var target:level.getEntitiesOfClass(LivingEntity.class,new net.minecraft.world.phys.AABB(at,at).inflate(4.5),t->CombatSettings.canHit(caster,t))){
             AttackTypes.mark(AttackTypes.MAGIC);
             try{CombatSettings.hurt(caster,target,caster.damageSources().indirectMagic(caster,caster),damage);}
@@ -284,6 +286,10 @@ public final class JogoCombat {
             int ticks=pillar.ticks()+1;
             ServerLevel level=pillar.level();
             Vec3 next=ticks<=8?pillar.pos().add(pillar.dir().scale(1.6)):pillar.pos();
+            if(ticks<=8){
+                ServerPlayer mover=MaidBridge.find(level,pillar.owner());
+                if(mover!=null)cn.blockforge.generated.nnnnr1201forge2.SkillDestruction.line(mover,pillar.pos(),next,1.4);
+            }
             if(ticks%2==0)Network.send(level,new Network.Effect(JogoFx.PILLAR,0,next,pillar.dir(),1,6,0));
             if(ticks%10==0){
                 pillar.hit().clear();   // 停留期允许重复灼烧
@@ -302,6 +308,8 @@ public final class JogoCombat {
         }
     }
     private static boolean pillarFlies(Vec3 at,Vec3 dir,ServerLevel level) {
+        // r385：开 desblock 时岩浆柱不再被地形拦下（沿途自己把方块清掉）
+        if(cn.blockforge.generated.nnnnr1201forge2.SkillDestruction.enabled(level))return at.y>level.getMinBuildHeight()+1;
         return level.getBlockState(BlockPos.containing(at)).isAir()&&at.y>level.getMinBuildHeight()+1;
     }
     /** 火焰喷发：每 2 刻向前推一波扇形火舌，持续 15 秒。 */
@@ -321,6 +329,8 @@ public final class JogoCombat {
                 Vec3 dir=fan.dir().scale(Math.cos(angle)).add(side.scale(Math.sin(angle))).normalize();
                 Vec3 at=fan.origin().add(dir.scale(reach));
                 Network.send(level,new Network.Effect(JogoFx.PILLAR,0,at,dir,1,6,0));
+                // r385：扇形火舌经过的地方按火球粗细清空
+                cn.blockforge.generated.nnnnr1201forge2.SkillDestruction.sphere(owner,at,1.8);
                 for(var target:level.getEntitiesOfClass(LivingEntity.class,
                         new net.minecraft.world.phys.AABB(at,at).inflate(2.2),t->CombatSettings.canHit(owner,t)&&hit.add(t.getUUID()))){
                     AttackTypes.mark(AttackTypes.MAGIC);
@@ -340,6 +350,8 @@ public final class JogoCombat {
             if(owner==null||c.traveled()>=40){it.remove();continue;}
             Vec3 next=c.pos().add(c.dir().scale(2.5));
             Network.send(level,new Network.Effect(JogoFx.PILLAR,0,next,c.dir(),2,8,0));
+            // r385：火山喷发沿途按自身粗细清空，不再只破坏一格
+            cn.blockforge.generated.nnnnr1201forge2.SkillDestruction.line(owner,c.pos(),next,2.0);
             for(var target:level.getEntitiesOfClass(LivingEntity.class,
                     new net.minecraft.world.phys.AABB(c.pos(),next).inflate(2.2),t->CombatSettings.canHit(owner,t))){
                 AttackTypes.mark(AttackTypes.MAGIC);

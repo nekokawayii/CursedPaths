@@ -133,11 +133,12 @@ public final class Uraume {
         for(Pillar q:List.copyOf(pillars)){
             if(!valid(q.owner,q.level)||q.age>=50){pillars.remove(q);continue;}if(q.level.getGameTime()<q.born+q.delay)continue;
             if(q.age%5==0)Network.send(q.level,new Network.Effect(BranchRules.FX_ICE,q.owner.getId(),q.position,q.velocity,1,6,0));
-            Vec3 next=q.position.add(q.velocity);var block=q.level.clip(new ClipContext(q.position,next,ClipContext.Block.COLLIDER,ClipContext.Fluid.NONE,q.owner));
-            if(block.getType()!=HitResult.Type.MISS)next=block.getLocation();LivingEntity victim=null;double nearest=Double.MAX_VALUE;
+            Vec3 next=q.position.add(q.velocity);BlockHitResult block=null;
+            // r385：开 desblock 时冰柱不再被地形截断
+            if(!SkillDestruction.enabled(q.level)){block=q.level.clip(new ClipContext(q.position,next,ClipContext.Block.COLLIDER,ClipContext.Fluid.NONE,q.owner));if(block.getType()!=HitResult.Type.MISS)next=block.getLocation();}LivingEntity victim=null;double nearest=Double.MAX_VALUE;
             for(LivingEntity t:q.level.getEntitiesOfClass(LivingEntity.class,new AABB(q.position,next).inflate(0.7),t->CombatSettings.canHit(q.owner,t)&&!DomainClash.active(t))){var box=t.getBoundingBox().inflate(0.45);Vec3 hit=box.contains(q.position)?q.position:box.clip(q.position,next).orElse(null);if(hit!=null&&hit.distanceToSqr(q.position)<nearest){nearest=hit.distanceToSqr(q.position);victim=t;}}
             SkillDestruction.line(q.owner,q.position,next,0.6);
-            if(victim!=null){hurt(q.owner,victim,4);pillars.remove(q);}else if(block.getType()!=HitResult.Type.MISS)pillars.remove(q);else {q.position=next;q.age++;}
+            if(victim!=null){hurt(q.owner,victim,4);pillars.remove(q);}else if(block!=null)pillars.remove(q);else {q.position=next;q.age++;}
         }
     }
     public static void protect(ServerPlayer owner,UUID target){Frozen f=frozen.get(target);if(f!=null&&f.owner==owner){frozen.remove(target,f);release(f);}}

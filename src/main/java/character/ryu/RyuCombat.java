@@ -142,7 +142,7 @@ public final class RyuCombat {
         // 领域内"招式必中"：不再被方块截断，直接打满
         boolean pierce = owner != null && RyuDomain.active(owner);
         Vec3 end = origin.add(dir.scale(length));
-        if (!pierce) {
+        if (!pierce && !cn.blockforge.generated.nnnnr1201forge2.SkillDestruction.enabled(level)) {
             var blockHit = level.clip(new ClipContext(origin, end, ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, caster));
             if (blockHit.getType() != HitResult.Type.MISS) end = blockHit.getLocation();
         }
