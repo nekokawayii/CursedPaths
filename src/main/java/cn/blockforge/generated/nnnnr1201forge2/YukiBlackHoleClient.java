@@ -138,6 +138,7 @@ public final class YukiBlackHoleClient {
         if (e.getStage() == RenderLevelStageEvent.Stage.AFTER_PARTICLES) {
             worldView = new Matrix4f(e.getPoseStack().last().pose());
             worldProjection = new Matrix4f(e.getProjectionMatrix());
+            SkillBlackHole.capture(e);   // r412：skill 世界透镜要这一帧的相机量
             return;
         }
         if (e.getStage() != RenderLevelStageEvent.Stage.AFTER_LEVEL) return;
@@ -151,6 +152,10 @@ public final class YukiBlackHoleClient {
         Hole hole = HOLES.stream().filter(h -> h.pos.distanceToSqr(camera) < 128 * 128)
             .min(Comparator.comparingDouble(h -> h.pos.distanceToSqr(camera))).orElse(null);
         if (hole == null) return;
+
+        // r412：优先走 skill 的 world.fsh（照搬），失败/不可用再落到下面自写的世界空间版
+        SkillBlackHole.setRadius(hole.radius);
+        if (SkillBlackHole.render(hole.pos, fade(hole), (tick + e.getPartialTick()) / 20f)) return;
 
         Matrix4f vp = new Matrix4f(worldProjection).mul(worldView);
         Vec3 rel = hole.pos.subtract(camera);
