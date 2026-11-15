@@ -135,6 +135,11 @@ public final class YukiBlackHoleClient {
 
         Matrix4f vp = new Matrix4f(worldProjection).mul(worldView);
         Vec3 rel = hole.pos.subtract(camera);
+        // 世界遮挡：被墙/地形挡住时不画（否则它会像贴在镜头上的一层贴纸）。
+        var blockHit = mc.level.clip(new net.minecraft.world.level.ClipContext(camera, hole.pos,
+            net.minecraft.world.level.ClipContext.Block.COLLIDER,
+            net.minecraft.world.level.ClipContext.Fluid.NONE, mc.player));
+        if (blockHit.getType() == net.minecraft.world.phys.HitResult.Type.BLOCK) return;
         Vector4f projected = new Vector4f((float) rel.x, (float) rel.y, (float) rel.z, 1).mul(vp);
         if (projected.w <= 0.08f) return;   // 黑洞在镜头后面
         float cx = projected.x / projected.w * 0.5f + 0.5f;

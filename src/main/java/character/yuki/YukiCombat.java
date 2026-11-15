@@ -191,8 +191,16 @@ public final class YukiCombat {
         // r390：真正的黑洞后期（冰蓝视界 + 冰蓝内盘 + 橙色外盘 + 背景透镜），
         // 由 YukiBlackHole / YukiBlackHoleClient 做屏幕空间渲染；下面的粒子只作着色器不可用时的兜底。
         if (p.level() instanceof ServerLevel level) {
-            cn.blockforge.generated.nnnnr1201forge2.YukiBlackHole.open(level, p,
-                p.getEyePosition().add(p.getLookAngle().scale(cn.blockforge.generated.nnnnr1201forge2.YukiBlackHole.DISTANCE)),
+            // r394：落在**准星指的位置**（最远 24 格，撞墙就贴墙前 1.5 格），而不是永远悬在玩家脸前。
+            var eye = p.getEyePosition();
+            var aim = eye.add(p.getLookAngle().scale(24));
+            var hit = level.clip(new net.minecraft.world.level.ClipContext(eye, aim,
+                net.minecraft.world.level.ClipContext.Block.COLLIDER,
+                net.minecraft.world.level.ClipContext.Fluid.NONE, p));
+            Vec3 center = hit.getType() == net.minecraft.world.phys.HitResult.Type.MISS
+                ? eye.add(p.getLookAngle().scale(12))
+                : hit.getLocation().subtract(p.getLookAngle().scale(1.5));
+            cn.blockforge.generated.nnnnr1201forge2.YukiBlackHole.open(level, p, center,
                 cn.blockforge.generated.nnnnr1201forge2.YukiBlackHole.RADIUS,
                 cn.blockforge.generated.nnnnr1201forge2.YukiBlackHole.LIFETIME);
         }

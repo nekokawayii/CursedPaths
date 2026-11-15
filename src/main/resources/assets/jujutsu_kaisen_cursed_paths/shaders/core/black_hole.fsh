@@ -45,21 +45,34 @@ void main() {
         return;
     }
 
-    // ---- 透镜：径向外推背景，越近视界弯得越狠 ----
-    float bend = Lens.w * 0.075 / (r * r + 0.05);
-    vec2 warped = clamp(uv - delta / vec2(aspect, 1.0) * bend,
+    // ---- 透镜：径向外推背景（r394 加强，肉眼可见的引力透镜）----
+    // 薄透镜近似：位移 ∝ 1/r²，越靠近视界弯得越狠；r≈1 处位移约 0.16 个屏幕高度。
+    float bend = clamp(Lens.w * 0.90 / (r * r + 0.03), 0.0, 2.2);
+    vec2 disp = delta * bend;
+    vec2 warped = clamp(uv - disp / vec2(aspect, 1.0),
                         1.0 / FrameSize, 1.0 - 1.0 / FrameSize);
     vec3 lensed = texture(Sampler0, warped).rgb;
+    // 爱因斯坦环：视界外侧一圈被强烈压缩的背景，单独取一次并提亮，
+    // 这是"引力透镜"最直观的特征（不靠盘面也看得出来）。
+    float ringBand = exp(-pow((r - 1.12) * 7.5, 2.0));
+    if (ringBand > 0.02) {
+        vec2 ringUV = clamp(uv - delta * (bend * 2.1) / vec2(aspect, 1.0),
+                            1.0 / FrameSize, 1.0 - 1.0 / FrameSize);
+        lensed = mix(lensed, texture(Sampler0, ringUV).rgb * 1.35, ringBand * 0.55);
+    }
 
-    // ---- 双层吸积盘（屏幕空间环带，可以一直正对镜头）----
-    float angle = atan(delta.y, delta.x);
-    float inner = smoothstep(INNER_IN, INNER_IN + 0.10, r)
-                * (1.0 - smoothstep(INNER_OUT - 0.14, INNER_OUT, r));
-    float outer = smoothstep(OUTER_IN, OUTER_IN + 0.16, r)
-                * (1.0 - smoothstep(OUTER_OUT - 0.30, OUTER_OUT, r));
+    // ---- 双层吸积盘（屏幕空间环带，压扁 0.62 做出"侧看的盘"而不是正对的圆）----
+    vec2 diskDelta = delta;
+    diskDelta.y *= 0.62;
+    float rDisk = length(diskDelta) / radius;
+    float angle = atan(diskDelta.y, diskDelta.x);
+    float inner = smoothstep(INNER_IN, INNER_IN + 0.10, rDisk)
+                * (1.0 - smoothstep(INNER_OUT - 0.14, INNER_OUT, rDisk));
+    float outer = smoothstep(OUTER_IN, OUTER_IN + 0.16, rDisk)
+                * (1.0 - smoothstep(OUTER_OUT - 0.30, OUTER_OUT, rDisk));
 
-    float innerTex = bandNoise(angle, r, 2.1);
-    float outerTex = bandNoise(angle + 0.9, r, 0.85);
+    float innerTex = bandNoise(angle, rDisk, 2.1);
+    float outerTex = bandNoise(angle + 0.9, rDisk, 0.85);
 
     // 内盘更亮更密（冰蓝），外盘偏暗偏暖（橙），中间留一条窄缝让暗核轮廓更清楚。
     vec3 disk = InnerColor.rgb * inner * (0.55 + 0.95 * innerTex)
