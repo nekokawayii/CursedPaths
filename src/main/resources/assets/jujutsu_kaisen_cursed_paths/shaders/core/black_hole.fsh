@@ -14,9 +14,9 @@ in vec2 uv;
 out vec4 fragColor;
 
 const float INNER_IN = 1.02;
-const float INNER_OUT = 1.58;
-const float OUTER_IN = 1.74;
-const float OUTER_OUT = 2.62;
+const float INNER_OUT = 1.92;
+const float OUTER_IN = 2.12;
+const float OUTER_OUT = 3.35;
 
 float bandNoise(float angle, float radius, float speed) {
     // 角向条纹 + 径向细纹，整体缓慢旋转；不用贴图，避免依赖粒子素材。

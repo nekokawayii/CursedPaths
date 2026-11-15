@@ -151,8 +151,8 @@ public final class YukiBlackHoleClient {
         float cx = projected.x / projected.w * 0.5f + 0.5f;
         float cy = projected.y / projected.w * 0.5f + 0.5f;
         float screenRadius = Math.abs(worldProjection.m11() * hole.radius / projected.w) * 0.5f;
-        // 上限 0.35：外盘是 2.62 倍半径，再大就会把橙盘裁到屏幕外
-        screenRadius = Math.max(0.02f, Math.min(0.35f, screenRadius));
+        // 上限 0.42：外盘扩到 3.35 倍半径后，再大会把橙盘裁出屏幕
+        screenRadius = Math.max(0.02f, Math.min(0.42f, screenRadius));
         if (cx < -1 || cx > 2 || cy < -1 || cy > 2) return;
         if (!loggedDraw) {
             loggedDraw = true;
