@@ -50,7 +50,7 @@ void main() {
     // 导致位移偏竖直、看起来像"竖向拉伸"。这里先取径向单位再回 uv 空间，保证是圆形径向。
     vec2 radial = normalize(delta + vec2(1e-5));
     vec2 radialUV = vec2(radial.x / aspect, radial.y);
-    float bend = clamp(Lens.w * 0.90 / (r * r + 0.03), 0.0, 2.2);
+    float bend = clamp(Lens.w * 4.50 / (r * r + 0.03), 0.0, 6.0);
     vec2 warped = clamp(uv - radialUV * (bend * radius * 0.55),
                         1.0 / FrameSize, 1.0 - 1.0 / FrameSize);
     vec3 lensed = texture(Sampler0, warped).rgb;
@@ -62,9 +62,11 @@ void main() {
         lensed = mix(lensed, texture(Sampler0, ringUV).rgb * 1.35, ringBand * 0.55);
     }
 
-    // ---- 双层吸积盘（屏幕空间环带，压扁 0.62 做出"侧看的盘"而不是正对的圆）----
+    // ---- 双层吸积盘（屏幕空间环带）----
+    // r397 修正：把 y 乘大才是"压扁"成横向椭圆！之前乘 0.62 反而让纵向更长，
+    // 所以盘一直看着是竖的。这里的 1.6 让同一圈 rDisk 在 x 方向更宽、y 方向更窄。
     vec2 diskDelta = delta;
-    diskDelta.y *= 0.62;
+    diskDelta.y *= 1.6;
     float rDisk = length(diskDelta) / radius;
     float angle = atan(diskDelta.y, diskDelta.x);
     float inner = smoothstep(INNER_IN, INNER_IN + 0.10, rDisk)
