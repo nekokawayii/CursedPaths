@@ -97,6 +97,12 @@ public final class YukiBlackHoleClient {
         HOLES.add(new Hole(e.owner(), e.position(), Math.max(0.5f, e.size()), tick, until));
         if (HOLES.size() > 2) HOLES.remove(0);
         com.mojang.logging.LogUtils.getLogger().info("[黑洞] 客户端收到 radius={} life={} shader={}", e.size(), e.life(), shader != null);
+        // 直接在动作栏告诉玩家这一发走的是哪条路径，不用翻日志也能判断"竖着的"是不是兜底粒子。
+        var mc = Minecraft.getInstance();
+        if (mc.player != null) {
+            mc.player.displayClientMessage(net.minecraft.network.chat.Component.literal(
+                shader != null ? "黑洞渲染：着色器" : "黑洞渲染：粒子兜底"), true);
+        }
     }
 
     @SubscribeEvent public static void tick(net.minecraftforge.event.TickEvent.ClientTickEvent e) {

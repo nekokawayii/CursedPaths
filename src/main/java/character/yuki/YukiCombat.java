@@ -217,13 +217,27 @@ public final class YukiCombat {
             cn.blockforge.generated.nnnnr1201forge2.CombatSettings.hurt(p,e,p.damageSources().indirectMagic(p,p),damage);
         }
         if (p.level() instanceof ServerLevel level) {
-            for (int i = 0; i < 160; i++) {
-                double a = i * Math.PI / 40, r = 10 * (1 - i / 180.0);
-                level.sendParticles(ParticleTypes.PORTAL,
-                    center.x + Math.cos(a) * r * 2, center.y + 0.3 + (i % 15) * 0.4, center.z + Math.sin(a) * r * 2,
-                    2, 0.1, 0.1, 0.1, 0.06);
+            // r396：兜底粒子原来是一条**竖直**螺旋（y 随 i 升高），着色器没生效时看起来就是"竖着的黑洞"。
+            // 改成水平圆盘：半径逐步扩大、y 只有 ±0.12 的起伏，冰蓝 + 橙两层。
+            var eye = p.getEyePosition();
+            var aim = eye.add(p.getLookAngle().scale(24));
+            var hit = level.clip(new net.minecraft.world.level.ClipContext(eye, aim,
+                net.minecraft.world.level.ClipContext.Block.COLLIDER,
+                net.minecraft.world.level.ClipContext.Fluid.NONE, p));
+            Vec3 vis = hit.getType() == net.minecraft.world.phys.HitResult.Type.MISS
+                ? eye.add(p.getLookAngle().scale(12))
+                : hit.getLocation().subtract(p.getLookAngle().scale(1.5));
+            var blue = new net.minecraft.core.particles.DustParticleOptions(new org.joml.Vector3f(0.42f, 0.86f, 1f), 1.6f);
+            var orange = new net.minecraft.core.particles.DustParticleOptions(new org.joml.Vector3f(1f, 0.52f, 0.14f), 1.9f);
+            for (int i = 0; i < 240; i++) {
+                double a = i * Math.PI / 30, t = i / 240.0;
+                double r = 0.8 + 4.6 * t;
+                var type = (t < 0.45 || i % 4 == 0) ? blue : orange;
+                level.sendParticles(type,
+                    vis.x + Math.cos(a) * r, vis.y + Math.sin(a * 0.5) * 0.12, vis.z + Math.sin(a) * r,
+                    1, 0, 0, 0, 0);
             }
-            level.sendParticles(ParticleTypes.EXPLOSION_EMITTER, center.x, center.y + 1, center.z, 1, 0, 0, 0, 0);
+            level.sendParticles(ParticleTypes.SQUID_INK, vis.x, vis.y, vis.z, 24, 0.35, 0.10, 0.35, 0.01);
             level.playSound(null, p.blockPosition(), SoundEvents.END_PORTAL_SPAWN, SoundSource.PLAYERS, 2f, 0.4f);
         }
     }
