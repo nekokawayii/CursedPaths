@@ -45,18 +45,19 @@ void main() {
         return;
     }
 
-    // ---- 透镜：径向外推背景（r394 加强，肉眼可见的引力透镜）----
-    // 薄透镜近似：位移 ∝ 1/r²，越靠近视界弯得越狠；r≈1 处位移约 0.16 个屏幕高度。
+    // ---- 透镜：径向外推背景（r395：修正方向，之前按分量除 aspect 会把位移拉成竖的）----
+    // 屏幕径向单位向量在 uv 空间要 x/aspect；直接乘 delta 再除 aspect 会把 x 除两次，
+    // 导致位移偏竖直、看起来像"竖向拉伸"。这里先取径向单位再回 uv 空间，保证是圆形径向。
+    vec2 radial = normalize(delta + vec2(1e-5));
+    vec2 radialUV = vec2(radial.x / aspect, radial.y);
     float bend = clamp(Lens.w * 0.90 / (r * r + 0.03), 0.0, 2.2);
-    vec2 disp = delta * bend;
-    vec2 warped = clamp(uv - disp / vec2(aspect, 1.0),
+    vec2 warped = clamp(uv - radialUV * (bend * radius * 0.55),
                         1.0 / FrameSize, 1.0 - 1.0 / FrameSize);
     vec3 lensed = texture(Sampler0, warped).rgb;
-    // 爱因斯坦环：视界外侧一圈被强烈压缩的背景，单独取一次并提亮，
-    // 这是"引力透镜"最直观的特征（不靠盘面也看得出来）。
+    // 爱因斯坦环：视界外侧一圈被强烈压缩的背景，单独取一次并提亮。
     float ringBand = exp(-pow((r - 1.12) * 7.5, 2.0));
     if (ringBand > 0.02) {
-        vec2 ringUV = clamp(uv - delta * (bend * 2.1) / vec2(aspect, 1.0),
+        vec2 ringUV = clamp(uv - radialUV * (bend * radius * 1.35),
                             1.0 / FrameSize, 1.0 - 1.0 / FrameSize);
         lensed = mix(lensed, texture(Sampler0, ringUV).rgb * 1.35, ringBand * 0.55);
     }
