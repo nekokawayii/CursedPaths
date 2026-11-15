@@ -61,6 +61,7 @@ public final class BloodExpansion {
         Vec3 next=s.at.add(s.direction.scale(s.meteor?1.3:2.6));if(!s.level.hasChunkAt(BlockPos.containing(next))){shots.remove(s);continue;}var wall=s.level.clip(new ClipContext(s.at,next,ClipContext.Block.COLLIDER,ClipContext.Fluid.NONE,MaidBridge.body(s.p)));boolean blocked=wall.getType()!=HitResult.Type.MISS;if(blocked)next=wall.getLocation();Vec3 end=next;
         var targets=s.level.getEntitiesOfClass(LivingEntity.class,new AABB(s.at,next).inflate(s.meteor?.5:.12),t->CombatSafety.canAffect(s.p,t)&&t.getBoundingBox().inflate(s.meteor?.4:.10).clip(s.at,end).isPresent());targets.sort(Comparator.comparingDouble(t->t.distanceToSqr(s.at)));
         BloodArts.fx(s.p,s.meteor?FX_METEOR:FX_NEEDLE,s.at,next,1,s.meteor?5:4,s.age);
+        if(s.meteor&&(wall!=null||!targets.isEmpty()))cn.blockforge.generated.nnnnr1201forge2.SkillDestruction.impact(s.p,next,2.2);
         if(!targets.isEmpty()){LivingEntity t=targets.get(0);int hits=s.volley.hits.getOrDefault(t.getUUID(),0);s.volley.hits.put(t.getUUID(),hits+1);if(BloodArts.hit(s.p,t,(s.meteor?16:2.4f)*(s.meteor?1:BloodRules.needleFalloff(hits)),s.meteor?0:1,s.meteor)){if(s.meteor)BloodArts.fx(s.p,BloodArts.FX+6,t.getBoundingBox().getCenter(),s.direction,1,14,2);else BloodArts.dot(s.p,t,40,true);}shots.remove(s);}else if(blocked)shots.remove(s);else s.at=next;
     }}
     private static void tickTraps(){for(Trap t:List.copyOf(traps)){
@@ -68,7 +69,7 @@ public final class BloodExpansion {
         if(now%25==0)BloodArts.fx(t.p,FX_TRAP,t.at,Vec3.ZERO,1,27,0);
         var touching=enemies(t.p,t.at.add(0,.65,0),1.5);Set<UUID> present=new HashSet<>();boolean trigger=false;
         for(LivingEntity e:touching){if(Math.abs(e.getY()-t.at.y)>1.5)continue;present.add(e.getUUID());int age=t.dwell.merge(e.getUUID(),1,Integer::sum);if(age==1)BloodArts.fx(t.p,FX_TRAP,t.at,Vec3.ZERO,1,40,1);if(age>=BloodRules.TRAP_DWELL)trigger=true;}
-        t.dwell.keySet().retainAll(present);if(!trigger)continue;traps.remove(t);int rank=BloodArts.rank(t.p);BloodArts.fx(t.p,BloodArts.FX+8,t.at.add(0,.2,0),Vec3.ZERO,1,28,96+rank*16);
+        t.dwell.keySet().retainAll(present);if(!trigger)continue;traps.remove(t);int rank=BloodArts.rank(t.p);cn.blockforge.generated.nnnnr1201forge2.SkillDestruction.impact(t.p,t.at,4.0+rank);BloodArts.fx(t.p,BloodArts.FX+8,t.at.add(0,.2,0),Vec3.ZERO,1,28,96+rank*16);
         for(int i=0;i<8+rank*4;i++){double angle=i*Math.PI*2/(8+rank*4);BloodArts.fx(t.p,BloodArts.FX+12,t.at.add(Math.cos(angle)*2,0,Math.sin(angle)*2),Vec3.ZERO,1,22,0);}
         for(LivingEntity e:enemies(t.p,t.at,4+rank))if(visible(t.p,t.at.add(0,.3,0),e)&&BloodArts.hit(t.p,e,38,.5f,false))CombatSafety.push(t.p,e,new Vec3(0,.65,0));
     }}

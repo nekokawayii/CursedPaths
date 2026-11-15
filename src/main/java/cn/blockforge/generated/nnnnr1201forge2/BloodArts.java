@@ -148,6 +148,26 @@ public final class BloodArts {
             case BloodRules.SENBON -> {s.blade=0;BloodExpansion.senbon(p,origin,dir);}
             default -> {}
         }
+        // r423：所有赤血术式都按各自形态破坏方块（走 SkillDestruction，自动继承 desblock 开关与领域/结界保护）
+        carve(p,skill,origin,dir,floor,rank,empowered);
+    }
+    /** 每招的破坏形态：line=沿射线清一条，impact=以点为中心清一圈。 */
+    private static void carve(ServerPlayer p,int skill,Vec3 origin,Vec3 dir,Vec3 floor,int rank,boolean empowered){
+        double boost=empowered?1.6:1.0;
+        switch(skill){
+            case BloodRules.BIND -> SkillDestruction.impact(p,origin,2.5*boost);
+            case BloodRules.RINGS -> SkillDestruction.line(p,origin,origin.add(dir.scale(12+rank*2)),1.2*boost);
+            case BloodRules.PIERCE -> {} // 由 pierce() 自己沿射线清
+            case BloodRules.METEOR -> SkillDestruction.impact(p,origin,2.0*boost);
+            case BloodRules.NOVA -> {} // 已在上方按 3+0.6*章节 清
+            case BloodRules.CANAL -> SkillDestruction.impact(p,origin,2.2*boost);
+            case BloodRules.MIST -> SkillDestruction.impact(p,floor,6.0+rank*0.8);
+            case BloodRules.THORNS -> SkillDestruction.line(p,floor,floor.add(new Vec3(dir.x,0,dir.z).normalize().scale(10+rank*1.5)),1.4*boost);
+            case BloodRules.OCEAN -> SkillDestruction.impact(p,floor,8.0+rank*0.8);
+            case BloodRules.TRAP -> SkillDestruction.line(p,origin,origin.add(dir.scale(24)),1.3*boost);
+            case BloodRules.SENBON -> SkillDestruction.impact(p,origin,2.0*boost);
+            default -> {}
+        }
     }
     public static void fx(ServerPlayer p,int kind,Vec3 at,Vec3 direction,float size,int life,long seed){Network.CHANNEL.send(net.minecraftforge.network.PacketDistributor.NEAR.with(()->new net.minecraftforge.network.PacketDistributor.TargetPoint(at.x,at.y,at.z,192,p.level().dimension())),new Network.Effect(kind,p.getId(),at,direction,size,life,seed));}
     private static void pose(ServerPlayer p,int skill,int ticks){Network.send(p.serverLevel(),new Network.Effect(70,p.getId(),p.position(),p.getLookAngle(),skill,ticks,0));}
