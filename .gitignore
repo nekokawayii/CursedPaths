@@ -15,3 +15,19 @@ tools/__pycache__/
 
 # 本地记忆库与会话记录（私有数据，不入库）
 .dsh-meow/
+
+# --- dev run leftovers (2026-11-15, never commit) ---
+run-client/
+run-client.log
+runclient.log
+client-*.log
+server-*.log
+crash-reports/
+config/
+ops.json
+banned-ips.json
+banned-players.json
+server.properties
+usercache.json
+whitelist.json
+world/
