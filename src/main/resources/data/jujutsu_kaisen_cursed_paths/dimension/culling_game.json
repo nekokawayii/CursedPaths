@@ -11,6 +11,10 @@
         {
           "height": 1,
           "block": "minecraft:bedrock"
+        },
+        {
+          "height": 60,
+          "block": "minecraft:stone"
         }
       ]
     }

@@ -45,7 +45,7 @@ public final class CullingSpawns {
         boolean allInRoom = level.players().stream()
             .allMatch(p -> CullingGate.inRoomArea(p.blockPosition()));
         if (allInRoom) return;
-        List<Mob> all = level.getEntitiesOfClass(Mob.class, new AABB(-256, 0, -256, 256, 512, 256),
+        List<Mob> all = level.getEntitiesOfClass(Mob.class, new AABB(-cn.blockforge.generated.nnnnr1201forge2.CullingMap.HALF, 0, -cn.blockforge.generated.nnnnr1201forge2.CullingMap.HALF, cn.blockforge.generated.nnnnr1201forge2.CullingMap.HALF, 512, cn.blockforge.generated.nnnnr1201forge2.CullingMap.HALF),
             m -> m.isAlive() && m.getPersistentData().getBoolean("CullingEnemy"));
         int sukuna = 0, sorcerers = 0, curses = 0, toji = 0;
         for (Mob m : all) {
@@ -99,7 +99,7 @@ public final class CullingSpawns {
 
     /** 刷一只 Boss 级参赛者，血量与普通泳者完全相同。 */
     private static void spawnBoss(ServerLevel level, int wave) {
-        for (Mob m : level.getEntitiesOfClass(Mob.class, new AABB(-256, 0, -256, 256, 512, 256),
+        for (Mob m : level.getEntitiesOfClass(Mob.class, new AABB(-cn.blockforge.generated.nnnnr1201forge2.CullingMap.HALF, 0, -cn.blockforge.generated.nnnnr1201forge2.CullingMap.HALF, cn.blockforge.generated.nnnnr1201forge2.CullingMap.HALF, 512, cn.blockforge.generated.nnnnr1201forge2.CullingMap.HALF),
             m -> m.isAlive() && m.getPersistentData().getBoolean("CullingBoss"))) return;
         if (level.players().isEmpty()) return;
         ServerPlayer anchor = anchor(level);
@@ -168,7 +168,7 @@ public final class CullingSpawns {
 
     /** 刷一只死灭洄游专用的羂索（只会召唤强化原版生物）。 */
     private static void spawnGeto(ServerLevel level, int wave) {
-        for (Mob m : level.getEntitiesOfClass(Mob.class, new AABB(-256, 0, -256, 256, 512, 256),
+        for (Mob m : level.getEntitiesOfClass(Mob.class, new AABB(-cn.blockforge.generated.nnnnr1201forge2.CullingMap.HALF, 0, -cn.blockforge.generated.nnnnr1201forge2.CullingMap.HALF, cn.blockforge.generated.nnnnr1201forge2.CullingMap.HALF, 512, cn.blockforge.generated.nnnnr1201forge2.CullingMap.HALF),
             m -> m.isAlive() && m.getPersistentData().getBoolean("CullingGeto"))) return;
         if (level.players().isEmpty()) return;
         ServerPlayer anchor = anchor(level);
@@ -279,7 +279,7 @@ public final class CullingSpawns {
         if (server.getTickCount() % 20 != 0) return;
         ServerLevel level = server.getLevel(CullingGame.DIM);
         if (level == null) return;
-        for (Mob mob : level.getEntitiesOfClass(Mob.class, new AABB(-256, 0, -256, 256, 512, 256),
+        for (Mob mob : level.getEntitiesOfClass(Mob.class, new AABB(-cn.blockforge.generated.nnnnr1201forge2.CullingMap.HALF, 0, -cn.blockforge.generated.nnnnr1201forge2.CullingMap.HALF, cn.blockforge.generated.nnnnr1201forge2.CullingMap.HALF, 512, cn.blockforge.generated.nnnnr1201forge2.CullingMap.HALF),
             m -> m.isAlive() && m.getPersistentData().getBoolean("CullingEnemy"))) {
             LivingEntity best = nearestPrey(level, mob, 48);
             if (best != null && mob.getTarget() != best) mob.setTarget(best);
@@ -421,7 +421,7 @@ public final class CullingSpawns {
         }
         level.playSound(null, mob.blockPosition(), net.minecraft.sounds.SoundEvents.BEACON_ACTIVATE,
             net.minecraft.sounds.SoundSource.HOSTILE, 1.4f, .8f);
-        for (Mob m : level.getEntitiesOfClass(Mob.class, new AABB(-256, 0, -256, 256, 512, 256),
+        for (Mob m : level.getEntitiesOfClass(Mob.class, new AABB(-cn.blockforge.generated.nnnnr1201forge2.CullingMap.HALF, 0, -cn.blockforge.generated.nnnnr1201forge2.CullingMap.HALF, cn.blockforge.generated.nnnnr1201forge2.CullingMap.HALF, 512, cn.blockforge.generated.nnnnr1201forge2.CullingMap.HALF),
             m -> m.isAlive() && m.getPersistentData().getBoolean("CullingEnemy"))) applyNpcRuleMods(m);
     }
 

@@ -52,9 +52,9 @@ public final class CullingGame {
     }
     @SubscribeEvent public static void tick(TickEvent.PlayerTickEvent e){
         if(e.phase!=TickEvent.Phase.END||!(e.player instanceof ServerPlayer p)||!p.level().dimension().equals(DIM)||p.isSpectator())return;
-        if((p.getX()< -255||p.getX()>254||p.getZ()< -255||p.getZ()>254||p.getY()<1||p.getY()>510)
+        if((p.getX()< -CullingMap.HALF+1||p.getX()>CullingMap.HALF-1||p.getZ()< -CullingMap.HALF+1||p.getZ()>CullingMap.HALF-1||p.getY()<1||p.getY()>CullingMap.CEILING-1)
             &&!character.culling.CullingGate.inRoomArea(p.blockPosition())){
-            p.teleportTo(p.serverLevel(),.5,65,-15.5,p.getYRot(),p.getXRot());p.fallDistance=0;}
+            p.teleportTo(p.serverLevel(),.5,66,-15.5,p.getYRot(),p.getXRot());p.fallDistance=0;}
         // r220：旧刷怪逻辑已整体交给 CullingSpawns（这里原来还会把参赛者塞进同一个阵营队伍、
         // 关掉友伤，导致「参赛者之间强制敌对」不生效，且和 CullingSpawns 重复刷怪）。此处只保留边界检查。
     }
