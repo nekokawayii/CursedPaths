@@ -219,6 +219,7 @@ public final class GeneratedMod {
         character.CharacterCasting.registerEffect("jogo",character.jogo.JogoSkills.VOLCANO_BEAM,character.jogo.JogoCombat::castVolcanoBeam);
         character.CharacterCasting.registerEffect("jogo",character.jogo.JogoSkills.MAGMA_TRAP,character.jogo.JogoCombat::castMagmaTrap);
         character.CharacterCasting.registerEffect("jogo",character.jogo.JogoSkills.ASH_VEIL,character.jogo.JogoCombat::castAshVeil);
+        character.CharacterCasting.registerEffect("jogo",character.jogo.JogoSkills.JIYAN,character.jogo.JogoCombat::castJiyan);
         character.CharacterCasting.allowWhileMindLocked("jogo",character.jogo.JogoSkills.DOMAIN);
         character.CharacterService.registerRanker("jogo",character.jogo.JogoCombat::rank);
         character.CharacterCasting.registerCooldownScale("jogo",pl->character.jogo.JogoCombat.inDomain(pl)?0.5:1.0);

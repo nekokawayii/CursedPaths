@@ -34,3 +34,4 @@ tools
 scripts
 gradle/
 libs/
+*.log

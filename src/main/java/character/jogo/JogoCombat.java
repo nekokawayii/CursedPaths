@@ -58,6 +58,14 @@ public final class JogoCombat {
     public static final int DOMAIN_RADIUS=27, DOMAIN_LIFE=600;   // 用户指定：半径 100 格
     private static final double DOMAIN_INSET=0.35;               // 碰撞箱留出的安全余量
 
+    // ---------------------------------------------------------------- 极之番·陨
+    /** 蓄力 2 秒（40 刻）→ 火球升空 → 1.5 秒（30 刻）后陨石砸向准星。 */
+    private static final int JIYAN_CHARGE=40, JIYAN_FALL=30;
+    private static final int JIYAN_RADIUS=15, JIYAN_SEA_RADIUS=10, JIYAN_SEA_TICKS=300;
+    private static final float JIYAN_TRUE_SCALE=.40f, JIYAN_FIRE_DAMAGE=120f;
+    private record Strike(ServerPlayer owner, Vec3 target, long launchAt, long impactAt, boolean launched) {}
+    private static final List<Strike> STRIKES=new ArrayList<>();
+
     /** 章节进度：一章=泡岩浆满 30 秒；二章=盖棺铁围山坚持 60 秒。 */
     public static int rank(ServerPlayer p) {
         var data=Curse.data(p);
@@ -217,7 +225,7 @@ public final class JogoCombat {
     }
     @SubscribeEvent public static void tick(TickEvent.ServerTickEvent e) {
         if(e.phase!=TickEvent.Phase.END)return;
-        tickBugs();tickMeteors();tickFalling();tickFans();tickColumns();tickTraps();tickDomains();JogoTerrain.tick();tickBeam();
+        tickBugs();tickMeteors();tickFalling();tickFans();tickColumns();tickTraps();tickDomains();tickStrikes();JogoTerrain.tick();JogoScorch.tick();tickBeam();
     }
     private static void tickBugs() {
         for(Iterator<Bug> it=BUGS.iterator();it.hasNext();){
@@ -495,6 +503,8 @@ public final class JogoCombat {
     /** 关服/退存档兜底：把没结束的领域地形还原，避免残留。 */
     @SubscribeEvent public static void serverStopped(net.minecraftforge.event.server.ServerStoppingEvent e) {
         JogoTerrain.reset();
+        JogoScorch.reset();
+        STRIKES.clear();
         DOMAINS.clear();BUGS.clear();METEORS.clear();FALLING.clear();PILLARS.clear();
     }
 
@@ -588,6 +598,75 @@ public final class JogoCombat {
     /** 只在本类内部用来触发发奖，避免循环依赖写死 CharacterRewards 的调用顺序。 */
     static final class CharacterRewardsHook {
         static void grant(ServerPlayer p) { character.CharacterRewards.grant(p); }
+    }
+
+    // ---------------------------------------------------------------- 极之番·陨
+    /** 准入：咒力必须是满的。TechniqueInput 在扣费/写冷却之前先查这里，避免「没放出来却吃了 5 分钟冷却」。 */
+    public static boolean jiyanReady(ServerPlayer p) {
+        double max=Curse.maximum(p);
+        return max>0&&Curse.energy(p)+0.5>=max;
+    }
+    public static void jiyanRefuse(ServerPlayer p) {
+        p.sendSystemMessage(net.minecraft.network.chat.Component.literal(
+            "极之番·陨 需要咒力全满（当前 "+(int)Curse.energy(p)+" / "+(int)Curse.maximum(p)+"），本次未释放、冷却未消耗"));
+    }
+    /** 真正的施放：扣光咒力、开始 2 秒蓄力（技能次数与冷却由 CharacterCasting 负责）。 */
+    public static void castJiyan(ServerPlayer p,CharacterSkill skill,int rank) {
+        if(!jiyanReady(p)){jiyanRefuse(p);return;}
+        ServerLevel level=p.serverLevel();
+        Vec3 target=aimPoint(p,40);
+        Curse.add(p,-Curse.energy(p));
+        Curse.sync(p);
+        Network.send(level,new Network.Effect(JogoFx.JIYAN_CHARGE,p.getId(),p.position(),Vec3.ZERO,1f,JIYAN_CHARGE,0));
+        level.playSound(null,p.blockPosition(),SoundEvents.FIRECHARGE_USE,SoundSource.PLAYERS,3.2f,0.35f);
+        level.playSound(null,p.blockPosition(),SoundEvents.BLAZE_SHOOT,SoundSource.PLAYERS,3.0f,0.4f);
+        long now=level.getGameTime();
+        STRIKES.add(new Strike(p,target,now+JIYAN_CHARGE,now+JIYAN_CHARGE+JIYAN_FALL,false));
+        p.sendSystemMessage(net.minecraft.network.chat.Component.literal("极之番 · 陨：咒力已燃尽，1.5 秒后落地"));
+    }
+    /** 每刻推进：蓄力到点 → 火球升空；坠落 30 刻后 → 落地结算。 */
+    private static void tickStrikes() {
+        if(STRIKES.isEmpty())return;
+        for(int i=STRIKES.size()-1;i>=0;i--){
+            Strike s=STRIKES.get(i);
+            ServerPlayer owner=s.owner();
+            if(owner==null||!owner.isAlive()){STRIKES.remove(i);continue;}
+            ServerLevel level=owner.serverLevel();
+            long now=level.getGameTime();
+            if(!s.launched()){
+                if(now>=s.launchAt()){
+                    Network.send(level,new Network.Effect(JogoFx.JIYAN_LAUNCH,owner.getId(),owner.getEyePosition(),Vec3.ZERO,1f,14,0));
+                    level.playSound(null,owner.blockPosition(),SoundEvents.FIREWORK_ROCKET_LAUNCH,SoundSource.PLAYERS,3.0f,0.35f);
+                    STRIKES.set(i,new Strike(owner,s.target(),s.launchAt(),s.impactAt(),true));
+                }
+                continue;
+            }
+            if(now>=s.impactAt()){
+                jiyanImpact(owner,level,s.target());
+                STRIKES.remove(i);
+            }
+        }
+    }
+    private static void jiyanImpact(ServerPlayer owner,ServerLevel level,Vec3 target) {
+        Network.send(level,new Network.Effect(JogoFx.JIYAN_IMPACT,owner.getId(),target,Vec3.ZERO,JIYAN_RADIUS,60,0));
+        BlockPos at=BlockPos.containing(target);
+        level.playSound(null,at,SoundEvents.GENERIC_EXPLODE,SoundSource.PLAYERS,6.0f,0.5f);
+        level.playSound(null,at,SoundEvents.ENDER_DRAGON_GROWL,SoundSource.PLAYERS,4.0f,0.6f);
+        level.playSound(null,at,SoundEvents.WITHER_SPAWN,SoundSource.PLAYERS,3.0f,0.5f);
+        for(var t:level.getEntitiesOfClass(LivingEntity.class,
+                new net.minecraft.world.phys.AABB(target,target).inflate(JIYAN_RADIUS),
+                e->e!=owner&&e.isAlive()&&CombatSettings.canHit(owner,e))){
+            if(t.position().distanceToSqr(target)>JIYAN_RADIUS*JIYAN_RADIUS)continue;
+            // 40% 最大生命真实伤害：走与九十九由基「星崩拳」同一条真伤通道（无视护甲/减伤/无敌帧，兼容首领 internalHealth）
+            character.yuki.YukiCombat.trueDamage(owner,t,t.getMaxHealth()*JIYAN_TRUE_SCALE);
+            if(!t.isAlive())continue;
+            AttackTypes.mark(AttackTypes.MAGIC);
+            try{CombatSettings.hurt(owner,t,owner.damageSources().indirectMagic(owner,owner),JIYAN_FIRE_DAMAGE);}
+            finally{AttackTypes.clear();}
+            t.setSecondsOnFire(10);
+        }
+        JogoScorch.impact(owner,level,target,JIYAN_RADIUS,JIYAN_SEA_RADIUS,JIYAN_SEA_TICKS);
+        Network.send(level,new Network.Effect(JogoFx.JIYAN_SEA,owner.getId(),target,Vec3.ZERO,JIYAN_SEA_RADIUS,JIYAN_SEA_TICKS,0));
     }
 
     private JogoCombat() {}

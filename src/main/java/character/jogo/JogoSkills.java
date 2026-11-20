@@ -7,7 +7,7 @@ import static character.CharacterSkill.Shape.*;
 /** 漏壶·灾厄火焰：三招都是自定义效果（见 {@link JogoCombat}），这里只声明参数与轮盘文字。 */
 public final class JogoSkills {
     public static final int FIRE_BUG=1000, METEOR=1001, LAVA_BURST=1002, DOMAIN=1003,
-            VOLCANO_BEAM=1004, MAGMA_TRAP=1005, ASH_VEIL=1006;
+            VOLCANO_BEAM=1004, MAGMA_TRAP=1005, ASH_VEIL=1006, JIYAN=1007;
 
     public static List<CharacterSkill> all() {
         return List.of(
@@ -32,7 +32,10 @@ public final class JogoSkills {
                 0xFFFF7A18,300,220,CONE,10,2,30,16,3,6,2,0,0),
             new CharacterSkill(ASH_VEIL,"火山灰隐身","火山灰",
                 "化作灰烬消散：短暂隐身并加速，下一次攻击必定暴击。",
-                0xFFB0A090,180,260,BURST,4,1,180,0,0,1,0,0,0)
+                0xFFB0A090,180,260,BURST,4,1,180,0,0,1,0,0,0),
+            new CharacterSkill(JIYAN,"极之番·陨","陨",
+                "极之番：咒力必须全满才能发动（放完咒力清零）。天空转为暗红、双手托起黑红火球射向高空，1.5 秒后直径 30 格的燃烧陨石砸向准星：半径 15 格内造成 40% 最大生命真实伤害 + 巨额火伤，砸出陨石坑、坑底化为熔岩焦土，坑心留下半径 10 格的岩浆海持续 15 秒。",
+                0xFFFF2A0A,0,6000,BURST,32,6,180,0,0,1,0,0,0)
         );
     }
     private JogoSkills() {}
