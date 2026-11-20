@@ -83,6 +83,7 @@ public final class BloodArts {
         // NPC / 女仆的假玩家不要开「玩家版 100 格胎海」：那会把整片区域罩住、还会锁传送，
         // NPC 用 NpcDomain（半径 26）自己开领域，见 NpcCombatCasting。
         if(in.skill()==BloodRules.DOMAIN&&(p instanceof NpcBridge.NpcActor||p instanceof MaidBridge.Actor))return;
+        if(in.skill()==BloodRules.DEATH_STAR&&(p instanceof NpcBridge.NpcActor||p instanceof MaidBridge.Actor))return;
         if(!BloodRules.skill(in.skill())||in.phase()<0||in.phase()>3)return;
         if(in.skill()==BloodRules.DEATH_STAR){if(in.phase()==0)DeathStar.start(p);return;}
         if(DeathStar.anemic(p)){tell(p,"严重贫血：暂时无法使用其他赤血操术");return;}

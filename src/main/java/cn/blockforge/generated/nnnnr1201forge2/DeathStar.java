@@ -50,6 +50,8 @@ public final class DeathStar {
     private static void fx(ServerPlayer p,int kind,Vec3 at,Vec3 direction,float size,int life,long id){BloodArts.fx(p,kind,at,direction,size,life,id);}
     private static void pose(ServerPlayer p,int ticks){fx(p,70,p.position(),p.getLookAngle(),DeathStarRules.SKILL,ticks,0);}
     public static void start(ServerPlayer p){
+        // NPC / 女仆的假玩家不放极之番·死胎星（半径 50 的破坏会啃穿整片城区）
+        if(p instanceof NpcBridge.NpcActor||p instanceof MaidBridge.Actor)return;
         if(charging(p)||anemic(p)){tell(p,"严重贫血期间无法使用赤血操术");return;}
         if(!BloodArts.unlocked(p)||!BloodDomain.free(p)){tell(p,"死胎星只能在自己展开的胎海领域内释放");return;}
         if(!TechniqueInput.allowed(p)||Skills.sealing(p)||DomainClash.active(p)||SixfoldFinale.active(p)||DismantleMotion.active(p)||FurnaceMax.active(p)||CombatExpansion.chanting(p)){tell(p,"当前动作未结束，无法凝聚死胎星");return;}
@@ -136,7 +138,9 @@ public final class DeathStar {
         for(LivingEntity t:near(s.p,at,DeathStarRules.RADIUS))hit(s.p,t,DeathStarRules.damage(t.getMaxHealth()));
         // 成长增加爆心向外的索敌血线，不重复命中已在爆心内结算的目标。
         int rank=BloodArts.rank(s.p);if(rank>0){var outside=near(s.p,at,DeathStarRules.RADIUS+rank*3);outside.removeIf(t->t.distanceToSqr(at)<=DeathStarRules.RADIUS*DeathStarRules.RADIUS);outside.sort(Comparator.comparingDouble(t->t.distanceToSqr(at)));for(LivingEntity t:outside.stream().limit(rank*4).toList()){Vec3 end=t.getBoundingBox().getCenter();if(s.level.clip(new ClipContext(at,end,ClipContext.Block.COLLIDER,ClipContext.Fluid.NONE,MaidBridge.body(s.p))).getType()!=HitResult.Type.MISS)continue;fx(s.p,BloodExpansion.FX_CELL,at,end,1,20,s.id);hit(s.p,t,DeathStarRules.damage(t.getMaxHealth())*.1f);}}
-        SkillDestruction.sphere(s.p,at,DeathStarRules.RADIUS);
+        // 地形只挖到半径 20：伤害半径仍是 50，但 50 格的球形破坏要排 50 多万方块、逐帧铺好几秒，
+        // 看起来就是「一个圆形一行一行地往外啃」。20 格既保留大坑，又不会啃掉半条街。
+        SkillDestruction.sphere(s.p,at,Math.min(DeathStarRules.RADIUS,20));
     }
     /** 保留外部取消伤害事件的权利；不直接 setHealth 杀人，不绕过敌友/领地保护。 */
     @SubscribeEvent(priority=EventPriority.HIGHEST) public static void trueDamage(LivingHurtEvent event){Float amount=trueHits.get(event.getEntity());if(source(event.getSource())&&amount!=null)event.setAmount(amount);}
