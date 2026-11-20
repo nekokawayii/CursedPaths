@@ -113,11 +113,19 @@ public final class DomainTerrain extends SavedData {
             if(!current.equals(cell.placed)){forget(pos);continue;}
             BlockState desired=desired(pos,cell);
             if(!current.equals(desired)){
-                if(!level.setBlock(pos,desired,2)){enqueue(pos);continue;}
+                // 2|UPDATE_KNOWN_SHAPE|UPDATE_SUPPRESS_DROPS：不触发邻居形状更新、也抑制掉落。
+                // 否则领域清场时，原世界里挂在墙上的梯子/铁门被邻居更新「崩开」，道具掉一地。
+                if(!level.setBlock(pos,desired,2|net.minecraft.world.level.block.Block.UPDATE_KNOWN_SHAPE|net.minecraft.world.level.block.Block.UPDATE_SUPPRESS_DROPS)){enqueue(pos);continue;}
                 cell.placed=desired;setDirty();
             }
             if(cell.layers.empty()){cells.remove(pos);setDirty();}
         }
+    }
+    /** 兜底：领域正在改写的格子里新生成的掉落物直接清掉，避免「铁门梯子掉一地」。 */
+    @SubscribeEvent public static void swallowDrops(net.minecraftforge.event.entity.EntityJoinLevelEvent event){
+        if(!(event.getLevel() instanceof ServerLevel level))return;
+        if(!(event.getEntity() instanceof net.minecraft.world.entity.item.ItemEntity item))return;
+        if(changing(level,item.blockPosition()))item.discard();
     }
     @SubscribeEvent public static void tick(TickEvent.ServerTickEvent event){
         if(event.phase==TickEvent.Phase.END)for(var level:event.getServer().getAllLevels())get(level).flush(level,BUDGET);

@@ -34,7 +34,7 @@ public final class DomainTerrainJournal extends SavedData {
         if(before.equals(placed)||before.hasBlockEntity()||before.getDestroySpeed(level,pos)<0)return false;
         var entry=new Entry(owner,pos.immutable(),before,placed);
         entries.put(entry.pos,entry);queue.add(entry.pos);setDirty();
-        if(!level.setBlock(pos,placed,2)){entries.remove(pos);return false;}
+        if(!level.setBlock(pos,placed,2|net.minecraft.world.level.block.Block.UPDATE_KNOWN_SHAPE|net.minecraft.world.level.block.Block.UPDATE_SUPPRESS_DROPS)){entries.remove(pos);return false;}
         return true;
     }
     /** live 为当前仍在工作的领域；没有活动主人的记录一律进入恢复。扫描跳过项也计预算。 */
@@ -45,7 +45,7 @@ public final class DomainTerrainJournal extends SavedData {
             if(live.contains(entry.owner)||!level.hasChunkAt(pos)){queue.addLast(pos);continue;}
             var current=level.getBlockState(pos);
             if(current.equals(entry.placed)&&!current.hasBlockEntity()){
-                if(!level.setBlock(pos,entry.before,2)){queue.addLast(pos);continue;}
+                if(!level.setBlock(pos,entry.before,2|net.minecraft.world.level.block.Block.UPDATE_KNOWN_SHAPE|net.minecraft.world.level.block.Block.UPDATE_SUPPRESS_DROPS)){queue.addLast(pos);continue;}
             }
             entries.remove(pos);setDirty();
         }
