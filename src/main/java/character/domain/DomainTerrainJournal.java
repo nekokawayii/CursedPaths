@@ -51,6 +51,8 @@ public final class DomainTerrainJournal extends SavedData {
         }
     }
     public int size(){return entries.size();}
+    /** 丢弃所有日志（不还原）。换地图后旧日志会把新地形改回旧样，开服清掉。 */
+    public void clear(){entries.clear();queue.clear();setDirty();}
     @Override public CompoundTag save(CompoundTag tag) {
         var list=new ListTag();
         for(var e:entries.values()){

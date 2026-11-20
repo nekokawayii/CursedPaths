@@ -61,6 +61,17 @@ public final class DomainTerrain extends SavedData {
     public static DomainTerrain get(ServerLevel level){
         return level.getDataStorage().computeIfAbsent(tag->load(level,tag),DomainTerrain::new,"sukuna_domain_layers");
     }
+    /**
+     * 放弃本维度所有领域记录（不还原、不清方块）：死灭洄游换地图后，旧地图留下的领域日志会把新城市
+     * 一点点改回旧地形（看起来像一个圆形在逐行塌掉），所以开服时直接丢掉。
+     */
+    public static void abandon(ServerLevel level){
+        var store=get(level);
+        store.cells.clear();store.handles.clear();
+        store.pending.clear();store.queued.clear();
+        store.urgent.clear();store.urgentQueued.clear();
+        store.setDirty();
+    }
     /** 落点不能依赖仍被领域占用或正在恢复的方块。 */
     public static boolean changing(ServerLevel level,BlockPos pos){return get(level).cells.containsKey(pos);}
     private void enqueue(BlockPos pos){if(queued.add(pos))pending.addLast(pos);}

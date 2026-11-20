@@ -58,23 +58,17 @@ public final class CullingGame {
         // r220：旧刷怪逻辑已整体交给 CullingSpawns（这里原来还会把参赛者塞进同一个阵营队伍、
         // 关掉友伤，导致「参赛者之间强制敌对」不生效，且和 CullingSpawns 重复刷怪）。此处只保留边界检查。
     }
-    /** r259：老存档里已经生成的沙砾层，在区块加载时替换成基岩。 */
+    /**
+     * 换新宿地图后：旧地图遗留的领域地形日志（DomainTerrain / DomainTerrainJournal）会按坐标
+     * 把新城市一点点改回旧地形，表现就是「一个圆形逐行塌掉」。开服时直接丢弃本维度的旧日志。
+     */
     @SubscribeEvent
-    public static void chunkLoad(net.minecraftforge.event.level.ChunkEvent.Load e) {
-        if (!(e.getLevel() instanceof ServerLevel level) || !level.dimension().equals(DIM)) return;
-        var chunk = e.getChunk();
-        BlockPos origin = chunk.getPos().getWorldPosition();
-        boolean changed = false;
-        // r260：整个区块（全高度）的沙砾统统换成基岩
-        for (int dx = 0; dx < 16; dx++) for (int dz = 0; dz < 16; dz++)
-            for (int y = level.getMinBuildHeight(); y < level.getMaxBuildHeight(); y++) {
-                BlockPos pos = origin.offset(dx, y, dz);
-                if (level.getBlockState(pos).is(net.minecraft.world.level.block.Blocks.GRAVEL)) {
-                    level.setBlock(pos, net.minecraft.world.level.block.Blocks.BEDROCK.defaultBlockState(), 2);
-                    changed = true;
-                }
-            }
-        if (changed) com.mojang.logging.LogUtils.getLogger().info("[死灭洄游] 区块 {} 的沙砾层已换成基岩", chunk.getPos());
+    public static void serverStarted(net.minecraftforge.event.server.ServerStartedEvent e) {
+        net.minecraft.server.level.ServerLevel level = e.getServer().getLevel(DIM);
+        if (level == null) return;
+        character.domain.DomainTerrain.abandon(level);
+        character.domain.DomainTerrainJournal.get(level).clear();
+        com.mojang.logging.LogUtils.getLogger().info("[死灭洄游] 已丢弃旧地图遗留的领域地形日志");
     }
 
     private CullingGame(){}
