@@ -23,7 +23,7 @@ import java.util.*;
  * 因为这是极之番的招牌演出，和「断流」同类处理）。逐帧分批施工，避免单刻改几千方块卡服。
  */
 public final class JogoScorch {
-    private static final int PER_TICK=420;
+    private static final int PER_TICK=1500;
     private static final int SEA_BURN_TICKS=10;
     private static final float SEA_BURN_DAMAGE=10f;
 
@@ -46,7 +46,7 @@ public final class JogoScorch {
                 int x=cx+dx,z=cz+dz;
                 if(!level.hasChunkAt(new BlockPos(x,cy,z)))continue;
                 double d=Math.sqrt(d2);
-                int depth=(int)Math.round(9.0*(1.0-d/radius));
+                int depth=(int)Math.round(18.0*(1.0-d/radius));
                 int bottom=cy-depth;
                 if(depth<=0){
                     // 坑缘：把表层烧成焦土，形成一个明显的焦黑圈

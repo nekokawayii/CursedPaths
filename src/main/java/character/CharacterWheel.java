@@ -17,6 +17,8 @@ public final class CharacterWheel extends Screen {
     private boolean star() { return blood()&&BloodClient.ownDomain(); }
     /** 鹿紫云一：轮盘中心是终奥「幻兽·琥珀」。 */
     private boolean kashimo() { return definition!=null&&"kashimo".equals(definition.id()); }
+    /** 漏壶：轮盘中心是「极之番·陨」。 */
+    private boolean jogo() { return definition!=null&&"jogo".equals(definition.id()); }
     private int skillAt(double x,double y) {
         if(definition==null||CharacterClient.skills().isEmpty())return -1;
         if(blood()&&CharacterClient.skills().size()==19)return CharacterClient.skills().get(BloodRules.wheelSlot(x,y,radius()));
@@ -45,7 +47,7 @@ public final class CharacterWheel extends Screen {
         if(mainlineHover>=0){starHover=false;ultHover=false;return;}
         double x=mx-width/2.0,y=my-height/2.0,r=x*x+y*y;
         starHover=star()&&r<inner()*inner();
-        ultHover=kashimo()&&r<inner()*inner();
+        ultHover=(kashimo()||jogo())&&r<inner()*inner();
         if(r>=inner()*inner()&&r<=radius()*radius())current=skillAt(x,y);
     }
     private void confirm() {
@@ -54,6 +56,11 @@ public final class CharacterWheel extends Screen {
         // 鹿紫云一：轮盘中心 = 终奥「幻兽·琥珀」（phase=7 直接请求，不走技能表）
         if(kashimo()&&ultHover){
             Network.CHANNEL.sendToServer(new TechniqueInput.Input(character.kashimo.KashimoCombat.ULT,7,false,false,false,false,0,0));
+            minecraft.setScreen(null);return;
+        }
+        // 漏壶：轮盘中心 = 极之番·陨（同样 phase=7 直接请求，不走技能表）
+        if(jogo()&&ultHover){
+            Network.CHANNEL.sendToServer(new TechniqueInput.Input(character.jogo.JogoSkills.JIYAN,7,false,false,false,false,0,0));
             minecraft.setScreen(null);return;
         }
         if(fistHover){Network.CHANNEL.sendToServer(new Network.Cast(SkillAction.TOGGLE_FIST));minecraft.setScreen(null);return;}
@@ -96,9 +103,10 @@ public final class CharacterWheel extends Screen {
             for(int line=0;line<Math.min(2,lines.size());line++){var text=lines.get(line);g.drawString(font,text,-font.width(text)/2,yy+line*11,textColor);}
             g.pose().popPose();
         }
-        g.drawCenteredString(font,kashimo()?"极之番":star()?"极之番":style.title().isBlank()?definition.name():style.title(),cx,cy-14,definition.color());
-        g.drawCenteredString(font,kashimo()?"幻兽·琥珀":star()?"死胎星":style.subtitle().isBlank()?definition.technique():style.subtitle(),cx,cy+1,kashimo()?(ultHover?0xFFFFFFFF:style.text()):starHover?0xFFFFBAC9:style.text());
+        g.drawCenteredString(font,kashimo()||jogo()?"极之番":star()?"极之番":style.title().isBlank()?definition.name():style.title(),cx,cy-14,definition.color());
+        g.drawCenteredString(font,kashimo()?"幻兽·琥珀":jogo()?"陨":star()?"死胎星":style.subtitle().isBlank()?definition.technique():style.subtitle(),cx,cy+1,(kashimo()||jogo())?(ultHover?0xFFFFFFFF:style.text()):starHover?0xFFFFBAC9:style.text());
         if(kashimo())g.drawCenteredString(font,ultHover?"满咒力释放终奥 · 生命低于30%自动触发":"轮盘中心：幻兽·琥珀",cx,cy+14,ultHover?0xFFBFF4FF:0xFF7FA8BC);
+        if(jogo())g.drawCenteredString(font,ultHover?"满咒力释放 · 原地砸落 · 站在陨石上":"轮盘中心：极之番·陨",cx,cy+14,ultHover?0xFFFFD2B0:0xFFB08060);
         if(star()&&DeathStarClient.anemic())g.drawCenteredString(font,"贫血禁用",cx,cy+14,0xFFFF7480);
         int skill=starHover?BloodRules.DEATH_STAR:current;
         g.drawCenteredString(font,CharacterClient.name(skill),cx,12,definition.color());

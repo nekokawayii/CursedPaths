@@ -56,6 +56,8 @@ public final class TechniqueInput {
             &&input.skill()<=character.mainline.Mainline.SKILL_AMPLIFY){if(input.phase()==0||input.phase()==7)character.mainline.Mainline.cast(p,input.skill());return;}
         if(character.mainline.Mainline.domainSkill(p,input.skill())&&!character.mainline.Mainline.requireDomain(p))return;
         if(input.skill()==character.kashimo.KashimoCombat.ULT&&input.phase()==7){character.kashimo.KashimoCombat.requestUltimate(p);return;}
+        // 漏壶：轮盘中心「极之番·陨」——phase=7 直接请求；满咒力校验与扣费/冷却都在 JogoCombat.startJiyan 里
+        if(input.skill()==character.jogo.JogoSkills.JIYAN&&input.phase()==7){character.jogo.JogoCombat.startJiyan(p);return;}
         // 石流龙：冰沙冲击波可蓄力（按住越久越粗、伤害越高），走 phase 0/1/2 而不是立刻施法
         if(input.skill()==character.ryu.RyuSkills.BLAST&&character.CharacterService.selected(p)!=null
             &&"ryu".equals(character.CharacterService.selected(p).id())){
@@ -227,8 +229,6 @@ public final class TechniqueInput {
     }
     public static void castRaw(ServerPlayer p,int skill){
         if(!character.CharacterService.allowsSkill(p,skill))return;
-        // 漏壶 极之番·陨：咒力必须全满。在扣费/写冷却之前拦下，否则会出现「没放出来却吃了 5 分钟冷却」。
-        if(skill==character.jogo.JogoSkills.JIYAN&&!character.jogo.JogoCombat.jiyanReady(p)){character.jogo.JogoCombat.jiyanRefuse(p);return;}
         // 乙骨掠夺来的术式沿用旧编号（34/60/…），但它们没有走「已拥有该术式」的老通路，
         // 必须交给 CharacterCasting 走「扣次数 + 借用放行」的分支，否则会静默失败。
         if(character.CharacterSkill.custom(skill)||character.yuta.YutaCopies.has(p,skill)){character.CharacterCasting.cast(p,skill);return;}

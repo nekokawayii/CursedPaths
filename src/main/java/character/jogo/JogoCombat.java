@@ -58,12 +58,17 @@ public final class JogoCombat {
     public static final int DOMAIN_RADIUS=27, DOMAIN_LIFE=600;   // 用户指定：半径 100 格
     private static final double DOMAIN_INSET=0.35;               // 碰撞箱留出的安全余量
 
-    // ---------------------------------------------------------------- 极之番·陨
-    /** 蓄力 2 秒（40 刻）→ 火球升空 → 1.5 秒（30 刻）后陨石砸向准星。 */
-    private static final int JIYAN_CHARGE=40, JIYAN_FALL=30;
-    private static final int JIYAN_RADIUS=15, JIYAN_SEA_RADIUS=10, JIYAN_SEA_TICKS=300;
-    private static final float JIYAN_TRUE_SCALE=.40f, JIYAN_FIRE_DAMAGE=120f;
-    private record Strike(ServerPlayer owner, Vec3 target, long launchAt, long impactAt, boolean launched) {}
+    // ---------------------------------------------------------------- 极之番·陨（轮盘中心）
+    /** 召唤 60 格半径的陨石，玩家被托到陨石顶上漂浮，陨石 8 秒缓慢砸向施法原地。 */
+    private static final int JIYAN_RIDE_TICKS=160;      // 8 秒慢速下落
+    private static final int JIYAN_COOLDOWN=6000;       // 300 秒
+    private static final double JIYAN_RADIUS=60;
+    private static final double JIYAN_START_HEIGHT=120; // 陨石中心起始高度（球底离地 60 格）
+    private static final double JIYAN_LAND_OFFSET=24;   // 陨石中心降到离地 24 格时算砸地
+    private static final int JIYAN_SEA_RADIUS=36, JIYAN_SEA_TICKS=300;
+    private static final float JIYAN_TRUE_SCALE=.40f, JIYAN_FIRE_DAMAGE=300f;
+    private static final String JIYAN_CD="JogoJiyanCooldown";
+    private record Strike(ServerPlayer owner,Vec3 center,Vec3 startCenter,Vec3 floatAt,long landAt,boolean impacted) {}
     private static final List<Strike> STRIKES=new ArrayList<>();
 
     /** 章节进度：一章=泡岩浆满 30 秒；二章=盖棺铁围山坚持 60 秒。 */
@@ -600,7 +605,7 @@ public final class JogoCombat {
         static void grant(ServerPlayer p) { character.CharacterRewards.grant(p); }
     }
 
-    // ---------------------------------------------------------------- 极之番·陨
+    // ---------------------------------------------------------------- 极之番·陨（轮盘中心）
     /** 准入：咒力必须是满的。TechniqueInput 在扣费/写冷却之前先查这里，避免「没放出来却吃了 5 分钟冷却」。 */
     public static boolean jiyanReady(ServerPlayer p) {
         double max=Curse.maximum(p);
@@ -610,49 +615,102 @@ public final class JogoCombat {
         p.sendSystemMessage(net.minecraft.network.chat.Component.literal(
             "极之番·陨 需要咒力全满（当前 "+(int)Curse.energy(p)+" / "+(int)Curse.maximum(p)+"），本次未释放、冷却未消耗"));
     }
-    /** 真正的施放：扣光咒力、开始 2 秒蓄力（技能次数与冷却由 CharacterCasting 负责）。 */
-    public static void castJiyan(ServerPlayer p,CharacterSkill skill,int rank) {
+    /** 轮盘中心点击 → 施放：扣光咒力、把玩家托到陨石顶上，8 秒后砸回原地。 */
+    public static void startJiyan(ServerPlayer p) {
+        var data=Curse.data(p);
+        long now=p.level().getGameTime();
+        long cd=data.getLong(JIYAN_CD);
+        if(cd>now){
+            p.sendSystemMessage(net.minecraft.network.chat.Component.literal(
+                "极之番·陨 冷却中 · "+String.format("%.1f",(cd-now)/20.0)+" 秒"));
+            return;
+        }
+        for(Strike s:STRIKES){
+            if(s.owner()==p){p.sendSystemMessage(net.minecraft.network.chat.Component.literal("极之番·陨 正在释放中"));return;}
+        }
         if(!jiyanReady(p)){jiyanRefuse(p);return;}
         ServerLevel level=p.serverLevel();
-        Vec3 target=aimPoint(p,40);
+        Vec3 center=new Vec3(p.getX(),p.getY(),p.getZ());
+        data.putLong(JIYAN_CD,now+JIYAN_COOLDOWN);
         Curse.add(p,-Curse.energy(p));
         Curse.sync(p);
-        Network.send(level,new Network.Effect(JogoFx.JIYAN_CHARGE,p.getId(),p.position(),Vec3.ZERO,1f,JIYAN_CHARGE,0));
-        level.playSound(null,p.blockPosition(),SoundEvents.FIRECHARGE_USE,SoundSource.PLAYERS,3.2f,0.35f);
-        level.playSound(null,p.blockPosition(),SoundEvents.BLAZE_SHOOT,SoundSource.PLAYERS,3.0f,0.4f);
-        long now=level.getGameTime();
-        STRIKES.add(new Strike(p,target,now+JIYAN_CHARGE,now+JIYAN_CHARGE+JIYAN_FALL,false));
-        p.sendSystemMessage(net.minecraft.network.chat.Component.literal("极之番 · 陨：咒力已燃尽，1.5 秒后落地"));
+        Vec3 startCenter=center.add(0,JIYAN_START_HEIGHT,0);
+        Vec3 floatAt=startCenter.add(0,JIYAN_RADIUS+2,0);
+        p.setNoGravity(true);
+        p.setDeltaMovement(Vec3.ZERO);
+        p.fallDistance=0;
+        p.connection.teleport(floatAt.x,floatAt.y,floatAt.z,p.getYRot(),p.getXRot());
+        STRIKES.add(new Strike(p,center,startCenter,floatAt,now+JIYAN_RIDE_TICKS,false));
+        Network.send(level,new Network.Effect(JogoFx.JIYAN_RIDE,p.getId(),startCenter,center,(float)JIYAN_RADIUS,JIYAN_RIDE_TICKS,0));
+        level.playSound(null,p.blockPosition(),SoundEvents.ENDER_DRAGON_GROWL,SoundSource.PLAYERS,4.0f,0.35f);
+        level.playSound(null,p.blockPosition(),SoundEvents.BLAZE_SHOOT,SoundSource.PLAYERS,3.0f,0.3f);
+        p.sendSystemMessage(net.minecraft.network.chat.Component.literal("极之番·陨：站上陨石，8 秒后砸向原地"));
     }
-    /** 每刻推进：蓄力到点 → 火球升空；坠落 30 刻后 → 落地结算。 */
+    /** 每刻：把玩家固定在陨石顶（不跟着下落），到点砸地并结算。 */
     private static void tickStrikes() {
         if(STRIKES.isEmpty())return;
         for(int i=STRIKES.size()-1;i>=0;i--){
             Strike s=STRIKES.get(i);
             ServerPlayer owner=s.owner();
-            if(owner==null||!owner.isAlive()){STRIKES.remove(i);continue;}
-            ServerLevel level=owner.serverLevel();
-            long now=level.getGameTime();
-            if(!s.launched()){
-                if(now>=s.launchAt()){
-                    Network.send(level,new Network.Effect(JogoFx.JIYAN_LAUNCH,owner.getId(),owner.getEyePosition(),Vec3.ZERO,1f,14,0));
-                    level.playSound(null,owner.blockPosition(),SoundEvents.FIREWORK_ROCKET_LAUNCH,SoundSource.PLAYERS,3.0f,0.35f);
-                    STRIKES.set(i,new Strike(owner,s.target(),s.launchAt(),s.impactAt(),true));
-                }
+            if(owner==null||!owner.isAlive()||owner.hasDisconnected()){
+                endRide(s,false);
+                STRIKES.remove(i);
                 continue;
             }
-            if(now>=s.impactAt()){
-                jiyanImpact(owner,level,s.target());
+            ServerLevel level=owner.serverLevel();
+            long now=level.getGameTime();
+            if(now<s.landAt()){
+                owner.setNoGravity(true);
+                owner.setDeltaMovement(Vec3.ZERO);
+                owner.fallDistance=0;
+                owner.connection.teleport(s.floatAt().x,s.floatAt().y,s.floatAt().z,owner.getYRot(),owner.getXRot());
+                continue;
+            }
+            if(!s.impacted()){
+                jiyanImpact(owner,level,s.center());
+                STRIKES.set(i,new Strike(owner,s.center(),s.startCenter(),s.floatAt(),s.landAt(),true));
+            }
+            if(now>=s.landAt()+20){
+                endRide(s,true);
                 STRIKES.remove(i);
             }
         }
     }
+    /** 演出结束/中断：恢复重力；正常收尾时把玩家挪到坑外最近的安全落脚点。 */
+    private static void endRide(Strike s,boolean normal) {
+        ServerPlayer p=s.owner();
+        if(p==null)return;
+        p.setNoGravity(false);
+        if(!normal||!p.isAlive())return;
+        Vec3 spot=safeSpot(p.serverLevel(),s.center());
+        p.connection.teleport(spot.x,spot.y,spot.z,p.getYRot(),p.getXRot());
+        p.setDeltaMovement(Vec3.ZERO);
+        p.fallDistance=0;
+        p.hurtMarked=true;
+    }
+    /** 陨石坑外的安全落脚点：从半径 64 往外找一块实心地面。 */
+    private static Vec3 safeSpot(ServerLevel level,Vec3 center) {
+        for(double r=JIYAN_RADIUS+4;r<=JIYAN_RADIUS+44;r+=3){
+            for(int a=0;a<12;a++){
+                double ang=a*Math.PI/6;
+                int x=(int)Math.floor(center.x+Math.cos(ang)*r);
+                int z=(int)Math.floor(center.z+Math.sin(ang)*r);
+                if(!level.hasChunkAt(new BlockPos(x,0,z)))continue;
+                int y=level.getHeight(net.minecraft.world.level.levelgen.Heightmap.Types.WORLD_SURFACE,x,z);
+                BlockPos pos=new BlockPos(x,y,z);
+                if(level.getBlockState(pos.below()).isAir())continue;
+                if(!level.getBlockState(pos).isAir()||!level.getBlockState(pos.above()).isAir())continue;
+                return new Vec3(x+0.5,y+0.1,z+0.5);
+            }
+        }
+        return center.add(0,3,0);
+    }
     private static void jiyanImpact(ServerPlayer owner,ServerLevel level,Vec3 target) {
-        Network.send(level,new Network.Effect(JogoFx.JIYAN_IMPACT,owner.getId(),target,Vec3.ZERO,JIYAN_RADIUS,60,0));
+        Network.send(level,new Network.Effect(JogoFx.JIYAN_IMPACT,owner.getId(),target,Vec3.ZERO,(float)JIYAN_RADIUS,80,0));
         BlockPos at=BlockPos.containing(target);
-        level.playSound(null,at,SoundEvents.GENERIC_EXPLODE,SoundSource.PLAYERS,6.0f,0.5f);
-        level.playSound(null,at,SoundEvents.ENDER_DRAGON_GROWL,SoundSource.PLAYERS,4.0f,0.6f);
-        level.playSound(null,at,SoundEvents.WITHER_SPAWN,SoundSource.PLAYERS,3.0f,0.5f);
+        level.playSound(null,at,SoundEvents.GENERIC_EXPLODE,SoundSource.PLAYERS,8.0f,0.45f);
+        level.playSound(null,at,SoundEvents.ENDER_DRAGON_GROWL,SoundSource.PLAYERS,5.0f,0.55f);
+        level.playSound(null,at,SoundEvents.WITHER_SPAWN,SoundSource.PLAYERS,4.0f,0.45f);
         for(var t:level.getEntitiesOfClass(LivingEntity.class,
                 new net.minecraft.world.phys.AABB(target,target).inflate(JIYAN_RADIUS),
                 e->e!=owner&&e.isAlive()&&CombatSettings.canHit(owner,e))){
@@ -665,7 +723,7 @@ public final class JogoCombat {
             finally{AttackTypes.clear();}
             t.setSecondsOnFire(10);
         }
-        JogoScorch.impact(owner,level,target,JIYAN_RADIUS,JIYAN_SEA_RADIUS,JIYAN_SEA_TICKS);
+        JogoScorch.impact(owner,level,target,(int)JIYAN_RADIUS,JIYAN_SEA_RADIUS,JIYAN_SEA_TICKS);
         Network.send(level,new Network.Effect(JogoFx.JIYAN_SEA,owner.getId(),target,Vec3.ZERO,JIYAN_SEA_RADIUS,JIYAN_SEA_TICKS,0));
     }
 
