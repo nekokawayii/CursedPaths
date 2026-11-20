@@ -472,7 +472,9 @@ public final class CullingRules {
         if(!dead.level().dimension().equals(CullingGame.DIM))return;
         ServerPlayer killer=CombatSettings.caster(e.getSource());
         if(killer==null&&dead.getKillCredit() instanceof ServerPlayer credited)killer=credited;
-        if(killer!=null&&inDimension(killer)){
+        if(killer!=null&&inDimension(killer)
+            &&!(killer instanceof cn.blockforge.generated.nnnnr1201forge2.NpcBridge.NpcActor)
+            &&!(killer instanceof cn.blockforge.generated.nnnnr1201forge2.MaidBridge.Actor)){
             if(special(killer,"killFullHeal"))killer.heal(killer.getMaxHealth());
             if(special(killer,"death_split")&&dead instanceof Mob mob&&dead.getMaxHealth()<800)splitMob(mob);
         }

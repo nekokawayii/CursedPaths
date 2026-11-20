@@ -55,7 +55,9 @@ public final class CullingPerks {
         LivingEntity attacker = src.getEntity() instanceof LivingEntity a ? a : null;
         boolean melee = attacker != null && src.getDirectEntity() == attacker;
 
-        if (attacker instanceof ServerPlayer ap && CullingRules.inDimension(ap)) {
+        if (attacker instanceof ServerPlayer ap && CullingRules.inDimension(ap)
+            && !(ap instanceof cn.blockforge.generated.nnnnr1201forge2.NpcBridge.NpcActor)
+            && !(ap instanceof cn.blockforge.generated.nnnnr1201forge2.MaidBridge.Actor)) {
             double amount = e.getAmount();
             // 弱点洞悉：额外真实伤害
             double truePct = sum(ap, m -> m.truePct);
@@ -154,6 +156,9 @@ public final class CullingPerks {
         ServerPlayer killer = CombatSettings.caster(e.getSource());
         if (killer == null && e.getEntity().getKillCredit() instanceof ServerPlayer credited) killer = credited;
         if (killer == null || !CullingRules.inDimension(killer)) return;
+        // NPC / 女仆的假玩家不享受玩家规则（否则「杀敌回血」会让 NPC 每杀一只就回满）
+        if (killer instanceof cn.blockforge.generated.nnnnr1201forge2.NpcBridge.NpcActor
+            || killer instanceof cn.blockforge.generated.nnnnr1201forge2.MaidBridge.Actor) return;
         // 杀敌回血
         double heal = sum(killer, m -> m.killHeal);
         if (heal > 0) killer.heal((float) (killer.getMaxHealth() * heal));

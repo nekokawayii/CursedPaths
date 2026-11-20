@@ -305,7 +305,13 @@ public final class NpcDomain {
                         }
                         case BLOOD -> {                          // 胀相：胎海 · 流血 + 施术者命中回血
                             living.hurt(living.damageSources().magic(), (float) DAMAGE);
-                            owner.heal(2f);
+                            // 每次伤害结算最多回 2 点（按目标数累加会让多目标时回满血，看起来像"很多条命"）
+                            var bloodTag = owner.getPersistentData();
+                            long bloodNow = job.level.getGameTime();
+                            if (bloodTag.getLong("NpcBloodHealAt") != bloodNow) {
+                                bloodTag.putLong("NpcBloodHealAt", bloodNow);
+                                owner.heal(2f);
+                            }
                             living.addEffect(new net.minecraft.world.effect.MobEffectInstance(
                                 net.minecraft.world.effect.MobEffects.WITHER, 40, 0));
                         }
