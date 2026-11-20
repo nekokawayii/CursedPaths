@@ -55,9 +55,9 @@ public final class TechniqueInput {
         if(input.skill()>=character.mainline.Mainline.SKILL_REVERSE
             &&input.skill()<=character.mainline.Mainline.SKILL_AMPLIFY){if(input.phase()==0||input.phase()==7)character.mainline.Mainline.cast(p,input.skill());return;}
         if(character.mainline.Mainline.domainSkill(p,input.skill())&&!character.mainline.Mainline.requireDomain(p))return;
-        if(input.skill()==character.kashimo.KashimoCombat.ULT&&input.phase()==7){character.kashimo.KashimoCombat.requestUltimate(p);return;}
-        // 漏壶：轮盘中心「极之番·陨」——phase=7 直接请求；满咒力校验与扣费/冷却都在 JogoCombat.startJiyan 里
-        if(input.skill()==character.jogo.JogoSkills.JIYAN&&input.phase()==7){character.jogo.JogoCombat.startJiyan(p);return;}
+        if(input.skill()==character.kashimo.KashimoCombat.ULT){if(input.phase()==0||input.phase()==7)character.kashimo.KashimoCombat.requestUltimate(p);return;}
+        // 漏壶：轮盘中心「极之番·陨」——中心选中后由释放键施放（phase 0），旧 phase 7 也保留兼容
+        if(input.skill()==character.jogo.JogoSkills.JIYAN){if(input.phase()==0||input.phase()==7)character.jogo.JogoCombat.startJiyan(p);return;}
         // 石流龙：冰沙冲击波可蓄力（按住越久越粗、伤害越高），走 phase 0/1/2 而不是立刻施法
         if(input.skill()==character.ryu.RyuSkills.BLAST&&character.CharacterService.selected(p)!=null
             &&"ryu".equals(character.CharacterService.selected(p).id())){

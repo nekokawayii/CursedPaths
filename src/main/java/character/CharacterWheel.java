@@ -53,14 +53,10 @@ public final class CharacterWheel extends Screen {
     private void confirm() {
         if(confirmed)return;confirmed=true;
         if(character.mainline.MainlineWheel.cast(mainlineHover)){minecraft.setScreen(null);return;}
-        // 鹿紫云一：轮盘中心 = 终奥「幻兽·琥珀」（phase=7 直接请求，不走技能表）
-        if(kashimo()&&ultHover){
-            Network.CHANNEL.sendToServer(new TechniqueInput.Input(character.kashimo.KashimoCombat.ULT,7,false,false,false,false,0,0));
-            minecraft.setScreen(null);return;
-        }
-        // 漏壶：轮盘中心 = 极之番·陨（同样 phase=7 直接请求，不走技能表）
-        if(jogo()&&ultHover){
-            Network.CHANNEL.sendToServer(new TechniqueInput.Input(character.jogo.JogoSkills.JIYAN,7,false,false,false,false,0,0));
+        // 鹿紫云一 / 漏壶：轮盘中心技能与「死胎星」同款——中心选中，然后用释放键施放
+        if((kashimo()||jogo())&&ultHover){
+            int id=kashimo()?character.kashimo.KashimoCombat.ULT:character.jogo.JogoSkills.JIYAN;
+            if(Client.availableSkill(id))Client.selected=id;
             minecraft.setScreen(null);return;
         }
         if(fistHover){Network.CHANNEL.sendToServer(new Network.Cast(SkillAction.TOGGLE_FIST));minecraft.setScreen(null);return;}

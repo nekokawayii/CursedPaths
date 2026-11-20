@@ -190,23 +190,23 @@ public final class JogoFxClient {
         quad(b,ps,new Vec3(cam.x-r,y-10,cam.z-r),new Vec3(cam.x+r,y-10,cam.z-r),new Vec3(cam.x+r,y-10,cam.z+r),new Vec3(cam.x-r,y-10,cam.z+r),0x40FF2A00);
     }
 
-    /** 熔岩球：经纬球面贴用户给的岩浆图（u 方向平铺 3 次），外加一层暗红轮廓光。 */
+    /** 熔岩球：只画朝向相机的那半球（避免球体背面漏出来），贴用户给的岩浆图。 */
     private static void meteorQuads(PoseStack ps,Vec3 cam,long now){
-        Minecraft mc=Minecraft.getInstance();
         RenderSystem.enableBlend();
         RenderSystem.defaultBlendFunc();
-        RenderSystem.depthMask(false);
-        // ① 球体：贴图
+        RenderSystem.depthMask(true);
+        // ① 球体：贴图（不透明的近半球，写深度）
         RenderSystem.setShader(GameRenderer::getPositionTexColorShader);
         RenderSystem.setShaderTexture(0,ROCK_TEX);
         BufferBuilder b=Tesselator.getInstance().getBuilder();
         b.begin(VertexFormat.Mode.QUADS,DefaultVertexFormat.POSITION_TEX_COLOR);
         for(Ride r:RIDES){
             Vec3 c=rideCenter(r,now);
-            sphere(b,ps,c,r.radius(),0xFFFFFFFF,now*0.0006);
+            sphere(b,ps,c,r.radius(),0xFFFFFFFF,now*0.0006,cam);
         }
         BufferUploader.drawWithShader(b.end());
         // ② 尾焰：加法混合的相机面片，拖在球体上方
+        RenderSystem.depthMask(false);
         RenderSystem.setShader(GameRenderer::getPositionTexColorShader);
         RenderSystem.setShaderTexture(0,TRAIL_TEX);
         RenderSystem.blendFunc(org.lwjgl.opengl.GL11.GL_SRC_ALPHA,org.lwjgl.opengl.GL11.GL_ONE);
@@ -234,17 +234,21 @@ public final class JogoFxClient {
         RenderSystem.depthMask(true);
     }
 
-    /** 经纬球面（u 平铺 3 次、v 平铺 1.5 次），UV 随时间缓慢滚动。 */
-    private static void sphere(BufferBuilder b,PoseStack ps,Vec3 c,double radius,int color,double scroll){
+    /** 经纬球面（u 平铺 3 次、v 平铺 1.5 次），只画法线朝向相机的那半球。 */
+    private static void sphere(BufferBuilder b,PoseStack ps,Vec3 c,double radius,int color,double scroll,Vec3 cam){
         int lon=28,lat=14;
+        Vec3 toCam=cam.subtract(c);
         for(int i=0;i<lat;i++){
             double v0=i/(double)lat,v1=(i+1)/(double)lat;
             double phi0=Math.PI*(v0-0.5),phi1=Math.PI*(v1-0.5);
             for(int j=0;j<lon;j++){
-                double u0=j/(double)lon,u1=(j+1)/(double)lon;
+                double u0=j/(double)lon,u1=(j+1)/lon;
                 double th0=u0*Math.PI*2,th1=u1*Math.PI*2;
                 Vec3 a=onSphere(c,radius,phi0,th0),bb=onSphere(c,radius,phi0,th1);
                 Vec3 cc=onSphere(c,radius,phi1,th1),d=onSphere(c,radius,phi1,th0);
+                double midPhi=(phi0+phi1)/2,midTh=(th0+th1)/2;
+                Vec3 normal=new Vec3(Math.cos(midTh)*Math.cos(midPhi),Math.sin(midPhi),Math.sin(midTh)*Math.cos(midPhi));
+                if(normal.dot(toCam)<=0)continue;   // 背面不画
                 float uu0=(float)(u0*3+scroll),uu1=(float)(u1*3+scroll);
                 float vv0=(float)(v0*1.5),vv1=(float)(v1*1.5);
                 tex(b,ps,a,uu0,vv0,color);
@@ -291,8 +295,9 @@ public final class JogoFxClient {
     private static void vec(BufferBuilder b,PoseStack ps,Vec3 p,int color){
         b.vertex(ps.last().pose(),(float)p.x,(float)p.y,(float)p.z).color(color).endVertex();
     }
+    /** POSITION_TEX_COLOR 的元素顺序是 Position → UV0 → Color，写反会抛 "Not filled all elements of the vertex"。 */
     private static void tex(BufferBuilder b,PoseStack ps,Vec3 p,float u,float v,int color){
-        b.vertex(ps.last().pose(),(float)p.x,(float)p.y,(float)p.z).color(color).uv(u,v).endVertex();
+        b.vertex(ps.last().pose(),(float)p.x,(float)p.y,(float)p.z).uv(u,v).color(color).endVertex();
     }
 
     public static void clear(){DOMAINS.clear();RIDES.clear();BLOOMS.clear();}

@@ -115,12 +115,24 @@ public final class Client {
         var p=net.minecraft.client.Minecraft.getInstance().player;
         return p!=null&&(p.getMainHandItem().is(VoidContent.SHINBUKE.get())||p.getOffhandItem().is(VoidContent.SHINBUKE.get()));
     }
+    /** 轮盘中心技能：漏壶「极之番·陨」与鹿紫云一「幻兽·琥珀」——不占格，选中后由释放键施放。 */
+    private static boolean centerSkill(int skill){
+        return skill==character.jogo.JogoSkills.JIYAN||skill==character.kashimo.KashimoCombat.ULT;
+    }
     public static boolean availableSkill(int skill){
         // 五条悟轮盘分支（3400-3405）：不是角色技能表里的编号，不能走 allows 门禁，
         // 否则每次选中都会被 fallbackSkill() 顶回「苍」——用户看到的"无法选中，直接跳回苍"。
         if(GojoBranches.branch(skill)){
             var gojoRole=character.CharacterClient.selected();
             return progress.gojo()||(gojoRole!=null&&"gojo".equals(gojoRole.id()));
+        }
+        // 轮盘中心技能（漏壶「极之番·陨」1007 / 鹿紫云一「幻兽·琥珀」2405）不在技能表里，
+        // 与赤血「死胎星」同款：中心选中后由释放键施放，必须单独放行，否则会被 fallbackSkill 顶回默认技能。
+        if(centerSkill(skill)){
+            var centerRole=character.CharacterClient.selected();
+            if(centerRole==null)return false;
+            if(skill==character.jogo.JogoSkills.JIYAN)return "jogo".equals(centerRole.id());
+            return "kashimo".equals(centerRole.id());
         }
         if(toolBlocksTechnique()||!character.CharacterClient.allows(skill))return false;
         // 乙骨的复制品：借用的是旧术式编号，但不该受原角色的解锁链约束。

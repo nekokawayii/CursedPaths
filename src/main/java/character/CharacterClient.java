@@ -57,6 +57,9 @@ public final class CharacterClient {
         if(d==null)return !CharacterSkill.custom(skill);if(!d.hasWheel())return false;
         for(int id:copies)if(id==skill)return true;
         if(character.mainline.Mainline.domainSkill(d.id(),skill)&&d.skills().contains(skill))return true;
+        // 轮盘中心技能（漏壶 1007 / 鹿紫云一 2405）：不在技能表里，按角色放行（与死胎星同款）
+        if(skill==character.jogo.JogoSkills.JIYAN)return "jogo".equals(d.id());
+        if(skill==character.kashimo.KashimoCombat.ULT)return "kashimo".equals(d.id());
         if(CharacterSkill.custom(skill))return d.config().skill(skill)!=null;   // 与服务端一致：自定义技能不再按章节门禁
         if(d.family()==CharacterDefinition.Family.SHRINE)return !(skill>=22&&skill<=23)&&!(skill>=34&&skill<=42);
         return d.unlocked(skill,state.rank())||d.family()==CharacterDefinition.Family.BLOOD&&skill==BloodRules.DEATH_STAR;
