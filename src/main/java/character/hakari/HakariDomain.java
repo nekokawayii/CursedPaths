@@ -15,10 +15,10 @@ import net.minecraft.world.phys.Vec3;
 /** 坐杀博徒：中奖即收起；逻辑关闭与分批还原分离，不把数万方块挤在一个游戏刻。 */
 public final class HakariDomain {
     public static final int SKILL = HakariSkills.DOMAIN;
-    /** 长方形领域：内部 100（长）× 64（宽）× 17（高），白色混凝土外壳 + 两列地铁夹一条走廊。 */
-    public static final int HALF_LENGTH=50, HALF_WIDTH=32, HEIGHT=17;
-    /** 两列「八节悬空地铁」贴左右墙摆放（结构 96×14×9）。 */
-    private static final int TRAIN_X=-48, TRAIN_Z_LEFT=-31, TRAIN_Z_RIGHT=22;
+    /** 长方形领域：内部 100（长）× 24（宽）× 17（高），白色混凝土外壳 + 两列地铁夹一条 6 格走廊。 */
+    public static final int HALF_LENGTH=50, HALF_WIDTH=13, HEIGHT=17;
+    /** 两列「八节悬空地铁」贴左右墙摆放（结构 96×14×9），中间只留 6 格走廊。 */
+    private static final int TRAIN_X=-48, TRAIN_Z_LEFT=-12, TRAIN_Z_RIGHT=3;
     private static final int BATCH=1500, GLOBAL_BATCH=2500, MAX_TICKS=1200, DRAIN_PER_SECOND=40;
     private record Rec(BlockPos pos,BlockState state) { }
     private static final class Job {
