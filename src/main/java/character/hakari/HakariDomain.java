@@ -15,7 +15,11 @@ import net.minecraft.world.phys.Vec3;
 /** 坐杀博徒：中奖即收起；逻辑关闭与分批还原分离，不把数万方块挤在一个游戏刻。 */
 public final class HakariDomain {
     public static final int SKILL = HakariSkills.DOMAIN;
-    private static final int RADIUS=30, BATCH=512, GLOBAL_BATCH=1024, MAX_TICKS=1200, DRAIN_PER_SECOND=40;
+    /** 长方形领域：内部 100（长）× 64（宽）× 17（高），白色混凝土外壳 + 两列地铁夹一条走廊。 */
+    public static final int HALF_LENGTH=50, HALF_WIDTH=32, HEIGHT=17;
+    /** 两列「八节悬空地铁」贴左右墙摆放（结构 96×14×9）。 */
+    private static final int TRAIN_X=-48, TRAIN_Z_LEFT=-31, TRAIN_Z_RIGHT=22;
+    private static final int BATCH=1500, GLOBAL_BATCH=2500, MAX_TICKS=1200, DRAIN_PER_SECOND=40;
     private record Rec(BlockPos pos,BlockState state) { }
     private static final class Job {
         final ServerPlayer owner;final ServerLevel level;final BlockPos center;
@@ -30,7 +34,7 @@ public final class HakariDomain {
         if(active(p)){close(p,"已收起");return;}
         if(HakariCombat.jackpot(p)){p.displayClientMessage(Component.literal("中奖期间不重复展开赌场"),true);return;}
         Job job=new Job(p);buildPlan(job);JOBS.put(p.getUUID(),job);
-        DomainClash.opened(p,Vec3.atCenterOf(job.center),RADIUS);
+        DomainClash.opened(p,Vec3.atCenterOf(job.center),HALF_LENGTH);
         if(!active(p))return;
         p.displayClientMessage(Component.literal("领域展开 · 坐杀博徒"),false);
         job.level.playSound(null,p.blockPosition(),net.minecraft.sounds.SoundEvents.NOTE_BLOCK_PLING.get(),net.minecraft.sounds.SoundSource.PLAYERS,1.4f,.8f);
@@ -45,17 +49,38 @@ public final class HakariDomain {
         job.owner.displayClientMessage(Component.literal("领域解除："+reason),false);
     }
     private static void buildPlan(Job job){
-        int outer=RADIUS*RADIUS,inner=(RADIUS-1)*(RADIUS-1);
-        var floor=Blocks.GOLD_BLOCK.defaultBlockState();var shell=Blocks.BLACK_CONCRETE.defaultBlockState();
+        var white=Blocks.WHITE_CONCRETE.defaultBlockState();
         var light=Blocks.LIGHT.defaultBlockState().setValue(net.minecraft.world.level.block.LightBlock.LEVEL,15);
-        for(int x=-RADIUS;x<=RADIUS;x++)for(int z=-RADIUS;z<=RADIUS;z++){
-            if(x*x+z*z>outer)continue;
-            job.plan.add(new Rec(job.center.offset(x,-1,z),floor));
-            for(int y=0;y<=RADIUS;y++){
-                int squared=x*x+y*y+z*z;if(squared>outer)break;
-                job.plan.add(new Rec(job.center.offset(x,y,z),squared>inner?shell:light));
-            }
+        // ① 地板与天花板（白色混凝土，地板同时就是走廊地面）
+        for(int x=-HALF_LENGTH;x<HALF_LENGTH;x++)for(int z=-HALF_WIDTH;z<HALF_WIDTH;z++){
+            job.plan.add(new Rec(job.center.offset(x,-1,z),white));
+            job.plan.add(new Rec(job.center.offset(x,HEIGHT,z),white));
         }
+        // ② 四面白墙
+        for(int y=0;y<HEIGHT;y++)for(int x=-HALF_LENGTH;x<HALF_LENGTH;x++){
+            job.plan.add(new Rec(job.center.offset(x,y,-HALF_WIDTH),white));
+            job.plan.add(new Rec(job.center.offset(x,y,HALF_WIDTH-1),white));
+        }
+        for(int y=0;y<HEIGHT;y++)for(int z=-HALF_WIDTH+1;z<HALF_WIDTH-1;z++){
+            job.plan.add(new Rec(job.center.offset(-HALF_LENGTH,y,z),white));
+            job.plan.add(new Rec(job.center.offset(HALF_LENGTH-1,y,z),white));
+        }
+        // ③ 内部清空（已经是空气的格子直接跳过，省掉大半工作量），每隔一段嵌隐形光源
+        for(int x=-HALF_LENGTH+1;x<HALF_LENGTH-1;x++)
+            for(int z=-HALF_WIDTH+1;z<HALF_WIDTH-1;z++)
+                for(int y=0;y<HEIGHT;y++){
+                    BlockPos pos=job.center.offset(x,y,z);
+                    if(Math.floorMod(x*7+z*11+y*13,109)==0){job.plan.add(new Rec(pos,light));continue;}
+                    if(!job.level.getBlockState(pos).isAir())job.plan.add(new Rec(pos,Blocks.AIR.defaultBlockState()));
+                }
+        // ④ 两列地铁贴着左右墙，中间留出白色走廊
+        addTrain(job,TRAIN_Z_LEFT);
+        addTrain(job,TRAIN_Z_RIGHT);
+    }
+    /** 一列 96 格长的八节地铁：x 从 -48 到 47、y 从 0 到 13，z 从 z0 到 z0+8。 */
+    private static void addTrain(Job job,int z0){
+        HakariTrainLayout.forEach((x,y,z,state)->job.plan.add(new Rec(
+            job.center.offset(TRAIN_X+x,y,z0+z),HakariTrainLayout.state(state))));
     }
     public static void onServerTick(net.minecraftforge.event.TickEvent.ServerTickEvent event){
         if(event.phase!=net.minecraftforge.event.TickEvent.Phase.END)return;
