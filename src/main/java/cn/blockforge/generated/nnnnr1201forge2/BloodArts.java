@@ -80,6 +80,9 @@ public final class BloodArts {
     private static boolean usable(ServerPlayer p){return valid(p,p.serverLevel())&&unlocked(p)&&TechniqueInput.allowed(p)&&!Skills.sealing(p)&&!SixfoldFinale.active(p)&&!DomainClash.active(p)&&!DismantleMotion.active(p)&&!TenShadows.locked(p)&&!ObserverRitual.active(p)&&!FurnaceMax.active(p)&&!CombatExpansion.chanting(p);}
     public static boolean armored(LivingEntity target){State s=states.get(target.getUUID());return s!=null&&s.shield>0&&s.shieldEnd>s.level.getGameTime();}
     public static void input(ServerPlayer p,TechniqueInput.Input in){
+        // NPC / 女仆的假玩家不要开「玩家版 100 格胎海」：那会把整片区域罩住、还会锁传送，
+        // NPC 用 NpcDomain（半径 26）自己开领域，见 NpcCombatCasting。
+        if(in.skill()==BloodRules.DOMAIN&&(p instanceof NpcBridge.NpcActor||p instanceof MaidBridge.Actor))return;
         if(!BloodRules.skill(in.skill())||in.phase()<0||in.phase()>3)return;
         if(in.skill()==BloodRules.DEATH_STAR){if(in.phase()==0)DeathStar.start(p);return;}
         if(DeathStar.anemic(p)){tell(p,"严重贫血：暂时无法使用其他赤血操术");return;}

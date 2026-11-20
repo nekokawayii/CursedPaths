@@ -22,6 +22,8 @@ public final class BloodDomain {
     public static boolean active(ServerPlayer p){return domains.stream().anyMatch(d->d.owner==p);}
     public static boolean free(ServerPlayer p){return domains.stream().anyMatch(d->d.owner==p&&d.level==p.level()&&d.end>d.level.getGameTime()&&BloodRules.inside(p.position().distanceToSqr(d.center)));}
     public static void open(ServerPlayer p,Vec3 center,boolean echo){
+        // 防御：NPC / 女仆的假玩家不开玩家版 100 格胎海（会把城市罩住、锁传送）；NPC 用 NpcDomain。
+        if(p instanceof NpcBridge.NpcActor||p instanceof MaidBridge.Actor)return;
         if(!character.mainline.Mainline.requireDomain(p))return;
         if(!echo)close(p);if(domains.size()>=32)return;
         Domain d=new Domain(p,center);domains.add(d);sync(d);
