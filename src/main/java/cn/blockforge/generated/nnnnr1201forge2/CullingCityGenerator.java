@@ -32,7 +32,11 @@ public final class CullingCityGenerator extends FlatLevelSource {
         }
         // ② 地图本体（只铺本区块，约 2500 块）
         CullingMap.place(c);
-        // ③ 出生点设施：兑换台与离开点（地图中心地块）
+        // ③ 街道以下的泥土/石头全部换成基岩：地图最低 y 是 BASE_Y(61)，所以只需覆盖 61~63；
+        //    再往下由维度 flat 层的 64 层基岩负责。
+        for(int x=minX;x<minX+16;x++)for(int z=minZ;z<minZ+16;z++)
+            for(int y=CullingMap.BASE_Y;y<64;y++)put(c,x,y,z,Blocks.BEDROCK);
+        // ④ 出生点设施：兑换台与离开点（地图中心地块）
         for(int x=minX;x<minX+16;x++)for(int z=minZ;z<minZ+16;z++){
             if(x==0&&z==-8)put(c,x,65,z,ExpeditionContent.block("culling_exchange"));
             if(x==2&&z==-8)put(c,x,65,z,ExpeditionContent.block("culling_exit"));

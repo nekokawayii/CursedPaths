@@ -63,8 +63,12 @@ public final class CullingSpawns {
         boolean allowToji = toji == 0 && stage % 3 == 0;
         if (sukuna < CAP_SUKUNA) spawnSukuna(level, wave);
         if (curses < CAP_CURSE) spawnVanilla(level, Math.min(CAP_CURSE - curses, elite ? 2 : 3), wave, elite);
-        // r230：羂索本体（轻量独立生物，只会召唤强化原版怪），场上最多一只
-        if (level.random.nextFloat() < GETO_CHANCE) spawnGeto(level, wave);
+        // r230：羂索本体（轻量独立生物，只会召唤强化原版怪），场上最多一只。
+        // 概率从 4% 降到 1.2%，且只有 35% 真的出羂索；其余名额改成补刷随机术师 NPC，把概率平摊出去。
+        if (level.random.nextFloat() < GETO_CHANCE) {
+            if (level.random.nextFloat() < GETO_SHARE) spawnGeto(level, wave);
+            else spawn(level, SORCERERS, "sorcerer", GETO_SPARE_SORCERERS, wave, false, allowToji);
+        }
         int sorcererCap = ancient ? CAP_SORCERER * 3 : CAP_SORCERER;
         if (sorcerers < sorcererCap) spawn(level, SORCERERS, "sorcerer", Math.min(sorcererCap - sorcerers, elite ? 1 : 2), wave, elite, allowToji);
         // r227：界内会偶尔刷出五条悟 / 虎杖残影这类"大人物"，血量按普通泳者算
@@ -125,8 +129,12 @@ public final class CullingSpawns {
             p.displayClientMessage(Component.literal("【死灭洄游】" + BOSS_NAMES[pick] + " 作为参赛者出现了。"), true);
     }
 
-    /** 羂索本体出现概率。 */
-    private static final float GETO_CHANCE = .04f;
+    /** 羂索本体出现概率（每轮刷新掷一次）。 */
+    private static final float GETO_CHANCE = .012f;
+    /** 掷中之后真正出羂索的比例，其余让给其他 NPC —— 把概率平摊出去。 */
+    private static final float GETO_SHARE = .35f;
+    /** 掷中但不出羂索时，额外补刷一只随机术师。 */
+    private static final int GETO_SPARE_SORCERERS = 1;
     /** 强化原版生物池（替代自定义咒灵，省性能）。 */
     private static final net.minecraft.world.entity.EntityType<?>[] VANILLA = {
         net.minecraft.world.entity.EntityType.ZOMBIE, net.minecraft.world.entity.EntityType.HUSK,
