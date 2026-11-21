@@ -325,21 +325,35 @@ public final class Infinity {
         }
         // 领域展延：术式穿透无下限
         if (attacker != null && DomainAmplification.active(attacker)) return false;
-        // 距离：按碰撞箱边缘算；近战怪有攻击距离，放宽 0.6 格
-        double reach = EDGE + BODY_BAND;   // 2.5 格：覆盖各种近战攻击距离
-        if (attacker != null) {
-            if (bodyDist(attacker, p.getBoundingBox().getCenter()) > reach) return false;
-        } else {
-            Vec3 at = source.getSourcePosition();
-            if (at != null) {
-                if (edge(p.getBoundingBox(), point(at)) > reach) return false;
-            } else if (source.is(net.minecraft.world.damagesource.DamageTypes.STARVE)
-                || source.is(net.minecraft.world.damagesource.DamageTypes.FELL_OUT_OF_WORLD)) {
-                return false; // 机制性伤害不挡
-            }
-            // 没有来源实体也没有坐标的远程/领域伤害：无下限直接吃掉
+        Vec3 center = p.getBoundingBox().getCenter();
+        boolean melee = attacker != null && source.getDirectEntity() == attacker;
+        // 1) 近战：手长的怪（攻击距离 4~5 格）也算，6 格内一律挡
+        if (melee) {
+            if (bodyDist(attacker, center) > 6.0) return false;
+            return shieldFeedback(p, attacker);
         }
-        return shieldFeedback(p, attacker);
+        // 2) 有来源实体的术式/弹道
+        if (attacker != null) {
+            if (bodyDist(attacker, center) <= 6.0) return shieldFeedback(p, attacker);
+            // NPC 的远程术式常常直接结算魔法伤害、没有弹道实体：距离拦不到，按伤害类型拦
+            if (source.is(net.minecraft.world.damagesource.DamageTypes.MAGIC)
+                || source.is(net.minecraft.world.damagesource.DamageTypes.INDIRECT_MAGIC)
+                || source.is(net.minecraft.world.damagesource.DamageTypes.SONIC_BOOM)
+                || source.is(net.minecraft.world.damagesource.DamageTypes.WITHER)
+                || source.is(net.minecraft.world.damagesource.DamageTypes.DRAGON_BREATH)) {
+                return shieldFeedback(p, attacker);
+            }
+            return false;
+        }
+        // 3) 没有来源实体：看来源坐标；连坐标都没有的机制伤害放过
+        Vec3 at = source.getSourcePosition();
+        if (at != null) {
+            if (edge(p.getBoundingBox(), point(at)) > 3.0) return false;
+            return shieldFeedback(p, null);
+        }
+        if (source.is(net.minecraft.world.damagesource.DamageTypes.STARVE)
+            || source.is(net.minecraft.world.damagesource.DamageTypes.FELL_OUT_OF_WORLD)) return false;
+        return shieldFeedback(p, null);
     }
 
     private static boolean shieldFeedback(ServerPlayer p, LivingEntity attacker) {
