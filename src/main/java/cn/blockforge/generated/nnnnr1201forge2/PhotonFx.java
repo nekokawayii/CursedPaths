@@ -424,6 +424,17 @@ public final class PhotonFx {
         }catch(Throwable t){fail(t);return null;}
     }
 
+    /** 半透明球壳：领域边界用，非叠加混合，低密度，不会糊满屏。 */
+    public static Handle shell(Vec3 pos,double radius,int color,int bloom,int life){
+        try{
+            Emitter e=emitter(SHELL,Math.max(0.5,radius),0.03);Object c=e.config();
+            duration(c,Math.max(4,life));particleLife(c,Math.max(20,life/2));
+            size(c,Math.max(0.2,radius*0.02));rate(c,Math.max(4,radius*0.8));
+            colour(c,color);render(c,MODE_BILLBOARD,"textures/effect/glow.png",bloom,false);
+            return start(e,pos);
+        }catch(Throwable t){fail(t);return null;}
+    }
+
     // ------------------------------------------------------------ 简易领域 · 捌（全 Photon）
     /** 领域柱壳：半径 {@code radius}、高 {@code height} 的青色粒子壳 + 贴地圆环。长按期间常驻。 */
     public static Handle simpleDomainShell(Vec3 pos,double radius,double height){

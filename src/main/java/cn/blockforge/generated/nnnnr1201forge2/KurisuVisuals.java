@@ -68,6 +68,7 @@ public final class KurisuVisuals {
         stIndex++;
         if(stIndex>=ST_SKILLS.length){stIndex=-1;return;}
         int skill=ST_SKILLS[stIndex];
+        KurisuPhoton.stopAll();
         KurisuPhoton.play(skill,mc.player.position().add(0,2,0).add(mc.player.getLookAngle().scale(12)),mc.player.getLookAngle(),120);
         stCapture=6;
     }

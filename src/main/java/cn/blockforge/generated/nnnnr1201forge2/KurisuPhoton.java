@@ -26,7 +26,7 @@ public final class KurisuPhoton {
         switch(skill){
             case KurisuSkills.BAPTISM -> {
                 add(skill,PhotonFx.beam(at.add(0,26,0),at,0.7,8),12);
-                add(skill,PhotonFx.shockwave(at,0xFFFFE9A8,2,10),14);
+                add(skill,PhotonFx.shell(at,4,0x66FFF6D8,0,20),24);
             }
             case KurisuSkills.FLAME -> {
                 add(skill,PhotonFx.ring(at.add(0,.15,0),3.2,.55,GOLD,0,26,160,16),170);
@@ -54,9 +54,8 @@ public final class KurisuPhoton {
                 add(skill,PhotonFx.ring(at,3.4,.6,GOLD,0xFFD77A,40,24,12),26);
             }
             case KurisuSkills.STORM -> {
-                add(skill,PhotonFx.beam(at.add(0,12,0),at,4.2,20),24);
+                add(skill,PhotonFx.shell(at,7,0x55FFF6D8,0,30),34);
                 add(skill,PhotonFx.ring(at,7.5,.7,GOLD,0xFFD77A,52,26,16),30);
-                add(skill,PhotonFx.shockwave(at,0xFFFFF6D8,8,14),18);
             }
             case KurisuSkills.EXECUTE -> {
                 add(skill,PhotonFx.sphere(at,.8,.9,WHITE,0xFFD77A,GLOW,true,10,6,26,.4),14);
@@ -77,8 +76,8 @@ public final class KurisuPhoton {
             }
             case KurisuSkills.DOMAIN -> {
                 int dur=Math.max(60,Math.min(600,d));
-                add(skill,PhotonFx.domain(at,20,dur),dur);
-                add(skill,PhotonFx.ring(at,18,.7,WHITE,0xFFF6D8,36,dur,14),dur);
+                add(skill,PhotonFx.shell(at,22,0x44FFF6D8,0,dur),dur);
+                add(skill,PhotonFx.ring(at,20,.7,WHITE,0xFFF6D8,36,dur,14),dur);
             }
             default -> {}
         }
