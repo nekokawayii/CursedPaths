@@ -307,7 +307,11 @@ public final class Client {
     private static boolean slashEffect(int kind){return switch(kind){case 0,7,10,11,12,51,59,61,62,64,72,92,93,96,113,115,119,121,122,123,125,126,134,138,139,140,141,142,145,146,147,148,149,170,171,172->true;default->false;};}
     public static void collectSlashes(Vec3 center,double radius,List<Vec3> out){visuals.removeIf(v->{if(!slashEffect(v.e.kind()))return false;Vec3 at=v.e.position();if(at.distanceToSqr(center)>radius*radius)return false;if(out.size()<6000)out.add(at);PhotonBridge.stop(v.handle);return true;});}
     public static void slashShake(){shakeUntil=Math.max(shakeUntil,tick+3);}
-    public static void receive(Network.Effect e){
+    public static void receive(Network.Effect raw){
+        // 无下限：服务端同步开关状态；其余特效按本地玩家是否开着无下限夹到 1.0 格球面上。
+        // 放在最前面，才能覆盖 sendTo / 单人特效等不经过 Network.send 的路径（所有角色的术式都过这里）。
+        if(raw.kind()==character.gojo.Infinity.SYNC_KIND){character.gojo.InfinityClient.set((int)raw.size());return;}
+        final Network.Effect e=character.gojo.InfinityClient.deflect(raw);
         if(e.kind()==ManualContent.EFFECT_OPEN){Minecraft.getInstance().setScreen(new ManualScreen());return;}
         if(e.kind()==970){RitualClient.lightning(e);return;}
         if(e.kind()==YukiBlackHole.FX){YukiBlackHoleClient.receive(e);return;}

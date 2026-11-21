@@ -36,6 +36,8 @@ import java.util.*;
 @Mod.EventBusSubscriber(modid = "jujutsu_kaisen_cursed_paths")
 public final class Infinity {
     public static final int SKILL = 9;
+    /** 服务端 → 客户端同步无下限状态（size = 等级，0 = 关闭）。 */
+    public static final int SYNC_KIND = 996;
     public static final double RADIUS = 1.0, STOP = 0.2, COST_PER_SECOND = 250;
     public static final int STACK_TICKS = 500, IMMUNE_TICKS = 300, MAX_LEVEL = 200;
 
@@ -88,12 +90,14 @@ public final class Infinity {
             shutdown(p, "无下限：收起");
         }
         applyDebuff(p);
+        sync(p);
     }
 
     private static void shutdown(ServerPlayer p, String message) {
         Curse.data(p).putBoolean(K_ON, false);
         restoreAll(p);
         applyDebuff(p);
+        sync(p);
         if (message != null) p.displayClientMessage(Component.literal(message), true);
     }
 
@@ -104,7 +108,14 @@ public final class Infinity {
         data.putLong(K_IMMUNE, p.level().getGameTime() + IMMUNE_TICKS);
         data.putLong(K_NEXT, p.level().getGameTime() + STACK_TICKS);
         applyDebuff(p);
+        sync(p);
         p.displayClientMessage(Component.literal("反转术式：混乱的思绪已清除，15 秒内不再积累"), true);
+    }
+
+    /** 服务端 → 客户端同步无下限状态：客户端用它决定是否把特效夹在 1.0 格球面上。 */
+    private static void sync(ServerPlayer p) {
+        Network.sendTo(p, new Network.Effect(SYNC_KIND, p.getId(), p.position(), Vec3.ZERO,
+            active(p) ? Math.max(1, level(p)) : 0f, 0, 0));
     }
 
     /** 天逆鉾：无下限强制关闭 3 秒。 */
@@ -134,7 +145,7 @@ public final class Infinity {
                 }
             }
             zone(p, now);
-            if (now % 20 == 0) fx(p, (float) (RADIUS * 2.0), 4);
+            if (now % 20 == 0) { sync(p); fx(p, (float) (RADIUS * 2.0), 4); }
         }
         // 玩家下线/切维度清理
         HELD.keySet().removeIf(id -> e.getServer().getPlayerList().getPlayer(id) == null);
