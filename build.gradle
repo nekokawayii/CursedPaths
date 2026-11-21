@@ -15,6 +15,7 @@ minecraft {
             property 'forge.logging.markers', 'REGISTRIES'
             property 'forge.logging.console.level', 'info'
             arg '--username'; arg 'Dev'
+            property 'mixin.env.disableRefMap', 'true'
             mods { cursed { source sourceSets.main } }
         }
         server {
@@ -31,6 +32,7 @@ dependencies {
     // 运行期由 mods 目录提供；这里只用于编译，避免把它们的类打进我们自己的 jar。
     compileOnly fileTree(dir: 'libs', include: ['*.jar'])
     annotationProcessor fileTree(dir: 'libs', include: ['*.jar'])
+    runtimeOnly files('build/devlibs/photon-fixed3.jar', 'build/devlibs/animplay-fixed.jar')
 
     minecraft 'net.minecraftforge:forge:1.20.1-47.4.0'
 }
