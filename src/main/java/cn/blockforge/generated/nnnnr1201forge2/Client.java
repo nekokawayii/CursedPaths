@@ -356,6 +356,9 @@ public final class Client {
         if(e.kind()>=character.jogo.JogoFx.FIRST&&e.kind()<=character.jogo.JogoFx.LAST){character.jogo.JogoFxClient.receive(e);return;}
         if(e.kind()>=ObserverRitual.FX_START&&e.kind()<=ObserverRitual.FX_FIGHT){ObserverClient.receive(e);return;}
         if(e.kind()>=FurnaceMax.FX_CHARGE&&e.kind()<=FurnaceMax.FX_BURN){FurnaceMaxClient.receive(e);return;}
+        // 无下限的挡下波纹：第一人称不渲染（糊脸），第三人称照常
+        if(e.kind()==GojoFx.BLOCK&&e.owner()==(Minecraft.getInstance().player==null?-1:Minecraft.getInstance().player.getId())
+            &&Minecraft.getInstance().options.getCameraType().isFirstPerson())return;
         if((e.kind()>=GojoFx.BLOCK&&e.kind()<=GojoFx.DOMAIN_CLOSE)||e.kind()==GojoFx.BIG_BANG
             ||e.kind()==GojoFx.PURPLE_CHARGE||e.kind()==GojoFx.PURPLE_TAP||e.kind()==GojoFx.PURPLE_TAP_BURST
             ||e.kind()==GojoFx.PURPLE_GATHER_SPIN){GojoFx.receive(e);return;}

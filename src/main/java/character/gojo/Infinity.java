@@ -237,32 +237,62 @@ public final class Infinity {
     }
 
     // ------------------------------------------------------------ 伤害拦截
-    @SubscribeEvent public static void hurt(LivingAttackEvent e) {
+    @SubscribeEvent(priority = net.minecraftforge.eventbus.api.EventPriority.HIGHEST)
+    public static void hurt(LivingAttackEvent e) {
         if (e.getEntity().level().isClientSide || !(e.getEntity() instanceof ServerPlayer p)) return;
-        if (!active(p)) return;
-        var source = e.getSource();
-        if (source.is(net.minecraft.tags.DamageTypeTags.BYPASSES_INVULNERABILITY)) return;
-        // 环境伤害（火/岩浆/冻结）也一并免疫：粒子都被减速了
+        if (blocked(p, e.getSource())) e.setCanceled(true);
+    }
+
+    /** 兜底：万一有别的模组/通道绕过 LivingAttackEvent，在扣血前再拦一次。 */
+    @SubscribeEvent(priority = net.minecraftforge.eventbus.api.EventPriority.LOWEST)
+    public static void hurtLate(net.minecraftforge.event.entity.living.LivingHurtEvent e) {
+        if (e.getEntity().level().isClientSide || !(e.getEntity() instanceof ServerPlayer p)) return;
+        if (e.getAmount() <= 0) return;
+        if (blocked(p, e.getSource())) e.setCanceled(true);
+    }
+
+    /** true = 这一下该被无下限挡掉。 */
+    private static boolean blocked(ServerPlayer p, net.minecraft.world.damagesource.DamageSource source) {
+        if (!active(p)) return false;
+        if (source.is(net.minecraft.tags.DamageTypeTags.BYPASSES_INVULNERABILITY)) return false;
+        // 环境伤害（火/岩浆/冻结）直接免疫：粒子都被减速了
         if (source.is(net.minecraft.tags.DamageTypeTags.IS_FIRE) || source.is(net.minecraft.tags.DamageTypeTags.IS_FREEZING)) {
-            e.setCanceled(true);
-            return;
+            return shieldFeedback(p, null);
         }
-        if (p.getPersistentData().getBoolean("SukunaWorldSlashHit")) return;
+        if (p.getPersistentData().getBoolean("SukunaWorldSlashHit")) return false;
         LivingEntity attacker = source.getEntity() instanceof LivingEntity living ? living : null;
         // 天逆鉾：刺中即斩断无下限 3 秒
         if (attacker != null && isTenka(attacker)) {
             sever(p);
             p.level().playSound(null, p.blockPosition(), SoundEvents.ANVIL_LAND, SoundSource.PLAYERS, 1.2f, .6f);
-            return;
+            return false;
         }
-        if (attacker != null && DomainAmplification.active(attacker)) return;
-        Vec3 at = source.getSourcePosition() != null ? source.getSourcePosition() : (attacker != null ? attacker.position() : null);
-        if (at == null) return;
-        if (at.distanceToSqr(p.getBoundingBox().getCenter()) > RADIUS * RADIUS * 1.6) return;
-        e.setCanceled(true);
+        // 领域展延：术式穿透无下限
+        if (attacker != null && DomainAmplification.active(attacker)) return false;
+        // 距离：按碰撞箱边缘算；近战怪有攻击距离，放宽 0.6 格
+        double reach = RADIUS + 0.6;
+        if (attacker != null) {
+            if (edge(p.getBoundingBox(), attacker.getBoundingBox()) > reach) return false;
+        } else {
+            Vec3 at = source.getSourcePosition();
+            if (at != null) {
+                if (edge(p.getBoundingBox(), point(at)) > reach) return false;
+            } else if (source.is(net.minecraft.world.damagesource.DamageTypes.STARVE)
+                || source.is(net.minecraft.world.damagesource.DamageTypes.FELL_OUT_OF_WORLD)) {
+                return false; // 机制性伤害不挡
+            }
+            // 没有来源实体也没有坐标的远程/领域伤害：无下限直接吃掉
+        }
+        return shieldFeedback(p, attacker);
+    }
+
+    private static boolean shieldFeedback(ServerPlayer p, LivingEntity attacker) {
         p.level().playSound(null, p.blockPosition(), SoundEvents.SHIELD_BLOCK, SoundSource.PLAYERS, 1.0f, .6f);
         fx(p, 1.4f, 6);
-        if (attacker instanceof ServerPlayer other) other.displayClientMessage(Component.literal("无下限：伤害被无限减速挡下（需要领域展延）"), true);
+        if (attacker instanceof ServerPlayer other) {
+            other.displayClientMessage(Component.literal("无下限：伤害被无限减速挡下（需要领域展延）"), true);
+        }
+        return true;
     }
 
     // ------------------------------------------------------------ 混乱的思绪

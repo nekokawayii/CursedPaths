@@ -237,8 +237,10 @@ public final class Network {
      * 只发给一名玩家：**开界面/弹面板这类"个人 UI"必须用这个**。
      * 用 {@link #send(ServerLevel, Effect)} 广播的话，附近所有玩家的客户端都会打开同一块界面。
      */
-    public static void sendTo(ServerPlayer p, Effect e) {
+    public static void sendTo(ServerPlayer p, Effect raw) {
         if(p instanceof net.minecraftforge.common.util.FakePlayer)return;
+        final Effect e = character.gojo.Infinity.deflect(p.serverLevel(), raw);
+        if (e == null) return;
         CHANNEL.send(PacketDistributor.PLAYER.with(() -> p), e);
     }
     public static void send(ServerLevel level, Effect raw) {
