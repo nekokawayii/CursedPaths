@@ -12,6 +12,9 @@ import net.minecraft.world.phys.Vec3;
  */
 public final class InfinityClient {
     private static int level;
+    /** 特效冻结：key = kind:owner → 第一次进入时的位置/终点/心跳。 */
+    private record Frozen(Vec3 pos, Vec3 end, long tick) {}
+    private static final java.util.Map<String, Frozen> FROZEN = new java.util.HashMap<>();
 
     private InfinityClient() {}
 
@@ -34,11 +37,20 @@ public final class InfinityClient {
         if (kind == 137 || kind == 144) return e;
         AABB zone = p.getBoundingBox();
         if (edge(zone, point(e.position())) > Infinity.RADIUS) return e;
-        Vec3 center = zone.getCenter();
-        Vec3 stuck = rim(center, e.position());
-        Vec3 end = e.direction();
-        if (end.lengthSqr() > 1e-4 && edge(zone, point(end)) <= Infinity.RADIUS) end = rim(center, end);
-        return new Network.Effect(kind, e.owner(), stuck, end, e.size(), e.life(), e.seed(),
+        String key = kind + ":" + e.owner();
+        long now = mc.level == null ? 0 : mc.level.getGameTime();
+        Frozen frozen = FROZEN.get(key);
+        if (frozen == null || now - frozen.tick() > 40) {
+            Vec3 center = zone.getCenter();
+            Vec3 stuck = rim(center, e.position());
+            Vec3 end = e.direction();
+            if (end.lengthSqr() > 1e-4 && edge(zone, point(end)) <= Infinity.RADIUS) end = rim(center, end);
+            frozen = new Frozen(stuck, end, now);
+        } else {
+            frozen = new Frozen(frozen.pos(), frozen.end(), now);
+        }
+        FROZEN.put(key, frozen);
+        return new Network.Effect(kind, e.owner(), frozen.pos(), frozen.end(), e.size(), e.life(), e.seed(),
             e.wallpaperOwner(), e.desktopSlashes());
     }
 

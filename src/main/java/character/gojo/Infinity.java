@@ -59,6 +59,9 @@ public final class Infinity {
     private static final Map<UUID, Integer> LEVEL_CACHE = new HashMap<>();
     /** 被硬定身的实体 → 锁死的位置（离开 0.5 格后清除）。 */
     private static final Map<UUID, Vec3> LOCKED = new LinkedHashMap<>();
+    /** 特效冻结：key = kind:owner，value = 第一次进入 1.0 格时的位置/终点/心跳。 */
+    private record Frozen(Vec3 pos, Vec3 end, long tick) {}
+    private static final Map<String, Frozen> FROZEN = new HashMap<>();
 
     public static boolean active(Player p) {
         return p != null && Curse.data(p).getBoolean(K_ON);
@@ -403,13 +406,23 @@ public final class Infinity {
             if (!active(p) || effect.owner() == p.getId()) continue;
             AABB zone = p.getBoundingBox();
             if (edge(zone, point(effect.position())) > RADIUS) continue;
-            Vec3 center = zone.getCenter();
-            Vec3 stuck = rim(center, effect.position());
-            Vec3 end = effect.direction();
-            if (end.lengthSqr() > 1e-4 && edge(zone, point(end)) <= RADIUS) end = rim(center, end);
-            if (level.getGameTime() % 4 == 0) fx(p, 1.5f, 6);
-            return new Network.Effect(kind, effect.owner(), stuck, end, effect.size(), effect.life(),
-                effect.seed(), effect.wallpaperOwner(), effect.desktopSlashes());
+            String key = kind + ":" + effect.owner();
+            long now = level.getGameTime();
+            Frozen frozen = FROZEN.get(key);
+            // 40 刻内同一个特效持续在圈内 → 一直用第一次进入的点（速度归零、不再滑动）
+            if (frozen == null || now - frozen.tick() > 40) {
+                Vec3 center = zone.getCenter();
+                Vec3 stuck = rim(center, effect.position());
+                Vec3 end = effect.direction();
+                if (end.lengthSqr() > 1e-4 && edge(zone, point(end)) <= RADIUS) end = rim(center, end);
+                frozen = new Frozen(stuck, end, now);
+                if (level.getGameTime() % 4 == 0) fx(p, 1.5f, 6);
+            } else {
+                frozen = new Frozen(frozen.pos(), frozen.end(), now);
+            }
+            FROZEN.put(key, frozen);
+            return new Network.Effect(kind, effect.owner(), frozen.pos(), frozen.end(), effect.size(),
+                effect.life(), effect.seed(), effect.wallpaperOwner(), effect.desktopSlashes());
         }
         return effect;
     }
