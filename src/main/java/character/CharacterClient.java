@@ -60,6 +60,7 @@ public final class CharacterClient {
         // 轮盘中心技能（漏壶 1007 / 鹿紫云一 2405）：不在技能表里，按角色放行（与死胎星同款）
         if(skill==character.jogo.JogoSkills.JIYAN)return "jogo".equals(d.id());
         if(skill==character.kashimo.KashimoCombat.ULT)return "kashimo".equals(d.id());
+        if("gojo".equals(d.id())&&skill==41)return true;   // 无下限（第 8 格，不在技能表也能放）
         if(CharacterSkill.custom(skill))return d.config().skill(skill)!=null;   // 与服务端一致：自定义技能不再按章节门禁
         if(d.family()==CharacterDefinition.Family.SHRINE)return !(skill>=22&&skill<=23)&&!(skill>=34&&skill<=42);
         return d.unlocked(skill,state.rank())||d.family()==CharacterDefinition.Family.BLOOD&&skill==BloodRules.DEATH_STAR;

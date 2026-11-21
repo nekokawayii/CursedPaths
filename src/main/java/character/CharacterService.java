@@ -69,7 +69,8 @@ public final class CharacterService {
         var d=selected(p);if(d==null)return !CharacterSkill.custom(skill);
         // 轮盘中心技能（漏壶 1007 / 鹿紫云一 2405）：不在技能表里，按角色放行（与死胎星同款）
         if(d!=null&&((skill==character.jogo.JogoSkills.JIYAN&&"jogo".equals(d.id()))
-            ||(skill==character.kashimo.KashimoCombat.ULT&&"kashimo".equals(d.id()))))return true;
+            ||(skill==character.kashimo.KashimoCombat.ULT&&"kashimo".equals(d.id()))
+            ||(skill==41&&"gojo".equals(d.id()))))return true;
         // 乙骨掠夺来的旧术式不在角色静态技能表里，按复制记录单独授权（施放时还会校验里香与单次次数）。
         for(int id:character.yuta.YutaCopies.array(p))if(id==skill)return true;
         if(character.mainline.Mainline.domainSkill(d.id(),skill)&&d.skills().contains(skill))return character.mainline.Mainline.domainUnlocked(p);
