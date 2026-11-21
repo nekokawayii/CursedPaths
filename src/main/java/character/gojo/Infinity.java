@@ -129,6 +129,36 @@ public final class Infinity {
     }
 
     // ------------------------------------------------------------ 主循环
+    /** 在实体 tick 之前先扫一遍：把已经进入 3 格的箭/实体先定住，避免它们先动一步就打中。 */
+    @SubscribeEvent public static void levelTick(TickEvent.LevelTickEvent e) {
+        if (e.phase != TickEvent.Phase.START || !(e.level instanceof ServerLevel level)) return;
+        long now = level.getGameTime();
+        for (ServerPlayer p : level.players()) if (active(p)) zone(p, now);
+    }
+
+    /** 保底：箭/火球真的要命中时直接取消命中并把它钉住（Forge 的 ProjectileImpactEvent）。 */
+    @SubscribeEvent public static void impact(net.minecraftforge.event.entity.ProjectileImpactEvent e) {
+        if (!(e.getProjectile().level() instanceof ServerLevel level) || level.isClientSide) return;
+        Entity projectile = e.getProjectile();
+        for (ServerPlayer p : level.players()) {
+            if (!active(p)) continue;
+            if (projectile instanceof net.minecraft.world.entity.projectile.Projectile pj && pj.getOwner() == p) continue;
+            if (edge(p.getBoundingBox(), projectile.getBoundingBox()) > 3.0) continue;
+            e.setCanceled(true);
+            lock(projectile);
+            return;
+        }
+    }
+
+    private static void lock(Entity entity) {
+        Vec3 at = LOCKED.computeIfAbsent(entity.getUUID(), k -> entity.position());
+        entity.setNoGravity(true);
+        entity.setDeltaMovement(Vec3.ZERO);
+        if (entity.position().distanceToSqr(at) > 1e-8) entity.setPos(at.x, at.y, at.z);
+        entity.fallDistance = 0;
+        if (entity instanceof LivingEntity le) le.hurtMarked = true;
+    }
+
     @SubscribeEvent public static void tick(TickEvent.ServerTickEvent e) {
         if (e.phase != TickEvent.Phase.END || e.getServer() == null) return;
         long now = e.getServer().overworld().getGameTime();
@@ -161,9 +191,12 @@ public final class Infinity {
         AABB reach = p.getBoundingBox().inflate(RADIUS + 1.0);
         Map<UUID, Held> held = HELD.computeIfAbsent(p.getUUID(), k -> new HashMap<>());
         Set<UUID> seen = new HashSet<>();
-        for (Entity entity : level.getEntities(p, reach, t -> t.isAlive() && t != p)) {
+        for (Entity entity : level.getEntities(p, p.getBoundingBox().inflate(4.0), t -> t.isAlive() && t != p)) {
             double dist = edge(p.getBoundingBox(), entity.getBoundingBox());
-            if (dist > RADIUS) continue;
+            boolean projectile = entity instanceof net.minecraft.world.entity.projectile.Projectile;
+            // 箭/投掷物速度快（一 tick 能走 3 格），必须提前 3 格抓，否则会 tunnelling 直接命中
+            double gate = projectile ? 3.0 : RADIUS;
+            if (dist > gate) continue;
             seen.add(entity.getUUID());
             double decay = dist <= STOP ? 0 : Math.pow(Math.min(1, dist / RADIUS), 6);
             Held state = held.computeIfAbsent(entity.getUUID(), k -> {
@@ -174,7 +207,7 @@ public final class Infinity {
                 return h;
             });
             // 贴身处（<= EDGE 0.5 格）直接硬定身：位置锁死 + 速度清零 + 关重力（抄 JJK-HeianEra 的 freeze）
-            boolean holds = !(entity instanceof Player) && dist <= EDGE;
+            boolean holds = !(entity instanceof Player) && (dist <= EDGE || (projectile && dist <= 3.0));
             if (holds) {
                 Vec3 lock = LOCKED.computeIfAbsent(entity.getUUID(), k -> entity.position());
                 entity.setNoGravity(true);
@@ -226,7 +259,7 @@ public final class Infinity {
                 if (!p.getInventory().add(stack)) p.drop(stack, false);
                 item.discard();
             }
-            if (entity instanceof Projectile projectile && decay <= 0) projectile.setDeltaMovement(Vec3.ZERO);
+            if (entity instanceof net.minecraft.world.entity.projectile.Projectile proj && decay <= 0) proj.setDeltaMovement(Vec3.ZERO);
         }
         // 离开 1.0 格：还原
         held.entrySet().removeIf(entry -> {
