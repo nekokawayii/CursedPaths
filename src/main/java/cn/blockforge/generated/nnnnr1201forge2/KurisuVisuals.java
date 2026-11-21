@@ -17,7 +17,7 @@ public final class KurisuVisuals {
 
     public static void receive(Network.Effect e){
         switch(e.kind()){
-            case KurisuFx.PLAY -> KurisuPhoton.play((int)e.size(),e.position(),e.direction());
+            case KurisuFx.PLAY -> KurisuPhoton.play((int)e.size(),e.position(),e.direction(),Math.max(20,e.life()));
             case KurisuFx.STOP -> KurisuPhoton.stop((int)e.size());
             case KurisuFx.HUD -> sanity=(int)e.size();
             default -> {}
