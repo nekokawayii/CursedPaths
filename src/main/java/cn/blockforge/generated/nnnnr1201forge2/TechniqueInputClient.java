@@ -16,6 +16,8 @@ public final class TechniqueInputClient {
         return new TechniqueInput.Input(skill,phase,up,downKey,jump,crouch,motion,Client.selected);
     }
     private static void send(int skill,int phase){Network.CHANNEL.sendToServer(packet(skill,phase));}
+    /** 供按键直接触发某个技能输入（例如无下限 K 键）。 */
+    public static void press(int skill){send(skill,0);}
     public static void cancel(){if((heldSkill>=0||worldLease>0)&&Minecraft.getInstance().player!=null)send(heldSkill>=0?heldSkill:SlashFormRules.WORLD,3);heldSkill=-1;previous=false;ticks=0;worldLease=0;}
     public static void clear(){heldSkill=-1;previous=false;ticks=worldLease=0;}
     public static void tick(){update(true);}

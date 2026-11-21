@@ -26,6 +26,8 @@ public final class Client {
     public static final KeyMapping FIST=gameplayKey("key.jujutsu_kaisen_cursed_paths.fist",GLFW.GLFW_KEY_DELETE);
     public static final KeyMapping STREAM=gameplayKey("key.jujutsu_kaisen_cursed_paths.stream",GLFW.GLFW_KEY_HOME);
     public static final KeyMapping AMPLIFY=gameplayKey("key.jujutsu_kaisen_cursed_paths.amplify",GLFW.GLFW_KEY_G);
+    /** 无下限：不依赖轮盘格位，五条悟直接按 K 开/关（轮盘第 8 格在旧布局里可能显示不全）。 */
+    public static final KeyMapping INFINITY=gameplayKey("key.jujutsu_kaisen_cursed_paths.infinity",GLFW.GLFW_KEY_K);
     public static final KeyMapping LIMBS=gameplayKey("key.jujutsu_kaisen_cursed_paths.limbs",GLFW.GLFW_KEY_U);
     public static final KeyMapping LIMB_1=gameplayKey("key.jujutsu_kaisen_cursed_paths.limb1",GLFW.GLFW_KEY_LEFT_BRACKET);
     public static final KeyMapping LIMB_2=gameplayKey("key.jujutsu_kaisen_cursed_paths.limb2",GLFW.GLFW_KEY_RIGHT_BRACKET);
@@ -205,7 +207,7 @@ public final class Client {
     }
     public static class Registration {
         @SubscribeEvent public static void setup(net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent e){e.enqueueWork(()->{ItemBlockRenderTypes.setRenderLayer(SoulContent.THREAD.get(),RenderType.cutout());ItemBlockRenderTypes.setRenderLayer(SoulContent.RICE.get(),RenderType.cutout());MahoragaArmorModel.register();});}
-        @SubscribeEvent public static void keys(RegisterKeyMappingsEvent e){e.register(WHEEL);e.register(CAST);e.register(GUIDE);e.register(ROTATE);e.register(RELATIONS);e.register(FIST);e.register(STREAM);e.register(AMPLIFY);e.register(LIMBS);e.register(LIMB_1);e.register(LIMB_2);e.register(LIMB_3);e.register(LIMB_4);AuthorityClient.setup();TenShadows.receiver=TenShadowsClient::receive;SlashTerrain.receiver=SlashTerrainClient::receive;ObserverPackets.receiver=ObserverFight::receive;ObserverPackets.cursorReceiver=ObserverFight::cursors;Network.aimReceiver=AimAssistClient::receive;Network.testResetReceiver=Client::testReset;WallpaperPackets.receiver=WallpaperClient::receive;Network.motionReceiver=DismantleMotionClient::receive;Network.drawReceiver=FreehandClient::receive;Network.clashReceiver=DomainClashClient::receive;Network.clientReceiver=Client::receive;Network.progressReceiver=p->progress=p;Network.combatReceiver=FinaleClient::state;Network.relationsReceiver=p->{if(Minecraft.getInstance().screen instanceof RelationsScreen screen)screen.receive(p);};Network.controllerReceiver=p->{if(Minecraft.getInstance().screen instanceof VoidControllerScreen screen)screen.receive(p);else if(Minecraft.getInstance().screen instanceof AimOptionsScreen screen)screen.receive(p);};Network.pendantReceiver=TenkaPendantClient::receive;}
+        @SubscribeEvent public static void keys(RegisterKeyMappingsEvent e){e.register(WHEEL);e.register(CAST);e.register(GUIDE);e.register(ROTATE);e.register(RELATIONS);e.register(FIST);e.register(STREAM);e.register(AMPLIFY);e.register(INFINITY);e.register(LIMBS);e.register(LIMB_1);e.register(LIMB_2);e.register(LIMB_3);e.register(LIMB_4);AuthorityClient.setup();TenShadows.receiver=TenShadowsClient::receive;SlashTerrain.receiver=SlashTerrainClient::receive;ObserverPackets.receiver=ObserverFight::receive;ObserverPackets.cursorReceiver=ObserverFight::cursors;Network.aimReceiver=AimAssistClient::receive;Network.testResetReceiver=Client::testReset;WallpaperPackets.receiver=WallpaperClient::receive;Network.motionReceiver=DismantleMotionClient::receive;Network.drawReceiver=FreehandClient::receive;Network.clashReceiver=DomainClashClient::receive;Network.clientReceiver=Client::receive;Network.progressReceiver=p->progress=p;Network.combatReceiver=FinaleClient::state;Network.relationsReceiver=p->{if(Minecraft.getInstance().screen instanceof RelationsScreen screen)screen.receive(p);};Network.controllerReceiver=p->{if(Minecraft.getInstance().screen instanceof VoidControllerScreen screen)screen.receive(p);else if(Minecraft.getInstance().screen instanceof AimOptionsScreen screen)screen.receive(p);};Network.pendantReceiver=TenkaPendantClient::receive;}
     }
     public static boolean wheelHeld(){return ClientInput.held(WHEEL);}
     @SubscribeEvent public static void logout(ClientPlayerNetworkEvent.LoggingOut e){clear();character.CharacterClient.clear();world=null;}
@@ -253,6 +255,10 @@ public final class Client {
             // 释放键由 TechniqueInputClient 独立处理；失焦时也能取消服务端按住状态。
             while(STREAM.consumeClick())if(mc.isWindowActive()&&mc.mouseHandler.isMouseGrabbed())Network.CHANNEL.sendToServer(new Network.StreamToggle());
             while(AMPLIFY.consumeClick())if(mc.screen==null&&mc.isWindowActive()&&mc.mouseHandler.isMouseGrabbed())Network.CHANNEL.sendToServer(new Network.Cast(SkillAction.DOMAIN_AMPLIFICATION));
+            // 无下限：K 键直接开关（不依赖轮盘第 8 格）
+            while(INFINITY.consumeClick())if(mc.screen==null&&mc.isWindowActive()&&mc.mouseHandler.isMouseGrabbed()
+                &&character.CharacterClient.selected()!=null&&"gojo".equals(character.CharacterClient.selected().id()))
+                TechniqueInputClient.press(41);
         }
         castHeld=pressed;while(CAST.consumeClick()){}
         }
