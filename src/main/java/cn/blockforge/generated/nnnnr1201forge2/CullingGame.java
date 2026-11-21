@@ -71,5 +71,25 @@ public final class CullingGame {
         com.mojang.logging.LogUtils.getLogger().info("[死灭洄游] 已丢弃旧地图遗留的领域地形日志");
     }
 
+    /**
+     * 死灭洄游每 15 秒清一次凋落物：刷怪、领域破坏、NPC 死亡掉的东西会把地面铺满，既卡又难看。
+     * 只清 3 秒以前掉落的，避免把玩家刚丢下/刚打死怪爆出来的东西秒吞。
+     */
+    public static final int DROP_SWEEP_TICKS = 300;
+    public static final int DROP_MIN_AGE = 60;
+
+    @SubscribeEvent
+    public static void sweepDrops(TickEvent.ServerTickEvent e) {
+        if (e.phase != TickEvent.Phase.END) return;
+        ServerLevel level = e.getServer().getLevel(DIM);
+        if (level == null || level.getGameTime() % DROP_SWEEP_TICKS != 0) return;
+        AABB box = new AABB(-CullingMap.HALF, level.getMinBuildHeight(), -CullingMap.HALF,
+            CullingMap.HALF, CullingMap.CEILING, CullingMap.HALF);
+        for (var item : level.getEntitiesOfClass(net.minecraft.world.entity.item.ItemEntity.class, box,
+                it -> it.isAlive() && it.tickCount > DROP_MIN_AGE)) {
+            item.discard();
+        }
+    }
+
     private CullingGame(){}
 }
