@@ -241,9 +241,10 @@ public final class Network {
         if(p instanceof net.minecraftforge.common.util.FakePlayer)return;
         CHANNEL.send(PacketDistributor.PLAYER.with(() -> p), e);
     }
-    public static void send(ServerLevel level, Effect e) {
-        // 无下限：1.0 格内的一切术式特效都不广播（多角色的弹幕/火山/特效都会被挡在范围外）
-        if (character.gojo.Infinity.blocks(level, e)) return;
+    public static void send(ServerLevel level, Effect raw) {
+        // 无下限：1.0 格内的术式特效不消失，而是把位置/终点夹到边界球面上 → 定格在五条悟面前
+        final Effect e = character.gojo.Infinity.deflect(level, raw);
+        if (e == null) return;
         // 东堂葵：登记这条特效的位置，之后"纯客户端特效"能被注入成实体（不义游戏换位用）
         character.todo.TodoMarks.anchor(level, e);
         SkillDestruction.effect(level,e);

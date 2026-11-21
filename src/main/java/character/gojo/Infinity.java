@@ -280,26 +280,36 @@ public final class Infinity {
     }
 
     /**
-     * 所有角色的「术式特效」也会被挡在 1.0 格外：在 {@link Network#send(ServerLevel, Network.Effect)}
-     * 广播前调用，命中范围就整条特效不发（客户端看不到它穿过无下限），并给五条悟自己补一圈挡下的波纹。
+     * 所有角色的「术式特效」被无下限**定格在 1.0 格边界上**：
+     * 在 {@link Network#send(ServerLevel, Network.Effect)} 广播前把落在圈内的特效位置/终点夹到边界球面上，
+     * 于是火山、弹幕、斩击这些每刻刷新位置的特效会一直停在五条悟面前那层「看不见的墙」上。
      */
-    public static boolean blocks(ServerLevel level, Network.Effect effect) {
-        if (effect == null) return false;
+    public static Network.Effect deflect(ServerLevel level, Network.Effect effect) {
+        if (effect == null) return null;
         int kind = effect.kind();
-        // 这些是界面/自身状态类，不是术式实体，别乱挡
-        if (kind == 137 || kind == 144) return false;
+        if (kind == 137 || kind == 144) return effect; // 界面/状态类不算术式
         for (ServerPlayer p : level.players()) {
-            if (!active(p)) continue;
-            if (effect.owner() == p.getId()) continue; // 五条悟自己的术法照常显示
-            double d = edge(p.getBoundingBox(), new AABB(effect.position(), effect.position()).inflate(.05));
-            if (d > RADIUS + 0.35) continue;
-            // 挡下反馈：每 4 刻最多补一次波纹
-            if (p.level().getGameTime() % 4 == 0) {
-                Network.send(level, new Network.Effect(GojoFx.BLOCK, p.getId(), p.getEyePosition(), Vec3.ZERO, 1.5f, 6, 0));
-            }
-            return true;
+            if (!active(p) || effect.owner() == p.getId()) continue;
+            AABB zone = p.getBoundingBox();
+            if (edge(zone, point(effect.position())) > RADIUS) continue;
+            Vec3 center = zone.getCenter();
+            Vec3 stuck = rim(center, effect.position());
+            Vec3 end = effect.direction();
+            if (end.lengthSqr() > 1e-4 && edge(zone, point(end)) <= RADIUS) end = rim(center, end);
+            if (level.getGameTime() % 4 == 0) fx(p, 1.5f, 6);
+            return new Network.Effect(kind, effect.owner(), stuck, end, effect.size(), effect.life(),
+                effect.seed(), effect.wallpaperOwner(), effect.desktopSlashes());
         }
-        return false;
+        return effect;
+    }
+
+    private static AABB point(Vec3 v) { return new AABB(v, v).inflate(.05); }
+
+    /** 把一个点拉到以 center 为球心、半径 1.0 的球面上。 */
+    private static Vec3 rim(Vec3 center, Vec3 at) {
+        Vec3 dir = at.subtract(center);
+        if (dir.lengthSqr() < 1e-6) dir = new Vec3(0, 1, 0);
+        return center.add(dir.normalize().scale(RADIUS + 0.02));
     }
 
     /** 两个碰撞箱之间的最近距离（Boss 大碰撞箱按边缘算，不按中心算）。 */
