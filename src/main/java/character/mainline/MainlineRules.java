@@ -20,6 +20,7 @@ public final class MainlineRules {
             case "mahito" -> id==2101;
             case "higuruma" -> id==2302;
             case "ryu" -> id==2704;
+            case "kurisu" -> id==2810;
             case "naoya" -> id==2901;
             case "hakari" -> id==3006;
             default -> false;

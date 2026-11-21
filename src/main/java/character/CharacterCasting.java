@@ -73,6 +73,8 @@ public final class CharacterCasting {
         if(EFFECTS.putIfAbsent(new Key(character,skill),effect)!=null)throw new IllegalArgumentException("重复的角色技能效果");
     }
     public static void cast(ServerPlayer p,int id) {
+        // 天国之门：领域内敌人的生得术式被封印
+        if(character.kurisu.KurisuCombat.sealed(p)){p.displayClientMessage(net.minecraft.network.chat.Component.literal("天国之门：生得术式被封印（只能平A）"),true);return;}
         if(character.mainline.Mainline.domainSkill(p,id)&&DomainClash.registered(p)&&DomainClash.withdraw(p))return;
         // 主动收起先于熔断、控制、资格、咒力和冷却门槛；不能让已有赌场无法取消。
         if(character.CharacterService.hakari(p)&&id==character.hakari.HakariSkills.DOMAIN&&character.hakari.HakariDomain.active(p)){

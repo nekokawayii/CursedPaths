@@ -79,6 +79,10 @@ public final class Content {
         ()->EntityType.Builder.of(RyuNpcEntity::new,MobCategory.CREATURE).sized(0.6f,1.8f).clientTrackingRange(16).updateInterval(1).build("jujutsu_kaisen_cursed_paths:ryu_npc"));
     public static final RegistryObject<Item> RYU_NPC_EGG=ITEMS.register("ryu_npc_spawn_egg",
         ()->new net.minecraftforge.common.ForgeSpawnEggItem(RYU_NPC,0x0A1016,0x9FDFFF,new Item.Properties()));
+    public static final RegistryObject<EntityType<KurisuNpcEntity>> KURISU_NPC=ENTITIES.register("kurisu_npc",
+        ()->EntityType.Builder.of(KurisuNpcEntity::new,MobCategory.CREATURE).sized(0.6f,1.8f).clientTrackingRange(16).updateInterval(1).build("jujutsu_kaisen_cursed_paths:kurisu_npc"));
+    public static final RegistryObject<Item> KURISU_NPC_EGG=ITEMS.register("kurisu_npc_spawn_egg",
+        ()->new net.minecraftforge.common.ForgeSpawnEggItem(KURISU_NPC,0xFFD77A,0x2B2416,new Item.Properties()));
     public static final RegistryObject<EntityType<HakariNpcEntity>> HAKARI_NPC=ENTITIES.register("hakari_npc",
         ()->EntityType.Builder.of(HakariNpcEntity::new,net.minecraft.world.entity.MobCategory.CREATURE)
             .sized(0.6f,1.8f).clientTrackingRange(10).build("hakari_npc"));

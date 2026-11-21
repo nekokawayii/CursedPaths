@@ -157,6 +157,28 @@ public final class GeneratedMod {
             (character.CharacterCasting.Effect) (p, s2, r) -> character.ryu.RyuCombat.domain(p));
         character.CharacterCasting.registerEffect("ryu", character.ryu.RyuSkills.SANKA,
             (character.CharacterCasting.Effect) (p, s2, r) -> character.ryu.RyuCombat.sanka(p));
+        character.CharacterCasting.registerEffect("kurisu", character.kurisu.KurisuSkills.BAPTISM,
+            (character.CharacterCasting.Effect) (p, s2, r) -> character.kurisu.KurisuCombat.cast(p, s2.id()));
+        character.CharacterCasting.registerEffect("kurisu", character.kurisu.KurisuSkills.FLAME,
+            (character.CharacterCasting.Effect) (p, s2, r) -> character.kurisu.KurisuCombat.cast(p, s2.id()));
+        character.CharacterCasting.registerEffect("kurisu", character.kurisu.KurisuSkills.SPEARS,
+            (character.CharacterCasting.Effect) (p, s2, r) -> character.kurisu.KurisuCombat.cast(p, s2.id()));
+        character.CharacterCasting.registerEffect("kurisu", character.kurisu.KurisuSkills.GATE,
+            (character.CharacterCasting.Effect) (p, s2, r) -> character.kurisu.KurisuCombat.cast(p, s2.id()));
+        character.CharacterCasting.registerEffect("kurisu", character.kurisu.KurisuSkills.SWORD,
+            (character.CharacterCasting.Effect) (p, s2, r) -> character.kurisu.KurisuCombat.cast(p, s2.id()));
+        character.CharacterCasting.registerEffect("kurisu", character.kurisu.KurisuSkills.THUNDER,
+            (character.CharacterCasting.Effect) (p, s2, r) -> character.kurisu.KurisuCombat.cast(p, s2.id()));
+        character.CharacterCasting.registerEffect("kurisu", character.kurisu.KurisuSkills.STORM,
+            (character.CharacterCasting.Effect) (p, s2, r) -> character.kurisu.KurisuCombat.cast(p, s2.id()));
+        character.CharacterCasting.registerEffect("kurisu", character.kurisu.KurisuSkills.EXECUTE,
+            (character.CharacterCasting.Effect) (p, s2, r) -> character.kurisu.KurisuCombat.cast(p, s2.id()));
+        character.CharacterCasting.registerEffect("kurisu", character.kurisu.KurisuSkills.HORN,
+            (character.CharacterCasting.Effect) (p, s2, r) -> character.kurisu.KurisuCombat.cast(p, s2.id()));
+        character.CharacterCasting.registerEffect("kurisu", character.kurisu.KurisuSkills.SUPPER,
+            (character.CharacterCasting.Effect) (p, s2, r) -> character.kurisu.KurisuCombat.cast(p, s2.id()));
+        character.CharacterCasting.registerEffect("kurisu", character.kurisu.KurisuSkills.DOMAIN,
+            (character.CharacterCasting.Effect) (p, s2, r) -> character.kurisu.KurisuCombat.cast(p, s2.id()));
         character.CharacterCasting.registerLock("ryu", new character.CharacterCasting.Lock() {
             @Override public boolean locked(net.minecraft.server.level.ServerPlayer player) {
                 return character.ryu.RyuCombat.dessertActive(player);

@@ -359,6 +359,7 @@ public final class Client {
         // 无下限的挡下波纹：第一人称不渲染（糊脸），第三人称照常
         if(e.kind()==GojoFx.BLOCK&&e.owner()==(Minecraft.getInstance().player==null?-1:Minecraft.getInstance().player.getId())
             &&Minecraft.getInstance().options.getCameraType().isFirstPerson())return;
+        if(e.kind()>=character.kurisu.KurisuFx.FIRST&&e.kind()<=character.kurisu.KurisuFx.LAST){KurisuVisuals.receive(e);return;}
         if((e.kind()>=GojoFx.BLOCK&&e.kind()<=GojoFx.DOMAIN_CLOSE)||e.kind()==GojoFx.BIG_BANG
             ||e.kind()==GojoFx.PURPLE_CHARGE||e.kind()==GojoFx.PURPLE_TAP||e.kind()==GojoFx.PURPLE_TAP_BURST
             ||e.kind()==GojoFx.PURPLE_GATHER_SPIN){GojoFx.receive(e);return;}

@@ -34,6 +34,7 @@ public final class NpcBridge {
         if (e instanceof JogoNpcEntity) return "jogo";
         if (e instanceof UraumeNpcEntity) return "uraume";
         if (e instanceof RyuNpcEntity) return "ryu";
+        if (e instanceof KurisuNpcEntity) return "kurisu";
         if (e instanceof HakariNpcEntity) return "hakari";
         if (e instanceof HigurumaNpcEntity) return "higuruma";
         if (e instanceof NaoyaNpcEntity) return "naoya";

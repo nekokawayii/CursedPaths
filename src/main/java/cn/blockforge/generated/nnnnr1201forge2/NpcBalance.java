@@ -27,6 +27,7 @@ public final class NpcBalance {
         BASE.put("jujutsu_kaisen_cursed_paths:jogo_npc", 800.0);
         BASE.put("jujutsu_kaisen_cursed_paths:todo_npc", 600.0);
         BASE.put("jujutsu_kaisen_cursed_paths:ryu_npc", 700.0);
+        BASE.put("jujutsu_kaisen_cursed_paths:kurisu_npc", 720.0);
         BASE.put("jujutsu_kaisen_cursed_paths:hakari_npc", 900.0);
         BASE.put("jujutsu_kaisen_cursed_paths:naoya_npc", 800.0);
         BASE.put("jujutsu_kaisen_cursed_paths:higuruma_npc", 900.0);

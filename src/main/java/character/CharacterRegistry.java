@@ -31,6 +31,7 @@ public final class CharacterRegistry {
         register(character.domainking.DomainKingCharacter.create());   // 领域王：万域（咒力无限）
         register(character.jogo.JogoCharacter.create());   // 漏壶·灾厄火焰（自定义个人线：泡岩浆 30 秒）
         register(character.yuta.YutaCharacter.create());
+        register(character.kurisu.KurisuCharacter.create());   // 来栖华：邪去悔天梯
         // 启用完整示例：register(character.example.CharacterTemplate.create());
         // 复制到自己的文件夹后：register(character.my_ice.MyIceCharacter.create());
     }
