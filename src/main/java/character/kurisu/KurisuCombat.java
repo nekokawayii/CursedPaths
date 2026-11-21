@@ -24,6 +24,8 @@ import net.minecraftforge.event.entity.living.LivingAttackEvent;
 import net.minecraftforge.event.entity.living.LivingHealEvent;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
 import net.minecraftforge.event.entity.player.AttackEntityEvent;
+import net.minecraftforge.event.RegisterCommandsEvent;
+import net.minecraft.commands.Commands;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -48,6 +50,8 @@ public final class KurisuCombat {
     private static final List<Gate> GATES=new ArrayList<>();
     private static final List<Domain> DOMAINS=new ArrayList<>();
     private static final Map<UUID,Long> HORNS=new HashMap<>();
+    /** 视觉自检：/jjksp kurisufx 按 1 秒间隔依次播放 11 个技能时间轴。 */
+    private static final Map<UUID,java.util.ArrayDeque<Integer>> FX_QUEUE=new HashMap<>();
     /** 落雷眩晕：UUID → 结束刻；期间 Mob 关 AI、实体位移清零。 */
     private static final Map<UUID,Long> STUNS=new HashMap<>();
     private static boolean swordBypass;
@@ -280,6 +284,13 @@ public final class KurisuCombat {
                 }
             }
         }
+        // 视觉自检队列
+        var q=FX_QUEUE.get(p.getUUID());
+        if(q!=null&&now%20==0){
+            Integer next=q.poll();
+            if(next==null)FX_QUEUE.remove(p.getUUID());
+            else Network.send(p.serverLevel(),new Network.Effect(KurisuFx.PLAY,p.getId(),p.position().add(0,1,0),p.getLookAngle(),next,60,0));
+        }
         // 落雷眩晕恢复
         STUNS.entrySet().removeIf(en->{
             if(en.getValue()>now)return false;
@@ -395,6 +406,17 @@ public final class KurisuCombat {
             e.setCanceled(true);
             p.displayClientMessage(Component.literal("吹奏号角时无法普通攻击"),true);
         }
+    }
+
+    @SubscribeEvent public static void commands(RegisterCommandsEvent e){
+        e.getDispatcher().register(Commands.literal("jjksp").then(Commands.literal("kurisufx").executes(c->{
+            var p=c.getSource().getPlayerOrException();
+            var q=new java.util.ArrayDeque<Integer>();
+            for(int id:List.of(KurisuSkills.BAPTISM,KurisuSkills.FLAME,KurisuSkills.SPEARS,KurisuSkills.GATE,KurisuSkills.SWORD,KurisuSkills.THUNDER,KurisuSkills.STORM,KurisuSkills.EXECUTE,KurisuSkills.HORN,KurisuSkills.SUPPER,KurisuSkills.DOMAIN))q.add(id);
+            FX_QUEUE.put(p.getUUID(),q);
+            p.displayClientMessage(Component.literal("来栖华视觉自检：11 个技能依次播放"),false);
+            return 1;
+        })));
     }
 
     public static void clear(){
