@@ -269,17 +269,7 @@ public final class Skills {
         MaidBridge.domainOpened(p);double yaw=Math.toRadians(p.getYRot());Vec3 behind=new Vec3(Math.sin(yaw)*12,0,-Math.cos(yaw)*12);
         LivingEntity locked=Authority.instant(p)?aimTarget(p):null;Vec3 center=locked==null?p.position():locked.position();
         int duration=ShrineRules.domainTicks(Authority.countedAsMaid(p));Domain d=new Domain(p,p.serverLevel(),center,behind,now,now+duration,radius,damageMult,speedMult,verticalKill);domains.put(p.getUUID(),d);
-        // 领域「外壳 + 内部」采样点：斩击节拍到了就在这两处各切一刀，70% 被切掉就解除领域
-        var rnd=p.getRandom();
-        for(int i=0;i<600;i++){
-            double y=rnd.nextDouble()*2-1,flat=Math.sqrt(Math.max(0,1-y*y)),a=rnd.nextDouble()*Math.PI*2;
-            d.shellCut.add(center.add(Math.cos(a)*flat*radius,y*Math.max(4,radius*0.55),Math.sin(a)*flat*radius));
-        }
-        for(int i=0;i<400;i++){
-            double a=rnd.nextDouble()*Math.PI*2,r=Math.sqrt(rnd.nextDouble())*radius*0.65;
-            d.insideCut.add(center.add(Math.cos(a)*r,(rnd.nextDouble()*2-1)*Math.max(4,radius*0.25),Math.sin(a)*r));
-        }
-        d.erodeTotal=d.shellCut.size()+d.insideCut.size();
+
         if(VoidJourney.evolved(p))syncVoidShrine(d);
         fx(p,1,d.center,d.shrineOffset,(float)d.radius,duration,SoulJourney.evolved(p)?-now:now);
         fx(p,25,p.position(),Vec3.ZERO,CombatSettings.voidFloor(p)?1:0,10,0);
@@ -526,6 +516,34 @@ public final class Skills {
         if(d.erodeTotal>0&&d.erodeCut>=(int)Math.ceil(d.erodeTotal*0.70)){
             p.displayClientMessage(Component.literal("御厨子被破坏 70% · 领域解除"),true);
             closeDomain(p,false);
+        }
+    }
+    /** 御厨子撕开其他「封闭领域」的方块：按节拍随机拆敌方领域铺过的方块，拆到 60% 直接收掉对方领域。 */
+    private static final Map<UUID,int[]> ENEMY_ERODE=new HashMap<>();
+    private static void erodeEnemyDomains(ServerPlayer p,Domain d){
+        for(var h:character.domain.DomainTerrain.handles(d.level)){
+            if(h.owner().equals(p.getUUID()))continue;
+            var box=h.bounds();
+            if(box==null)continue;
+            if(box.distanceToSqr(d.center)>d.radius*d.radius)continue;
+            var positions=h.positions();
+            if(positions.isEmpty()){ENEMY_ERODE.remove(h.id());continue;}
+            int[] state=ENEMY_ERODE.computeIfAbsent(h.id(),k->new int[]{0,positions.size()});
+            if(state[1]<=0)state[1]=positions.size();
+            for(int i=0;i<2;i++){
+                var pos=positions.get(p.getRandom().nextInt(positions.size()));
+                var st=d.level.getBlockState(pos);
+                if(st.isAir())continue;
+                d.level.destroyBlock(pos,false);
+                state[0]++;
+            }
+            if(state[0]>=(int)Math.ceil(state[1]*0.60)){
+                h.close();
+                ENEMY_ERODE.remove(h.id());
+                p.displayClientMessage(Component.literal("御厨子撕碎对方领域 60% · 领域解除"),true);
+                var owner=d.level.getEntity(h.owner());
+                if(owner instanceof LivingEntity le)DomainClash.sever(le);
+            }
         }
     }
     private static void cutOne(ServerPlayer p,Domain d,java.util.ArrayDeque<Vec3> pool){
@@ -807,7 +825,7 @@ public final class Skills {
             boolean beat;
             if(age<=0){d.slashCharge=0;beat=true;}
             else {d.slashCharge++;beat=d.slashCharge>=interval;if(beat)d.slashCharge-=interval;}
-            if(beat)erodeDomain(p,d);
+            if(beat)erodeEnemyDomains(p,d);
             if(VoidJourney.evolved(p)){
                 if(!clash&&beat)for(LivingEntity target:targets(d.level,p,d.center,d.radius))if(reachable(d,target))VoidCombat.domainHit(p,target,d.damageScale*d.damageMult);
                 if(age%40==0){syncVoidShrine(d);fx(p,1,d.center,d.shrineOffset,(float)d.radius,(int)(d.end-now),-d.start);}

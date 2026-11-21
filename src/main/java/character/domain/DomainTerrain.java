@@ -38,6 +38,11 @@ public final class DomainTerrain extends SavedData {
         private net.minecraft.world.phys.AABB bounds;
         private boolean closed;
         private Handle(ServerLevel level,UUID owner){this.level=level;this.owner=owner;}
+        /** 这个领域铺过的方块位置（只读快照，供「御厨子破坏敌方领域」采样）。 */
+        public java.util.List<BlockPos> positions(){return java.util.List.copyOf(positions);}
+        public java.util.UUID owner(){return owner;}
+        public java.util.UUID id(){return id;}
+        public net.minecraft.world.phys.AABB bounds(){return bounds;}
         /** 可以逐批调用。覆盖其它领域时仍然保存最底层原状；容器和原生基岩保持不动。 */
         public boolean place(BlockPos pos,BlockState target){return !closed&&get(level).place(this,pos,target);}
         /** 已提交的可见结构是否落地；传送落座、生成装饰实体前调用，不等待未加载区块。 */
@@ -58,6 +63,8 @@ public final class DomainTerrain extends SavedData {
     public static Handle begin(ServerLevel level,UUID owner){
         var handle=new Handle(level,owner);get(level).handles.put(handle.id,handle);return handle;
     }
+    /** 当前维度所有领域施工句柄（只读快照）。 */
+    public static java.util.List<Handle> handles(ServerLevel level){return java.util.List.copyOf(get(level).handles.values());}
     public static DomainTerrain get(ServerLevel level){
         return level.getDataStorage().computeIfAbsent(tag->load(level,tag),DomainTerrain::new,"sukuna_domain_layers");
     }
