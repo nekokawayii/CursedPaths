@@ -11,7 +11,7 @@ import net.minecraftforge.fml.common.Mod;
 import java.io.IOException;
 
 /** 盖棺铁围山的不透明球壳材质：POSITION_COLOR_TEX，uv.x=经度、uv.y=纬度。 */
-@Mod.EventBusSubscriber(modid = "jujutsu_kaisen_cursed_paths", value = Dist.CLIENT, bus = Mod.EventBusSubscriber.Bus.MOD)
+
 public final class JogoDomainShaders {
     public static ShaderInstance shell;
     public static boolean textured;

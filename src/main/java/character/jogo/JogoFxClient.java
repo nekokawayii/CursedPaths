@@ -26,7 +26,7 @@ import java.util.Random;
  * 漏壶的 PhotonFx 表现层。
  * 极之番·陨：一颗 60 格半径的熔岩球缓慢下坠（贴图球面 + 尾焰），玩家被托在球顶漂浮观看；落地后是蘑菇云。
  */
-@Mod.EventBusSubscriber(modid="jujutsu_kaisen_cursed_paths",value=Dist.CLIENT)
+
 public final class JogoFxClient {
     private static final String GLOW="textures/effect/glow.png";
     private static final int FIRE=0xFFFF7A18, FIRE_BLOOM=0xFFFF3A00, LAVA=0xFFFFB024, EMBER=0xFFFFD08A, ASH=0xFF2A1A18;

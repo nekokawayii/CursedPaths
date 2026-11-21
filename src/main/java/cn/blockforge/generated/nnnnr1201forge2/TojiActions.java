@@ -11,7 +11,7 @@ import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
  * <p>每招三段姿态：起手 → 命中 → 收招；三段之间线性混合，其它玩家也能看到。
  * 动作名与 {@link character.toji.TojiCombos} 的连招编号一一对应：`jujutsu_kaisen_cursed_paths:toji_c1` ~ `jujutsu_kaisen_cursed_paths:toji_c20`。
  */
-@Mod.EventBusSubscriber(modid = "jujutsu_kaisen_cursed_paths", value = Dist.CLIENT, bus = Mod.EventBusSubscriber.Bus.MOD)
+
 public final class TojiActions {
     private static final DismantlePose.Pose STAND = new DismantlePose.Pose(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
 

@@ -34,6 +34,7 @@ public final class ClientBootstrap {
         ExpeditionProgress.receiver=RitualClient::progress;
 
         var gameBus=MinecraftForge.EVENT_BUS;
+        gameBus.register(BlackFlashClient.class);
         gameBus.register(Client.class);
         gameBus.register(TenShadowsClient.class);
         gameBus.register(ShadowClient.class);

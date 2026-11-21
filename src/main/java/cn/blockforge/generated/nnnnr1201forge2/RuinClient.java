@@ -17,7 +17,7 @@ import net.minecraftforge.client.event.*;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 /** 遗迹的局部天空和非实体残影，不生成怪物、不改变世界时间。 */
-@Mod.EventBusSubscriber(modid="jujutsu_kaisen_cursed_paths",value=Dist.CLIENT)
+
 public final class RuinClient {
     private static Vec3 origin;private static int rotation;private static long until,caption;
     private static Vec3 local(double x,double y,double z){return switch(rotation){case 1->origin.add(64-z,y,x);case 2->origin.add(48-x,y,64-z);case 3->origin.add(z,y,48-x);default->origin.add(x,y,z);};}

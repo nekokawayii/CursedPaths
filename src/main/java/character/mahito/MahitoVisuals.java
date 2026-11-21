@@ -16,7 +16,7 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
 /** 纯客户端演出，不生成一堆装饰生物；每个领域固定24只倒悬手臂。 */
-@Mod.EventBusSubscriber(modid="jujutsu_kaisen_cursed_paths",value=Dist.CLIENT)
+
 public final class MahitoVisuals {
     private record Visual(Network.Effect effect,long born){}
     private static final List<Visual> EFFECTS=new ArrayList<>();

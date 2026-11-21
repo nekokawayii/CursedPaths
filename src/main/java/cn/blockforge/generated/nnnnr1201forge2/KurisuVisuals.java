@@ -10,7 +10,7 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
 /** 来栖华的客户端表现：只负责把 PLAY/STOP/HUD 转给 Photon 时间轴与 HUD。 */
-@Mod.EventBusSubscriber(modid = "jujutsu_kaisen_cursed_paths", value = Dist.CLIENT)
+
 public final class KurisuVisuals {
     private static int sanity=-1;
     private static net.minecraft.world.level.Level lastLevel;

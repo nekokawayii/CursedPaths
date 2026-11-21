@@ -13,7 +13,7 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
 /** 附拳火焰粒子的客户端提供者：走贴图（`fist_flame_0.png`），不是程序化烟雾。 */
-@Mod.EventBusSubscriber(modid = "jujutsu_kaisen_cursed_paths", bus = Mod.EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
+
 public final class FistParticleClient {
     @SubscribeEvent
     public static void register(RegisterParticleProvidersEvent e) {

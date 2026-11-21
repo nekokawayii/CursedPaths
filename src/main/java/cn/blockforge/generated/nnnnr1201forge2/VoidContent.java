@@ -127,7 +127,7 @@ public final class VoidContent {
     public static final RegistryObject<Item> EGG=Content.ITEMS.register("gojo_spawn_egg",()->new net.minecraftforge.common.ForgeSpawnEggItem(GOJO,0x0b0b12,0x8fd0ff,new Item.Properties()));
     public static final RegistryObject<Item> MAHORAGA_EGG=Content.ITEMS.register("mahoraga_spawn_egg",()->new net.minecraftforge.common.ForgeSpawnEggItem(MAHORAGA,0x2b2118,0xffd24a,new Item.Properties()));
     public static final RegistryObject<Item> CONTROLLER=Content.ITEMS.register("void_controller",()->new Item(new Item.Properties().stacksTo(1).rarity(Rarity.EPIC).fireResistant()){
-        @Override public InteractionResultHolder<ItemStack> use(Level l,Player p,InteractionHand h){if(l.isClientSide)net.minecraftforge.fml.DistExecutor.unsafeRunWhenOn(net.minecraftforge.api.distmarker.Dist.CLIENT,()->()->net.minecraft.client.Minecraft.getInstance().setScreen(new VoidControllerScreen()));else if(p instanceof ServerPlayer sp)Network.sendController(sp);return InteractionResultHolder.sidedSuccess(p.getItemInHand(h),l.isClientSide);}
+        @Override public InteractionResultHolder<ItemStack> use(Level l,Player p,InteractionHand h){if(l.isClientSide)net.minecraftforge.fml.DistExecutor.unsafeRunWhenOn(net.minecraftforge.api.distmarker.Dist.CLIENT,()->VoidControllerClient::open);else if(p instanceof ServerPlayer sp)Network.sendController(sp);return InteractionResultHolder.sidedSuccess(p.getItemInHand(h),l.isClientSide);}
     });
     public static void init(IEventBus bus){GENERATORS.register(bus);bus.addListener(VoidContent::attributes);}
     private static void attributes(EntityAttributeCreationEvent e){GojoEntity.attributes(e);MahoragaEntity.attributes(e);}

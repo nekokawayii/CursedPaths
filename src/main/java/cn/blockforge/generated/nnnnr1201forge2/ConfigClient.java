@@ -8,7 +8,7 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 
 /** 只在客户端注册，专用服务器不加载界面类。 */
-@Mod.EventBusSubscriber(modid = GeneratedMod.MOD_ID, value = Dist.CLIENT, bus = Mod.EventBusSubscriber.Bus.MOD)
+
 public final class ConfigClient {
     @SubscribeEvent
     public static void setup(FMLClientSetupEvent event) {

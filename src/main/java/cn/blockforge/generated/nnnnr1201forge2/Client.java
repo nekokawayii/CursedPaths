@@ -226,7 +226,7 @@ public final class Client {
         // 轮盘里刚选中御厨子(5) → 弹出点数分配界面；确定后按释放键正常释放
         if(!AuthorityClient.enabled()&&selected==5&&lastShrineSel!=5&&mc.screen==null&&!shrineDomainOpen()&&availableSkill(5))mc.setScreen(new DomainOptionsScreen());
         // 共同主线：L 键在 ClientInput.key 里开面板（这里不再轮询 GLFW）
-        lastShrineSel=selected;tick++;TojiQteVisuals.tick();TojiQteClient.tick();NaoyaVisuals.tick();NaoyaClient.tick();HakariClient.tick();tripleJump(mc);DismantleMotionClient.tick();SlashTerrainClient.tick();SlashFormVisuals.tick();FreehandClient.tick(selected==SlashFormRules.FREEHAND&&FreehandClient.keyDown());BranchVisuals.tick();NetBranchVisuals.tick();VoidTechniqueClient.tick();VoidBossClient.tick();FurnaceMaxClient.tick();GojoFx.tick();MahoragaWheelClient.tick();ShinbukeVisuals.tick();SoulClient.tick();FistFlameClient.tick();BlackFlashMarks.clientTick();VoidVisuals.tick();if(charging&&tick-chargeBorn>200)charging=false;
+        lastShrineSel=selected;tick++;TojiQteVisuals.tick();TojiQteClient.tick();NaoyaVisuals.tick();NaoyaClient.tick();HakariClient.tick();tripleJump(mc);DismantleMotionClient.tick();SlashTerrainClient.tick();SlashFormVisuals.tick();FreehandClient.tick(selected==SlashFormRules.FREEHAND&&FreehandClient.keyDown());BranchVisuals.tick();NetBranchVisuals.tick();VoidTechniqueClient.tick();VoidBossClient.tick();FurnaceMaxClient.tick();GojoFx.tick();MahoragaWheelClient.tick();ShinbukeVisuals.tick();SoulClient.tick();FistFlameClient.tick();BlackFlashClient.clientTick();VoidVisuals.tick();if(charging&&tick-chargeBorn>200)charging=false;
         if(tick-window>=20){window=tick;generated=0;}
         if(ObserverClient.active()||FinaleClient.local()||DomainClashClient.active()||NetBranchVisuals.locked()||DismantleMotionClient.locked()){
             charging=cleaveHeld=false;castHeld=ClientInput.held(CAST);heldLast=wheelHeld();
@@ -384,7 +384,7 @@ public final class Client {
         if(e.kind()==2||e.kind()==70||e.kind()==71)CastHands.receive(e);   // 71 = 无量空处的单手结印姿态
         // 手臂动作与炎弓独立恢复，屏幕切割和释放法阵保持关闭。
         if(e.kind()==50||e.kind()==52||e.kind()==53||e.kind()==71||e.kind()==70&&BloodRules.skill((int)e.size()))return;
-        if(e.kind()==BlackFlashMarks.FX_MARK){BlackFlashMarks.receive(e);return;}
+        if(e.kind()==BlackFlashMarks.FX_MARK){BlackFlashClient.receive(e);return;}
         if(e.kind()==FistFlameClient.FX){FistFlameClient.receive(e);return;}
         if(e.kind()>=80&&e.kind()<=95||e.kind()>=125&&e.kind()<=127){SoulClient.receive(e);return;}
         if(e.kind()==67){if(e.size()>0)supreme.add(e.owner());else supreme.remove(e.owner());return;}

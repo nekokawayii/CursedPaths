@@ -15,12 +15,12 @@ import net.minecraftforge.fml.common.Mod;
 import java.util.*;
 
 /** 真实世界中的球面天空和对拼交界。深度测试保留，绝不使用遮住 NPC 的全屏贴片。 */
-@Mod.EventBusSubscriber(modid="jujutsu_kaisen_cursed_paths",value=Dist.CLIENT)
+
 public final class DomainWorldRenderer {
     private static DomainPresentation.Snapshot snapshot;
     private static long received;
     private static net.minecraft.client.multiplayer.ClientLevel receivedLevel;
-    @Mod.EventBusSubscriber(modid="jujutsu_kaisen_cursed_paths",value=Dist.CLIENT,bus=Mod.EventBusSubscriber.Bus.MOD)
+
     public static final class Setup {
         @SubscribeEvent public static void setup(net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent event){
             event.enqueueWork(()->DomainPresentation.receiver=DomainWorldRenderer::receive);

@@ -21,7 +21,7 @@ public final class WallpaperSlash {
     private static ShaderInstance shader;
     private static boolean collecting;
     private static int batchCuts;
-    @Mod.EventBusSubscriber(modid="jujutsu_kaisen_cursed_paths",value=Dist.CLIENT,bus=Mod.EventBusSubscriber.Bus.MOD)
+
     public static final class Registration {
         @SubscribeEvent public static void shaders(RegisterShadersEvent e){
             shader=null;try{e.registerShader(new ShaderInstance(e.getResourceProvider(),new ResourceLocation("jujutsu_kaisen_cursed_paths","wallpaper_slash"),DefaultVertexFormat.POSITION_COLOR),s->shader=s);}catch(java.io.IOException|RuntimeException ex){com.mojang.logging.LogUtils.getLogger().warn("壁纸专用材质不可用，斩击保留原版贴图通道",ex);}
