@@ -5,7 +5,7 @@ import java.util.List;
 
 /** 石流龙 · 咒力强化/放出：1 冰沙冲击波 / 2 追踪弹 / 3 咒力喷涌 / 4 甜品时间 / 5 领域展开（占位）。 */
 public final class RyuSkills {
-    public static final int BLAST = 2700, SCATTER = 2701, BURST = 2702, DESSERT = 2703, DOMAIN = 2704;
+    public static final int BLAST = 2700, SCATTER = 2701, BURST = 2702, DESSERT = 2703, DOMAIN = 2704, SANKA = 2705;
 
     public static List<CharacterSkill> all() {
         return List.of(
@@ -29,7 +29,11 @@ public final class RyuSkills {
                 "半径 65 格的封闭领域（外基岩、内纯黑混凝土，内部换成落日云海）：4 秒展开、5 秒收起、持续 30 秒；"
                     + "领域内自己所有招式必中，并不断升起烟花炸成各色追踪弹幕。再按一次可提前收起。",
                 0xFF7FB8E8, 4000, 2400, CharacterSkill.Shape.BURST,
-                8, 8, 180, 0, 0, 1, 0, 0, 0)
+                8, 8, 180, 0, 0, 1, 0, 0, 0),
+            new CharacterSkill(SANKA, "散花", "散花",
+                "头部凝聚蓝色光球蓄力 1 秒，随后 3 秒内连续射出 15 道追踪蓝色激光；每道独立索敌、会自动拐弯追人。",
+                0xFF9FDFFF, 600, 600, CharacterSkill.Shape.RAY,
+                24, 1, 30, 16, 0, 15, 0, 0, 0)
         );
     }
     private RyuSkills() {}

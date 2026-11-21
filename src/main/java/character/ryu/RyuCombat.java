@@ -269,6 +269,108 @@ public final class RyuCombat {
         return best;
     }
 
+    // ------------------------------------------------------------ 散花
+    /** 散花：头部蓄力 1 秒 → 3 秒内连射 15 道追踪激光（每 4 刻一发）。 */
+    public static final int SANKA_SHOTS = 15, SANKA_INTERVAL = 4, SANKA_CHARGE_TICKS = 20, SANKA_LIFE = 90;
+    public static final double SANKA_SPEED = 1.9, SANKA_TURN = .30, SANKA_TRACK = 30, SANKA_DAMAGE = 16;
+
+    private static final List<Laser> LASERS = new ArrayList<>();
+    private static final Map<UUID, SankaCharge> SANKA = new LinkedHashMap<>();
+    private static int laserSerial;
+
+    private static final class SankaCharge {
+        final ServerLevel level;
+        final LivingEntity caster;
+        final ServerPlayer owner;
+        final long start;
+        int fired;
+        SankaCharge(ServerLevel level, LivingEntity caster, ServerPlayer owner, long start) {
+            this.level = level; this.caster = caster; this.owner = owner; this.start = start;
+        }
+    }
+
+    private record Laser(ServerLevel level, int fxId, ServerPlayer owner, LivingEntity caster,
+                         Vec3 pos, Vec3 dir, long born, double damage) {}
+
+    public static void sanka(ServerPlayer p) {
+        if (!(p.level() instanceof ServerLevel level)) return;
+        LivingEntity caster = p instanceof NpcBridge.NpcActor actor ? actor.mob : p;
+        ServerPlayer owner = p instanceof NpcBridge.NpcActor ? null : p;
+        if (caster == null || SANKA.containsKey(caster.getUUID())) return;
+        SANKA.put(caster.getUUID(), new SankaCharge(level, caster, owner, level.getGameTime()));
+        Network.send(level, new Network.Effect(RyuFx.SANKA_CHARGE, caster.getId(), caster.position(), Vec3.ZERO, .01f, SANKA_CHARGE_TICKS, 0));
+        level.playSound(null, caster.blockPosition(), SoundEvents.BEACON_ACTIVATE, SoundSource.PLAYERS, 1.0f, 1.7f);
+        if (owner != null) owner.displayClientMessage(Component.literal("散花：蓄力中"), true);
+    }
+
+    private static void fireLaser(SankaCharge c) {
+        Vec3 from = origin(c.caster).add(c.caster.getLookAngle().scale(.45));
+        LivingEntity target = nearest(c.level, c.caster, from, SANKA_TRACK);
+        Vec3 dir = target != null ? target.getBoundingBox().getCenter().subtract(from).normalize()
+            : c.caster.getLookAngle().normalize();
+        LASERS.add(new Laser(c.level, 40000 + (++laserSerial), c.owner, c.caster, from, dir, c.start, SANKA_DAMAGE));
+        c.fired++;
+    }
+
+    /** 服务端每刻：推进蓄力与全部激光。 */
+    public static void tickSanka(long now) {
+        for (var it = SANKA.values().iterator(); it.hasNext(); ) {
+            SankaCharge c = it.next();
+            long elapsed = now - c.start;
+            if (elapsed < SANKA_CHARGE_TICKS) {
+                if (elapsed % 2 == 0 && c.caster.isAlive()) {
+                    float ratio = (float) Math.min(1, elapsed / (double) SANKA_CHARGE_TICKS);
+                    Network.send(c.level, new Network.Effect(RyuFx.SANKA_CHARGE, c.caster.getId(), c.caster.position(),
+                        Vec3.ZERO, ratio, 4, 0));
+                }
+                continue;
+            }
+            int should = Math.min(SANKA_SHOTS, (int) ((elapsed - SANKA_CHARGE_TICKS) / SANKA_INTERVAL) + 1);
+            while (c.fired < should) fireLaser(c);
+            if (c.fired >= SANKA_SHOTS && elapsed > SANKA_CHARGE_TICKS + SANKA_INTERVAL * SANKA_SHOTS) {
+                Network.send(c.level, new Network.Effect(RyuFx.SANKA_CHARGE, c.caster.getId(), c.caster.position(),
+                    Vec3.ZERO, 0f, 0, 0));
+                it.remove();
+            }
+        }
+        if (LASERS.isEmpty()) return;
+        List<Laser> keep = new ArrayList<>();
+        for (Laser laser : LASERS) {
+            if (now - laser.born() > SANKA_LIFE) continue;
+            LivingEntity ownerEntity = laser.owner() != null ? laser.owner() : laser.caster();
+            if (ownerEntity == null || !ownerEntity.isAlive()) continue;
+            Vec3 dir = laser.dir();
+            LivingEntity target = nearest(laser.level(), ownerEntity, laser.pos(), SANKA_TRACK);
+            if (target != null) {
+                Vec3 want = target.getBoundingBox().getCenter().subtract(laser.pos()).normalize();
+                dir = dir.scale(1 - SANKA_TURN).add(want.scale(SANKA_TURN)).normalize();
+            }
+            Vec3 pos = laser.pos().add(dir.scale(SANKA_SPEED));
+            // 激光本体：只发轻量光束（客户端只画丝带，不喷粒子），前端靠光束末端球壳提亮
+            Network.send(laser.level(), new Network.Effect(RyuFx.SANKA_LASER, laser.fxId(),
+                pos.subtract(dir.scale(2.8)), pos, .42f, 3, 0));
+            LivingEntity hit = null;
+            for (var candidate : laser.level().getEntitiesOfClass(LivingEntity.class, new AABB(pos, pos).inflate(.8),
+                    t -> t != ownerEntity && t.isAlive() && !t.isSpectator()
+                        && (ownerEntity instanceof ServerPlayer p ? CombatSettings.canHit(p, t) : NpcBridge.canHit(ownerEntity, t))
+                        && t.getBoundingBox().inflate(.45).contains(pos))) {
+                hit = candidate;
+                break;
+            }
+            if (hit != null) {
+                hurt(laser.level(), ownerEntity, laser.owner(), hit, laser.damage());
+                laser.level().playSound(null, hit.blockPosition(), SoundEvents.GENERIC_EXPLODE, SoundSource.PLAYERS, .5f, 1.8f);
+                continue;
+            }
+            var bp = net.minecraft.core.BlockPos.containing(pos);
+            if (!(laser.owner() != null && RyuDomain.active(laser.owner()))
+                && !laser.level().getBlockState(bp).getCollisionShape(laser.level(), bp).isEmpty()) continue;
+            keep.add(new Laser(laser.level(), laser.fxId(), laser.owner(), laser.caster(), pos, dir, laser.born(), laser.damage()));
+        }
+        LASERS.clear();
+        LASERS.addAll(keep);
+    }
+
     // ------------------------------------------------------------ 咒力喷涌
     public static void burst(ServerPlayer p) {
         if (!(p.level() instanceof ServerLevel level)) return;
@@ -380,6 +482,7 @@ public final class RyuCombat {
     @SubscribeEvent public static void serverTick(TickEvent.ServerTickEvent e) {
         if (e.phase == TickEvent.Phase.END && e.getServer() != null) {
             tickMissiles(e.getServer().overworld().getGameTime());
+            tickSanka(e.getServer().overworld().getGameTime());
             RyuDomain.tick(e.getServer());
         }
     }

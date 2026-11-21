@@ -20,6 +20,10 @@ public final class RyuFx {
     public static final int FIREWORK_BURST = 397;
     /** 烟花弹幕：position=当前位置，direction=朝向，size=颜色索引。 */
     public static final int FIREWORK_SHELL = 398;
-    public static final int FIRST = BEAM, LAST = FIREWORK_SHELL;
+    /** 散花蓄力：owner=施术者 id，size=蓄力进度 0~1，life=剩余刻。 */
+    public static final int SANKA_CHARGE = 399;
+    /** 散花激光：position=尾端，direction=当前位置，size=宽度；每刻一枚，只画光束不喷粒子。 */
+    public static final int SANKA_LASER = 400;
+    public static final int FIRST = BEAM, LAST = SANKA_LASER;
     private RyuFx() {}
 }

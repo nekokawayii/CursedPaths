@@ -32,9 +32,13 @@ public final class RyuVisuals {
     private record Rise(Vec3 pos, double height, long born, int life) {}
     private record Burst2(Vec3 pos, int color, long born, int life) {}
     private record Spark(Vec3 pos, int color, long born, int life) {}
+    /** 散花蓄力：owner=施术者实体 id，ratio=蓄力进度，until=过期刻。 */
+    private record Sanka(int owner, double ratio, long until) {}
 
     /** 一条光束只保留最新的一条（施术者 id → 光束），持续喷的时候不会叠成一堆。 */
     private static final Map<Integer, Beam> BEAMS = new LinkedHashMap<>();
+    /** 散花激光：独立于 BEAMS，只画光束，不喷 PhotonFx 粒子、不震屏。 */
+    private static final Map<Integer, Beam> LASERS = new LinkedHashMap<>();
     private static final List<Trail> TRAILS = new ArrayList<>();
     private static final List<Burst> BURSTS = new ArrayList<>();
     private static final Map<Integer, Charge> CHARGES = new HashMap<>();
@@ -43,6 +47,7 @@ public final class RyuVisuals {
     private static final List<Rise> RISES = new ArrayList<>();
     private static final List<Burst2> BURSTS2 = new ArrayList<>();
     private static final List<Spark> SPARKS = new ArrayList<>();
+    private static final Map<Integer, Sanka> SANKAS = new HashMap<>();
     /** 烟花颜色表（特效的 size 里存的就是这个下标）。 */
     private static final int[] COLORS = {0xFFFFFF, 0xFF5A5A, 0xFFD24A, 0x7CFF6B, 0x6BE8FF, 0x6B8CFF, 0xFF6BE8, 0xFFA24A};
     /** 内部天际图（用户给的落日晚霞，原图原分辨率）。 */
@@ -70,6 +75,12 @@ public final class RyuVisuals {
                 if (e.size() <= 0) CHARGES.remove(e.owner());
                 else CHARGES.put(e.owner(), new Charge(e.owner(), e.size(), now + Math.max(2, e.life())));
             }
+            case RyuFx.SANKA_CHARGE -> {
+                if (e.size() <= 0) SANKAS.remove(e.owner());
+                else SANKAS.put(e.owner(), new Sanka(e.owner(), e.size(), now + Math.max(2, e.life())));
+            }
+            case RyuFx.SANKA_LASER ->
+                LASERS.put(e.owner(), new Beam(e.position(), e.direction(), Math.max(0.18, e.size()), now, Math.max(2, e.life())));
             case RyuFx.MISSILE -> {
                 TRAILS.add(new Trail(e.position().subtract(e.direction().normalize().scale(0.8)), e.position(), now, 5));
                 if (PhotonFx.ready())
@@ -128,6 +139,7 @@ public final class RyuVisuals {
         }
         long now = now(mc);
         BEAMS.values().removeIf(b -> now - b.born() > b.life());
+        LASERS.values().removeIf(b -> now - b.born() > b.life());
         TRAILS.removeIf(t -> now - t.born() > t.life());
         BURSTS.removeIf(b -> now - b.born() > b.life());
         CHARGES.values().removeIf(c -> c.until() <= now);
@@ -136,6 +148,7 @@ public final class RyuVisuals {
         RISES.removeIf(r -> now - r.born() > r.life());
         BURSTS2.removeIf(b -> now - b.born() > b.life());
         SPARKS.removeIf(s2 -> now - s2.born() > s2.life());
+        SANKAS.values().removeIf(s2 -> s2.until() <= now);
         if (SKY != null && now >= SKY.until()) SKY = null;
         // 甜品：吃蛋糕的小表现
         var p = mc.player;
@@ -148,6 +161,7 @@ public final class RyuVisuals {
 
     public static void clear() {
         BEAMS.clear();
+        LASERS.clear();
         TRAILS.clear();
         BURSTS.clear();
         CHARGES.clear();
@@ -156,6 +170,7 @@ public final class RyuVisuals {
         RISES.clear();
         BURSTS2.clear();
         SPARKS.clear();
+        SANKAS.clear();
         SKY = null;
     }
 
@@ -163,7 +178,8 @@ public final class RyuVisuals {
         var mc = Minecraft.getInstance();
         if (mc.level == null || e.getStage() != RenderLevelStageEvent.Stage.AFTER_PARTICLES) return;
         if (BEAMS.isEmpty() && TRAILS.isEmpty() && BURSTS.isEmpty() && DOMAINS.isEmpty()
-            && CHARGES.isEmpty() && DESSERTS.isEmpty() && RISES.isEmpty() && BURSTS2.isEmpty() && SPARKS.isEmpty()) return;
+            && CHARGES.isEmpty() && DESSERTS.isEmpty() && RISES.isEmpty() && BURSTS2.isEmpty() && SPARKS.isEmpty()
+            && SANKAS.isEmpty() && LASERS.isEmpty()) return;
         long now = now(mc);
         PoseStack ps = e.getPoseStack();
         Vec3 cam = e.getCamera().getPosition();
@@ -180,6 +196,7 @@ public final class RyuVisuals {
         BufferBuilder b = Tesselator.getInstance().getBuilder();
         b.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_COLOR);
         for (Beam beam : BEAMS.values()) drawBeam(b, ps, beam, cam, now);
+        for (Beam beam : LASERS.values()) drawBeam(b, ps, beam, cam, now);
         for (Trail trail : TRAILS) drawTrail(b, ps, trail, cam, now);
         for (Burst burst : BURSTS) drawBurst(b, ps, burst, cam, now);
         for (Domain domain : DOMAINS) drawDomain(b, ps, domain, cam, now);
@@ -188,6 +205,7 @@ public final class RyuVisuals {
         for (Rise rise : RISES) drawRise(b, ps, rise, cam, now);
         for (Burst2 burst : BURSTS2) drawBurst2(b, ps, burst, cam, now);
         for (Spark spark : SPARKS) drawSpark(b, ps, spark, cam, now);
+        for (var entry : SANKAS.entrySet()) drawSanka(b, ps, mc, entry.getValue(), cam, now);
         BufferUploader.drawWithShader(b.end());
         RenderSystem.depthMask(true);
         RenderSystem.enableCull();
@@ -286,6 +304,48 @@ public final class RyuVisuals {
             argb(GLOW, alpha), cam);
         Client.ring(b, ps, domain.pos().add(0, 0.3, 0), domain.radius() * 0.6 * Math.min(1, t * 1.4), 0.08,
             argb(CORE, alpha), cam);
+    }
+
+    /**
+     * 散花蓄力：头顶一颗由「球壳 + 双旋环 + 八瓣光带」叠出来的蓝色光球，不是粒子云。
+     * 三个阶段自然递进：0→0.35 只亮内核、0.35→0.75 环开始转、0.75→1 花瓣全开并高亮。
+     */
+    private static void drawSanka(BufferBuilder b, PoseStack ps, Minecraft mc, Sanka sanka, Vec3 cam, long now) {
+        Entity entity = mc.level.getEntity(sanka.owner());
+        if (!(entity instanceof LivingEntity living)) return;
+        double r = Math.max(0, Math.min(1, sanka.ratio()));
+        Vec3 look = living.getLookAngle();
+        Vec3 at = living.getEyePosition().add(0, 0.42, 0).add(look.scale(0.12));
+        double pulse = 0.92 + 0.08 * Math.sin(now * 0.55);
+        double core = (0.20 + 0.34 * r) * pulse;
+        int alpha = (int) (110 + 135 * r);
+        Vec3 axis = new Vec3(0, 1, 0);
+        Vec3 u = new Vec3(1, 0, 0), v = new Vec3(0, 0, 1);
+        // ① 内核球壳：三圈互相垂直，越蓄越亮
+        shells(b, ps, at, axis, core, u, v, Math.min(255, alpha + 30), cam);
+        Client.ribbon(b, ps, at.subtract(0, core * 0.55, 0), at.add(0, core * 0.55, 0),
+            0.08 + core * 0.35, argb(CORE, Math.min(255, alpha + 70)), cam);
+        if (r < 0.35) return;
+        // ② 双旋环：从 0.35 开始出现，转速随时间加快
+        double spin = now * (0.12 + 0.20 * r);
+        for (int k = 0; k < 2; k++) {
+            double tilt = spin * (k == 0 ? 1 : -1.35) + k * Math.PI / 2.4;
+            Vec3 uu = new Vec3(Math.cos(tilt), 0.85, Math.sin(tilt)).normalize();
+            Vec3 vv = uu.cross(axis);
+            if (vv.lengthSqr() < 1e-4) vv = new Vec3(0, 0, 1);
+            vv = vv.normalize();
+            circle(b, ps, at, uu, vv, core * (1.55 + 0.35 * k), 0.055 + 0.02 * r,
+                spin * (k == 0 ? 2.2 : -2.8), argb(k == 0 ? GLOW : DEEP, (int) (alpha * 0.85)), cam);
+        }
+        if (r < 0.75) return;
+        // ③ 八瓣：最后 25% 才展开，长度随蓄力呼吸
+        for (int i = 0; i < 8; i++) {
+            double ang = i * Math.PI / 4 + spin * 2.6;
+            Vec3 dir = new Vec3(Math.cos(ang), Math.sin(now * 0.25 + i * 0.8) * 0.22, Math.sin(ang)).normalize();
+            double len = core * (1.8 + 1.9 * r) * (0.85 + 0.15 * Math.sin(now * 0.6 + i));
+            Client.ribbon(b, ps, at.add(dir.scale(core * 1.15)), at.add(dir.scale(len)),
+                0.06 + 0.06 * r, argb(GLOW, (int) (alpha * 0.8)), cam);
+        }
     }
 
     /** 蓄力：飞机头前方一颗越涨越亮的球 + 一圈收缩的瞄准环。 */

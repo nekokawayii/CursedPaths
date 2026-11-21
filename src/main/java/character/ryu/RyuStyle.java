@@ -12,7 +12,7 @@ public final class RyuStyle {
             new Stats(10000, 20, 5, 10, 5),
             Stats.ZERO,
             RyuSkills.all(),
-            Map.of(RyuSkills.BLAST, 0),
+            Map.of(RyuSkills.BLAST, 0, RyuSkills.SANKA, 0),
             Map.of()
         );
     }

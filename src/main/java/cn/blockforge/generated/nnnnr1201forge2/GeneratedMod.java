@@ -155,6 +155,8 @@ public final class GeneratedMod {
             (character.CharacterCasting.Effect) (p, s2, r) -> character.ryu.RyuCombat.dessert(p));
         character.CharacterCasting.registerEffect("ryu", character.ryu.RyuSkills.DOMAIN,
             (character.CharacterCasting.Effect) (p, s2, r) -> character.ryu.RyuCombat.domain(p));
+        character.CharacterCasting.registerEffect("ryu", character.ryu.RyuSkills.SANKA,
+            (character.CharacterCasting.Effect) (p, s2, r) -> character.ryu.RyuCombat.sanka(p));
         character.CharacterCasting.registerLock("ryu", new character.CharacterCasting.Lock() {
             @Override public boolean locked(net.minecraft.server.level.ServerPlayer player) {
                 return character.ryu.RyuCombat.dessertActive(player);
