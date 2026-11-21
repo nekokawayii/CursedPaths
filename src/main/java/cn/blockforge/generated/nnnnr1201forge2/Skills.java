@@ -269,6 +269,17 @@ public final class Skills {
         MaidBridge.domainOpened(p);double yaw=Math.toRadians(p.getYRot());Vec3 behind=new Vec3(Math.sin(yaw)*12,0,-Math.cos(yaw)*12);
         LivingEntity locked=Authority.instant(p)?aimTarget(p):null;Vec3 center=locked==null?p.position():locked.position();
         int duration=ShrineRules.domainTicks(Authority.countedAsMaid(p));Domain d=new Domain(p,p.serverLevel(),center,behind,now,now+duration,radius,damageMult,speedMult,verticalKill);domains.put(p.getUUID(),d);
+        // 领域「外壳 + 内部」采样点：斩击节拍到了就在这两处各切一刀，70% 被切掉就解除领域
+        var rnd=p.getRandom();
+        for(int i=0;i<600;i++){
+            double y=rnd.nextDouble()*2-1,flat=Math.sqrt(Math.max(0,1-y*y)),a=rnd.nextDouble()*Math.PI*2;
+            d.shellCut.add(center.add(Math.cos(a)*flat*radius,y*Math.max(4,radius*0.55),Math.sin(a)*flat*radius));
+        }
+        for(int i=0;i<400;i++){
+            double a=rnd.nextDouble()*Math.PI*2,r=Math.sqrt(rnd.nextDouble())*radius*0.65;
+            d.insideCut.add(center.add(Math.cos(a)*r,(rnd.nextDouble()*2-1)*Math.max(4,radius*0.25),Math.sin(a)*r));
+        }
+        d.erodeTotal=d.shellCut.size()+d.insideCut.size();
         if(VoidJourney.evolved(p))syncVoidShrine(d);
         fx(p,1,d.center,d.shrineOffset,(float)d.radius,duration,SoulJourney.evolved(p)?-now:now);
         fx(p,25,p.position(),Vec3.ZERO,CombatSettings.voidFloor(p)?1:0,10,0);
@@ -501,10 +512,34 @@ public final class Skills {
         /** 斩击节奏累积器：每刻攒 1，攒够 {@code SLASH_INTERVAL/speedMult}（九相轮转时 1/speedMult）刻结算一次，
          *  用累积而不是取整间隔，速度倍率才对每一刻都线性生效。 */
         double slashCharge;
+        /** 「御厨子被破坏」：外壳 / 内部各抽一批点，按斩击节拍逐对切掉，70% 时解除领域。 */
+        final java.util.ArrayDeque<Vec3> shellCut=new java.util.ArrayDeque<>(),insideCut=new java.util.ArrayDeque<>();
+        int erodeTotal,erodeCut;
         Domain(ServerPlayer owner,ServerLevel level,Vec3 center,Vec3 shrineOffset,long start,long end,double radius,float damageMult,float speedMult,boolean verticalKill){this.owner=owner;this.level=level;this.center=center;this.shrineOffset=shrineOffset;this.start=start;this.end=end;this.radius=radius;this.damageMult=damageMult;this.speedMult=speedMult;this.verticalKill=verticalKill;}
     }
     /** 纵向伤敌：「纵向伤敌」关掉时，跳过 Y 明显低于领域中心的目标（阈值 {@link DomainOptions#VERTICAL_MARGIN} 格，
      *  {@code d.center} 是展开那一刻玩家站的位置，也是领域的垂直基准）——省下的那 1 点就是换来的补偿。 */
+    private static void erodeDomain(ServerPlayer p,Domain d){
+        var rnd=p.getRandom();
+        cutOne(p,d,d.shellCut);
+        cutOne(p,d,d.insideCut);
+        if(d.erodeTotal>0&&d.erodeCut>=(int)Math.ceil(d.erodeTotal*0.70)){
+            p.displayClientMessage(Component.literal("御厨子被破坏 70% · 领域解除"),true);
+            closeDomain(p,false);
+        }
+    }
+    private static void cutOne(ServerPlayer p,Domain d,java.util.ArrayDeque<Vec3> pool){
+        if(pool.isEmpty())return;
+        Vec3 at=pool.poll();
+        Vec3 dir=new Vec3(p.getRandom().nextDouble()*2-1,p.getRandom().nextDouble()*2-1,p.getRandom().nextDouble()*2-1).normalize();
+        int before=slashes.size();
+        slash(p,at,dir,1.6f,p.getRandom().nextInt(360),0f,20,0);
+        if(slashes.size()>before)slashes.get(slashes.size()-1).carve=false; // 只用视觉，不靠常规破坏逻辑
+        // 只拆领域自己的方块；不是领域方块就算了（保证「恢复地形」能完整还原）
+        var pos=net.minecraft.core.BlockPos.containing(at);
+        if(SkillDestruction.domainBlock(d.level,pos)){d.level.destroyBlock(pos,false);}
+        d.erodeCut++;
+    }
     private static boolean reachable(Domain d,LivingEntity target){return !character.mainline.Mainline.simpleProtected(target)&&(d.verticalKill||target.getY()>=d.center.y-DomainOptions.VERTICAL_MARGIN);}
     /** 已经"放下"过（姿态解除、御厨子伤害 50% / 无量空处仅控制）但领域仍在的玩家：再按一次释放键即收起领域。 */
     private static final java.util.Set<UUID> released=new java.util.HashSet<>();
@@ -772,6 +807,7 @@ public final class Skills {
             boolean beat;
             if(age<=0){d.slashCharge=0;beat=true;}
             else {d.slashCharge++;beat=d.slashCharge>=interval;if(beat)d.slashCharge-=interval;}
+            if(beat)erodeDomain(p,d);
             if(VoidJourney.evolved(p)){
                 if(!clash&&beat)for(LivingEntity target:targets(d.level,p,d.center,d.radius))if(reachable(d,target))VoidCombat.domainHit(p,target,d.damageScale*d.damageMult);
                 if(age%40==0){syncVoidShrine(d);fx(p,1,d.center,d.shrineOffset,(float)d.radius,(int)(d.end-now),-d.start);}

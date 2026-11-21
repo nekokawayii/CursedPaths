@@ -70,7 +70,7 @@ public final class SkillDestruction {
     }
     /** 掀块和断流也走相同的开关、领地事件与不可破坏方块保护。 */
     /** r383：领域/结界自己铺过的方块一律不可破坏（用户要求：领域不可破坏）。 */
-    private static boolean domainBlock(ServerLevel l,BlockPos pos){
+    public static boolean domainBlock(ServerLevel l,BlockPos pos){
         return character.domain.DomainTerrain.changing(l,pos)
             || character.uraume.UraumePalaceDomain.changing(l,pos)
             || character.mainline.Mainline.changing(l,pos)
