@@ -825,7 +825,7 @@ public final class Skills {
             boolean beat;
             if(age<=0){d.slashCharge=0;beat=true;}
             else {d.slashCharge++;beat=d.slashCharge>=interval;if(beat)d.slashCharge-=interval;}
-            if(beat)erodeEnemyDomains(p,d);
+            // r458：拆方块会造成卡顿/冻结，整套「御厨子撕敌方领域方块」已移除（不再拆任何方块）
             if(VoidJourney.evolved(p)){
                 if(!clash&&beat)for(LivingEntity target:targets(d.level,p,d.center,d.radius))if(reachable(d,target))VoidCombat.domainHit(p,target,d.damageScale*d.damageMult);
                 if(age%40==0){syncVoidShrine(d);fx(p,1,d.center,d.shrineOffset,(float)d.radius,(int)(d.end-now),-d.start);}
