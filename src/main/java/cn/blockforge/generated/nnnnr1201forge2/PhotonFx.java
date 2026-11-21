@@ -256,6 +256,46 @@ public final class PhotonFx {
         }catch(Throwable t){fail(t);return null;}
     }
     /** 赫·最大功率发射：真正的三维红色圆柱（Cylinder 体积），白色环由 GojoBeamClient 自绘。 */
+    /** 分阶段特效的一段：同一 FX 里多个 Stage 用 delay 串成时间轴。 */
+    public record Stage(int shape,double radius,double size,int color,int bloom,String texture,boolean additive,
+                        int duration,int life,double rate,double speed,double orbit,int delay,
+                        Vec3 offset,Vec3 axis,boolean vertical,double stretch){
+        public static Stage of(int shape,double radius,double size,int color,int bloom,String texture,boolean additive,
+                               int duration,int life,double rate,double speed,double orbit,int delay){
+            return new Stage(shape,radius,size,color,bloom,texture,additive,duration,life,rate,speed,orbit,delay,Vec3.ZERO,null,false,0);
+        }
+        public Stage at(Vec3 off){return new Stage(shape,radius,size,color,bloom,texture,additive,duration,life,rate,speed,orbit,delay,off,axis,vertical,stretch);}
+        public Stage along(Vec3 ax){return new Stage(shape,radius,size,color,bloom,texture,additive,duration,life,rate,speed,orbit,delay,offset,ax,vertical,stretch);}
+        public Stage beam(double along){return new Stage(shape,radius,size,color,bloom,texture,additive,duration,life,rate,speed,orbit,delay,offset,axis,true,along);}
+    }
+    private static void delay(Object config,int ticks)throws Exception{tryCall(config,"setStartDelay",num(Math.max(0,ticks)));}
+    /** 把多个带 delay 的发射器放进同一个 FX：整段过程只用一次 emmit，结束后由句柄统一清理。 */
+    public static Handle staged(Vec3 pos,Stage... stages){
+        if(broken||stages.length==0||Minecraft.getInstance().level==null)return null;
+        try{
+            List<Placement> list=new ArrayList<>();
+            for(Stage st:stages){
+                try{
+                Emitter e=emitter(st.shape(),Math.max(0.05,st.radius()),st.shape()==RING?.55:1);
+                Object c=e.config();
+                duration(c,st.duration());particleLife(c,st.life());
+                size(c,Math.max(0.02,st.size()));
+                rate(c,Math.max(1,st.rate()));
+                tryCall(c,"setMaxParticles",Math.max(700,(int)(st.rate()*Math.max(2,st.life()))));
+                if(st.speed()!=0)speed(c,st.speed());
+                if(st.orbit()!=0)orbit(c,st.orbit());
+                if(st.delay()>0)delay(c,st.delay());
+                colour(c,st.color());
+                if(st.vertical()||st.stretch()>0){stretch(c,Math.max(0.05,st.stretch()>0?st.stretch():st.size()),Math.max(0.02,st.size()));render(c,MODE_VERTICAL,st.texture(),st.bloom(),st.additive());}
+                else render(c,MODE_BILLBOARD,st.texture(),st.bloom(),st.additive());
+                if(st.axis()!=null)list.add(PA(e,st.offset(),st.axis().normalize()));
+                else list.add(P(e,st.offset()));
+                }catch(Throwable t){note("stage",t);}
+            }
+            return start(list,pos);
+        }catch(Throwable t){fail(t);return null;}
+    }
+
     public static Handle beam(Vec3 from,Vec3 to,double width,int life){
         try{
             Vec3 delta=to.subtract(from);double length=Math.max(0.6,delta.length());

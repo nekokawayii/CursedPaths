@@ -93,8 +93,13 @@ public final class KurisuCombat {
         t.invulnerableTime=0;
         CombatSettings.hurt(p,t,p.damageSources().indirectMagic(p,p),amount);
     }
-    private static void fx(ServerPlayer p,int kind,Vec3 at,Vec3 dir,float size,int life){
-        Network.send(p.serverLevel(),new Network.Effect(kind,p.getId(),at,dir,size,life,0));
+    /** 触发一次 Photon 时间轴（整段过程只发这一包）。 */
+    private static void play(ServerPlayer p,int skill,Vec3 at,Vec3 dir,int life){
+        Network.send(p.serverLevel(),new Network.Effect(KurisuFx.PLAY,p.getId(),at,dir,skill,life,0));
+    }
+    /** 中断/结束：让客户端销毁对应时间轴。 */
+    private static void stopFx(ServerPlayer p,int skill){
+        Network.send(p.serverLevel(),new Network.Effect(KurisuFx.STOP,p.getId(),Vec3.ZERO,Vec3.ZERO,skill,0,0));
     }
     private static boolean cursedSpirit(LivingEntity t){
         String id=net.minecraftforge.registries.ForgeRegistries.ENTITY_TYPES.getKey(t.getType()).getPath();
@@ -132,14 +137,13 @@ public final class KurisuCombat {
     private static void baptism(ServerPlayer p){
         LivingEntity t=aimTarget(p,28);
         Vec3 from=p.getEyePosition(),to=t==null?aimPoint(p,28):t.getBoundingBox().getCenter();
-        fx(p,KurisuFx.BEAM,from,to,1.6f,8);
+        play(p,KurisuSkills.BAPTISM,from,to,40);
         p.level().playSound(null,p.blockPosition(),SoundEvents.BEACON_DEACTIVATE,SoundSource.PLAYERS,1.2f,2f);
         if(t==null)return;
         for(var eff:List.copyOf(t.getActiveEffects()))t.removeEffect(eff.getEffect());
         if(t instanceof ServerPlayer sp){character.gojo.Infinity.sever(sp);DomainAmplification.stop(sp);}
         t.invulnerableTime=0;
         CombatSettings.hurt(p,t,p.damageSources().indirectMagic(p,p),Math.max(1,t.getMaxHealth()*.15f));
-        fx(p,KurisuFx.MARK,t.getBoundingBox().getCenter(),Vec3.ZERO,1.2f,10);
         p.displayClientMessage(Component.literal("剥夺洗礼：增益已解除").withStyle(net.minecraft.ChatFormatting.GOLD),true);
     }
 
@@ -147,7 +151,7 @@ public final class KurisuCombat {
     private static void flame(ServerPlayer p,ServerLevel level){
         Vec3 at=aimPoint(p,6);
         FLAMES.add(new Flame(level,at,level.getGameTime()+200,p));
-        fx(p,KurisuFx.FLAME,at,Vec3.ZERO,6f,40);
+        play(p,KurisuSkills.FLAME,at,Vec3.ZERO,200);
         level.playSound(null,net.minecraft.core.BlockPos.containing(at),SoundEvents.FIRECHARGE_USE,SoundSource.PLAYERS,1.4f,.7f);
     }
 
@@ -157,7 +161,6 @@ public final class KurisuCombat {
         for(var t:around(p,p.position(),24)){
             boolean air=!t.onGround()||t.isNoGravity()||t.getY()>p.getY()+2;
             if(!air)continue;
-            fx(p,KurisuFx.SPEAR,t.position(),Vec3.ZERO,1.2f,10);
             t.setNoGravity(false);t.setDeltaMovement(t.getDeltaMovement().add(0,-1.6,0));t.hurtMarked=true;
             t.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN,100,4));
             hurt(p,t,Math.max(8,t.getMaxHealth()*.08f));
@@ -170,14 +173,14 @@ public final class KurisuCombat {
     private static void gate(ServerPlayer p,ServerLevel level){
         Vec3 at=p.getEyePosition().add(p.getLookAngle().scale(2.4));
         GATES.add(new Gate(level,at,level.getGameTime()+160,p));
-        fx(p,KurisuFx.GATE,at,Vec3.ZERO,2.2f,40);
+        play(p,KurisuSkills.GATE,at,Vec3.ZERO,160);
         level.playSound(null,p.blockPosition(),SoundEvents.BELL_BLOCK,SoundSource.PLAYERS,1.6f,.8f);
     }
 
     // 5 裁决光剑
     private static void sword(ServerPlayer p){
         Curse.status(p,K_SWORD,300);
-        fx(p,KurisuFx.SWORD,p.getEyePosition(),Vec3.ZERO,1.4f,20);
+        play(p,KurisuSkills.SWORD,p.getEyePosition(),Vec3.ZERO,300);
         p.level().playSound(null,p.blockPosition(),SoundEvents.ANVIL_USE,SoundSource.PLAYERS,1.0f,1.4f);
         p.displayClientMessage(Component.literal("裁决光剑：15 秒（无视护甲 · 对咒灵/受肉双倍）").withStyle(net.minecraft.ChatFormatting.GOLD),true);
     }
@@ -185,7 +188,7 @@ public final class KurisuCombat {
     // 6 神罚·落雷
     private static void thunder(ServerPlayer p){
         Vec3 at=aimPoint(p,30);
-        fx(p,KurisuFx.THUNDER,at,Vec3.ZERO,3f,14);
+        play(p,KurisuSkills.THUNDER,at,Vec3.ZERO,40);
         p.level().playSound(null,net.minecraft.core.BlockPos.containing(at),SoundEvents.LIGHTNING_BOLT_THUNDER,SoundSource.PLAYERS,2f,.9f);
         for(var t:around(p,at,3.5)){
             hurt(p,t,Math.max(30,t.getMaxHealth()*.12f));
@@ -198,7 +201,7 @@ public final class KurisuCombat {
 
     // 7 净化风暴：击退 + 清空全部效果
     private static void storm(ServerPlayer p){
-        fx(p,KurisuFx.STORM,p.position(),Vec3.ZERO,8f,20);
+        play(p,KurisuSkills.STORM,p.position(),Vec3.ZERO,46);
         p.level().playSound(null,p.blockPosition(),SoundEvents.BEACON_ACTIVATE,SoundSource.PLAYERS,1.6f,1.2f);
         for(var t:around(p,p.position(),8)){
             for(var eff:List.copyOf(t.getActiveEffects()))t.removeEffect(eff.getEffect());
@@ -212,7 +215,7 @@ public final class KurisuCombat {
     private static void execute(ServerPlayer p){
         LivingEntity t=aimTarget(p,3.5);
         if(t==null){p.displayClientMessage(Component.literal("破魔：前方 3 格内没有目标").withStyle(net.minecraft.ChatFormatting.GRAY),true);return;}
-        fx(p,KurisuFx.EXECUTE,t.getBoundingBox().getCenter(),Vec3.ZERO,2.4f,14);
+        play(p,KurisuSkills.EXECUTE,t.getBoundingBox().getCenter(),Vec3.ZERO,36);
         p.level().playSound(null,t.blockPosition(),SoundEvents.PLAYER_ATTACK_CRIT,SoundSource.PLAYERS,1.6f,.7f);
         boolean open=!casting(t);
         CombatSettings.hurt(p,t,p.damageSources().indirectMagic(p,p),open?Math.max(40,t.getMaxHealth()*.25f):Math.max(10,t.getMaxHealth()*.08f));
@@ -222,7 +225,7 @@ public final class KurisuCombat {
     // 9 邪去悔天梯（号角）：3 秒圣光柱
     private static void horn(ServerPlayer p){
         HORNS.put(p.getUUID(),p.level().getGameTime()+HORN_TICKS);
-        fx(p,KurisuFx.HORN,p.getEyePosition(),Vec3.ZERO,6f,20);
+        play(p,KurisuSkills.HORN,aimPoint(p,20),Vec3.ZERO,64);
         p.level().playSound(null,p.blockPosition(),SoundEvents.RAID_HORN.get(),SoundSource.PLAYERS,1.4f,.9f);
         p.displayClientMessage(Component.literal("邪去悔天梯：吹奏中（移速 -50%）").withStyle(net.minecraft.ChatFormatting.GOLD),true);
     }
@@ -231,7 +234,7 @@ public final class KurisuCombat {
     private static void supper(ServerPlayer p){
         Curse.status(p,"KurisuSupperCharge",60);
         p.displayClientMessage(Component.literal("最后的晚餐：蓄力 3 秒…").withStyle(net.minecraft.ChatFormatting.GOLD),true);
-        fx(p,KurisuFx.SIGIL,p.position(),Vec3.ZERO,6f,60);
+        play(p,KurisuSkills.SUPPER,p.position(),Vec3.ZERO,150);
     }
 
     // 11 领域展开·天国之门
@@ -246,7 +249,7 @@ public final class KurisuCombat {
             public void close(){DOMAINS.remove(d);}
         };
         DomainClash.opened(p,center,DOMAIN_RADIUS,life);
-        fx(p,KurisuFx.DOMAIN,center,Vec3.ZERO,DOMAIN_RADIUS,DOMAIN_TICKS);
+        play(p,KurisuSkills.DOMAIN,center,Vec3.ZERO,DOMAIN_TICKS);
         p.displayClientMessage(Component.literal("领域展开 · 天国之门（半径 "+DOMAIN_RADIUS+" · 封印生得术式）").withStyle(net.minecraft.ChatFormatting.GOLD),false);
     }
 
@@ -287,12 +290,11 @@ public final class KurisuCombat {
         // 号角持续
         Long until=HORNS.get(p.getUUID());
         if(until!=null){
-            if(until<=now||!p.isAlive()){HORNS.remove(p.getUUID());}
+            if(until<=now||!p.isAlive()){HORNS.remove(p.getUUID());stopFx(p,KurisuSkills.HORN);}
             else{
                 p.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN,10,1,false,false));
                 if(now%4==0){
                     Vec3 at=aimPoint(p,20);
-                    fx(p,KurisuFx.HORN,at,Vec3.ZERO,4f,6);
                     for(var t:around(p,at,4))hurt(p,t,Math.max(6,t.getMaxHealth()*.03f));
                 }
             }
@@ -300,18 +302,15 @@ public final class KurisuCombat {
         // 最后的晚餐引爆
         if(data.contains("KurisuSupperAt")&&data.getLong("KurisuSupperAt")<=now){
             data.remove("KurisuSupperAt");
-            fx(p,KurisuFx.SUPPER,p.position(),Vec3.ZERO,8f,30);
             for(var t:around(p,p.position(),64)){
                 if(t instanceof Mob m&&(m.getPersistentData().getBoolean("CullingSummon")||m.getPersistentData().getBoolean("TenShadows")||m.getPersistentData().getBoolean("ShadowSummon"))){m.discard();continue;}
-                fx(p,KurisuFx.SUPPER,t.position(),Vec3.ZERO,2.2f,12);
                 CombatSettings.hurt(p,t,p.damageSources().indirectMagic(p,p),Math.max(10,t.getMaxHealth()*.2f));
             }
         }
         // 火海
         FLAMES.removeIf(f->{
-            if(f.level()!=p.level()||f.end()<=now)return true;
+            if(f.level()!=p.level()||f.end()<=now){stopFx(p,KurisuSkills.FLAME);return true;}
             if(now%20==0){
-                fx(p,KurisuFx.FLAME,f.center(),Vec3.ZERO,6f,20);
                 for(var t:around(p,f.center(),6)){
                     CombatSettings.hurt(p,t,p.damageSources().indirectMagic(p,p),Math.max(3,t.getMaxHealth()*.03f));
                     t.getPersistentData().putLong(K_NOHEAL,t.level().getGameTime()+20);
@@ -320,9 +319,8 @@ public final class KurisuCombat {
             return false;
         });
         GATES.removeIf(g->g.end()<=now||g.level()!=p.level());
-        DOMAINS.removeIf(d->d.end()<=now||!d.owner().isAlive()||d.level()!=p.level());
+        DOMAINS.removeIf(d->{boolean gone=d.end()<=now||!d.owner().isAlive()||d.level()!=p.level();if(gone)stopFx(p,KurisuSkills.DOMAIN);return gone;});
         if(now%20==0){
-            for(var d:DOMAINS)fx(p,KurisuFx.DOMAIN,d.center(),Vec3.ZERO,DOMAIN_RADIUS,20);
             Network.sendTo(p,new Network.Effect(KurisuFx.HUD,p.getId(),Vec3.ZERO,Vec3.ZERO,sanity(p),0,0));
         }
         if(Curse.active(p,"KurisuSupperCharge")&&!data.contains("KurisuSupperAt"))data.putLong("KurisuSupperAt",now+60);
@@ -388,7 +386,6 @@ public final class KurisuCombat {
         for(var g:GATES)if(g.level()==level&&g.end()>level.getGameTime()
             &&e.getProjectile().position().distanceToSqr(g.center())<=9){
             e.setCanceled(true);e.getProjectile().discard();
-            Network.send(level,new Network.Effect(KurisuFx.GATE,g.owner().getId(),g.center(),Vec3.ZERO,2.2f,10,0));
             return;
         }
     }
