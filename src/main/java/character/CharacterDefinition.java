@@ -94,7 +94,7 @@ public record CharacterDefinition(String id, String name, String technique, Stri
     }
     private static boolean legacySkill(Family family,int skill) {
         return switch(family){
-            case LIMITLESS -> skill>=34&&skill<=40;
+            case LIMITLESS -> skill>=34&&skill<=41;   // 41 = 无下限（r448 起进五条悟轮盘）
             case ICE -> skill==22||skill==23;
             case MARTIAL -> skill==7||skill==8||skill==13;
             case BLOOD -> skill>=60&&skill<=79&&skill!=75;
