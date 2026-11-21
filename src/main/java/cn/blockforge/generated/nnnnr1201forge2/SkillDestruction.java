@@ -35,6 +35,8 @@ public final class SkillDestruction {
         if(p.level().dimension().equals(CullingGame.DIM))set(server,true);
     }
     public static void set(net.minecraft.server.MinecraftServer server,boolean on){server.overworld().getGameRules().getRule(RULE).set(on,server);if(!on)visitedNow.clear();}
+    /** 本次破坏的额外边界（领域「清理」用：只拆神龛 y-5 以上、半径 100 内）。 */
+    private static Vec3 LIMIT_CENTER;private static double LIMIT_R,LIMIT_MINY=-1e9;
     public static void line(ServerPlayer p,Vec3 from,Vec3 to,double radius){
         immediate(p,from,to,radius);
     }
@@ -44,6 +46,11 @@ public final class SkillDestruction {
     @SubscribeEvent public static void load(net.minecraftforge.event.level.ChunkEvent.Load e){if(e.getLevel() instanceof ServerLevel l)loaded.computeIfAbsent(l,k->new HashSet<>()).add(e.getChunk().getPos());}
     @SubscribeEvent public static void unload(net.minecraftforge.event.level.ChunkEvent.Unload e){if(e.getLevel() instanceof ServerLevel l){Set<net.minecraft.world.level.ChunkPos> set=loaded.get(l);if(set!=null)set.remove(e.getChunk().getPos());}}
     /** 当刻直接破坏；不排队、不延后追着特效补破坏。仍保留原有地形开关和领地保护。 */
+    public static void line(ServerPlayer p,Vec3 from,Vec3 to,double radius,Vec3 center,double maxRadius,double minY){
+        Vec3 oldC=LIMIT_CENTER;double oldR=LIMIT_R,oldY=LIMIT_MINY;
+        LIMIT_CENTER=center;LIMIT_R=maxRadius;LIMIT_MINY=minY;
+        try{line(p,from,to,radius);}finally{LIMIT_CENTER=oldC;LIMIT_R=oldR;LIMIT_MINY=oldY;}
+    }
     public static void immediate(ServerPlayer p,Vec3 from,Vec3 to,double radius){
         ServerLevel l=p.serverLevel();if(!enabled(l)||!p.isAlive()||DomainClash.active(p)||EternalLove.settling(MaidBridge.body(p))||!Double.isFinite(from.lengthSqr()+to.lengthSqr()))return;
         // r383：判定半径不再封顶。粗体积（光束/大口径）改走分刻队列，避免单刻扫几十万方块卡死服务器。
@@ -81,6 +88,7 @@ public final class SkillDestruction {
         try{return l.structureManager().getStructureAt(pos,cubeStructure).isValid();}catch(Exception ignored){return false;}
     }
     private static boolean mayChange(ServerPlayer p,BlockPos pos){
+        if(LIMIT_R>0&&(pos.getY()<LIMIT_MINY||(LIMIT_CENTER!=null&&Vec3.atCenterOf(pos).distanceToSqr(LIMIT_CENTER)>LIMIT_R*LIMIT_R)))return false;
         ServerLevel l=p.serverLevel();if(!enabled(l)||!p.isAlive()||DomainClash.active(p)||!l.hasChunkAt(pos)||!l.getWorldBorder().isWithinBounds(pos))return false;
         var state=l.getBlockState(pos);if(state.isAir()||state.getDestroySpeed(l,pos)<0||state.hasBlockEntity()||SoulJourney.protectedBlock(l,pos)||domainBlock(l,pos))return false;
         ServerPlayer authority=p instanceof MaidBridge.Actor a?MaidBridge.owner(a):p;

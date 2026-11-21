@@ -141,6 +141,8 @@ public final class Skills {
         /** 每刻飞行格数：**这就是"斩击速度"**（剑气弹幕的飞行速度）。手持生成了才定型，中途换手不影响已经在飞的。 */
         double speed=SLASH_SPEED;
         final long visualId=SlashTerrain.id();List<SlashForms.Line> fragments;
+        /** 领域斩击的地形破坏开关与范围（清理关闭时 carve=false，完全不破方块）。 */
+        boolean carve=true;Vec3 carveCenter;double carveRadius=1e9,carveMinY=-1e9;
         /** 伤害系数（1 = 普通解）。简易领域的随机斩击用小于 1 的系数。 */
         float damageScale=1f;
         Slash(ServerPlayer p,Vec3 pos,Vec3 dir,Vec3 axis,float size){owner=p;level=p.serverLevel();this.pos=pos;this.dir=dir;this.axis=axis;this.size=size;power=(float)Curse.power(p);world=Curse.awakened(p);life=(int)(400*Curse.scale(p));speed=SLASH_SPEED*(Hiten.holding(p)?Hiten.SLASH_SLOW:1);}
@@ -559,7 +561,21 @@ public final class Skills {
         if(slashes.size()>=DOMAIN_CUT_LIMIT)return;
         double y=p.getRandom().nextDouble()*2-1,flat=Math.sqrt(Math.max(0,1-y*y)),a=p.getRandom().nextDouble()*Math.PI*2;
         Vec3 dir=new Vec3(Math.cos(a)*flat,y,Math.sin(a)*flat);
+        int before=slashes.size();
         slash(p,at,dir,size,p.getRandom().nextInt(360),0f,life,0);
+        // 领域斩击的地形破坏：默认「只清实体」；选择界面里开了「清理」才拆，
+        // 而且只拆神龛 y-5 以上、半径 100 以内（与全局 desblock 开关无关）。
+        if(slashes.size()>before){
+            boolean cleanup=SukunaBranches.domainCleanup(p);
+            Slash s=slashes.get(slashes.size()-1);
+            s.carve=cleanup;
+            if(cleanup){
+                Domain d=domains.get(p.getUUID());
+                s.carveCenter=d==null?at:d.center;
+                s.carveRadius=100;
+                s.carveMinY=(d==null?at.y:d.center.y)-5;
+            }
+        }
     }
     static void heldSlash(ServerPlayer p){
         if(SlashForms.qi(p)){SlashForms.basic(p);return;}
@@ -735,7 +751,7 @@ public final class Skills {
         }
         for(Iterator<Joint> it=joints.values().iterator();it.hasNext();){Joint j=it.next();if(!valid(j.owner,j.level)){it.remove();continue;}if(j.level.getGameTime()<j.due)continue;it.remove();var entity=j.level.getEntity(j.target);if(entity instanceof LivingEntity target&&canHit(j.owner,target)){damage(j.level,j.owner,target,j.power,true,false);fx(j.owner,59,target.getBoundingBox().getCenter(),Vec3.ZERO,4,20,target.getId());SkillSounds.play(j.owner,"fetus_joint");}}
         tickRifts();
-        for(Iterator<Slash> it=slashes.iterator();it.hasNext();){Slash s=it.next();if(++s.age>s.life||!valid(s.owner,s.level)){it.remove();continue;}if(s.fragments!=null){if(!tickFlyingSlash(s))it.remove();continue;}Vec3 old=s.pos;s.pos=s.pos.add(s.dir.scale(s.speed));if(CombatExpansion.collideSlash(s.owner,s.pos.subtract(s.axis.scale(s.size/2)),s.pos.add(s.axis.scale(s.size/2)),s.dir)){it.remove();continue;}SkillDestruction.line(s.owner,s.pos.subtract(s.axis.scale(s.size/2)),s.pos.add(s.axis.scale(s.size/2)),0.6);AABB swept=new AABB(old,s.pos).inflate(s.size/2+1);
+        for(Iterator<Slash> it=slashes.iterator();it.hasNext();){Slash s=it.next();if(++s.age>s.life||!valid(s.owner,s.level)){it.remove();continue;}if(s.fragments!=null){if(!tickFlyingSlash(s))it.remove();continue;}Vec3 old=s.pos;s.pos=s.pos.add(s.dir.scale(s.speed));if(CombatExpansion.collideSlash(s.owner,s.pos.subtract(s.axis.scale(s.size/2)),s.pos.add(s.axis.scale(s.size/2)),s.dir)){it.remove();continue;}if(s.carve)SkillDestruction.line(s.owner,s.pos.subtract(s.axis.scale(s.size/2)),s.pos.add(s.axis.scale(s.size/2)),0.6,s.carveCenter,s.carveRadius,s.carveMinY);AABB swept=new AABB(old,s.pos).inflate(s.size/2+1);
             for(LivingEntity e:targets(s.level,s.owner,s.pos,s.size/2+3)){if(!e.getBoundingBox().intersects(swept))continue;Vec3 q=e.getBoundingBox().getCenter().subtract(old.lerp(s.pos,0.5));double a=q.dot(s.axis),b=q.dot(s.dir);Vec3 normal=s.axis.cross(s.dir).normalize();double halfThickness=0.45;float amount=(s.space?(float)((YujiEntity.percent(e,e.getMaxHealth()*0.25f)+300)*Journey.bonus(s.owner)*(Curse.active(s.owner,"Disorder")?0.8:1)):(s.world?12:6)*s.power)*s.damageScale;boolean soul=SoulJourney.evolved(s.owner);if(Math.abs(a)<s.size/2+projection(e,s.axis)&&Math.abs(b)<1+projection(e,s.dir)&&Math.abs(q.dot(normal))<halfThickness+projection(e,normal)&&(Journey.rotation(s.owner)||s.hit.add(e.getUUID()))&&scaledDamage(s.level,s.owner,e,amount,s.world,true,soul,SlashFormRules.DAMAGE)){if(soul)hitEffectSoul(s.level,s.owner,e);else hitEffect(s.level,s.owner,e,7,s.world);}}
         }
         for(Iterator<Aura> it=auras.values().iterator();it.hasNext();){Aura a=it.next();long now=a.level.getGameTime(),age=now-a.start;ServerPlayer p=a.owner;

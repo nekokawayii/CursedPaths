@@ -18,8 +18,10 @@ public final class DomainOptionsScreen extends Screen {
     private int radiusPts=Client.progress.domainRadiusPts(),damagePts=Client.progress.domainDamagePts(),speedPts=Client.progress.domainSpeedPts();
     /** 「纵向伤敌」：per-player 设置，按「确定」时和三项点数一起发包（服务端存 NBT，展开时读那一刻的存档）。 */
     private boolean verticalKill=Client.progress.domainVerticalKill();
+    /** 领域斩击是否拆地形（独立于 desblock；默认关）。 */
+    private boolean cleanup=SukunaBranches.domainCleanup(net.minecraft.client.Minecraft.getInstance().player);
     private final Button[] minus=new Button[3],plus=new Button[3];
-    private Button verticalButton;
+    private Button verticalButton,cleanupButton;
     public DomainOptionsScreen(){super(Component.literal("伏魔御厨子 · 点数分配"));}
     @Override protected void init(){
         int left=width/2-110,right=left+194,top=height/2-46;
@@ -29,10 +31,12 @@ public final class DomainOptionsScreen extends Screen {
             plus[i]=addRenderableWidget(Button.builder(Component.literal("+"),b->adjust(index,1)).bounds(right,y,26,20).build());
         }
         verticalButton=addRenderableWidget(Button.builder(Component.literal(""),b->{verticalKill=!verticalKill;trimToTotal();b.setMessage(Component.literal(verticalText()));refresh();}).bounds(left,height/2+26,220,20).build());
-        addRenderableWidget(Button.builder(Component.literal("确定并选中"),b->{Network.CHANNEL.sendToServer(new Network.DomainOptions(radiusPts,damagePts,speedPts,verticalKill));minecraft.setScreen(null);}).bounds(left,height/2+62,220,20).build());
+        cleanupButton=addRenderableWidget(Button.builder(Component.literal(cleanupText()),b->{cleanup=!cleanup;b.setMessage(Component.literal(cleanupText()));}).bounds(left,height/2+44,220,20).build());
+        addRenderableWidget(Button.builder(Component.literal("确定并选中"),b->{Network.CHANNEL.sendToServer(new Network.DomainOptions(radiusPts,damagePts,speedPts,verticalKill,cleanup));minecraft.setScreen(null);}).bounds(left,height/2+62,220,20).build());
         refresh();
     }
     private int[] points(){return new int[]{radiusPts,damagePts,speedPts};}
+    private String cleanupText(){return "清理地形（拆神龛 y-5 以上 / 半径100）: "+(cleanup?"开":"关");}
     private String verticalText(){return "纵向伤敌："+(verticalKill?"开":"关");}
     /** 只有"关掉纵向伤敌多分出来的那 1 点"会超支：从关切回开时可用总点数少 1，就从**当前分得最多的一项**里收回那 1 点，
      *  保证发出去的分配永远合法（服务端按可用总点数整包校验，不合法的包会被直接拒收）。 */

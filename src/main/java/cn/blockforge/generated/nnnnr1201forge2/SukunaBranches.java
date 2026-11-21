@@ -55,10 +55,15 @@ public final class SukunaBranches {
     }
     /** 保存伏魔御厨子的三项点数与「纵向伤敌」开关：越界或三项之和超过可用总点数（开关开=10 / 关=11）就整包拒收
      *  （存档里永远是合法分配，客户端发的值不当真）。 */
+    /** 领域斩击是否破坏地形（与全局 desblock 开关**独立**，默认关 = 只清实体）。 */
+    public static boolean domainCleanup(net.minecraft.world.entity.player.Player p){return Curse.data(p).getBoolean("DomainCleanup");}
     public static void configureDomain(ServerPlayer p,int radiusPts,int damagePts,int speedPts,boolean verticalKill){
+        configureDomain(p,radiusPts,damagePts,speedPts,verticalKill,domainCleanup(p));
+    }
+    public static void configureDomain(ServerPlayer p,int radiusPts,int damagePts,int speedPts,boolean verticalKill,boolean cleanup){
         if(!DomainOptions.valid(radiusPts,damagePts,speedPts,verticalKill))return;
         var tag=Curse.data(p);
-        tag.putInt("DomainRadiusPts",radiusPts);tag.putInt("DomainDamagePts",damagePts);tag.putInt("DomainSpeedPts",speedPts);tag.putBoolean("DomainVerticalKill",verticalKill);
+        tag.putInt("DomainRadiusPts",radiusPts);tag.putInt("DomainDamagePts",damagePts);tag.putInt("DomainSpeedPts",speedPts);tag.putBoolean("DomainVerticalKill",verticalKill);tag.putBoolean("DomainCleanup",cleanup);
     }
     public static int cost(ServerPlayer p,int skill){return skill==BranchRules.WALL?BranchRules.wallCost(wallSpacing(p)):skill==BranchRules.WEB?180:120;}
     public static boolean available(ServerPlayer p,int skill){return skill>=BranchRules.WEB&&skill<=BranchRules.WALL&&Journey.unlocked(p)&&(skill==BranchRules.WALL?Curse.awakened(p):Curse.fingers(p)>=5)&&valid(p,p.serverLevel())&&!p.isSpectator()&&!MaidBridge.recovering(p)&&!SoulCombat.suppressed(p)&&Curse.canUseTechnique(p)&&!Curse.active(p,"BranchCooldown"+skill)&&Curse.canSpend(p,cost(p,skill))&&!(skill==BranchRules.MULTI&&Curse.data(p).getBoolean("MultiArmed"));}
