@@ -47,10 +47,13 @@ public final class ExpeditionEvents {
                 drop(e,"residue_high",1+l.random.nextInt(3));
                 if(l.random.nextInt(4)==0)drop(e,"curse_concentrate",1);
             }else{
-                drop(e,"mutant_gland",1+l.random.nextInt(2));
-                drop(e,"curse_flesh",1);
-                drop(e,"residue_medium",1+l.random.nextInt(2));
-                if(l.random.nextInt(6)==0)drop(e,"star_iron_fragment",1);
+                // 羂索召唤出来的杂兵是无限刷的，再给材料就等于无限刷残秽：召唤物不掉材料。
+                if(!mob.getPersistentData().getBoolean("CullingSummon")){
+                    drop(e,"mutant_gland",1+l.random.nextInt(2));
+                    drop(e,"curse_flesh",1);
+                    if(l.random.nextFloat()<.4f)drop(e,"residue_medium",1);
+                    if(l.random.nextInt(6)==0)drop(e,"star_iron_fragment",1);
+                }
             }
             int base=sorcerer?5:1,points=Math.max(1,(int)Math.round(base*character.culling.CullingRules.scoreMul(p)));
             double lootMul=character.culling.CullingRules.lootMul(p);
