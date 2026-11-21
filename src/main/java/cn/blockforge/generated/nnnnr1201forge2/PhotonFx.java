@@ -279,15 +279,19 @@ public final class PhotonFx {
                 Emitter e=emitter(st.shape(),Math.max(0.05,st.radius()),st.shape()==RING?.55:1);
                 Object c=e.config();
                 duration(c,st.duration());particleLife(c,st.life());
-                size(c,Math.max(0.02,st.size()));
-                rate(c,Math.max(1,st.rate()));
-                tryCall(c,"setMaxParticles",Math.max(700,(int)(st.rate()*Math.max(2,st.life()))));
+                double stageSize=Math.max(0.02,st.size()*0.32);
+                double stageRate=Math.max(1,st.rate()*0.35);
+                boolean additive=st.additive()&&st.size()<1.2;
+                int bloom=st.size()>1.4?0:st.bloom();
+                size(c,stageSize);
+                rate(c,stageRate);
+                tryCall(c,"setMaxParticles",Math.max(200,(int)(stageRate*Math.max(2,st.life()))));
                 if(st.speed()!=0)speed(c,st.speed());
                 if(st.orbit()!=0)orbit(c,st.orbit());
                 if(st.delay()>0)delay(c,st.delay());
                 colour(c,st.color());
-                if(st.vertical()||st.stretch()>0){stretch(c,Math.max(0.05,st.stretch()>0?st.stretch():st.size()),Math.max(0.02,st.size()));render(c,MODE_VERTICAL,st.texture(),st.bloom(),st.additive());}
-                else render(c,MODE_BILLBOARD,st.texture(),st.bloom(),st.additive());
+                if(st.vertical()||st.stretch()>0){stretch(c,Math.max(0.05,(st.stretch()>0?st.stretch():st.size())*0.5),stageSize);render(c,MODE_VERTICAL,st.texture(),bloom,additive);}
+                else render(c,MODE_BILLBOARD,st.texture(),bloom,additive);
                 if(st.axis()!=null)list.add(PA(e,st.offset(),st.axis().normalize()));
                 else list.add(P(e,st.offset()));
                 }catch(Throwable t){note("stage",t);}
