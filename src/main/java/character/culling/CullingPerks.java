@@ -307,7 +307,8 @@ public final class CullingPerks {
             var drop = rnd.nextBoolean() ? ExpeditionContent.item("star_iron_fragment") : net.minecraft.world.item.Items.AMETHYST_SHARD;
             if (drop != null) net.minecraft.world.level.block.Block.popResource(level, pos, new ItemStack(drop));
         }
-        if (CullingRules.special(p, "ruin_scrap") && rnd.nextInt(10) == 0) {
+        // r440：拾荒者掉残秽再收一档：25%（r438 前）→ 10%（r439）→ 3%
+        if (CullingRules.special(p, "ruin_scrap") && rnd.nextFloat() < .03f) {
             var drop = ExpeditionContent.item("residue_medium");
             if (drop != null) net.minecraft.world.level.block.Block.popResource(level, pos, new ItemStack(drop));
         }
