@@ -148,6 +148,8 @@ public final class Curse {
         if(body.getHealth()<=before)return false;
         // 对拼败北的55%费用由统一治疗事件收取，不能在这里再扣一次。
         if(!DomainClash.penalized(p))add(p,-reverseCost(p));status(p,"RecoveryDelay",60);status(p,"ReverseCooldown",ReverseRules.COOLDOWN_TICKS);sync(p);
+        // 反转术式：直接解除「混乱的思绪」并给 15 秒免疫（无下限 debuff）
+        if(character.gojo.Infinity.active(p)) character.gojo.Infinity.onReverse(p);
         Network.send(p.serverLevel(),new Network.Effect(137,body.getId(),body.position(),net.minecraft.world.phys.Vec3.ZERO,1,20,0));return true;
     }
     public static void repairBurnout(ServerPlayer p){

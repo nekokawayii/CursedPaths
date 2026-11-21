@@ -280,6 +280,8 @@ public final class GojoCombat {
         p.displayClientMessage(Component.literal("茈 · 点按发射"+(s.purpleChain>0?"（连点消耗 ×"+String.format(java.util.Locale.ROOT,"%.2f",mult)+"）":"")),true);
     }
     public static void cast(ServerPlayer p,int skill){
+        // 无下限：开启/关闭型，不消耗技能表的咒力（每秒 250 由 Infinity 自己扣）
+        if(skill==character.gojo.Infinity.SKILL){character.gojo.Infinity.toggle(p);return;}
         // 无量空处不再按下即展开：走 Skills 里那一套结印时间轴（按下=结印，第 80 刻才真正展开）
         if(skill==7){Skills.voidPress(p);return;}
         if(!available(p,skill)){reject(p,skill);return;}
@@ -287,7 +289,7 @@ public final class GojoCombat {
         if(s.p!=p||s.level!=p.level()){states.put(p.getUUID(),s=new State(p));}
         if(!character.yuta.CopyBorrow.borrowing(p)&&!Curse.spend(p,GojoPlayer.COST[skill]))return;
         // Curse.status 的第三个参数是"刻"，之前误按"秒"传入导致冷却只剩几刻
-        if(GojoPlayer.COOLDOWN[skill]>0)Curse.status(p,key(skill),GojoPlayer.COOLDOWN[skill]);
+        if(GojoPlayer.COOLDOWN[skill]>0)Curse.status(p,key(skill),(int)Math.round(GojoPlayer.COOLDOWN[skill]*character.gojo.Infinity.cooldownMul(p)));
         LivingEntity aim=Skills.aimTarget(p);
         s.casting=skill;s.age=0;s.target=aim==null?null:aim.getUUID();
         switch(skill){

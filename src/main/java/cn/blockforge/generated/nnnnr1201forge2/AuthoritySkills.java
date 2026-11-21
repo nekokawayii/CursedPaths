@@ -21,15 +21,15 @@ public final class AuthoritySkills {
             if(GuardianCombat.awakened(p))for(int i=7;i<=16;i++)out.add(i);
         }
         if(Uraume.unlocked(p))out.addAll(List.of(22,23));
-        if(GojoPlayer.unlocked(p))for(int i=100;i<109;i++)out.add(i);
+        if(GojoPlayer.unlocked(p))for(int i=100;i<110;i++)out.add(i);
         return out;
     }
     public static List<Integer> owned(ServerPlayer p){var ids=new TreeSet<Integer>(current(p));for(int i:Curse.data(p).getCompound("AuthorityHistory").getIntArray("Skills"))if(valid(i))ids.add(i);return List.copyOf(ids);}
     public static boolean owned(ServerPlayer p,int id){return valid(id)&&owned(p).contains(id);}
-    public static boolean valid(int id){return BloodRules.skill(id)||id>=0&&id<=33||id==43||id==44||id>=100&&id<109||id>=200&&id<=205||id>=300&&id<=304;}
+    public static boolean valid(int id){return BloodRules.skill(id)||id>=0&&id<=33||id==43||id==44||id>=100&&id<110||id>=200&&id<=205||id>=300&&id<=304;}
     public static String name(int id){
         if(BloodRules.skill(id))return BloodRules.name(id);
-        if(id>=100&&id<109)return GojoPlayer.nameOf(id-100);
+        if(id>=100&&id<110)return GojoPlayer.nameOf(id-100);
         if(id>=200&&id<=205)return new String[]{"解 · 后翻","解 · 飞踢","解 · 滑铲","解 · 冲拳","解 · 跪地斩","解 · 落地追击"}[id-200];
         if(id>=300&&id<=304)return new String[]{"反转术式","修复熔断","领域展延","咒力附拳","九相轮转"}[id-300];
         if(id==43)return "简易领域 · 捌";if(id==44)return FurnaceMax.NAME;
@@ -74,7 +74,7 @@ public final class AuthoritySkills {
         if(id==17||id==18)return NetBranches.available(p,id);
         if(id>=19&&id<=21)return SukunaBranches.available(p,id);
         if(id==22||id==23)return Uraume.available(p,id);
-        if(id>=100&&id<109)return GojoCombat.available(p,id-100)&&!(id==107&&GojoCombat.domainOpen(p));
+        if(id>=100&&id<110)return id==109?true:GojoCombat.available(p,id-100)&&!(id==107&&GojoCombat.domainOpen(p));
         if(id==24||id==25||id==27)return SlashForms.available(p,id);
         if(id==29||id==30||id==31||id==32)return CombatExpansion.available(p,id);
         if(id==44)return VoidJourney.evolved(p)&&FurnaceMax.cooldownLeft(p)==0&&Curse.canSpend(p,FurnaceMax.COST);
@@ -100,6 +100,7 @@ public final class AuthoritySkills {
         if(character.mainline.Mainline.domainSkill(p,id)&&!character.mainline.Mainline.requireDomain(p))return;
         if(BloodRules.skill(id)){BloodArts.automatic(p,id);return;}
         if(id<6){Skills.cast(p,id);return;}if(id==6){Skills.peel(p);return;}
+        if(id==109){GojoCombat.cast(p,9);return;}
         if(id>=100&&id<109){GojoCombat.cast(p,id-100);if(id==108)GojoCombat.releaseBlueMax(p);return;}
         if(id>=7&&id<=16){GuardianPlayerSkills.cast(p,id-7);return;}
         if(id==17||id==18){NetBranches.cast(p,id);return;}

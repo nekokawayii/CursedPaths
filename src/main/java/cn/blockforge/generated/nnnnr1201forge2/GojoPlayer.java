@@ -10,17 +10,17 @@ public final class GojoPlayer {
     /** 与首领完全同款：直接引用首领技能表，顺序、名称、冷却一一对应。 */
     public static final String[] NAMES=GojoEntity.NAMES;
     /** 轮盘短名：**直接按技能号**取（苍/赫/最大/茈/咏唱/瞬移/体术/无量/苍极）。 */
-    public static final String[] SHORT={"苍","赫","最大","茈","咏唱","瞬移","体术","无量","苍极"};
+    public static final String[] SHORT={"苍","赫","最大","茈","咏唱","瞬移","体术","无量","苍极","无下限"};
     // 无量空处原来要 1200 咒力，比宿傩自己的领域（70）高出一大截，很多存档根本付不起而表现为"按了没反应"，降到 300。
-    public static final int[] COST={120,150,400,600,900,60,40,300,200};
+    public static final int[] COST={120,150,400,600,900,60,40,300,200,0};
     // 技能 4 = 咏唱·茈（原无限制茈）：蓄力 3 秒、200% 大小/伤害、冷却 **300 秒 = 6000 刻**。
-    public static final int[] COOLDOWN={160,200,600,400,6000,100,0,1200,240};
-    public static final int COUNT=9;
-    /** 轮盘 7 格的显示名：**按下标与 WHEEL 一一对应**，不经过 shortName 的 switch，杜绝任何错位。 */
-    public static final String[] WHEEL_LABELS={"苍","赫","茈","咏唱","瞬移","体术","无量"};
-    /** 轮盘 7 格 → 技能号。**只放常规技能**：赫·最大功率（2）与苍·最大功率（8）是长按触发的，
+    public static final int[] COOLDOWN={160,200,600,400,6000,100,0,1200,240,0};
+    public static final int COUNT=10;
+    /** 轮盘 8 格的显示名：**按下标与 WHEEL 一一对应**，不经过 shortName 的 switch，杜绝任何错位。 */
+    public static final String[] WHEEL_LABELS={"苍","赫","茈","咏唱","瞬移","体术","无量","无下限"};
+    /** 轮盘 8 格 → 技能号。**只放常规技能**：赫·最大功率（2）与苍·最大功率（8）是长按触发的，
      *  不占格；之前把它们当独立格摆出来，就是你看到的"废弃的苍极与最又出现了"。 */
-    public static final int[] WHEEL={0,1,3,4,5,6,7};
+    public static final int[] WHEEL={0,1,3,4,5,6,7,9};
     public static final int SLOTS=WHEEL.length;
     /** 技能号 → 轮盘短名（41/42 是长按专属，轮盘不显示，但名字仍要正确）。 */
     public static String shortName(int skill){
@@ -28,7 +28,7 @@ public final class GojoPlayer {
             case 2->SHORT[2];   // 赫·最大功率
             case 7->SHORT[7];   // 无量空处
             case 8->SHORT[8];   // 苍·最大功率
-            default->skill>=0&&skill<7?SHORT[skill]:"术式";
+            default->skill>=0&&skill<SHORT.length?SHORT[skill]:"术式";
         };
     }
     /** 玩家侧显示名：技能 4 在轮盘里叫「咏唱·茈」（首领那边仍是原来的「无限制茈」，行为没变）。 */
@@ -39,7 +39,7 @@ public final class GojoPlayer {
      *  的两式最大功率），所以客户端实际发来的是 <b>40</b>，不是 41。41 = 「34 + 内部技能号」的历史写法，
      *  这里一并认下，免得旧路径再踩同一个坑（曾导致"第二次按下既放不下也收不起"）。 */
     public static boolean voidKey(int skill){
-        if(skill==41)return true;
+        // 轮盘第 8 格（41）现在是「无下限」，不能再当无量空处的兼容号
         return skill>=34&&skill<34+SLOTS&&WHEEL[skill-34]==7;
     }
     public static int costOf(int skill){return skill>=0&&skill<COST.length?COST[skill]:0;}
@@ -51,7 +51,8 @@ public final class GojoPlayer {
         "向准星方向瞬移最多 8 格，遇墙停止",
         "近距离三连拳，命中附加缓慢",
         "领域展开：结印 4 秒后展开，范围内敌人无法行动并持续受伤 · 再按=放下(仅控制、无伤害) · 放下后再按一次=收起（关闭后术式熔断，可修复）",
-        "苍·最大功率：长按引导的光球，松手后停留 5 秒（长按苍也能进）"};
+        "苍·最大功率：长按引导的光球，松手后停留 5 秒（长按苍也能进）",
+        "无下限：开启后每秒 250 咒力 · 1.0 格内无限减速一切（速度=(距离/1.0)^6，0.2 格内绝对静止）· 开启期间积累「混乱的思绪」：每 25 秒 +1 级，伤害/移速下降、冷却变长；反转术式可清除并免疫 15 秒"};
     public static String desc(int skill){return skill>=0&&skill<DESC.length?DESC[skill]:"";}
     /** **轮盘格号 → 说明**：必须先用 {@link #WHEEL} 换成技能号再查 DESC。
      *  之前轮盘直接拿格号索引 DESC（格号 2 = 茈，却取到 DESC[2] 的赫·最大功率），
