@@ -39,6 +39,8 @@ public final class Infinity {
     /** 服务端 → 客户端同步无下限状态（size = 等级，0 = 关闭）。 */
     public static final int SYNC_KIND = 996;
     public static final double RADIUS = 1.0, STOP = 0.2, COST_PER_SECOND = 250;
+    /** 抄 JJK-HeianEra 的几何：贴身处 0.5 格硬定身，2.0 格内算「身体距离」拦近战。 */
+    public static final double EDGE = 0.5, BODY_BAND = 2.0;
     public static final int STACK_TICKS = 500, IMMUNE_TICKS = 300, MAX_LEVEL = 200;
 
     private static final String K_ON = "GojoInfinity", K_LEVEL = "GojoInfinityLevel",
@@ -55,6 +57,8 @@ public final class Infinity {
     }
     private static final Map<UUID, Map<UUID, Held>> HELD = new HashMap<>();
     private static final Map<UUID, Integer> LEVEL_CACHE = new HashMap<>();
+    /** 被硬定身的实体 → 锁死的位置（离开 0.5 格后清除）。 */
+    private static final Map<UUID, Vec3> LOCKED = new LinkedHashMap<>();
 
     public static boolean active(Player p) {
         return p != null && Curse.data(p).getBoolean(K_ON);
@@ -169,6 +173,24 @@ public final class Infinity {
                 if (entity instanceof PrimedTnt tnt) h.fuse = tnt.getFuse();
                 return h;
             });
+            // 贴身处（<= EDGE 0.5 格）直接硬定身：位置锁死 + 速度清零 + 关重力（抄 JJK-HeianEra 的 freeze）
+            boolean holds = !(entity instanceof Player) && dist <= EDGE;
+            if (holds) {
+                Vec3 lock = LOCKED.computeIfAbsent(entity.getUUID(), k -> entity.position());
+                entity.setNoGravity(true);
+                entity.setDeltaMovement(Vec3.ZERO);
+                if (entity.position().distanceToSqr(lock) > 1e-8) entity.setPos(lock.x, lock.y, lock.z);
+                entity.fallDistance = 0;
+                if (entity instanceof LivingEntity le) {
+                    AttributeInstance speed = le.getAttribute(Attributes.MOVEMENT_SPEED);
+                    if (speed != null) {
+                        if (speed.getModifier(SPEED_ID) != null) speed.removeModifier(SPEED_ID);
+                        speed.addTransientModifier(new AttributeModifier(SPEED_ID, "无下限定身", -1, AttributeModifier.Operation.MULTIPLY_TOTAL));
+                    }
+                    le.hurtMarked = true;
+                }
+                continue;
+            }
             if (entity instanceof ExperienceOrb) continue; // 经验球让五条悟主动走过去吸收
             // 生物/载具/玩家：属性减速 + 到 0.2 格锁位移
             if (entity instanceof LivingEntity living) {
@@ -216,6 +238,7 @@ public final class Infinity {
     }
 
     private static void restore(Entity entity, Held state) {
+        LOCKED.remove(entity.getUUID());
         if (entity instanceof LivingEntity living) {
             AttributeInstance speed = living.getAttribute(Attributes.MOVEMENT_SPEED);
             if (speed != null && speed.getModifier(SPEED_ID) != null) speed.removeModifier(SPEED_ID);
@@ -270,9 +293,9 @@ public final class Infinity {
         // 领域展延：术式穿透无下限
         if (attacker != null && DomainAmplification.active(attacker)) return false;
         // 距离：按碰撞箱边缘算；近战怪有攻击距离，放宽 0.6 格
-        double reach = RADIUS + 0.6;
+        double reach = EDGE + BODY_BAND;   // 2.5 格：覆盖各种近战攻击距离
         if (attacker != null) {
-            if (edge(p.getBoundingBox(), attacker.getBoundingBox()) > reach) return false;
+            if (bodyDist(attacker, p.getBoundingBox().getCenter()) > reach) return false;
         } else {
             Vec3 at = source.getSourcePosition();
             if (at != null) {
@@ -351,6 +374,17 @@ public final class Infinity {
         Vec3 dir = at.subtract(center);
         if (dir.lengthSqr() < 1e-6) dir = new Vec3(0, 1, 0);
         return center.add(dir.normalize().scale(RADIUS + 0.02));
+    }
+
+    /** 实体「身体」到某点的距离：按宽高胶囊算（JJK-HeianEra 的 bodyDist 同款思路）。 */
+    public static double bodyDist(LivingEntity e, Vec3 at) {
+        double half = e.getBbWidth() * 0.5;
+        double bottom = e.getY() + half;
+        double top = e.getY() + e.getBbHeight() - half;
+        if (top < bottom) top = bottom;
+        double y = Math.max(bottom, Math.min(top, at.y));
+        double dx = at.x - e.getX(), dy = at.y - y, dz = at.z - e.getZ();
+        return Math.sqrt(dx * dx + dy * dy + dz * dz) - half;
     }
 
     /** 两个碰撞箱之间的最近距离（Boss 大碰撞箱按边缘算，不按中心算）。 */
