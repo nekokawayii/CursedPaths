@@ -120,6 +120,8 @@ public final class CharacterService {
         // 回程坐标属于玩家所在世界，不属于角色，换线后仍能回原地。
         for(String key:current.getAllKeys())if(key.startsWith("SoulReturn")||key.startsWith("VoidReturn"))next.put(key,current.get(key).copy());
         if(definition.family()==CharacterDefinition.Family.SHRINE)next.putBoolean("Memory",true);
+        // 从「咒术选择书」直接选五条悟：等同于吃过六眼，立刻开启五条悟轮盘（含第 8 格无下限）
+        if("gojo".equals(id))next.putBoolean("GojoMemory",true);
         next.putBoolean("ChoiceBookGiven",true);
         next.put(ID,net.minecraft.nbt.StringTag.valueOf(id));next.put(PROFILES,profiles);
         next.putLong("CharacterSwitchAfter",p.level().getGameTime()+200);

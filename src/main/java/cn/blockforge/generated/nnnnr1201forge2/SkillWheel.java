@@ -194,7 +194,7 @@ public final class SkillWheel extends Screen {
             g.drawCenteredString(font,sel>=0&&sel<GojoPlayer.SLOTS?GojoPlayer.WHEEL_LABELS[sel]:"五条悟",gx,cy-4,0xFFFFFFFF);
             g.drawCenteredString(font,"六眼",gx,cy+8,0xFF9FC7F0);
             g.drawCenteredString(font,"五条悟技能",gx,cy-gr-14,0xFFBEE0FF);
-            g.drawCenteredString(font,"碎片已食用 · 7 式（苍/赫长按为最大功率）",gx,cy+gr+7,0xFFA9C8F1);
+            g.drawCenteredString(font,"碎片已食用 · "+GojoPlayer.SLOTS+" 式（苍/赫长按为最大功率）",gx,cy+gr+7,0xFFA9C8F1);
         }
         int[] branches=branches();for(int i=0;i<branches.length;i++){var box=branchBox(i);int id=branches[i];g.fill(box.x(),box.y(),box.x()+box.width(),box.y()+box.height(),branchHover==id?0xEE9D263B:0xDD321722);g.drawCenteredString(font,shortName(id),box.x()+37,box.y()+(box.height()<27?3:4),0xFFFFE6DE);if(box.height()>=27)g.drawCenteredString(font,id==21?Client.wallSize()+"×"+Client.wallSize()+"格":id==26?"1咒力/像素":id==SimpleDomain.SKILL?Client.energyText(cost(id))+"咒力/秒":Client.energyText(cost(id))+"咒力",box.x()+37,box.y()+17,0xFFDCC1F4);}
         int detailX=Client.progress.sukuna()?cx:width/2;
