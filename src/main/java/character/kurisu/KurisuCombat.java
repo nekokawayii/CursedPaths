@@ -20,6 +20,7 @@ import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.ProjectileImpactEvent;
 import net.minecraftforge.event.entity.living.LivingEntityUseItemEvent;
+import net.minecraftforge.event.entity.living.LivingAttackEvent;
 import net.minecraftforge.event.entity.living.LivingHealEvent;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
 import net.minecraftforge.event.entity.player.AttackEntityEvent;
@@ -47,6 +48,9 @@ public final class KurisuCombat {
     private static final List<Gate> GATES=new ArrayList<>();
     private static final List<Domain> DOMAINS=new ArrayList<>();
     private static final Map<UUID,Long> HORNS=new HashMap<>();
+    /** 落雷眩晕：UUID → 结束刻；期间 Mob 关 AI、实体位移清零。 */
+    private static final Map<UUID,Long> STUNS=new HashMap<>();
+    private static boolean swordBypass;
 
     public static int sanity(Player p){var d=Curse.data(p);if(!d.contains(K_SANITY))return MAX_SANITY;return Math.max(0,Math.min(MAX_SANITY,d.getInt(K_SANITY)));}
     public static void addSanity(Player p,int delta){
@@ -98,8 +102,11 @@ public final class KurisuCombat {
             ||t instanceof cn.blockforge.generated.nnnnr1201forge2.LowCurseEntity;
     }
     private static boolean casting(LivingEntity t){
-        if(t instanceof ServerPlayer sp)return Skills.sealing(sp)||character.mainline.Mainline.domainSkill(sp,0)&&false;
-        return t.getPersistentData().getLong("NpcChannelUntil")>t.level().getGameTime();
+        if(t.getPersistentData().getLong("NpcChannelUntil")>t.level().getGameTime())return true;
+        if(t.getPersistentData().getLong("FinaleCastUntil")>t.level().getGameTime())return true;
+        if(t instanceof ServerPlayer sp)
+            return Skills.sealing(sp)||cn.blockforge.generated.nnnnr1201forge2.BloodArts.casting(sp);
+        return false;
     }
 
     // ------------------------------------------------------------ 施法入口
@@ -184,6 +191,8 @@ public final class KurisuCombat {
             hurt(p,t,Math.max(30,t.getMaxHealth()*.12f));
             t.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN,40,5));
             t.addEffect(new MobEffectInstance(MobEffects.WEAKNESS,40,2));
+            STUNS.put(t.getUUID(),p.level().getGameTime()+40);
+            if(t instanceof Mob m)m.setNoAi(true);
         }
     }
 
@@ -242,7 +251,7 @@ public final class KurisuCombat {
     }
 
     /** 领域内敌人的生得术式被封印（CharacterCasting.cast 会先查这里）。 */
-    public static boolean sealed(Player p){
+    public static boolean sealed(Entity p){
         if(p==null)return false;
         long now=p.level().getGameTime();
         for(var d:DOMAINS)if(d.end()>now&&d.level()==p.level()&&d.owner()!=p&&p.position().distanceToSqr(d.center())<=DOMAIN_RADIUS*DOMAIN_RADIUS)return true;
@@ -268,6 +277,13 @@ public final class KurisuCombat {
                 }
             }
         }
+        // 落雷眩晕恢复
+        STUNS.entrySet().removeIf(en->{
+            if(en.getValue()>now)return false;
+            Entity st=p.level() instanceof ServerLevel sl?sl.getEntity(en.getKey()):null;
+            if(st instanceof Mob m)m.setNoAi(false);
+            return true;
+        });
         // 号角持续
         Long until=HORNS.get(p.getUUID());
         if(until!=null){
@@ -305,8 +321,37 @@ public final class KurisuCombat {
         });
         GATES.removeIf(g->g.end()<=now||g.level()!=p.level());
         DOMAINS.removeIf(d->d.end()<=now||!d.owner().isAlive()||d.level()!=p.level());
-        if(now%20==0)for(var d:DOMAINS)fx(p,KurisuFx.DOMAIN,d.center(),Vec3.ZERO,DOMAIN_RADIUS,20);
+        if(now%20==0){
+            for(var d:DOMAINS)fx(p,KurisuFx.DOMAIN,d.center(),Vec3.ZERO,DOMAIN_RADIUS,20);
+            Network.sendTo(p,new Network.Effect(KurisuFx.HUD,p.getId(),Vec3.ZERO,Vec3.ZERO,sanity(p),0,0));
+        }
         if(Curse.active(p,"KurisuSupperCharge")&&!data.contains("KurisuSupperAt"))data.putLong("KurisuSupperAt",now+60);
+    }
+
+    @SubscribeEvent(priority=EventPriority.HIGHEST) public static void attackBypass(LivingAttackEvent e){
+        if(swordBypass||e.getEntity().level().isClientSide)return;
+        if(!(e.getSource().getEntity() instanceof ServerPlayer p))return;
+        LivingEntity t=e.getEntity();
+        var def=character.CharacterService.selected(p);
+        if(def==null||!"kurisu".equals(def.id()))return;
+        // 近战劈向天国之门法阵：武器耐久直接归零（不可破坏物品改为 10 秒失效）
+        for(var g:GATES){
+            if(g.level()!=t.level()||g.end()<=t.level().getGameTime())continue;
+            if(p.position().distanceToSqr(g.center())>9)continue;
+            ItemStack weapon=p.getMainHandItem();
+            if(!weapon.isEmpty()){
+                if(weapon.isDamageableItem())weapon.setDamageValue(weapon.getMaxDamage());
+                else p.getCooldowns().addCooldown(weapon.getItem(),200);
+                p.displayClientMessage(Component.literal("天国之门：武器被圣光崩解").withStyle(net.minecraft.ChatFormatting.GOLD),true);
+            }
+            e.setCanceled(true);
+            return;
+        }
+        if(!Curse.active(p,K_SWORD))return;
+        float mul=cursedSpirit(t)?2f:1.4f;
+        swordBypass=true;
+        try{ e.setCanceled(true); t.invulnerableTime=0; t.hurt(p.damageSources().magic(),e.getAmount()*mul); }
+        finally{ swordBypass=false; }
     }
 
     @SubscribeEvent(priority=EventPriority.LOWEST) public static void hurtEvent(LivingHurtEvent e){

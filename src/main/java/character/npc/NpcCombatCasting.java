@@ -24,6 +24,8 @@ public final class NpcCombatCasting {
     }
     /** 对外入口同样执行冷却与开场门槛，不能通过外部 AI 绕过。 */
     public static boolean cast(Mob mob, LivingEntity target, int id) {
+        // 天国之门：领域内敌人（含 NPC）无法施法
+        if(character.kurisu.KurisuCombat.sealed(mob))return false;
         if (mob == null || mob.isNoAi() || !mob.isAlive() || !NpcBridge.canHit(mob,target)) return false;
         var actor = NpcBridge.actorFor(mob);
         if (actor == null || !skills(mob).contains(id)) return false;

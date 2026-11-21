@@ -1,10 +1,20 @@
 package cn.blockforge.generated.nnnnr1201forge2;
 
 import character.kurisu.KurisuFx;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.world.phys.Vec3;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.client.event.RenderGuiEvent;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.event.TickEvent;
 
 /** 来栖华的客户端表现：金色圣光、光柱、法阵、羽状光带。 */
+@Mod.EventBusSubscriber(modid = "jujutsu_kaisen_cursed_paths", value = Dist.CLIENT)
 public final class KurisuVisuals {
+    /** -1 = 未选来栖华；客户端由 HUD 包更新。 */
+    private static int sanity=-1;
     private static final int GOLD=0xFFFFD77A, WHITE=0xFFFFF6D8, DEEP=0xFFB98A2A;
     private static final String GLOW="textures/effect/glow.png", DUST="textures/effect/dust.png";
 
@@ -82,11 +92,31 @@ public final class KurisuVisuals {
                     PhotonFx.domain(at,size,e.life());
                 }
             }
+            case KurisuFx.HUD -> sanity=(int)e.size();
             case KurisuFx.MARK -> {
                 if(PhotonFx.ready())PhotonFx.spark(at,1.4,.9,WHITE,GOLD,GLOW,true,10,14,30,.2);
             }
             default -> {}
         }
     }
+    @SubscribeEvent public static void tick(TickEvent.ClientTickEvent e){
+        if(e.phase!=TickEvent.Phase.END)return;
+        var d=character.CharacterClient.selected();
+        if(d==null||!"kurisu".equals(d.id()))sanity=-1;
+    }
+
+    @SubscribeEvent public static void hud(RenderGuiEvent.Post e){
+        if(sanity<0)return;
+        var mc=Minecraft.getInstance();
+        if(mc.player==null||mc.options.hideGui)return;
+        GuiGraphics g=e.getGuiGraphics();
+        int w=g.guiWidth(), h=g.guiHeight();
+        int barW=120, x=(w-barW)/2, y=h-52;
+        g.fill(x-1,y-1,x+barW+1,y+7,0xAA000000);
+        int fill=(int)(barW*(sanity/100.0));
+        g.fill(x,y,x+fill,y+6,0xFFFFD77A);
+        g.drawString(mc.font,"理智 "+sanity+"%",x,y-11,0xFFFFF6D8,true);
+    }
+
     private KurisuVisuals() {}
 }
