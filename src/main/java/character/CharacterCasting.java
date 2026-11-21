@@ -73,6 +73,8 @@ public final class CharacterCasting {
         if(EFFECTS.putIfAbsent(new Key(character,skill),effect)!=null)throw new IllegalArgumentException("重复的角色技能效果");
     }
     public static void cast(ServerPlayer p,int id) {
+        // 来栖华 · 长按咏唱期间除号角本身外不接受任何角色技能（松手那一刻号角已经出栈，不挡自己）
+        if(character.kurisu.KurisuHorn.channelCommitted(p)){p.displayClientMessage(net.minecraft.network.chat.Component.literal("天使咏唱中：无法施放其他术式"),true);return;}
         // 天国之门：领域内敌人的生得术式被封印
         if(character.kurisu.KurisuCombat.sealed(p)){p.displayClientMessage(net.minecraft.network.chat.Component.literal("天国之门：生得术式被封印（只能平A）"),true);return;}
         if(character.mainline.Mainline.domainSkill(p,id)&&DomainClash.registered(p)&&DomainClash.withdraw(p))return;

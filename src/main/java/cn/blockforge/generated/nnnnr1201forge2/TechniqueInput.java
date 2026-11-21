@@ -51,6 +51,25 @@ public final class TechniqueInput {
         // 日车判决「没收」：60 秒内禁用术式
         if(cn.blockforge.generated.nnnnr1201forge2.Curse.data(p).getLong("HigSealedUntil")>p.level().getGameTime()){
             p.displayClientMessage(net.minecraft.network.chat.Component.literal("判决·没收：60 秒内无法使用术式"),true);return;}
+        // 来栖华 · 邪去悔天梯：短按=号角光柱，长按=羽翼咏唱（松手才吹响号角、降下圣光柱）。
+        // 咏唱期间其他术式一律封锁（用户要求"无法使用其他技能"），只放行号角自己的松手包。
+        if(character.CharacterService.selected(p)!=null&&"kurisu".equals(character.CharacterService.selected(p).id())){
+            if(input.skill()==character.kurisu.KurisuSkills.HORN){
+                switch(input.phase()){
+                    case 0 -> character.kurisu.KurisuHorn.press(p);
+                    case 1 -> character.kurisu.KurisuHorn.heartbeat(p);
+                    case 2 -> character.kurisu.KurisuHorn.release(p);
+                    case 3 -> character.kurisu.KurisuHorn.cancel(p,"客户端取消");
+                    default -> {}
+                }
+                return;
+            }
+            if(character.kurisu.KurisuHorn.channeling(p)){
+                if(input.phase()==0)p.displayClientMessage(net.minecraft.network.chat.Component
+                    .literal("邪去悔天梯 · 咏唱中：只能松开释放键放出号角"),true);
+                return;
+            }
+        }
         // 共同主线（r382）：轮盘外方形格 / G 键 → Mainline.cast
         if(input.skill()>=character.mainline.Mainline.SKILL_REVERSE
             &&input.skill()<=character.mainline.Mainline.SKILL_AMPLIFY){if(input.phase()==0||input.phase()==7)character.mainline.Mainline.cast(p,input.skill());return;}

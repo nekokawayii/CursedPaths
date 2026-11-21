@@ -1,5 +1,5 @@
 plugins { id 'java'; id 'net.minecraftforge.gradle' version '[6.0,6.2)' }
-version = '1.8.1-original-textures-r463'
+version = '1.8.1-original-textures-r464'
 group = 'cn.blockforge.generated.nnnnr1201forge2'
 base { archivesName = "jujutsu-kaisen-cursed-paths-forge-1.20.1" }
 // 产物文件名固定为 jujutsu-kaisen-cursed-paths-forge-1.20.1（不带版本号），版本号只保留在 jar 内部的 mods.toml 里。
@@ -15,6 +15,10 @@ minecraft {
             property 'forge.logging.markers', 'REGISTRIES'
             property 'forge.logging.console.level', 'info'
             arg '--username'; arg 'Dev'
+            // 自检时直接进存档：./gradlew runClient -PquickplayWorld=iterworld（不传就照常停在主菜单）
+            if (project.hasProperty('quickplayWorld')) {
+                arg '--quickPlaySingleplayer'; arg project.property('quickplayWorld').toString()
+            }
             property 'mixin.env.disableRefMap', 'true'
             mods { cursed { source sourceSets.main } }
         }

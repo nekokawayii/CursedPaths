@@ -39,9 +39,8 @@ import java.util.*;
 @Mod.EventBusSubscriber(modid = "jujutsu_kaisen_cursed_paths")
 public final class KurisuCombat {
     public static final String K_SANITY="KurisuSanity", K_BERSERK="KurisuBerserkUntil",
-        K_NOHEAL="KurisuNoHealUntil", K_SWORD="KurisuSwordUntil", K_GATE="KurisuGateUntil",
-        K_HORN="KurisuHornUntil";
-    public static final int MAX_SANITY=100, DOMAIN_RADIUS=30, DOMAIN_TICKS=600, HORN_TICKS=60;
+        K_NOHEAL="KurisuNoHealUntil", K_SWORD="KurisuSwordUntil", K_GATE="KurisuGateUntil";
+    public static final int MAX_SANITY=100, DOMAIN_RADIUS=30, DOMAIN_TICKS=600;
 
     private record Flame(ServerLevel level, Vec3 center, long end, ServerPlayer owner) {}
     private record Gate(ServerLevel level, Vec3 center, long end, ServerPlayer owner) {}
@@ -49,7 +48,6 @@ public final class KurisuCombat {
     private static final List<Flame> FLAMES=new ArrayList<>();
     private static final List<Gate> GATES=new ArrayList<>();
     private static final List<Domain> DOMAINS=new ArrayList<>();
-    private static final Map<UUID,Long> HORNS=new HashMap<>();
     /** 视觉自检：/jjksp kurisufx 按 1 秒间隔依次播放 11 个技能时间轴。 */
     private static final Map<UUID,java.util.ArrayDeque<Integer>> FX_QUEUE=new HashMap<>();
     /** 落雷眩晕：UUID → 结束刻；期间 Mob 关 AI、实体位移清零。 */
@@ -131,6 +129,7 @@ public final class KurisuCombat {
             case KurisuSkills.STORM -> {addSanity(p,-10);storm(p);}
             case KurisuSkills.EXECUTE -> execute(p);
             case KurisuSkills.HORN -> {addSanity(p,-5);horn(p);}
+            // 长按松手的圣光柱多扣的理智在 KurisuHorn 里已经结算过一遍，这里不重复
             case KurisuSkills.SUPPER -> {addSanity(p,-15);supper(p);}
             case KurisuSkills.DOMAIN -> {addSanity(p,-8);domain(p,level);}
             default -> {}
@@ -226,12 +225,12 @@ public final class KurisuCombat {
         p.displayClientMessage(Component.literal(open?"破魔·重击：处决！":"破魔：目标正在施术，伤害削减").withStyle(net.minecraft.ChatFormatting.GOLD),true);
     }
 
-    // 9 邪去悔天梯（号角）：3 秒圣光柱
+    // 9 邪去悔天梯（号角）：短按=3 秒黄色光柱；长按松手=6 秒圣光柱。
+    //   判定、移速 -50%、封技、伤害与"术式蒸发"都在 KurisuHorn 里，这里只按松手类型分流。
     private static void horn(ServerPlayer p){
-        HORNS.put(p.getUUID(),p.level().getGameTime()+HORN_TICKS);
-        play(p,KurisuSkills.HORN,aimPoint(p,20),Vec3.ZERO,64);
-        p.level().playSound(null,p.blockPosition(),SoundEvents.RAID_HORN.get(),SoundSource.PLAYERS,1.4f,.9f);
-        p.displayClientMessage(Component.literal("邪去悔天梯：吹奏中（移速 -50%）").withStyle(net.minecraft.ChatFormatting.GOLD),true);
+        if(p.level().isClientSide)return;
+        if(KurisuHorn.consumeReleaseKind()==1)KurisuHorn.pillar(p);
+        else KurisuHorn.tap(p);
     }
 
     // 10 极之番·最后的晚餐
@@ -298,18 +297,8 @@ public final class KurisuCombat {
             if(st instanceof Mob m)m.setNoAi(false);
             return true;
         });
-        // 号角持续
-        Long until=HORNS.get(p.getUUID());
-        if(until!=null){
-            if(until<=now||!p.isAlive()){HORNS.remove(p.getUUID());stopFx(p,KurisuSkills.HORN);}
-            else{
-                p.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN,10,1,false,false));
-                if(now%4==0){
-                    Vec3 at=aimPoint(p,20);
-                    for(var t:around(p,at,4))hurt(p,t,Math.max(6,t.getMaxHealth()*.03f));
-                }
-            }
-        }
+        // 号角：按住/咏唱/松手后的持续光柱全部交给 KurisuHorn 推进
+        KurisuHorn.tick(p);
         // 最后的晚餐引爆
         if(data.contains("KurisuSupperAt")&&data.getLong("KurisuSupperAt")<=now){
             data.remove("KurisuSupperAt");
@@ -402,9 +391,9 @@ public final class KurisuCombat {
     }
 
     @SubscribeEvent public static void attack(AttackEntityEvent e){
-        if(e.getEntity() instanceof ServerPlayer p&&HORNS.getOrDefault(p.getUUID(),0L)>p.level().getGameTime()){
+        if(e.getEntity() instanceof ServerPlayer p&&KurisuHorn.channeling(p)){
             e.setCanceled(true);
-            p.displayClientMessage(Component.literal("吹奏号角时无法普通攻击"),true);
+            p.displayClientMessage(Component.literal("咏唱号角时无法普通攻击（松手释放）"),true);
         }
     }
 
@@ -416,11 +405,21 @@ public final class KurisuCombat {
             FX_QUEUE.put(p.getUUID(),q);
             p.displayClientMessage(Component.literal("来栖华视觉自检：11 个技能依次播放"),false);
             return 1;
-        })));
+        })).then(Commands.literal("kurisuhorn")
+            // 只用来对着看画面：不扣咒力、不写冷却
+            .then(Commands.literal("auto").executes(c->{KurisuHorn.autoTest(c.getSource().getPlayerOrException());return 1;}))
+            .then(Commands.literal("tap").executes(c->{KurisuHorn.tap(c.getSource().getPlayerOrException());return 1;}))
+            .then(Commands.literal("pillar").executes(c->{KurisuHorn.pillar(c.getSource().getPlayerOrException());return 1;}))
+            .executes(c->{
+                var p=c.getSource().getPlayerOrException();
+                KurisuHorn.tap(p);
+                p.displayClientMessage(Component.literal("/jjksp kurisuhorn tap|pillar 单独重放两种号角"),false);
+                return 1;
+            })));
     }
 
     public static void clear(){
-        FLAMES.clear();GATES.clear();DOMAINS.clear();HORNS.clear();
+        FLAMES.clear();GATES.clear();DOMAINS.clear();KurisuHorn.clear();
     }
     private KurisuCombat(){}
 }

@@ -32,6 +32,9 @@ public final class SkillSounds {
         for(int i=1;i<=11;i++)register("buddha_"+i);
         for(int i:new int[]{1,3,4,5,6,8,9,10,11,12})register("guardian_"+i);
         for(String id:AWAKENED)register("nine_"+id);
+        // 来栖华 · 邪去悔天梯：圣歌咏唱 BGM（sounds.json 里映射到 jujutsu_kaisen_cursed_paths:gojodomainmid，
+        // 想换成自己的合唱 ogg 时只要改 sounds.json 的 kurisu_hymn 指向，代码不用动）
+        register("kurisu_hymn");
     }
     private static void register(String id){
         if(SOUNDS.containsKey(id))return;
@@ -50,6 +53,18 @@ public final class SkillSounds {
     }
     /** 领域展开类音效的音量：默认 {@link #play(Entity,String)} 用 2，用户要求"翻 2.5 倍" → 5。 */
     public static final float DOMAIN_VOLUME=5f;
+    /**
+     * 只发给听得到的玩家的「BGM 类」音效（来栖华的圣歌）：按 MUSIC 通道直发每个玩家自己的位置，
+     * 不会因为光柱坐标太远被距离衰减吞掉。半径 512 格内都算听众。
+     */
+    public static void music(ServerLevel level,net.minecraft.world.phys.Vec3 at,String id,float volume){
+        var sound=SOUNDS.get(id);if(sound==null||level==null||at==null)return;
+        for(ServerPlayer listener:level.players()){
+            if(listener.position().distanceToSqr(at)<=512*512)
+                listener.connection.send(new ClientboundSoundPacket(Holder.direct(sound.get()),SoundSource.MUSIC,
+                    at.x,at.y,at.z,volume,1f,level.random.nextLong()));
+        }
+    }
     /** 指定音量的播放。 */
     public static void play(Entity entity,String id,float volume){
         var sound=SOUNDS.get(id);if(sound==null||!(entity.level() instanceof ServerLevel level))return;

@@ -559,5 +559,15 @@
         "stream": true
       }
     ]
+  },
+  "kurisu_hymn": {
+    "category": "music",
+    "sounds": [
+      {
+        "name": "jujutsu_kaisen_cursed_paths:gojodomainmid",
+        "stream": true,
+        "attenuation_distance": 512
+      }
+    ]
   }
 }

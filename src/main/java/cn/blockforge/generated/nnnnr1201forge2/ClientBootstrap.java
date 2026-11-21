@@ -36,6 +36,7 @@ public final class ClientBootstrap {
         var gameBus=MinecraftForge.EVENT_BUS;
         gameBus.register(BlackFlashClient.class);
         gameBus.register(KurisuVisuals.class);
+        gameBus.register(KurisuHornRender.class);
         gameBus.register(Client.class);
         gameBus.register(TenShadowsClient.class);
         gameBus.register(ShadowClient.class);

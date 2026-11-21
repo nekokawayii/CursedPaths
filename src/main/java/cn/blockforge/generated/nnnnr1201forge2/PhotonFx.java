@@ -516,6 +516,78 @@ public final class PhotonFx {
             return start(pl,pos);
         }catch(Throwable t){fail(t);return null;}
     }
+    // ------------------------------------------------------------ 来栖华 · 邪去悔天梯（可配色零件）
+    /**
+     * 一个可配色零件。{@code along/across} 同时 &gt; 0 时用拉伸尺寸（细线/羽片），否则用等向 {@code size}。
+     * {@code axis} 非空时把发射器局部 +Y 对准该方向（光柱/斜向直线）；{@code yaw/pitch} 是角度制欧拉旋转
+     * （羽翼、法阵面片这类"相对施法者朝向"的布置用）。
+     */
+    public record Part(int shape,double radius,double thickness,double size,String texture,
+                       double along,double across,int color,int bloom,boolean additive,
+                       int duration,int life,double rate,double speed,double orbit,
+                       Vec3 offset,Vec3 axis,double yaw,double pitch) {
+        public static Part at(int shape,double radius,double thickness,double size,String texture,
+                              double along,double across,int color,int bloom,boolean additive,
+                              int duration,int life,double rate,double speed,double orbit){
+            return new Part(shape,radius,thickness,size,texture,along,across,color,bloom,additive,
+                duration,life,rate,speed,orbit,Vec3.ZERO,null,0,0);
+        }
+        public Part move(double x,double y,double z){return new Part(shape,radius,thickness,size,texture,along,across,color,bloom,additive,duration,life,rate,speed,orbit,new Vec3(x,y,z),axis,yaw,pitch);}
+        public Part turn(double yawDeg,double pitchDeg){return new Part(shape,radius,thickness,size,texture,along,across,color,bloom,additive,duration,life,rate,speed,orbit,offset,axis,yawDeg,pitchDeg);}
+        public Part aim(Vec3 ax){return new Part(shape,radius,thickness,size,texture,along,across,color,bloom,additive,duration,life,rate,speed,orbit,offset,ax,yaw,pitch);}
+    }
+    /** 一组零件合成一个 FX（一次 emmit）：句柄可以整体移动，适合跟随施法者的持续特效。 */
+    public static Handle parts(Vec3 pos,Part... parts){
+        if(broken||parts==null||parts.length==0||Minecraft.getInstance().level==null)return null;
+        List<Placement> list=new ArrayList<>();
+        for(Part st:parts){
+            try{
+                Emitter e=emitter(st.shape(),Math.max(0.05,st.radius()),st.thickness()<=0?1:st.thickness());
+                Object c=e.config();
+                duration(c,st.duration());particleLife(c,st.life());
+                if(st.along()>0&&st.across()>0)stretch(c,st.along(),st.across());
+                else size(c,Math.max(0.02,st.size()));
+                rate(c,Math.max(0.5,st.rate()));
+                tryCall(c,"setMaxParticles",Math.max(400,(int)(st.rate()*Math.max(2,st.life()))));
+                if(st.speed()!=0)speed(c,st.speed());
+                if(st.orbit()!=0)orbit(c,st.orbit());
+                colour(c,st.color());
+                boolean drawn=st.along()>0&&st.across()>0;
+                render(c,drawn?MODE_VERTICAL:MODE_BILLBOARD,st.texture(),st.bloom(),st.additive());
+                if(st.axis()!=null&&st.axis().lengthSqr()>1e-6)list.add(PA(e,st.offset(),st.axis().normalize()));
+                else if(st.yaw()!=0||st.pitch()!=0)list.add(P(e,st.offset(),Math.toRadians(st.pitch()),Math.toRadians(st.yaw()),0));
+                else list.add(P(e,st.offset()));
+            }catch(Throwable t){note("kurisu-part",t);}
+        }
+        return start(list,pos);
+    }
+    /**
+     * 可配色的柱体光柱（来栖华的金色光柱）：{@code core} 亮芯 + {@code shell} 外晕。
+     * 与 {@link #beam} 同一套圆柱装配（高度取 {@code scale.y²}，因此这里开方）。
+     */
+    public static Handle columnBeam(Vec3 from,Vec3 to,double radius,int coreColor,int shellColor,int bloom,
+                                    int life,double coreRate,double shellRate,double sizeScale,int particleLife){
+        try{
+            Vec3 delta=to.subtract(from);double length=Math.max(0.6,delta.length());
+            if(length<1e-4)return null;
+            Vec3 dir=delta.normalize();
+            double r0=Math.max(0.15,radius),half=length*0.5;
+            List<Placement> list=new ArrayList<>();
+            Emitter core=emitter(CYLINDER,r0,1);Object c=core.config();
+            duration(c,Math.max(2,life));particleLife(c,Math.max(2,particleLife));
+            rate(c,Math.max(4,coreRate));size(c,Math.max(0.2,r0*sizeScale));
+            shapeScale(c,1,Math.sqrt(length),1);colour(c,coreColor);
+            render(c,MODE_BILLBOARD,GLOW,bloom);
+            Emitter shell=emitter(CYLINDER,r0*1.22,0.35);Object s=shell.config();
+            duration(s,Math.max(2,life));particleLife(s,Math.max(2,particleLife));
+            rate(s,Math.max(4,shellRate));size(s,Math.max(0.3,r0*sizeScale*1.55));
+            shapeScale(s,1,Math.sqrt(length),1);colour(s,shellColor);
+            render(s,MODE_BILLBOARD,GLOW,bloom);
+            list.add(PA(core,dir.scale(half),dir));
+            list.add(PA(shell,dir.scale(half),dir));
+            return start(list,from);
+        }catch(Throwable t){fail(t);return null;}
+    }
     /** 祭坛光束：使用现有发射器系统，支持紫色激光和正常混合的黑色雷芯。 */
     public static Handle ritualBeam(Vec3 from,Vec3 to,double width,int color,boolean additive,int ticks){
         try{
