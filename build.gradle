@@ -17,6 +17,13 @@ minecraft {
             arg '--username'; arg 'Dev'
             mods { cursed { source sourceSets.main } }
         }
+        server {
+            // 迭代用服务器单独放一个文件夹（仓库外），避免 world/logs 混进工程
+            workingDirectory project.file('../咒命歧路-迭代服')
+            property 'forge.logging.console.level', 'info'
+            args '--nogui'
+            mods { cursed { source sourceSets.main } }
+        }
     }
 }
 dependencies {
