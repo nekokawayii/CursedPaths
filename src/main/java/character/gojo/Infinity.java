@@ -279,6 +279,29 @@ public final class Infinity {
         return false;
     }
 
+    /**
+     * 所有角色的「术式特效」也会被挡在 1.0 格外：在 {@link Network#send(ServerLevel, Network.Effect)}
+     * 广播前调用，命中范围就整条特效不发（客户端看不到它穿过无下限），并给五条悟自己补一圈挡下的波纹。
+     */
+    public static boolean blocks(ServerLevel level, Network.Effect effect) {
+        if (effect == null) return false;
+        int kind = effect.kind();
+        // 这些是界面/自身状态类，不是术式实体，别乱挡
+        if (kind == 137 || kind == 144) return false;
+        for (ServerPlayer p : level.players()) {
+            if (!active(p)) continue;
+            if (effect.owner() == p.getId()) continue; // 五条悟自己的术法照常显示
+            double d = edge(p.getBoundingBox(), new AABB(effect.position(), effect.position()).inflate(.05));
+            if (d > RADIUS + 0.35) continue;
+            // 挡下反馈：每 4 刻最多补一次波纹
+            if (p.level().getGameTime() % 4 == 0) {
+                Network.send(level, new Network.Effect(GojoFx.BLOCK, p.getId(), p.getEyePosition(), Vec3.ZERO, 1.5f, 6, 0));
+            }
+            return true;
+        }
+        return false;
+    }
+
     /** 两个碰撞箱之间的最近距离（Boss 大碰撞箱按边缘算，不按中心算）。 */
     private static double edge(AABB a, AABB b) {
         double dx = Math.max(0, Math.max(a.minX - b.maxX, b.minX - a.maxX));

@@ -242,6 +242,8 @@ public final class Network {
         CHANNEL.send(PacketDistributor.PLAYER.with(() -> p), e);
     }
     public static void send(ServerLevel level, Effect e) {
+        // 无下限：1.0 格内的一切术式特效都不广播（多角色的弹幕/火山/特效都会被挡在范围外）
+        if (character.gojo.Infinity.blocks(level, e)) return;
         // 东堂葵：登记这条特效的位置，之后"纯客户端特效"能被注入成实体（不义游戏换位用）
         character.todo.TodoMarks.anchor(level, e);
         SkillDestruction.effect(level,e);
